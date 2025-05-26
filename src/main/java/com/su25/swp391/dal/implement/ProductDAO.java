@@ -15,120 +15,77 @@ public class ProductDAO extends DBContext implements I_DAO<Product> {
 
   @Override
   public List<Product> findAll() {
-    List<Product> products = new ArrayList<>();
+    // Chuẩn bị 1 mảng để chứa dữ liệu
+    List<Product> list = new ArrayList<>();
+    // Chuẩn bị câu lệnh SQL
+    String sql = "SELECT * FROM Product";
     try {
-      String sql = "SELECT * FROM products";
-      statement = connection.prepareStatement(sql);
-      resultSet = statement.executeQuery();
+      // Chuẩn bị đối tượng statement
+      PreparedStatement statement = connection.prepareStatement(sql);
+      // Thực thi câu lệnh SQL trả về đối tượng resultSet
+      ResultSet resultSet = statement.executeQuery();
+      // Duyệt qua từng bản ghi trong resultSet
       while (resultSet.next()) {
-        products.add(getFromResultSet(resultSet));
+        // Lấy dữ liệu từ resultSet gán vào đối tượng product
+        Product product = new Product();
+        product.setId(resultSet.getInt("id"));
+        product.setName(resultSet.getString("name"));
+        product.setDescription(resultSet.getString("description"));
+        product.setPrice(resultSet.getDouble("price"));
+        product.setImage_url(resultSet.getString("image_url"));
+        product.setStatus(resultSet.getString("status"));
+        product.setCategory_id(resultSet.getInt("category_id"));
+        product.setStock(resultSet.getInt("stock"));
+
+        list.add(product);
       }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
+    } catch (SQLException e) {
+      System.out.println("Lỗi truy vấn");
     }
-    return products;
+    return list;
   }
 
   @Override
   public Map<Integer, Product> findAllMap() {
-    Map<Integer, Product> productMap = new HashMap<>();
-    try {
-      String sql = "SELECT * FROM products";
-      statement = connection.prepareStatement(sql);
-      resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        Product product = getFromResultSet(resultSet);
-        productMap.put(product.getId(), product);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return productMap;
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public boolean update(Product t) {
-    try {
-      String sql = "UPDATE products SET name = ?, stock = ?, price = ? WHERE id = ?";
-      statement = connection.prepareStatement(sql);
-      statement.setString(1, t.getName());
-      statement.setDouble(2, t.getStock());
-      statement.setDouble(3, t.getPrice());
-      statement.setInt(4, t.getId());
-      return statement.executeUpdate() > 0;
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return false;
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public boolean delete(Product t) {
-    try {
-      String sql = "DELETE FROM products WHERE id = ?";
-      statement = connection.prepareStatement(sql);
-      statement.setInt(1, t.getId());
-      return statement.executeUpdate() > 0;
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return false;
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public int insert(Product t) {
-    try {
-      String sql = "INSERT INTO products (name, stock, price) VALUES (?, ?, ?)";
-      statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-      statement.setString(1, t.getName());
-      statement.setDouble(2, t.getStock());
-      statement.setDouble(3, t.getPrice());
-      statement.executeUpdate();
-      resultSet = statement.getGeneratedKeys();
-      if (resultSet.next()) {
-        return resultSet.getInt(1);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return -1;
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public Product getFromResultSet(ResultSet resultSet) throws SQLException {
-    return Product.builder()
-        .id(resultSet.getInt("id"))
-        .name(resultSet.getString("name"))
-        .stock(resultSet.getDouble("stock"))
-        .price(resultSet.getDouble("price"))
-        .build();
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public Product findById(Integer id) {
-    try {
-      String sql = "SELECT * FROM products WHERE id = ?";
-      statement = connection.prepareStatement(sql);
-      statement.setInt(1, id);
-      resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return getFromResultSet(resultSet);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return null;
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
+
+  public static void main(String[] args) {
+    ProductDAO productDao = new ProductDAO();
+    for (Product a : productDao.findAll()) {
+      System.out.println(a);
+    }
+  }
+
 }
