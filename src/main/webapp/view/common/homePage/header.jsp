@@ -141,17 +141,17 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li class="nav-item">
-                                                    <a href="log-in.html" class="nav-link">
+                                                    <a href="${pageContext.request.contextPath}/login" class="nav-link">
                                                         Log In
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="register.html" class="nav-link">
+                                                    <a href="${pageContext.request.contextPath}/register" class="nav-link">
                                                         Registration
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="forget-password.html" class="nav-link">
+                                                    <a href="${pageContext.request.contextPath}/forgetpassword" class="nav-link">
                                                         Forget Password
                                                     </a>
                                                 </li>
