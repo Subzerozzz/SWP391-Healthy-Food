@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.su25.swp391.entity;
-import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.ToString;
 
 /**
  *
- * @author Dell
+ * @author Predator
  */
 @ToString
 @Builder
@@ -23,14 +23,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Account {
-    private int id;
-    private String full_name;
-    private String user_name;
-    private String password_hash;
-    private Date birth_date;
-    private String gender;
-    private String role;
-    private String address;
-}
+public class Blog {
 
+    private int id;
+    private String title;
+    private String author;
+    private String brief_info;
+    private String context;
+    private String thumbnailblogs;
+}
