@@ -19,7 +19,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Category {
+public class Menu_Category {
     private Integer id;
     private String name;
+    
 }
