@@ -23,7 +23,7 @@ public class ProductDAO extends DBContext implements I_DAO<Product> {
       // Chuẩn bị đối tượng statement
       PreparedStatement statement = connection.prepareStatement(sql);
       // Thực thi câu lệnh SQL trả về đối tượng resultSet
-      ResultSet resultSet = statement.executeQuery();
+      resultSet = statement.executeQuery();
       // Duyệt qua từng bản ghi trong resultSet
       while (resultSet.next()) {
         // Lấy dữ liệu từ resultSet gán vào đối tượng product
