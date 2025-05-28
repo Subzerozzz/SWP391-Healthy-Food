@@ -1,33 +1,40 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Product;
+import com.su25.swp391.entity.Food;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.PreparedStatement;
 
-public class ProductDAO extends DBContext implements I_DAO<Product> {
+/**
+ *
+ * @author Dell
+ */
+public class FoodDAO extends DBContext implements I_DAO<Food> {
 
   @Override
-  public List<Product> findAll() {
+  public List<Food> findAll() {
     // Chuẩn bị 1 mảng để chứa dữ liệu
-    List<Product> list = new ArrayList<>();
+    List<Food> list = new ArrayList<>();
     // Chuẩn bị câu lệnh SQL
-    String sql = "SELECT * FROM Product";
+    String sql = "SELECT * FROM Food";
     try {
       // Chuẩn bị đối tượng statement
       PreparedStatement statement = connection.prepareStatement(sql);
       // Thực thi câu lệnh SQL trả về đối tượng resultSet
-      resultSet = statement.executeQuery();
+      ResultSet resultSet = statement.executeQuery();
       // Duyệt qua từng bản ghi trong resultSet
       while (resultSet.next()) {
         // Lấy dữ liệu từ resultSet gán vào đối tượng product
-        Product product = new Product();
+        Food product = new Food();
         product.setId(resultSet.getInt("id"));
         product.setName(resultSet.getString("name"));
         product.setDescription(resultSet.getString("description"));
@@ -35,7 +42,7 @@ public class ProductDAO extends DBContext implements I_DAO<Product> {
         product.setImage_url(resultSet.getString("image_url"));
         product.setStatus(resultSet.getString("status"));
         product.setCategory_id(resultSet.getInt("category_id"));
-        product.setStock(resultSet.getInt("stock"));
+        product.setCreated_at(resultSet.getString("created_at"));
 
         list.add(product);
       }
@@ -46,44 +53,44 @@ public class ProductDAO extends DBContext implements I_DAO<Product> {
   }
 
   @Override
-  public Map<Integer, Product> findAllMap() {
+  public Map<Integer, Food> findAllMap() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean update(Product t) {
+  public boolean update(Food t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean delete(Product t) {
+  public boolean delete(Food t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public int insert(Product t) {
+  public int insert(Food t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public Product getFromResultSet(ResultSet resultSet) throws SQLException {
+  public Food getFromResultSet(ResultSet resultSet) throws SQLException {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public Product findById(Integer id) {
+  public Food findById(Integer id) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   public static void main(String[] args) {
-    ProductDAO productDao = new ProductDAO();
-    for (Product a : productDao.findAll()) {
+    FoodDAO productDao = new FoodDAO();
+    for (Food a : productDao.findAll()) {
       System.out.println(a);
     }
   }
