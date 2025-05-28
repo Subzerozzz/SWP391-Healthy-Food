@@ -26,6 +26,9 @@
   --hv-item: #EDF1F5;
 }
 
+
+
+
 /**
   * Name: Remos eCommerce Admin Dashboard HTML Template
   * Version: 1.0.1
@@ -5535,7 +5538,7 @@ select.h40 {
   color: #94A3B8 !important;
 }
 .dark-theme .section-menu-left .menu-item a .icon svg path {
-  stroke: #94A3B8;
+  stroke: #A3D9A5;
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;

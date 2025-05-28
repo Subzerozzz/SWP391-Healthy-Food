@@ -12,6 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * @author Dell
+ */
 @ToString
 @Builder
 @Data
@@ -19,7 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Product {
+public class Food {
     private Integer id;
     private String name;
     private String description;
@@ -27,7 +31,7 @@ public class Product {
     private String image_url;
     private String status;
     private Integer category_id;
-    private Integer stock;
+    private String created_at;
     
     
 }

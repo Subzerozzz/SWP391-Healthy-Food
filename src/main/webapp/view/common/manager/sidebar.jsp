@@ -16,7 +16,7 @@
 <body>
   <div class="section-menu-left">
     <div class="box-logo">
-      <a href="${pageContext.request.contextPath}/view/manager/dashboard.jsp" id="site-logo-inner">
+      <a href="${pageContext.request.contextPath}/manage-food?action=view" id="site-logo-inner">
         <div style="font-size: 24px; font-family: Verdana; font-style: italic; font-weight: 700">GreenBite</div>
       </a>
       <div class="button-show-hide">
@@ -40,13 +40,10 @@
                   </a>
                 </li>
                 <li class="sub-menu-item">
-                    <a href="#" class="active" id="viewLink">
+                    <a href="${pageContext.request.contextPath}/manage-food?action=view" class="active" id="viewLink">
                         <div class="text">Food List</div>
                     </a>
                     
-                    <form id="postForm" action="${pageContext.request.contextPath}/manage-product?action=view" method="POST" style="display:none;">
-                        <input type="hidden" name="key" value="value" />
-                    </form>
                 </li>
               </ul>
             </li>
@@ -322,12 +319,6 @@
     </div>
   </div>
   
-        <script>
-            document.getElementById('viewLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.getElementById('postForm').submit();
-            });
-        </script>
 </body>
 
 </html>
