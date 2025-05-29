@@ -11,8 +11,7 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.util.List;
 
-
- @WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
+@WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
 public class ManageBlogController {
 
     private BlogDAO blogDAO;
@@ -120,10 +119,57 @@ public class ManageBlogController {
     }
 
     private void blogListDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        BlogDAO blogDao = new BlogDAO();
-        List<Blog> blog = blogDao.findAll();
-        request.setAttribute("blogs", blog);
-        request.getRequestDispatcher("manage-blog.jsp").forward(request, response);
+//        BlogDAO blogDao = new BlogDAO();
+//        List<Blog> blog = blogDao.findAll();
+//        request.setAttribute("blogs", blog);
+//        request.getRequestDispatcher("manage-blog.jsp").forward(request, response);
+
+        BlogDAO blogDAO = new BlogDAO();
+
+        // Get filter parameters
+        String searchTitle = request.getParameter("searchTitle");
+        String statusFilter = request.getParameter("status");
+
+        // Get pagination parameters
+        int page = 1;
+        int pageSize = 10;
+
+        try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+            if (request.getParameter("pageSize") != null) {
+                pageSize = Integer.parseInt(request.getParameter("pageSize"));
+                if (pageSize < 1) {
+                    pageSize = 10;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Use default values if parameters are invalid
+        }
+
+        // Get blogs with filtering and pagination
+        List<Blog> blogs = blogDAO.findBlogsWithFilter(searchTitle, statusFilter, page, pageSize);
+        int totalBlogs = blogDAO.countBlogsWithFilter(searchTitle, statusFilter);
+
+        // Calculate pagination info
+        int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
+
+        // Set attributes for the view
+        request.setAttribute("blogs", blogs);
+        request.setAttribute("searchTitle", searchTitle);
+        request.setAttribute("statusFilter", statusFilter);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalBlogs", totalBlogs);
+
+        // Forward to the view
+//        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutrition/listBlog.jsp");
+        //dispatcher.forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -137,5 +137,13 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return null;
     }
+
+    public List<Blog> findBlogsWithFilter(String searchTitle, String statusFilter, int page, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public int countBlogsWithFilter(String searchTitle, String statusFilter) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
    
 }
