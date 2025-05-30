@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.su25.swp391.entity;
 
 /**
@@ -24,14 +20,17 @@ import java.sql.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+
 public class Account {
-    private int id;
+    private Integer id;
     private String email;
+    private Integer mobie;
     private String password;
     private String user_name;
     private String full_name;
     private Date birth_date;
-    private boolean gender;
+    private Boolean gender;
     private String role;
     private String address;
+    private String status;
 }
