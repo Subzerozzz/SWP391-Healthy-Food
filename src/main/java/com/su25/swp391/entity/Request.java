@@ -19,16 +19,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Food {
+public class Request {
     private Integer id;
-    private String name;
-    private Integer idNutri;
-    private String nameNutri;
-    private String description;
-    private Double price;
-    private String image_url;
+    private String typeOfRequest;
+    private Integer foodDarftId;
     private String status;
-    private Integer category_id;
-    private Integer stock;
-     private Integer idFoodDraft;
 }
