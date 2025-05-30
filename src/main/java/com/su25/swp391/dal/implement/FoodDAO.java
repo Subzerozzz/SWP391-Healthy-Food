@@ -7,7 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Menu_Category;
+import com.su25.swp391.entity.Food;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,12 +20,12 @@ import java.util.Map;
  *
  * @author Admin
  */
-public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
+public class FoodDAO extends DBContext implements I_DAO<Food>{
     
     @Override
-    public List<Menu_Category> findAll() {
-        String sql = "select * from Menu_Category";
-        List<Menu_Category> list = new ArrayList<>();
+    public List<Food> findAll() {
+        String sql = "select * from Food ";
+        List<Food> list = new ArrayList<>();
         try {
            connection= getConnection();
            statement = connection.prepareStatement(sql);
@@ -34,7 +34,25 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
                list.add(getFromResultSet(resultSet));
            }
         } catch (Exception e) {
-            System.out.println("Error happen in MenuDAO:"+e.getMessage());
+            System.out.println("Error happen in FoodDAO:"+e.getMessage());
+        }finally{
+            closeResources();
+        }
+       return list;
+        
+     }
+     public List<Food> findAllStatusPending() {
+        String sql = "select * from Food where status ='pending' ";
+        List<Food> list = new ArrayList<>();
+        try {
+           connection= getConnection();
+           statement = connection.prepareStatement(sql);
+           resultSet = statement.executeQuery();
+           while(resultSet.next()){
+               list.add(getFromResultSet(resultSet));
+           }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:"+e.getMessage());
         }finally{
             closeResources();
         }
@@ -43,16 +61,16 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
      }
 
     @Override
-    public Map<Integer, Menu_Category> findAllMap() {
-        String sql = "Select * from Menu";
-        Map<Integer, Menu_Category> map = new HashMap<>();
+    public Map<Integer, Food> findAllMap() {
+        String sql = "Select * from Food";
+        Map<Integer, Food> map = new HashMap<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while(resultSet.next()){
-                Menu_Category menu = getFromResultSet(resultSet);
-                map.put(menu.getId(), menu);
+                Food food = getFromResultSet(resultSet);
+                map.put(food.getIdFood(), food);
             }
         } catch (Exception e) {
             e.getMessage();
@@ -63,13 +81,13 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
       }
 
     @Override
-    public boolean update(Menu_Category t) {
-        String sql = "UPDATE Menu_Category SET name = ? Where id = ?";
+    public boolean update(Food t) {
+        String sql = "UPDATE Food SET status = ? Where id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getId());
-            statement.setString(2, t.getName());
+            statement.setString(1, t.getStatus());
+            statement.setInt(2, t.getIdFood());
             statement.executeUpdate();
             return statement.executeUpdate()>0;
             
@@ -83,27 +101,29 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
     }
 
     @Override
-    public boolean delete(Menu_Category t) {
-       String sql = "DELETE from Menu_Category Where id = ?";
+    public boolean delete(Food t) {
+       String sql = "DELETE from Food Where id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getId());
+            statement.setInt(1, t.getIdFood());
             statement.executeUpdate();
             return statement.executeUpdate()>0;
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
+            closeResources();
         }
         return false;
     }
 
     @Override
-    public int insert(Menu_Category t) {
-      String sql = "INSERT into Menu_Category(name) values(?) ";
+    public int insert(Food t) {
+      String sql = "INSERT into Food(name) values(?) ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-            statement.setString(1, t.getName());
+            statement.setString(1, t.getNameFood());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
@@ -118,18 +138,24 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
     }
 
     @Override
-    public Menu_Category getFromResultSet(ResultSet resultSet) throws SQLException {
-        Menu_Category menu = Menu_Category
+    public Food getFromResultSet(ResultSet resultSet) throws SQLException {
+        Food menu = Food
                  .builder()
-                .id(resultSet.getInt("id"))
-                .name(resultSet.getString("name"))
+                .idFood(resultSet.getInt("idFood"))
+                .nameFood(resultSet.getString("nameFood"))
+                .idNutri(resultSet.getInt("idNutri"))
+                .nameNutri(resultSet.getString("nameNutri"))
+                .img(resultSet.getString("img"))
+                .price(resultSet.getDouble("price"))
+                .description(resultSet.getString("desciption"))
+                .status(resultSet.getString("status"))
                 .build();
           return menu;
    }
 
     @Override
-    public Menu_Category findById(Integer id) {
-       String sql = "Select * from Menu_Category WHERE id = ?";
+    public Food findById(Integer id) {
+       String sql = "Select * from Food WHERE id = ?";
         try {
             connection= getConnection();
             statement = connection.prepareStatement(sql);
@@ -145,15 +171,16 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
         }
         return null;
     }
+    
     public static void main(String[] args) {
-        Menu_CategoryDAO dao = new Menu_CategoryDAO();
-        for (Menu_Category i : dao.findAll()) {
+        FoodDAO dao = new FoodDAO();
+        for (Food i : dao.findAll()) {
             System.out.println(i);
         }
     }
      
     public boolean isCategoryNameExist( String name,int id){
-        String sql =" Select COUNT(*) from Category WHERE id != ? and name = ?";
+        String sql =" Select COUNT(*) from Food WHERE id != ? and name = ?";
         try {
             connection= getConnection();
             statement = connection.prepareStatement(sql);
@@ -171,7 +198,7 @@ public class Menu_CategoryDAO extends DBContext implements I_DAO<Menu_Category>{
             return false;
     }
     
-    public List<Menu_Category> fillAllParentCategories() {
+    public List<Food> fillAllParentCategories() {
        return null;
     }
     
