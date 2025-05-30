@@ -122,6 +122,7 @@
                                         <a class="tf-button style-1 w208" href="add-product.html"><i class="icon-plus"></i>Add new</a>
                                     </div>
                                     <div class="wg-table table-product-list">
+                                        <!--Heading table-->
                                         <ul class="table-title flex gap20 mb-14">
                                             <li>
                                                 <div class="body-title">Blog</div>
@@ -148,21 +149,24 @@
                                                 <div class="body-title">Action</div>
                                             </li>
                                         </ul>
+                                        
+                                        <!--body table-->
                                         <ul class="flex flex-column">
-                                            <li class="product-item gap14">
+                                        <c:forEach items="${blogs}" var = "blog">
+                                                <li class="product-item gap14">
                                                 <div class="image no-bg">
                                                     <img src="images/products/41.png" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Dog Food, Chicken & Chicken Liver Recipe...</a>
+                                                        <a href="product-list.html" class="body-title-2">${blog.title}</a>
                                                     </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
+                                                    <div class="body-text">${blog.id}</div>
+                                                    <div class="body-text">${blog.author}</div>
+                                                    <div class="body-text">${blog.brief_info}</div>
+                                                    <div class="body-text">${blog.context}/div>
                                                     <div>
-                                                        <div class="block-not-available">Out of stock</div>
+                                                        <div class="block-not-available">${blog.thumbnailblogs}/div>
                                                     </div>
                                                     <div class="body-text">$28,672.36</div>
                                                     <div class="list-icon-function">
@@ -178,267 +182,7 @@
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/42.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Grain Free Dry Dog Food | Rachael Ray® Nutrish®</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/43.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Weruva Pumpkin Patch Up! Pumpkin With Ginger...</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/44.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Milk-Bone Mini's Flavor Snacks Dog Treats, 15 Ounce </a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/45.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Milk-Bone Mini's Flavor Snacks Dog Treats, 15 Ounce </a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/46.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Weruva Pumpkin Patch Up! Dog & Cat Food...</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/47.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/48.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/49.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="images/products/50.png" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                    </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
+                                            </c:forEach>
                                         </ul>
                                     </div>
                                     <div class="divider"></div>

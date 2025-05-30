@@ -5,6 +5,7 @@ import com.su25.swp391.entity.Blog;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.util.List;
 
 @WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
-public class ManageBlogController {
+public class ManageBlogController extends HttpServlet{
 
     private BlogDAO blogDAO;
 
@@ -20,6 +21,7 @@ public class ManageBlogController {
         blogDAO = new BlogDAO();
     }
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if (action == null) {
@@ -172,6 +174,7 @@ public class ManageBlogController {
         //dispatcher.forward(request, response);
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 //        if (action == null) {
