@@ -72,8 +72,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
 
   @Override
   public int insert(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    String sql = ""
   }
 
   @Override
