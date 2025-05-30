@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <div class="header-dashboard">
                         <div class="wrap">
                             <div class="header-left">
@@ -30,7 +33,7 @@
                                                         </div>
                                                         <div class="flex items-center justify-between gap20 flex-grow">
                                                             <div class="name">
-                                                                <a href="product-list.html" class="body-text">Dog Food Rachael Ray Nutrish®</a>
+                                                                <a href="product-list.html" class="body-text">Dog Food Rachael Ray NutrishÂ®</a>
                                                             </div>
                                                         </div>
                                                     </li>

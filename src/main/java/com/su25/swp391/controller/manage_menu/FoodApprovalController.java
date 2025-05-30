@@ -4,8 +4,8 @@
  */
 package com.su25.swp391.controller.manage_menu;
 
-import com.su25.swp391.dal.implement.Menu_CategoryDAO;
-import com.su25.swp391.entity.Menu_Category;
+import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.entity.Food;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -22,14 +22,14 @@ import java.util.Map;
  *
  * @author Admin
  */
-@WebServlet(name = "CategoryController", urlPatterns = {"/manage-menu/menu-category"})
-public class CategoryController extends HttpServlet {
+@WebServlet(name = "CategoryController", urlPatterns = {"/menu-category"})
+public class FoodApprovalController extends HttpServlet {
 
-    private Menu_CategoryDAO menuCategoryDAO;
+    private FoodDAO foodDAO;
 
     @Override
     public void init() throws ServletException {
-        menuCategoryDAO = new Menu_CategoryDAO();
+        foodDAO = new FoodDAO();
     }
 
     @Override
@@ -39,6 +39,8 @@ public class CategoryController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             action = "list"; // Assign action = list 
+            List<Food> listFood = foodDAO.findAllStatusPending();
+            request.getSession().setAttribute("listFood", listFood);
         }
         switch (action) {
             case "add":
@@ -55,10 +57,12 @@ public class CategoryController extends HttpServlet {
                 break;
             case "list":
             default:
-                listCategories(request, response);
+               // listCategories(request, response);
                 break;
-
-        }
+    }
+        
+         
+          request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
 
     @Override
@@ -100,10 +104,10 @@ public class CategoryController extends HttpServlet {
         String menuCategoryIdStr = request.getParameter("id");
         if (menuCategoryIdStr != null && !menuCategoryIdStr.isEmpty()) {
             int categoryId = Integer.parseInt(menuCategoryIdStr);
-            Menu_Category menuCategory = menuCategoryDAO.findById(categoryId);
+            Food menuCategory = foodDAO.findById(categoryId);
             if (menuCategory != null) {
                 // Get parentCategory
-                List<Menu_Category> parentCategory = menuCategoryDAO.fillAllParentCategories();
+                List<Food> parentCategory = foodDAO.fillAllParentCategories();
                 request.setAttribute("parentCategory", parentCategory);
                 request.setAttribute("menuCategory", menuCategory);
                 request.getRequestDispatcher("/view/nutritionist/menu-category-edit.jsp").forward(request, response);
@@ -130,12 +134,12 @@ public class CategoryController extends HttpServlet {
         try {
             // Lấy thông tin từ form
             String name = request.getParameter("name");
-            if (!menuCategoryDAO.isCategoryNameExist(name, -1)) {
-                Menu_Category newCategory = Menu_Category
+            if (!foodDAO.isCategoryNameExist(name, -1)) {
+                Food newCategory = Food
                         .builder()
-                        .name(name)
+                        .img(name)
                         .build();
-                int newId = menuCategoryDAO.insert(newCategory);
+                int newId = foodDAO.insert(newCategory);
                 if (newId > 0) {
                     request.getSession().setAttribute("toastMessage", "Thêm danh mục thành công");
                     request.getSession().setAttribute("toastType", "success");
@@ -162,11 +166,11 @@ public class CategoryController extends HttpServlet {
         } else {
             // Check name already existed
             boolean nameExist = (name == null)
-                    ? menuCategoryDAO.isCategoryNameExist(name, -1)
-                    : menuCategoryDAO.isCategoryNameExist(name, id);
+                    ? foodDAO.isCategoryNameExist(name, -1)
+                    : foodDAO.isCategoryNameExist(name, id);
 
         }
-        if (menuCategoryDAO.isCategoryNameExist(name, id)) {
+        if (foodDAO.isCategoryNameExist(name, id)) {
             error.put("name", "Name already Existed");
         } else {
             error.put("name", "Name is valid");
