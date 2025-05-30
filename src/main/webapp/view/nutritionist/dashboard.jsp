@@ -28,25 +28,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
 
-        <style>
-     table.dataTable {
-    width: 100% !important; /* cho full width */
-    font-size: 16px; /* tăng size chữ */
-}
-
-table.dataTable th, table.dataTable td {
-    text-align: center; /* căn giữa nội dung */
-    vertical-align: middle; /* căn giữa theo chiều cao */
-}
-
-table.dataTable img {
-    display: block;
-    margin: 0 auto;
-    max-height: 60px;
-    width: auto;
-    border-radius: 6px;
-}
-        </style>
+  
 
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
@@ -153,56 +135,57 @@ table.dataTable img {
                                                 <div class="body-title">Price</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Quantity</div>
+                                                <div class="body-title">Name Nutritionist</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Sale</div>
+                                                <div class="body-title">Description</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Stock</div>
+                                                <div class="body-title">Id Nutri</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Start date</div>
+                                                <div class="body-title">Create date</div>
                                             </li>
                                             <li>
                                                 <div class="body-title">Action</div>
                                             </li>
                                         </ul>
                                         <ul class="flex flex-column">
-                                               <c:forEach items="${listFood}" var="food">
+                                               <c:forEach items="${listFoodDraft}" var="foodDraft">
                                             <li class="product-item gap14">
                                                 <div class="image no-bg">
-                                                    <img src="images/products/41.png" alt="">
+                                                    <img src="${foodDraft.image_url}" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">Dog Food, Chicken & Chicken Liver Recipe...</a>
+                                                        <a href="product-list.html" class="body-title-2">${foodDraft.name}</a>
                                                     </div>
-                                                    <div class="body-text">#7712309</div>
-                                                    <div class="body-text">$1,452.500</div>
-                                                    <div class="body-text">1,638</div>
-                                                    <div class="body-text">20</div>
+                                                    <div class="body-text">${foodDraft.id}</div>
+                                                    <div class="body-text">$ ${foodDraft.price}</div>
+                                                    <div class="body-text">${foodDraft.nameNutri}</div>
+                                                    <div class="body-text">${foodDraft.description}</div>
                                                     <div>
-                                                        <div class="block-not-available">Out of stock</div>
+                                                        <div class="block-not-available">${foodDraft.idNutri}</div>
                                                     </div>
-                                                    <div class="body-text">$28,672.36</div>
+                                                    <div class="body-text">${foodDraft.create_At}</div>
                                                     <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
+                                                     <div> VIEW DETAIL
+                                                         <a class="item eye" href="./view/nutritionist/detail-food-draft.jsp" "><i title="View Detail" class="icon-eye"></i> </a> 
+                                                     </div>
+                                                          <div > ACCPET
+                                                            <a class="item edit" href="https://google.com" onclick="return confirm('Are you want to ACCEPT this Food ?')"><i title="ACCEPT"   class="icon-check"></i></a>
                                                         </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
+                                                        <div  > REJECT
+                                                            <a class="item trash" href="#" onclick="return confirm('Are you want to Reject this Food ?')" ><i title="REJECT" class="icon-trash-2"></i></a> 
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                             </c:forEach>
-                                        </ul>
+-->                                        </ul>
                                     </div>
 <!--                    End list Product-->
+<!--images/products/41.png-->
                  </div>
                                     </div>
                                     <div class="divider"></div>
@@ -261,12 +244,7 @@ table.dataTable img {
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<!--    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.table-product-list').DataTable();
-    });
-</script>-->
+
 </body>
 
 

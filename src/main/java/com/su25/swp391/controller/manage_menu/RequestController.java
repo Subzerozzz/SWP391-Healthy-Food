@@ -5,7 +5,9 @@
 package com.su25.swp391.controller.manage_menu;
 
 import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.Food_DraftDAO;
 import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.Food_Draft;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -23,13 +25,13 @@ import java.util.Map;
  * @author Admin
  */
 @WebServlet(name = "CategoryController", urlPatterns = {"/menu-category"})
-public class FoodApprovalController extends HttpServlet {
+public class RequestController extends HttpServlet {
 
-    private FoodDAO foodDAO;
+    private Food_DraftDAO foodDraftDAO;
 
     @Override
     public void init() throws ServletException {
-        foodDAO = new FoodDAO();
+        foodDraftDAO = new Food_DraftDAO();
     }
 
     @Override
@@ -39,8 +41,8 @@ public class FoodApprovalController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             action = "list"; // Assign action = list 
-            List<Food> listFood = foodDAO.findAllStatusPending();
-            request.getSession().setAttribute("listFood", listFood);
+            List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
+            request.getSession().setAttribute("listFoodDraft", listFoodDraft);
         }
         switch (action) {
             case "add":
@@ -74,9 +76,9 @@ public class FoodApprovalController extends HttpServlet {
         }
 
         switch (action) {
-            case "add":
-                addCategory(request, response);
-                break;
+//            case "add":
+//                addCategory(request, response);
+//                break;
             case "update":
                 updateCategory(request, response);
                 break;
@@ -103,20 +105,20 @@ public class FoodApprovalController extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String menuCategoryIdStr = request.getParameter("id");
         if (menuCategoryIdStr != null && !menuCategoryIdStr.isEmpty()) {
-            int categoryId = Integer.parseInt(menuCategoryIdStr);
-            Food menuCategory = foodDAO.findById(categoryId);
-            if (menuCategory != null) {
-                // Get parentCategory
-                List<Food> parentCategory = foodDAO.fillAllParentCategories();
-                request.setAttribute("parentCategory", parentCategory);
-                request.setAttribute("menuCategory", menuCategory);
-                request.getRequestDispatcher("/view/nutritionist/menu-category-edit.jsp").forward(request, response);
+//            int categoryId = Integer.parseInt(menuCategoryIdStr);
+//            Food menuCategory = foodDraftDAO.findById(categoryId);
+//            if (menuCategory != null) {
+//                // Get parentCategory
+//                List<Food> parentCategory = foodDraftDAO.fillAllParentCategories();
+//                request.setAttribute("parentCategory", parentCategory);
+//                request.setAttribute("menuCategory", menuCategory);
+//                request.getRequestDispatcher("/view/nutritionist/menu-category-edit.jsp").forward(request, response);
 
             }
 
         }
-        response.sendRedirect(request.getContextPath() + "view/nutritionist/dashboard.jsp");
-    }
+//        response.sendRedirect(request.getContextPath() + "view/nutritionist/dashboard.jsp");
+    
 
     private void deactivateCategory(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -130,52 +132,52 @@ public class FoodApprovalController extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void addCategory(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            // Lấy thông tin từ form
-            String name = request.getParameter("name");
-            if (!foodDAO.isCategoryNameExist(name, -1)) {
-                Food newCategory = Food
-                        .builder()
-                        .img(name)
-                        .build();
-                int newId = foodDAO.insert(newCategory);
-                if (newId > 0) {
-                    request.getSession().setAttribute("toastMessage", "Thêm danh mục thành công");
-                    request.getSession().setAttribute("toastType", "success");
-                }
-                response.sendRedirect(request.getContextPath() + "../view/nutritionist/addCategory.jsp");
-
-            } else {
-                request.getSession().setAttribute("error", "Name already");
-                response.sendRedirect(request.getContextPath() + "../view/nutritionist/dashboard.jsp");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void addCategory(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            // Lấy thông tin từ form
+//            String name = request.getParameter("name");
+//            if (!foodDAO.isCategoryNameExist(name, -1)) {
+//                Food newCategory = Food
+//                        .builder()
+//                        .image_url(name)
+//                        .build();
+//                int newId = foodDAO.insert(newCategory);
+//                if (newId > 0) {
+//                    request.getSession().setAttribute("toastMessage", "Thêm danh mục thành công");
+//                    request.getSession().setAttribute("toastType", "success");
+//                }
+//                response.sendRedirect(request.getContextPath() + "../view/nutritionist/addCategory.jsp");
+//
+//            } else {
+//                request.getSession().setAttribute("error", "Name already");
+//                response.sendRedirect(request.getContextPath() + "../view/nutritionist/dashboard.jsp");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private Map<String, String> ValidateCategoryData(int id, String name) {
-        Map<String, String> error = new HashMap<>();
-        // Validate Name
-        if (name == null || name.trim().isEmpty()) {
-            error.put("name", "Category name is required");
-        } else if (name.length() > 100) {
-            error.put("name", "Category name must be less than 100 characteristic");
-        } else {
-            // Check name already existed
-            boolean nameExist = (name == null)
-                    ? foodDAO.isCategoryNameExist(name, -1)
-                    : foodDAO.isCategoryNameExist(name, id);
-
-        }
-        if (foodDAO.isCategoryNameExist(name, id)) {
-            error.put("name", "Name already Existed");
-        } else {
-            error.put("name", "Name is valid");
-        }
-        return error;
+     Map<String, String> error = new HashMap<>();
+//        // Validate Name
+//        if (name == null || name.trim().isEmpty()) {
+//            error.put("name", "Category name is required");
+//        } else if (name.length() > 100) {
+//            error.put("name", "Category name must be less than 100 characteristic");
+//        } else {
+//            // Check name already existed
+//            boolean nameExist = (name == null)
+//                    ? foodDAO.isCategoryNameExist(name, -1)
+//                    : foodDAO.isCategoryNameExist(name, id);
+//
+//        }
+//        if (foodDAO.isCategoryNameExist(name, id)) {
+//            error.put("name", "Name already Existed");
+//        } else {
+//            error.put("name", "Name is valid");
+//        }
+      return error;
     }
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) {

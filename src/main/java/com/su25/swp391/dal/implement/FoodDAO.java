@@ -70,7 +70,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             resultSet = statement.executeQuery();
             while(resultSet.next()){
                 Food food = getFromResultSet(resultSet);
-                map.put(food.getIdFood(), food);
+                map.put(food.getId(), food);
             }
         } catch (Exception e) {
             e.getMessage();
@@ -87,7 +87,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getStatus());
-            statement.setInt(2, t.getIdFood());
+            statement.setInt(2, t.getId());
             statement.executeUpdate();
             return statement.executeUpdate()>0;
             
@@ -106,7 +106,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getIdFood());
+            statement.setInt(1, t.getId());
             statement.executeUpdate();
             return statement.executeUpdate()>0;
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-            statement.setString(1, t.getNameFood());
+            statement.setString(1, t.getName());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
@@ -139,18 +139,22 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
 
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
-        Food menu = Food
+        Food food = Food
                  .builder()
-                .idFood(resultSet.getInt("idFood"))
-                .nameFood(resultSet.getString("nameFood"))
-                .idNutri(resultSet.getInt("idNutri"))
+                .id(resultSet.getInt("id"))
+                .name(resultSet.getString("name"))
+                .idNutri(resultSet.getInt("id_Nutri"))
                 .nameNutri(resultSet.getString("nameNutri"))
-                .img(resultSet.getString("img"))
+                .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
-                .description(resultSet.getString("desciption"))
+                .image_url(resultSet.getString("image_url"))
                 .status(resultSet.getString("status"))
+                .category_id(resultSet.getInt("category_id"))
+                .stock(resultSet.getInt("stock"))
+                .idFoodDraft(resultSet.getInt("idFoodDraft"))
                 .build();
-          return menu;
+                
+          return food;
    }
 
     @Override

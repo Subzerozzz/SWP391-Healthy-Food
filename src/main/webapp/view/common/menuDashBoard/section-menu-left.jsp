@@ -19,21 +19,15 @@
                                     <li class="menu-item has-children">
                                         <a href="javascript:void(0);" class="menu-item-button">
                                             <div class="icon"><i class="icon-shopping-cart"></i></div>
-                                            <div class="text">Nutritionist Requests</div>
+                                            <div class="text">Check Requests</div>
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
                                                 <a href="add-product.html" class="">
-                                                    <div class="text">Add a Menu_Category</div>
+                                                    <div class="text">List Request Food Draft</div>
                                                 </a>
                                             </li>
-                                            <c:forEach items="${listFood}" var="food">
-                                              <li class="sub-menu-item">
-                                                <a href="product-detail-1.html" class="">
-                                                    <div class="text">${food.nameNutri}</div>
-                                                </a>
-                                            </li>  
-                                            </c:forEach>
+                                          
                                        
                                         </ul>
                                     
