@@ -76,34 +76,10 @@
                                 <div class="center-heading">All page</div>
                                 <ul class="menu-list">
                                     <li class="menu-item has-children active">
-                                        <a href="javascript:void(0);" class="menu-item-button">
-                                            <div class="icon"><i class="icon-shopping-cart"></i></div>
-                                            <div class="text">Ecommerce</div>
-                                        </a>
                                         <ul class="sub-menu" style="display: block;">
                                             <li class="sub-menu-item">
                                                 <a href="add-product.html" class="">
                                                     <div class="text">Add Product</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="product-list.html" class="active">
-                                                    <div class="text">Product List</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="product-detail-1.html" class="">
-                                                    <div class="text">Product Detail 1</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="product-detail-2.html" class="">
-                                                    <div class="text">Product Detail 2</div>
-                                                </a>
-                                            </li>
-                                            <li class="sub-menu-item">
-                                                <a href="product-detail-3.html" class="">
-                                                    <div class="text">Product Detail 3</div>
                                                 </a>
                                             </li>
                                         </ul>
