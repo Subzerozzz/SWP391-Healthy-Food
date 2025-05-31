@@ -22,6 +22,6 @@ import lombok.ToString;
 public class Request {
     private Integer id;
     private String typeOfRequest;
-    private Integer foodDarftId;
+    private Integer foodDraftId;
     private String status;
 }

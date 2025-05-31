@@ -29,6 +29,7 @@ public class Food_Draft {
     private String image_url;
     private String status;
     private Date create_At;
+    private String typeOfRequest;
     private Integer category_id;
     private Integer stock;
    
