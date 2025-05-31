@@ -60,12 +60,12 @@
             </div>
             <!-- /preload -->
             <!-- section-menu-left -->
-            <jsp:include page="../common/manager/sidebar.jsp"></jsp:include>
+            <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
             <!-- /section-menu-left -->
             <!-- section-content-right -->
             <div class="section-content-right">
               <!-- header-dashboard -->
-              <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include>
+              <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
               <!-- /header-dashboard -->
               <!-- main-content -->
               <div class="main-content">
@@ -75,14 +75,15 @@
                   <div class="main-content-wrap">
                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Food List</h3>
-                      
+
                     </div>
                     <!-- product-list -->
                     <div class="wg-box">
                       <div class="title-box">
                         <i class="icon-coffee"></i>
                         <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID,
-                          which you can rely on to find the exact product you need.</div>
+                          which
+                          you can rely on to find the exact product you need.</div>
                       </div>
                       <div class="flex items-center justify-between gap10 flex-wrap">
                         <div class="wg-filter flex-grow">
@@ -107,56 +108,68 @@
                             </div>
                           </form>
                         </div>
-                          <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/manager/addFood.jsp"><i class="icon-plus"></i>Add new</a>
+                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/menu/addFood.jsp"><i class="icon-plus"></i>Add new</a>
                       </div>
-                      <!--                      <div class="wg-table table-product-list">
-                        
-
-                      </div>-->
-                      
-                      <!--View food-->
-                      <div class="table-container">
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>Product name</th>
-                              <th>Category</th>
-                              <th>Price</th>
-                              <th>Status</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <c:forEach items="${listFood}" var="item">
-                              <tr>
-                                <td>
-                                    ${item.getId()}
-                                    <img src="#" alt="product" class="product-image">
-                                </td>
-                                <td>
-                                  <div class="product-info">
-                                    
-                                    <span class="product-name">${item.getName()}</span>
+                      <div class="wg-table table-product-list">
+                        <ul class="table-title flex gap20 mb-14">
+                          <li>
+                            <div class="body-title">Food</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Product ID</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Category</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Price</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Status</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Created date</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Updated date</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Action</div>
+                          </li>
+                        </ul>
+                        <ul class="flex flex-column">
+                          <c:forEach items="${listFood}" var="item">
+                            <li class="product-item gap14">
+                              <div class="image no-bg">
+                                <img src="images/products/41.png" alt="">
+                              </div>
+                              <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="name">
+                                  <a href="product-list.html" class="body-title-2">${item.getName()}</a>
+                                </div>
+                                <div class="body-text">#0000${item.getId()}</div>
+                                <div class="body-text">${item.getCategory_id()}</div>
+                                <div class="body-text">${item.getPrice()}</div>
+                                <div class="body-text">${item.getStatus()}</div>
+                                <div class="body-text">${item.getCreated_at()}</div>
+                                <div class="body-text">${item.getUpdated_at()}</div>
+                                <div class="list-icon-function">
+                                  <div class="item eye">
+                                    <i class="icon-eye"></i>
                                   </div>
-                                </td>
-                                <td>Lấy sau</td>
-                                <td><span class="price">$${item.getPrice()}</span></td>
-                                <td><span class="status">${item.getStatus()}</span></td>
-                                <td>
-                                  <div class="action-btns">
-                                    <button class="btn btn-edit">Sửa</button>
-                                    <button class="btn btn-delete">Xóa</button>
+                                  <div class="item edit">
+                                    <i class="icon-edit-3"></i>
                                   </div>
-                                </td>
-                              </tr>
-                            </c:forEach>
+                                  <div class="item trash">
+                                    <i class="icon-trash-2"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          </c:forEach>
 
-                          </tbody>
-                        </table>
+                        </ul>
                       </div>
-                      <!--End view food-->
-                      
                       <div class="divider"></div>
                       <div class="flex items-center justify-between flex-wrap gap10">
                         <div class="text-tiny">Showing 10 entries</div>
@@ -213,139 +226,7 @@
       <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
       <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
-      <style>
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
 
-        body {
-          font-family: Arial, sans-serif;
-          padding: 20px;
-          background: #fff;
-          color: #111;
-        }
-
-        .table-container {
-          max-width: 1200px;
-          margin: auto;
-          border-radius: 8px;
-          overflow-x: auto;
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          min-width: 700px;
-        }
-
-        thead {
-          background-color: #f9fafb;
-        }
-
-        th,
-        td {
-          padding: 16px;
-          text-align: left;
-          font-size: 14px;
-        }
-
-        th {
-          color: #6b7280;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-
-        tbody tr {
-          background-color: #f8fafc;
-          transition: background 0.2s;
-        }
-
-        tbody tr:hover {
-          background-color: #f1f5f9;
-        }
-
-        .product-info {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .product-image {
-          width: 50px;
-          height: 50px;
-          flex-shrink: 0;
-          border-radius: 8px;
-          object-fit: cover;
-        }
-
-        .product-name {
-          font-size: 15px;
-          color: #374151;
-          max-width: 200px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .price {
-          color: #059669;
-          font-weight: 600;
-        }
-
-        .status {
-          padding: 6px 12px;
-          border-radius: 16px;
-          background: #d1fae5;
-          color: #065f46;
-          font-size: 12px;
-          font-weight: 500;
-          display: inline-block;
-        }
-
-        .action-btns {
-          display: flex;
-          gap: 8px;
-        }
-
-        .btn {
-          padding: 6px 12px;
-          font-size: 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        .btn-edit {
-          background-color: #3b82f6;
-          color: white;
-        }
-
-        .btn-delete {
-          background-color: #ef4444;
-          color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-
-          th,
-          td {
-            padding: 10px;
-            font-size: 13px;
-          }
-
-          .product-desc {
-            max-width: 120px;
-          }
-
-          .btn {
-            font-size: 11px;
-            padding: 4px 8px;
-          }
-        }
-      </style>
 
     </body>
 

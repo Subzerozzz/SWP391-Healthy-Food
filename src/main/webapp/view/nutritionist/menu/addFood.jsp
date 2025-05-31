@@ -53,12 +53,12 @@
             </div>
             <!-- /preload -->
             <!-- section-menu-left -->
-            <jsp:include page="../common/manager/sidebar.jsp"></jsp:include>
+            <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
             <!-- /section-menu-left -->
             <!-- section-content-right -->
             <div class="section-content-right">
               <!-- header-dashboard -->
-              <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include>
+              <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
               <!-- /header-dashboard -->
               <!-- main-content -->
               <div class="main-content">
@@ -138,7 +138,7 @@
                             </div>
                           </div>
                           <!--Date-->
-                        </fieldset>
+<!--                        </fieldset>
                         <div class="cols gap22">
                           <fieldset class="create_at">
                             <div class="body-title mb-10">Food created</div>
@@ -146,7 +146,7 @@
                               <input id="date-input" type="date" name="created_at" value="">
                             </div>
                           </fieldset>
-                        </div>
+                        </div>-->
                         <!--Request-->
                         <div class="cols gap10">
                           <button class="tf-button w-full" type="submit">Make request</button>
