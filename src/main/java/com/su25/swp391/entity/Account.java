@@ -4,10 +4,31 @@
  */
 package com.su25.swp391.entity;
 
-/**
- *
- * @author Dell
- */
+import java.sql.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Account {
+    private int id;
+    private String full_name;
+    private String use_name;
+    private String email;
+    private String password;
+    private String address;
+    private String role;
+    private Boolean status;
+    private Date birth_data;
     
 }
