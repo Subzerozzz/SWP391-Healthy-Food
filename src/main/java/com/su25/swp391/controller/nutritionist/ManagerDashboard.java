@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.su25.swp391.controller.manager;
+package com.su25.swp391.controller.nutritionist;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -50,7 +50,7 @@ public class ManagerDashboard extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    response.sendRedirect("view/manager/dashboard.jsp");
+    response.sendRedirect("view/nutritionist/menu/dashboard.jsp");
   }
 
   /**
