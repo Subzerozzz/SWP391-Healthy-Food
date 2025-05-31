@@ -35,7 +35,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
     }
 
     public List<Food_Draft> findAllFoodDrartByRequest() {
-        String sql = "select f.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Darft as f \n"
+        String sql = "select f.*,r.typeOfRequest from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
                 + "on r.foodDraftId = f.id Where f.status = 'pending'";
         List<Food_Draft> list = new ArrayList<>();
         try {
@@ -87,6 +87,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
                 .image_url(resultSet.getString("image_url"))
                 .status(resultSet.getString("status"))
                 .create_At(resultSet.getDate("create_At"))
+                .typeOfRequest(resultSet.getString("typeOfRequest"))
                 .category_id(resultSet.getInt("category_id"))
                 .stock(resultSet.getInt("stock"))
                 .build();
@@ -96,14 +97,32 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
     @Override
     public Food_Draft findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         String sql = "select f.*,r.typeOfRequest from swp391_healthy_food.Request as r"
+                 + " inner join swp391_healthy_food.Food_Draft as f " 
+                       +"on r.foodDraftId = f.id  WHERE f.id = ?";
+           try {
+     
+      connection =getConnection();
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, id);
+      resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        return getFromResultSet(resultSet);
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
+    }
+    return null;
     }
 
     public static void main(String[] args) {
         Food_DraftDAO dao = new Food_DraftDAO();
-        for (Food_Draft f : dao.findAllFoodDrartByRequest()) {
-            System.out.println(f);
+        Food_Draft f = dao.findById(6);
+        System.out.println(f);
+           
         }
-    }
+    
 
 }

@@ -6,8 +6,10 @@ package com.su25.swp391.controller.manage_menu;
 
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.Food_DraftDAO;
+import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Food_Draft;
+import com.su25.swp391.entity.Request;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -28,11 +30,15 @@ import java.util.Map;
 public class RequestController extends HttpServlet {
 
     private Food_DraftDAO foodDraftDAO;
-
+    private RequestDAO requestDAO;
     @Override
-    public void init() throws ServletException {
-        foodDraftDAO = new Food_DraftDAO();
+    public void init() throws ServletException{
+         foodDraftDAO = new Food_DraftDAO();
+        requestDAO = new RequestDAO();
+        
     }
+    
+    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,15 +47,13 @@ public class RequestController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             action = "list"; // Assign action = list 
-            List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
-            request.getSession().setAttribute("listFoodDraft", listFoodDraft);
-        }
+          }
         switch (action) {
             case "add":
                 showAddForm(request, response);
                 break;
-            case "edit":
-                showEditForm(request, response);
+            case "view":
+                showViewDetail(request, response);
                 break;
             case "deactivate":
                 deactivateCategory(request, response);
@@ -58,13 +62,12 @@ public class RequestController extends HttpServlet {
                 activateCategory(request, response);
                 break;
             case "list":
-            default:
-               // listCategories(request, response);
+                listFoodDraft(request,response);
                 break;
-    }
-        
-         
-          request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+            default:
+               listFoodDraft(request,response);
+                break;
+            }
     }
 
     @Override
@@ -76,9 +79,9 @@ public class RequestController extends HttpServlet {
         }
 
         switch (action) {
-//            case "add":
-//                addCategory(request, response);
-//                break;
+            case "add":
+                
+                break;
             case "update":
                 updateCategory(request, response);
                 break;
@@ -102,21 +105,12 @@ public class RequestController extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String menuCategoryIdStr = request.getParameter("id");
-        if (menuCategoryIdStr != null && !menuCategoryIdStr.isEmpty()) {
-//            int categoryId = Integer.parseInt(menuCategoryIdStr);
-//            Food menuCategory = foodDraftDAO.findById(categoryId);
-//            if (menuCategory != null) {
-//                // Get parentCategory
-//                List<Food> parentCategory = foodDraftDAO.fillAllParentCategories();
-//                request.setAttribute("parentCategory", parentCategory);
-//                request.setAttribute("menuCategory", menuCategory);
-//                request.getRequestDispatcher("/view/nutritionist/menu-category-edit.jsp").forward(request, response);
-
-            }
-
-        }
+    private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       int id = Integer.parseInt(request.getParameter("id"));
+           Food_Draft foodDraft = foodDraftDAO.findById(id);
+           request.setAttribute("foodD", foodDraft);
+           request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
+     }
 //        response.sendRedirect(request.getContextPath() + "view/nutritionist/dashboard.jsp");
     
 
@@ -182,6 +176,12 @@ public class RequestController extends HttpServlet {
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void listFoodDraft(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
+       request.setAttribute("listFoodDraft", listFoodDraft);
+       request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
 
 }

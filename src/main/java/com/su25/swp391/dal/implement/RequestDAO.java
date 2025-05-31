@@ -6,7 +6,6 @@ package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Food_Draft;
 import com.su25.swp391.entity.Request;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +25,25 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
           List<Request> list = new ArrayList<>();
         try {
           
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+       public List<Request> findAllRequest() {
+        String sql = "select r.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
+                + "on r.foodDraftId = f.id ";
+        List<Request> list = new ArrayList<>();
+        try {
+
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
@@ -67,7 +85,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
                       .builder()
                       .id(resultSet.getInt("id"))
                       .typeOfRequest(resultSet.getString("typeOfRequest"))
-                      .foodDarftId(resultSet.getInt("foodDarftId"))
+                      .foodDraftId(resultSet.getInt("foodDraftId"))
                       .status(resultSet.getString("status"))
                       .build();
        return request;
@@ -76,5 +94,10 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     public Request findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+       public static void main(String[] args) {
+        RequestDAO dao = new RequestDAO();
+        for (Request f : dao.findAllRequest()) {
+            System.out.println(f);
+        }
+    }
 }

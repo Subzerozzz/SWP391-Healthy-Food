@@ -35,7 +35,7 @@
 
     <!-- Icon -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
-
+        <<link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleButton.css"/>
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon.png">
@@ -126,28 +126,28 @@
                       <div class="wg-table table-product-list">
                                         <ul class="table-title flex gap20 mb-14">
                                             <li>
-                                                <div class="body-title">Product</div>
+                                                <div class="body-title">Product Images</div>
                                             </li>    
                                             <li>
-                                                <div class="body-title">Product ID</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Price</div>
+                                                <div class="body-title">Product Name</div>
                                             </li>
                                             <li>
                                                 <div class="body-title">Name Nutritionist</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Description</div>
+                                                <div class="body-title">Create DATE</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Id Nutri</div>
+                                                <div class="body-title">Request</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Create date</div>
+                                                <div class="body-title">View Detail</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Action</div>
+                                                <div class="body-title">Accept</div>
+                                            </li>
+                                            <li>
+                                                <div class="body-title">Reject</div>
                                             </li>
                                         </ul>
                                         <ul class="flex flex-column">
@@ -158,27 +158,30 @@
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">${foodDraft.name}</a>
+                                                        <a href="product-list.html" class="body-title-2"></a>
                                                     </div>
-                                                    <div class="body-text">${foodDraft.id}</div>
-                                                    <div class="body-text">$ ${foodDraft.price}</div>
+                                                    <div class="body-text">${foodDraft.name}</div>
                                                     <div class="body-text">${foodDraft.nameNutri}</div>
-                                                    <div class="body-text">${foodDraft.description}</div>
+                                                    <div class="body-text">${foodDraft.create_At} </div>
+                                                    <div class="body-text">${foodDraft.typeOfRequest}</div>
+                                                    <div >
+                                                        <form action="menu-category" method="get">
+                                                             <input type="hidden" name="action" value="view">
+                                                              <input type="hidden" name="id" value="${foodDraft.id}">
+                                                            <button type="submit" class="btn-blue">View Detail</button>
+                                                       </form>
+                                                    </div>   
+                                                    <div >
+                                                       <form action="action">
+                                                           <button type="submit" class="btn-blue" style="background-color: greenyellow">Accept</button>
+                                                       </form>
+                                                    </div>
                                                     <div>
-                                                        <div class="block-not-available">${foodDraft.idNutri}</div>
+                                                       <form action="action">
+                                                           <button type="submit" class="btn-blue" style="background-color: red">Reject</button>
+                                                       </form>     
                                                     </div>
-                                                    <div class="body-text">${foodDraft.create_At}</div>
-                                                    <div class="list-icon-function">
-                                                     <div> VIEW DETAIL
-                                                         <a class="item eye" href="./view/nutritionist/detail-food-draft.jsp" "><i title="View Detail" class="icon-eye"></i> </a> 
-                                                     </div>
-                                                          <div > ACCPET
-                                                            <a class="item edit" href="https://google.com" onclick="return confirm('Are you want to ACCEPT this Food ?')"><i title="ACCEPT"   class="icon-check"></i></a>
-                                                        </div>
-                                                        <div  > REJECT
-                                                            <a class="item trash" href="#" onclick="return confirm('Are you want to Reject this Food ?')" ><i title="REJECT" class="icon-trash-2"></i></a> 
-                                                        </div>
-                                                    </div>
+                                                  
                                                 </div>
                                             </li>
                                             </c:forEach>
