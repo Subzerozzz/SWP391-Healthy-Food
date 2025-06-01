@@ -139,11 +139,63 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     }
 
     public List<Blog> findBlogsWithFilter(String searchTitle, String statusFilter, int page, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Blog> blogs = new ArrayList<>();
+        try {
+            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+            List<Object> params = new ArrayList<>();
+            if (searchTitle != null && !searchTitle.trim().isEmpty()) {
+                sql.append(" AND title LIKE ?");
+                params.add("%" + searchTitle + "%");
+            }
+            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+                sql.append(" AND status = ?");
+                params.add(statusFilter);
+            }
+            sql.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
+            params.add(pageSize);
+            params.add((page - 1) * pageSize);
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                blogs.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return blogs;
     }
 
     public int countBlogsWithFilter(String searchTitle, String statusFilter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        int count = 0;
+        try {
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
+            List<Object> params = new ArrayList<>();
+            if (searchTitle != null && !searchTitle.trim().isEmpty()) {
+                sql.append(" AND title LIKE ?");
+                params.add("%" + searchTitle + "%");
+            }
+            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+                sql.append(" AND status = ?");
+                params.add(statusFilter);
+            }
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return count;
     }
-   
 }
