@@ -1,5 +1,5 @@
 <%-- Document : addFood.jsp Created on : May 28, 2025, 5:32:51 PM Author : Dell --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
@@ -87,9 +87,9 @@
                             <div class="body-title mb-10">Category <span class="tf-color-1">*</span></div>
                             <div class="select">
                               <select name="category" class="">
-                                <option>Choose category</option>
-                                <option>Shop</option>
-                                <option>Product</option>
+                                  <c:forEach items="${listCategory}" var="item">
+                                      <option value="${item.getId()}">${item.getMinBMI()} - ${item.getMaxBMI()}(${item.getName()})</option>
+                                  </c:forEach>
                               </select>
                             </div>
                           </fieldset>
@@ -137,8 +137,9 @@
                               </label>
                             </div>
                           </div>
-                          <!--Date-->
-<!--                        </fieldset>
+                        </fieldset>
+                        <!--Date-->
+                        <!--
                         <div class="cols gap22">
                           <fieldset class="create_at">
                             <div class="body-title mb-10">Food created</div>

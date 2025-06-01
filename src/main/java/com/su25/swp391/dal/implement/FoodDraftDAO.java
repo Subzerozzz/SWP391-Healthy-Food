@@ -9,8 +9,13 @@ import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Food_draft;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,18 +48,35 @@ public class FoodDraftDAO extends DBContext implements I_DAO<Food_draft> {
   }
 
   @Override
-    public int insert(Food_draft t) {
-        String sql = "INSERT INTO food_draft (name, description, price, image_url, status, category_id, created_at, updated_at)"
-                      +"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, t.getName());
-            preparedStatement.setString(2, t.getDescription());
-            preparedStatement.setDouble(3, t.getPrice());
-            preparedStatement.setString(4, t.getImage_url());
-            preparedStatement.setString(5, t.getStatus());  
-        }
+  public int insert(Food_draft t) {
+    String sql = "INSERT INTO Food_draft (name, description, price, image_url, status, category_id, created_at, updated_at)"
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    try {
+      // gan giá tri vao
+      statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+      statement.setString(1, t.getName());
+      statement.setString(2, t.getDescription());
+      statement.setDouble(3, t.getPrice());
+      statement.setString(4, t.getImage_url());
+      statement.setString(5, t.getStatus());
+      statement.setInt(6, t.getCategory_id());
+      statement.setTimestamp(7, t.getCreated_at());
+      statement.setTimestamp(8, t.getUpdated_at());
+
+      // thuc thi cau lenh
+      statement.executeUpdate();
+      resultSet = statement.getGeneratedKeys();
+      if (resultSet.next()) {
+        System.out.println("Insert thành công");
+        return resultSet.getInt(1);
+      }
+
+    } catch (SQLException ex) {
+      Logger.getLogger(FoodDraftDAO.class.getName()).log(Level.SEVERE, null, ex);
+      System.out.println(ex);
     }
+    return -1;
+  }
 
   @Override
   public Food_draft getFromResultSet(ResultSet resultSet) throws SQLException {
@@ -77,4 +99,25 @@ public class FoodDraftDAO extends DBContext implements I_DAO<Food_draft> {
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
+
+  public Integer getBiggestId() {
+      String sql = "SELECT MAX(id) AS id"
+                    +" FROM Food_draft;";
+      try {
+        statement = connection.prepareStatement(sql);
+        resultSet = statement.executeQuery(sql);
+
+        if(resultSet.next()){
+          return resultSet.getInt(1);
+        }
+      } catch (Exception e) {
+        System.out.println("Loi day" + e);
+      }
+      return -1;
+  }
+  
+    public static void main(String[] args) {
+        System.out.println(new FoodDraftDAO().getBiggestId());
+    }
+  
 }

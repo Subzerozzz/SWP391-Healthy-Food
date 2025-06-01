@@ -108,8 +108,11 @@
                             </div>
                           </form>
                         </div>
-                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/menu/addFood.jsp"><i class="icon-plus"></i>Add new</a>
+                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-category?action=view"><i class="icon-plus"></i>Add new</a>
                       </div>
+                        <c:if test="${isSuccess}">
+                            alert("Yêu cầu tạo món ăn đã được gửi đi thành công!");
+                        </c:if>
                       <div class="wg-table table-product-list">
                         <ul class="table-title flex gap20 mb-14">
                           <li>

@@ -6,8 +6,10 @@ package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.FoodDraftDAO;
+import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Food_draft;
+import com.su25.swp391.entity.Request;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,6 +34,7 @@ public class ManageFood extends HttpServlet {
 
   FoodDAO foodDao = new FoodDAO();
   FoodDraftDAO foodDraftDao = new FoodDraftDAO();
+  RequestDAO requestDao = new RequestDAO();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -67,16 +70,12 @@ public class ManageFood extends HttpServlet {
 
   private void viewFood(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<Food> listFood = foodDao.findAll();
-    // luu vao Session
-    HttpSession session = request.getSession();
-    session.setAttribute("listFood", listFood);
-    // chuyen huong ve trang dashboard manager
     request.getRequestDispatcher("manager-dashboard").forward(request, response);
   }
 
   private void addFood(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      //LẤY CÁC DỮ LIỆU
       // get name
       String name = request.getParameter("name");
       // get category
@@ -95,7 +94,7 @@ public class ManageFood extends HttpServlet {
       Timestamp created_at = new Timestamp(now.getTime());
       Timestamp updated_at = new Timestamp(now.getTime());
 
-      // create vao Food_draft truoc
+      // 1. THÊM FOOD VÀO DRAFT TRƯỚC
       Food_draft newFood = Food_draft.builder()
           .name(name)
           .category_id(category)
@@ -109,10 +108,30 @@ public class ManageFood extends HttpServlet {
 
       foodDraftDao.insert(newFood);
 
-      // Sau do tao them 1 ban ghi trong bang request
+      // 2.SAU ĐÓ THÊM VÀO 1 REQUEST ĐỂ GỬI LÊN MANAGER
+      //set type cho request
+      String type = "CREATE FOOD";
+      //lấy ra bản id của Food_draft mới nhất gắn vào bản request
+      Integer foodDraftId = foodDraftDao.getBiggestId();
+      //set trang thai mac dinh cho request moi
+      String statusRequest = "NOT DONE";
+      
+      Request newRequest = Request.builder()
+              .type(type)
+              .foodDraftId(foodDraftId)
+              .status(statusRequest)
+              .build();
+      
+      requestDao.insert(newRequest);
+      
+      //3.CHUYỂN VỀ TRANG HOME VÀ THÔNG BÁO YÊU CẦU THÀNH CÔNG GỬI ĐI
+      HttpSession session = request.getSession();
+      session.setAttribute("isCreated", true);
+      response.sendRedirect("manager-dashboard");
 
     } catch (Exception e) {
       e.printStackTrace();
+      System.out.println(e);
     }
   }
 
