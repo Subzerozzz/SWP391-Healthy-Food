@@ -31,10 +31,12 @@ public class RequestController extends HttpServlet {
 
     private Food_DraftDAO foodDraftDAO;
     private RequestDAO requestDAO;
+    private FoodDAO foodDAO;
     @Override
     public void init() throws ServletException{
-         foodDraftDAO = new Food_DraftDAO();
+        foodDraftDAO = new Food_DraftDAO();
         requestDAO = new RequestDAO();
+        foodDAO = new FoodDAO();
         
     }
     
@@ -49,8 +51,8 @@ public class RequestController extends HttpServlet {
             action = "list"; // Assign action = list 
           }
         switch (action) {
-            case "add":
-                showAddForm(request, response);
+            case "accept":
+                addToFood(request, response);
                 break;
             case "view":
                 showViewDetail(request, response);
@@ -61,8 +63,8 @@ public class RequestController extends HttpServlet {
             case "activate":
                 activateCategory(request, response);
                 break;
-            case "list":
-                listFoodDraft(request,response);
+            case "reject":
+                rejectFoodDraft(request,response);
                 break;
             default:
                listFoodDraft(request,response);
@@ -101,16 +103,30 @@ public class RequestController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void showAddForm(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    private void addToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Food_Draft food = foodDraftDAO.findById(id);
+        int ok1 = foodDAO.insertFoodfromFoodDraft(food);
+        Boolean ok2 = requestDAO.updateRequestFoodDraftById(id);
+        Boolean ok3 =foodDraftDAO.updateStatusAccept(id);
+        String mess = "ok";
+        if(ok1>0 && ok2 && ok3){
+            mess = "Accpetion Successfully";
+        }else{
+            mess = "Accept Failure";
+        }
+        request.setAttribute("mess", mess);
+        List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
+        request.setAttribute("listFoodDraft", listFoodDraft);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+     }
 
     private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       int id = Integer.parseInt(request.getParameter("id"));
-           Food_Draft foodDraft = foodDraftDAO.findById(id);
-           request.setAttribute("foodD", foodDraft);
-           request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
-     }
+        int id = Integer.parseInt(request.getParameter("id"));
+        Food_Draft foodDraft = foodDraftDAO.findById(id);
+        request.setAttribute("foodD", foodDraft);
+        request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
+    }
 //        response.sendRedirect(request.getContextPath() + "view/nutritionist/dashboard.jsp");
     
 
@@ -182,6 +198,23 @@ public class RequestController extends HttpServlet {
        List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
        request.setAttribute("listFoodDraft", listFoodDraft);
        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+
+    private void rejectFoodDraft(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       int id = Integer.parseInt(request.getParameter("id"));
+       Boolean ok1 = foodDraftDAO.updateStatusReject(id);
+       Boolean ok2 = requestDAO.updateRequestFoodDraftById(id);
+       String mess = "";
+       if(ok1&& ok2 ){
+            mess = "Reject Successfully";
+        }else{
+            mess = "Reject Failure";
+        }
+        request.setAttribute("mess", mess);
+        List<Food_Draft> listFoodDraft = foodDraftDAO.findAllFoodDrartByRequest();
+        request.setAttribute("listFoodDraft", listFoodDraft);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    
     }
 
 }

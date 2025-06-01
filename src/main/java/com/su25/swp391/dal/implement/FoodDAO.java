@@ -8,6 +8,7 @@ import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.Food_Draft;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.sql.Date;
+import java.sql.Timestamp;
 /**
  *
  * @author Admin
@@ -116,14 +118,23 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
         return false;
     }
-
-    @Override
-    public int insert(Food t) {
-      String sql = "INSERT into Food(name) values(?) ";
+    // INSERT FOOD_DRAFT INTO FOOD TABLE WHEN ACCEPT CREATE
+    public int insertFoodfromFoodDraft(Food_Draft t) {
+      String sql = "INSERT into Food(name,id_Nutri,description,price,image_url,status,create_At,category_id,stock,idFoodDraft)"
+              + " values(?,?,?,?,?,?,?,?,?,?) ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getName());
+            statement.setInt(2,t.getIdNutri());
+            statement.setString(3, t.getDescription());
+            statement.setDouble(4,t.getPrice());
+            statement.setString(5, t.getImage_url());
+            statement.setString(6, "Approved");
+            statement.setTimestamp(7, new java.sql.Timestamp(t.getCreate_At().getTime()));
+            statement.setInt(8,t.getCategory_id());
+            statement.setInt(9,t.getStock());
+            statement.setInt(10,t.getId());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
@@ -136,7 +147,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
        return -1;
     }
-
+    
+    
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
         Food food = Food
@@ -144,11 +156,11 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                 .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
                 .idNutri(resultSet.getInt("id_Nutri"))
-                .nameNutri(resultSet.getString("nameNutri"))
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
                 .image_url(resultSet.getString("image_url"))
                 .status(resultSet.getString("status"))
+                .create_At(resultSet.getDate("create_At"))
                 .category_id(resultSet.getInt("category_id"))
                 .stock(resultSet.getInt("stock"))
                 .idFoodDraft(resultSet.getInt("idFoodDraft"))
@@ -178,9 +190,21 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     
     public static void main(String[] args) {
         FoodDAO dao = new FoodDAO();
-        for (Food i : dao.findAll()) {
-            System.out.println(i);
-        }
+        Date d = new Date(2002,02,02);
+        Food_Draft food = Food_Draft
+                         .builder()
+                         .id(1)
+                         .name("ĐÂY")
+                         .idNutri(1)
+                         .description("Oke la")
+                         .price(20.0)
+                         .image_url("")
+                         .status("pending")
+                         .create_At(d)
+                         .category_id(1)
+                         .stock(12)
+                         .build();
+           dao.insertFoodfromFoodDraft(food);
     }
      
     public boolean isCategoryNameExist( String name,int id){
@@ -204,6 +228,11 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     
     public List<Food> fillAllParentCategories() {
        return null;
+    }
+
+    @Override
+    public int insert(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

@@ -91,6 +91,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                                      
                                 <!-- Product Detail -->
                                 <div class="wg-box">
                                     <div class="tf-main-product section-image-zoom flex">
@@ -107,11 +108,11 @@
                                             <div class="tf-zoom-main"></div>
                                             <div class="tf-product-info-list other-image-zoom">
                                                 <div class="tf-product-info-title">
-                                                    <h3>${foodD.name}<br>Nutritionist:  ${foodD.nameNutri}</h3>
+                                                    <h3>${foodD.name}<br>Nutritionist:</h3>
                                                     <div class="price body-title">$${foodD.price}</div>
                                                 </div>
                                                 <div>
-                                                    <h3>Type Request: ${foodD.typeOfRequest}</h3>
+                                                    <h3>Type Request: </h3>
                                                     <h3>Description: ${foodD.description}</h3>
                                                     <h3>Create At: ${foodD.create_At}</h3>
                                                 </div>
@@ -165,7 +166,7 @@
     <script src="${pageContext.request.contextPath}/js/swiper-bundle.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/carousel.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
+    
 </body>
 
 
