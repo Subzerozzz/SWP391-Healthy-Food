@@ -13,9 +13,9 @@
     <!-- Basic Page Needs -->
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-    <title>List Request</title>
+    <title>Create Food</title>
 
-    <meta name="author" content="themesflat.com">
+    <meta name="Trí" content="themesflat.com">
 
     <!-- Mobile Specific Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -169,14 +169,14 @@
                                                     <div class="body-text"></div>
                                                     <div class="body-text">${foodDraft.status}</div>
                                                     <div >
-                                                        <form action="menu-category" method="get">
+                                                        <form action="request-create-food" method="get">
                                                               <input type="hidden" name="action" value="view">
                                                               <input type="hidden" name="id" value="${foodDraft.id}">
                                                             <button type="submit" class="btn-blue">View Detail</button>
                                                        </form>
                                                     </div>   
                                                     <div >
-                                                        <form action="menu-category" method="get">
+                                                        <form action="request-create-food" method="get">
                                                             <input type="hidden" name="action" value="accept">
                                                             <input type="hidden" name="id" value="${foodDraft.id}">
                                                            <button type="submit" class="btn-blue" style="background-color: greenyellow"
@@ -186,7 +186,7 @@
                                                        </form>
                                                     </div>
                                                     <div>
-                                                        <form action="menu-category" method="get">
+                                                        <form action="request-create-food" method="get">
                                                             <input type="hidden" name="action" value="reject">
                                                              <input type="hidden" name="id" value="${foodDraft.id}">
                                                            <button type="submit" class="btn-blue" style="background-color: red"

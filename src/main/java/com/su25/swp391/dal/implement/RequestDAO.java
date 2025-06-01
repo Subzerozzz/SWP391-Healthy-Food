@@ -7,6 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Request;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -90,14 +91,32 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
                       .build();
        return request;
     }
+     // Update status DONE when Accept or Reject a Food_Draft
+    public boolean updateRequestFoodDraftById(int id) {
+      String sql = "UPDATE Request SET status = 'DONE' where foodDraftId = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+   
+    
+     
     @Override
     public Request findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
        public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
-        for (Request f : dao.findAllRequest()) {
-            System.out.println(f);
-        }
+        dao.updateRequestFoodDraftById(3);
+        
+        
     }
 }

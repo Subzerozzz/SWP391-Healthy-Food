@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.entity;
 
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,12 +24,12 @@ public class Food {
     private Integer id;
     private String name;
     private Integer idNutri;
-    private String nameNutri;
     private String description;
     private Double price;
     private String image_url;
     private String status;
+    private Date create_At;
     private Integer category_id;
     private Integer stock;
-     private Integer idFoodDraft;
+    private Integer idFoodDraft;
 }

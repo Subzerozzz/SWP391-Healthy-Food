@@ -23,13 +23,11 @@ public class Food_Draft {
     private Integer id;
     private String name;
     private Integer idNutri;
-    private String nameNutri;
     private String description;
     private Double price;
     private String image_url;
     private String status;
     private Date create_At;
-    private String typeOfRequest;
     private Integer category_id;
     private Integer stock;
    

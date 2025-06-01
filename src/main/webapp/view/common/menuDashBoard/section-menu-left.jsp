@@ -24,7 +24,7 @@
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
                                                 <a href="add-product.html" class="">
-                                                    <div class="text">List Request Food Draft</div>
+                                                    <div class="text">List All Request</div>
                                                 </a>
                                             </li>
                                           
@@ -35,17 +35,22 @@
                                     <li class="menu-item has-children">
                                         <a href="javascript:void(0);" class="menu-item-button">
                                             <div class="icon"><i class="icon-layers"></i></div>
-                                            <div class="text">Category</div>
+                                            <div class="text">Request Food Draft</div>
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
                                                 <a href="category-list.html" class="">
-                                                    <div class="text">Category list</div>
+                                                    <div class="text">Create Food</div>
                                                 </a>
                                             </li>
                                             <li class="sub-menu-item">
                                                 <a href="new-category.html" class="">
-                                                    <div class="text">New category</div>
+                                                    <div class="text">Update Food</div>
+                                                </a>
+                                            </li>
+                                            <li class="sub-menu-item">
+                                                <a href="new-category.html" class="">
+                                                    <div class="text">Delete Food</div>
                                                 </a>
                                             </li>
                                         </ul>
@@ -53,17 +58,22 @@
                                     <li class="menu-item has-children">
                                         <a href="javascript:void(0);" class="menu-item-button">
                                             <div class="icon"><i class="icon-box"></i></div>
-                                            <div class="text">Attributes</div>
+                                            <div class="text">Request Blog</div>
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">
                                                 <a href="attributes.html" class="">
-                                                    <div class="text">Attributes</div>
+                                                    <div class="text">Create Blog</div>
                                                 </a>
                                             </li>
                                             <li class="sub-menu-item">
                                                 <a href="add-attributes.html" class="">
-                                                    <div class="text">Add attributes</div>
+                                                    <div class="text">Update Blog</div>
+                                                </a>
+                                            </li>
+                                            <li class="sub-menu-item">
+                                                <a href="add-attributes.html" class="">
+                                                    <div class="text">Delete Blog</div>
                                                 </a>
                                             </li>
                                         </ul>
