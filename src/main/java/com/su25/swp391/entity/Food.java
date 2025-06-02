@@ -23,13 +23,15 @@ import lombok.ToString;
 public class Food {
     private Integer id;
     private String name;
-    private Integer idNutri;
     private String description;
     private Double price;
-    private String image_url;
+    private String image;
     private String status;
-    private Date create_At;
+    private String stock;
     private Integer category_id;
-    private Integer stock;
-    private Integer idFoodDraft;
+    private Integer nutriId;
+    private Date created_at;
+    private Date updated_at;
+   
+    
 }

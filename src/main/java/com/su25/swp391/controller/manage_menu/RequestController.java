@@ -49,7 +49,7 @@ public class RequestController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             action = "list"; // Assign action = list 
-          }
+        }
         switch (action) {
             case "accept":
                 addToFood(request, response);
@@ -108,11 +108,11 @@ public class RequestController extends HttpServlet {
         Food_Draft food = foodDraftDAO.findById(id);
         int ok1 = foodDAO.insertFoodfromFoodDraft(food);
         Boolean ok2 = requestDAO.updateRequestFoodDraftById(id);
-        Boolean ok3 =foodDraftDAO.updateStatusAccept(id);
+        Boolean ok3 = foodDraftDAO.updateStatusAccept(id);
         String mess = "ok";
-        if(ok1>0 && ok2 && ok3){
+        if (ok1 > 0 && ok2 && ok3) {
             mess = "Accpetion Successfully";
-        }else{
+        } else {
             mess = "Accept Failure";
         }
         request.setAttribute("mess", mess);

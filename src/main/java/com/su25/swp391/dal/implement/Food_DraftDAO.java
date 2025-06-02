@@ -19,7 +19,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
     @Override
     public List< Food_Draft> findAll() {
-        String sql = "select * from  Food_Draft f join f";
+        String sql = "select * from  Food_Draft ";
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
@@ -27,6 +27,23 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+    public List<String> findAllType() {
+        String sql = "select type from  Food_Draft Group by type";
+        List<String> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(resultSet.getString("type"));
             }
         } catch (Exception e) {
             System.out.println("Error happen in FoodDAO:" + e.getMessage());
@@ -125,6 +142,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
     public int insert(Food_Draft t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 
     @Override
     public Food_Draft getFromResultSet(ResultSet resultSet) throws SQLException {
@@ -132,14 +150,17 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
                 .builder()
                 .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
-                .idNutri(resultSet.getInt("id_Nutri"))
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
-                .image_url(resultSet.getString("image_url"))
+                .image(resultSet.getString("image"))
                 .status(resultSet.getString("status"))
-                .create_At(resultSet.getDate("create_At"))
+                .stock(resultSet.getString("stock"))
                 .category_id(resultSet.getInt("category_id"))
-                .stock(resultSet.getInt("stock"))
+                .nutriId(resultSet.getInt("nutriId"))
+                .created_at(resultSet.getDate("created_at"))
+                .updated_at(resultSet.getDate("updated_at"))
+                .foodId(resultSet.getInt("foodId"))
+                .type(resultSet.getString("type"))
                 .build();
 
         return food;
@@ -193,8 +214,12 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
       Food_Draft f = dao.findById(4);
 //        dao.updateStatus(1);
         // System.out.println(f);
-        for (Food_Draft f2 : dao.findAllFoodByCreateRequest()) {
+        for (Food_Draft f2 : dao.findAll()) {
             System.out.println(f2);
+        }
+        System.out.println("--");
+        for (String string : dao.findAllType()) {
+            System.out.println(string);
         }
         
     

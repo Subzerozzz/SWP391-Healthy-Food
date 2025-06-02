@@ -126,14 +126,14 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getName());
-            statement.setInt(2,t.getIdNutri());
+            statement.setInt(2,t.getNutriId());
             statement.setString(3, t.getDescription());
             statement.setDouble(4,t.getPrice());
-            statement.setString(5, t.getImage_url());
+            statement.setString(5, t.getImage());
             statement.setString(6, "Approved");
-            statement.setTimestamp(7, new java.sql.Timestamp(t.getCreate_At().getTime()));
+            statement.setTimestamp(7, new java.sql.Timestamp(t.getCreated_at().getTime()));
             statement.setInt(8,t.getCategory_id());
-            statement.setInt(9,t.getStock());
+           
             statement.setInt(10,t.getId());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
@@ -155,15 +155,15 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                  .builder()
                 .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
-                .idNutri(resultSet.getInt("id_Nutri"))
+                .nutriId(resultSet.getInt("id_Nutri"))
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
-                .image_url(resultSet.getString("image_url"))
+                .image(resultSet.getString("image_url"))
                 .status(resultSet.getString("status"))
-                .create_At(resultSet.getDate("create_At"))
+                .created_at(resultSet.getDate("create_At"))
                 .category_id(resultSet.getInt("category_id"))
-                .stock(resultSet.getInt("stock"))
-                .idFoodDraft(resultSet.getInt("idFoodDraft"))
+               
+              
                 .build();
                 
           return food;
@@ -195,14 +195,14 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                          .builder()
                          .id(1)
                          .name("ĐÂY")
-                         .idNutri(1)
+                         .nutriId(1)
                          .description("Oke la")
                          .price(20.0)
-                         .image_url("")
+                         .image("")
                          .status("pending")
-                         .create_At(d)
+                         .created_at(d)
                          .category_id(1)
-                         .stock(12)
+                         
                          .build();
            dao.insertFoodfromFoodDraft(food);
     }

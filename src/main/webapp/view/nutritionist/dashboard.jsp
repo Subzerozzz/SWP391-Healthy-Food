@@ -97,32 +97,26 @@
                                 <div class="wg-box">
                                     <div class="title-box">
                                         <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which you can rely on to find the exact product you need.</div>
+                                        <div class="body-text">Find request food_Draft by type of request</div>
                                     </div>
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
-                                            <div class="show">
-                                                <div class="text-tiny">Showing</div>
-                                                <div class="select">
-                                                    <select class="">
-                                                        <option>10</option>
-                                                        <option>20</option>
-                                                        <option>30</option>
-                                                    </select>
-                                                </div>
-                                                <div class="text-tiny">entries</div>
-                                            </div>
-                                            <form class="form-search">
-                                                <fieldset class="name">
-                                                    <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                </fieldset>
-                                                <div class="button-submit">
-                                                    <button class="" type="submit"><i class="icon-search"></i></button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <a class="tf-button style-1 w208" href="add-product.html"><i class="icon-plus"></i>Add new</a>
-                                    </div>
+                                    <div  style="width: 300px ;">
+                                        <form action="search" method="post">
+
+                                            <h3>Choose an option:</h3>
+                                            <select name="select">
+                                                <option value="-1">--All Type Of Request--</option>
+                                            <c:forEach items="${type}" var="t">
+                                                <option value="${t}">--${t}--</option>
+                                            </c:forEach>
+
+
+
+                                        </select>
+                                        <button type="submit" >Submit Option</button>
+
+                                    </form>  
+                                </div>
+                                   
                                     <!--Message about Alert-->
                                      <div id="mess">${mess}</div> 
 <!--                     Start List Product-->
@@ -158,14 +152,14 @@
                                                <c:forEach items="${listFoodDraft}" var="foodDraft">
                                             <li class="product-item gap14">
                                                 <div class="image no-bg">
-                                                    <img src="${foodDraft.image_url}" alt="">
+                                                    <img src="${foodDraft.image}" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
                                                         <a href="product-list.html" class="body-title-2"></a>
                                                     </div>
                                                     <div class="body-text">${foodDraft.name}</div>
-                                                    <div class="body-text">${foodDraft.create_At}</div>
+                                                    <div class="body-text">${foodDraft.created_at}</div>
                                                     <div class="body-text"></div>
                                                     <div class="body-text">${foodDraft.status}</div>
                                                     <div >
@@ -179,7 +173,7 @@
                                                         <form action="menu-category" method="get">
                                                             <input type="hidden" name="action" value="accept">
                                                             <input type="hidden" name="id" value="${foodDraft.id}">
-                                                           <button type="submit" class="btn-blue" style="background-color: greenyellow"
+                                                           <button type="submit" class="btn-blue" style="background-color: blueviolets"
                                                                    onclick="return confirm('Are you want to Accept this food')" >
                                                                Accept
                                                            </button>
