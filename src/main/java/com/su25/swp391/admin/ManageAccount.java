@@ -6,6 +6,7 @@ package com.su25.swp391.admin;
 
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,34 +28,8 @@ import java.util.regex.Pattern;
  *
  * @author Hang
  */
-@WebServlet(name = "ManageAccount_Controller", urlPatterns = {"/admin/manage_account"})
-public class Manage_account extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet </title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet  at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+@WebServlet(name = "ManageAccount_Controller", urlPatterns = {"/manage-account"})
+public class ManageAccount extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +39,13 @@ public class Manage_account extends HttpServlet {
             action = "list";//
         }
         switch (action) {
+            case "add":
+                showAddForm(request, response);
+                break;
+
+            case "edit":
+                showEditForm(request, response);
+                break;
             case "deactive":
                 deactivateAccount(request, response);
                 break;
@@ -69,6 +53,7 @@ public class Manage_account extends HttpServlet {
                 activateAccount(request, response);
                 break;
             case "list":
+                listAccount(request, response);
                 break;
             default:
                 listAccount(request, response);
@@ -87,12 +72,13 @@ public class Manage_account extends HttpServlet {
             case "add":
                 addAccount(request, response);
                 break;
-            case "update":
+            case "edit":
                 updateAccount(request, response);
                 break;
 
             default:
                 listAccount(request, response);
+                break;
         }
     }
 
@@ -105,68 +91,60 @@ public class Manage_account extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-private void setToastMessage (HttpServletRequest request,String message , String type){
-    request.getSession().setAttribute("toastMessage", message);
-    request.getSession().setAttribute("typeToast", type);
-}
-   
 
-    
-       
-
-    private void deactivateAccount(HttpServletRequest request, HttpServletResponse response) {
-  String accountIdStr = request.getParameter("id");
-            
-            if(accountIdStr != null && !accountIdStr.isEmpty()){
-                int accountId = Integer.parseInt(accountIdStr);
-                AccountDAO accountDao = new AccountDAO();
-                boolean activated = accountDao.deactivateAccount(accountId);
-                if(activated){
-                    setToastMessage(request, "deactivate success", "Success");
-                }else {
-                     setToastMessage(request, "deactivate fail", "Err");
-                }
-            }else {
-                setToastMessage(request, "Invalid account Id", "Err");
-            }
-            //chuyen huong ve trang list 
-            //response.sendRedirect(request.getContextPath()+"/admin/manage_account?action=");
+    private void setToastMessage(HttpServletRequest request, String message, String type) {
+        request.getSession().setAttribute("toastMessage", message);
+        request.getSession().setAttribute("typeToast", type);
     }
 
-    private void activateAccount(HttpServletRequest request, HttpServletResponse response) {
-            String accountIdStr = request.getParameter("id");
-            
-            if(accountIdStr != null && !accountIdStr.isEmpty()){
-                int accountId = Integer.parseInt(accountIdStr);
-                AccountDAO accountDao = new AccountDAO();
-                boolean activated = accountDao.activateAccount(accountId);
-                if(activated){
-                    setToastMessage(request, "Activate success", "Success");
-                }else {
-                     setToastMessage(request, "Activate fail", "Err");
-                }
-            }else {
-                setToastMessage(request, "Invalid account Id", "Err");
+    private void deactivateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String accountIdStr = request.getParameter("id");
+
+        if (accountIdStr != null && !accountIdStr.isEmpty()) {
+            int accountId = Integer.parseInt(accountIdStr);
+            AccountDAO accountDao = new AccountDAO();
+            boolean deactivated = accountDao.deactivateAccount(accountId);
+            if (deactivated) {
+                setToastMessage(request, "deactivate success", "Success");
+            } else {
+                setToastMessage(request, "deactivate fail", "Err");
             }
-            //chuyen huong ve trang list 
-          //  response.sendRedirect(request.getContextPath()+"/admin/manage_account?action=");
+        } else {
+            setToastMessage(request, "Invalid account Id", "Err");
+        }
+        response.sendRedirect("manage-account-dashbost");
+        return;
     }
-    
+
+    private void activateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String accountIdStr = request.getParameter("id");
+
+        if (accountIdStr != null && !accountIdStr.isEmpty()) {
+            int accountId = Integer.parseInt(accountIdStr);
+            AccountDAO accountDao = new AccountDAO();
+            boolean activated = accountDao.activateAccount(accountId);
+            if (activated) {
+                setToastMessage(request, "Activate success", "Success");
+            } else {
+                setToastMessage(request, "Activate fail", "Err");
+            }
+        } else {
+            setToastMessage(request, "Invalid account Id", "Err");
+        }
+        //chuyen huong ve trang list 
+        response.sendRedirect("/manage-account-dashbost");
+        return;
+    }
 
     private void listAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AccountDAO account = new AccountDAO();
-        List<Account> listAccount = account.findAll();
-        request.setAttribute("listAccount", listAccount);
-        request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
+        request.getRequestDispatcher("manage-account-dashbost").forward(request, response);
     }
 
     private void addAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             //lay thong tin tu request
-            String idStr = request.getParameter("id");
-            int id = Integer.parseInt(idStr);
             String full_name = request.getParameter("full_name");
             String user_name = request.getParameter("user_name");
             String email = request.getParameter("email");
@@ -182,70 +160,67 @@ private void setToastMessage (HttpServletRequest request,String message , String
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     date = (Date) sdf.parse(dateStr);
                 }
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 request.setAttribute("error", "Đinh dang sai form ");
-                request.getRequestDispatcher("/view/admin/add-acc.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
             //validate input data 
-            Map<String, String> errors = validateAccountData(full_name, email, password, id);
+            Map<String, String> errors = validateAccountData(full_name, email, password, 0);
             if (!errors.isEmpty()) {
                 //nếu có lỗi nhập thông tin loi
                 request.getSession().setAttribute("Err", errors);
                 //laay du lieu trc do nguoi dung nhap 
                 request.getSession().setAttribute("formData", request.getParameterMap());
                 //chuyen huong ve form them tai khoan
-                response.sendRedirect(request.getContextPath() + "/view/admin/add_account.jsp");
+                request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
 
             }
             //Tạo đối tượng account mới
-            Account newacoount = Account.builder()
-                    .id(id)
+            Account newAccount = Account.builder()
                     .full_name(full_name)
                     .use_name(user_name)
                     .email(email)
                     .password(password)
                     .address(address)
                     .role(role)
-                    
+                    .status(status)
                     .birth_data(date)
                     .build();
             AccountDAO accountDao = new AccountDAO();
-            boolean isSuccses = accountDao.insert(newacoount) > 0;
+            boolean isSuccses = accountDao.insert(newAccount) > 0;
             if (isSuccses) {
                 request.getSession().setAttribute("totalMess", "Add new Account Success");
                 request.getSession().setAttribute("totalType", "Success");
+                listAccount(request, response);
+                return; // THÊM DÒNG NÀY
             } else {
                 setToastMessage(request, "totalMess", "Fail to add Account");
                 setToastMessage(request, "totalType", "Err");
-              
+                request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
             request.getSession().setAttribute("totalMess", "Fail to add Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
         }
-        response.sendRedirect(request.getContextPath() + "/view/admin/list_account.jsp");
+//        response.sendRedirect("manage-account-dashbost");
 
     }
 
     private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-             int  accountId = Integer.parseInt(request.getParameter("id"));
-      String full_name = request.getParameter("full_name");
-            String user_name = request.getParameter("user_name");
+            int accountId = Integer.parseInt(request.getParameter("id"));
+            String full_name = request.getParameter("full_name");
             String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String address = request.getParameter("address");
-            String role = request.getParameter("role");
             Boolean status = Boolean.parseBoolean(request.getParameter("status"));
             //lay account tu database 
             AccountDAO accountDao = new AccountDAO();
             Account account = accountDao.findById(accountId);
             //cap nhap nhung thong tin co the thay doi
             account.setFull_name(full_name);
-            account.setUse_name(user_name);
-            account.setAddress(address);
+            account.setEmail(email);
             account.setStatus(status);
             //thuc hien update
             boolean isSuccess = accountDao.update(account);
@@ -253,26 +228,28 @@ private void setToastMessage (HttpServletRequest request,String message , String
             if (isSuccess) {
                 request.getSession().setAttribute("totalMess", "update new Account Success");
                 request.getSession().setAttribute("totalType", "Success");
+                response.sendRedirect("manage-account");
+                return; // THÊM DÒNG NÀY
             } else {
-                setToastMessage(request, "totalMess", "Fail to update Account");
+                 setToastMessage(request, "totalMess", "Fail to update Account");
                 setToastMessage(request, "totalType", "Err");
-              
+                request.setAttribute("error", "Update failed");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
+                dispatcher.forward(request, response);
             }
         } catch (Exception e) {
             request.getSession().setAttribute("totalMess", "Fail to Update Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
         }
-       
-            
-            response.sendRedirect(request.getContextPath() + "/admin/manage_account");// gui yeu cau khi khong thay tai khoan nguoi dung muong edit
+
+        response.sendRedirect("manage-account-dashbost");
+        return;
     }
 
-    
     private Map<String, String> validateAccountData(String full_name, String email, String password, int id) {
         Map<String, String> errors = new HashMap<>();
         AccountDAO accountdao = new AccountDAO();
 
-       
         // Validate full_name
         if (full_name != null && !full_name.isEmpty()) {
             if (full_name.length() < 3 || full_name.length() > 50) {
@@ -306,6 +283,16 @@ private void setToastMessage (HttpServletRequest request,String message , String
 
     private String getParameter(HttpServletRequest request, String fullname) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/add_account.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
+        dispatcher.forward(request, response);
     }
 
 }
