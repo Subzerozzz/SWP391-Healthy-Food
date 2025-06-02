@@ -222,14 +222,20 @@
                                                                                                 </a>
                                                                                                 <ul class="sub-menu" style="display: block;">
                                                                                                     <li class="sub-menu-item">
-                                                                                                        <a href="all-user.html" class="">
+                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=list" class="">
                                                                                                             <div class="text">All user</div>
                                                                                                         </a>
                                                                                                     </li>
                                                                                                     <li class="sub-menu-item">
-                                                                                                        <a href="add-new-user.html" class="active">
+                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=add" class="active">
                                                                                                             <div class="text">Add new user</div>
                                                                                                         </a>
+                                                                                                    </li>
+                                                                                                             <li class="sub-menu-item">
+                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=edit" >
+                                                                                                            <div class="text">Edit User</div>
+                                                                                                        </a>
+                                                                                                        
                                                                                                     </li>
                                                                                                     <li class="sub-menu-item">
                                                                                                         <a href="login.html" class="">
@@ -884,21 +890,21 @@
                                                                                             </ul>
                                                                                         </div>
                                                                                         <!-- add-new-user -->
-                                                                                        <form class="add_account" action="add" method="post">
-                                                                                            <div class="wg-box">
+                                                                                        <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=add" method="POST">
+                                                                                            <div class="wg-box">   
                                                                                                 <div class="left">
-                                                                                                    <h5 class="mb-4">Account</h5>
+                                                                                                    <h5 class="mb-4">Account</h5>   
                                                                                                     <div class="body-text">Fill in the information below to add a new account</div>
                                                                                                 </div>
 
                                                                                                 <div class="right flex-grow">
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Full_Name</div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="name" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="full_name" tabindex="0" value="" aria-required="true" required="">
                                                                                                     </fieldset>
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">User_Name</div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="name" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="user_name" tabindex="0" value="" aria-required="true" required="">
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="email mb-24">

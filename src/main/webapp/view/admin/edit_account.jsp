@@ -1,6 +1,6 @@
 <%-- 
-    Document   : all-acc.jsp
-    Created on : May 27, 2025, 10:00:36 AM
+    Document   : add_account
+    Created on : May 29, 2025, 8:10:49 AM
     Author     : Hang
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -12,7 +12,7 @@
     <!--<![endif]-->
 
 
-    <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
+    <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
@@ -30,8 +30,11 @@
                             <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
                                 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
                                     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
+
+
+
                                         <!-- Font -->
-                                        <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/font/fonts.css">
+                                        <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/font/fonts.css">   
 
                                             <!-- Icon -->
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
@@ -49,7 +52,14 @@
                                                                 <!-- #page -->
                                                                 <div id="page" class="">
                                                                     <!-- layout-wrap -->
-                                                                    <div class="layout-wrap">
+                                                                    <div class="layout-wrap">                
+                                                                        <!-- preload -->
+                                                                        <div id="preload" class="preload-container">
+                                                                            <div class="preloading">
+                                                                                <span></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- /preload -->
                                                                         <!-- section-menu-left -->
                                                                         <jsp:include page = "../common/admin/section-menu-left.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
@@ -60,7 +70,7 @@
                                                                                     <div class="wrap">
                                                                                         <div class="header-left">
                                                                                             <a href="index.html">
-                                                                                                <img class="" id="logo_header_mobile" alt="" src="${pageContext.request.contextPath}/images/logo/logo.png" data-light="images/logo/logo.png" data-dark="images/logo/logo-dark.png" data-width="154px" data-height="52px" data-retina="images/logo/logo@2x.png">
+                                                                                                <img class="" id="logo_header_mobile" alt="" src="${pageContext.request.contextPath}/images/logo/logo.png" data-light="${pageContext.request.contextPath}/images/logo/logo.png" data-dark="${pageContext.request.contextPath}/images/logo/logo-dark.png" data-width="154px" data-height="52px" data-retina="${pageContext.request.contextPath}/images/logo/logo@2x.png">
                                                                                         </a>
                                                                                         <div class="button-show-hide">
                                                                                             <i class="icon-menu-left"></i>
@@ -188,8 +198,8 @@
                                                                                     <div class="header-grid">
                                                                                         <div class="header-item country">
                                                                                             <select class="image-select no-text">
-                                                                                                <option data-thumbnail="images/country/1.png">ENG</option>
-                                                                                                <option data-thumbnail="images/country/9.png">VIE</option>
+                                                                                                <option data-thumbnail="${pageContext.request.contextPath}/images/country/1.png">ENG</option>
+                                                                                                <option data-thumbnail="${pageContext.request.contextPath}/images/country/9.png">VIE</option>
                                                                                             </select>
                                                                                         </div>
                                                                                         <div class="header-item button-dark-light">
@@ -500,7 +510,7 @@
                                                                                     <!-- main-content-wrap -->
                                                                                     <div class="main-content-wrap">
                                                                                         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                            <h3>All User</h3>
+                                                                                            <h3>Edit User</h3>
                                                                                             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                 <li>
                                                                                                     <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -515,113 +525,59 @@
                                                                                                     <i class="icon-chevron-right"></i>
                                                                                                 </li>
                                                                                                 <li>
-                                                                                                    <div class="text-tiny">All User</div>
+                                                                                                    <div class="text-tiny">Edit User</div>
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        <!-- all-user -->
-                                                                                        <div class="wg-box">
-                                                                                            <div class="flex items-center justify-between gap10 flex-wrap">
-                                                                                                <div class="wg-filter flex-grow">
-                                                                                                    <form class="form-search" >
-                                                                                                        <fieldset class="name">
-                                                                                                            <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                                                                        </fieldset>
-                                                                                                        <div class="button-submit">
-                                                                                                            <button class="" type="submit"><i class="icon-search"></i></button>
-                                                                                                        </div>
-                                                                                                    </form>
+                                                                                        <!-- add-new-user -->
+                                                                                        <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=edit" method="Post">
+                                                                                            <div class="wg-box">
+                                                                                                <div class="left">
+                                                                                                    <h5 class="mb-4">Account</h5>
+                                                                                                    <div class="body-text">Fill in the information below to edit account</div>
                                                                                                 </div>
-                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add"><i class="icon-plus"></i>Add new</a>
+
+                                                                                                <div class="right flex-grow">
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">Id_User</div>
+                                                                                                        <input class="flex-grow" type="text" name="id" value="${param.id}" readonly>
+                                                                                                    </fieldset>
+
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">Full_Name</div>
+                                                                                                        <input type="text" class="form-control" name="fu" value="${account.full_name}" required>
+
+                                                                                                    </fieldset>
+
+                                                                                                    </fieldset>
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">Email</div>
+                                                                                                        <input class="flex-grow" type="email" name="email" value="${account.email}" required>
+                                                                                                    </fieldset>
+
+
+
+                                                                                                    <!-- Status -->
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">Status</div>
+                                                                                                        <select name="status" class="flex-grow">
+                                                                                                            <option value="true" ${account.status ? 'selected' : ''}>Active</option>
+                                                                                                            <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
+                                                                                                        </select>
+                                                                                                    </fieldset>
+
+
+                                                                                                </div>
+
                                                                                             </div>
-                                                                                            <div class="wg-table table-all-user">
-                                                                                                <ul class="table-title flex gap20 mb-14">
-                                                                                                    <li>
-                                                                                                        <div class="body-title">User</div>
-                                                                                                    </li>   
 
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Address</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Email</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Role</div>
-                                                                                                    </li>
-         <li>
-                                                                                                        <div class="body-title">Status</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Action</div>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                                <ul class="flex flex-column">
-                                                                                                    <c:forEach items="${listAccount}" var="account">
-                                                                                                        <li class="user-item gap14">
-                                                                                                            <div class="image">
-                                                                                                                <img src="${pageContext.request.contextPath}/images/avatar/user-6.png" alt="">
-                                                                                                            </div>
-                                                                                                            <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="name">
-                                                                                                                    <a href="#" class="body-title-2">${account.use_name}</a>
-                                                                                                                    <div class="text-tiny mt-3">${account.full_name}</div>
-                                                                                                                </div>
 
-                                                                                                                <div class="body-text">${account.address}</div>
-
-                                                                                                                <div class="body-text">${account.email}</div>
-
-                                                                                                                <div class="body-text">${account.role}</div>
-                                                                                                                    <div class="body-text">
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when test="${account.status == false}">
-                                                                                                                            <span class="status-badge deactive">Deactive</span>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when test="${account.status == true}">
-                                                                                                                            <span class="status-badge active">Active</span>
-                                                                                                                        </c:when>
-                                                                                                                    </c:choose>
-
-                                                                                                                </div>
-                                                                                                                <div class="list-icon-function">
-
-                                                                                                                    <div class="item edit">
-
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i class="icon-edit-3"></i></a>
-                                                                                                                    </div>
-                                                                                                                    <div class="item trash">
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=deactive&id=${account.id}"><i class="icon-trash-2"></i></a>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </li>
-                                                                                                    </c:forEach>
-                                                                                                </ul>
+                                                                                            <div class="bot">
+                                                                                                <button class="tf-button w180" type="submit">Save</button>
                                                                                             </div>
-                                                                                            <div class="divider"></div>
-                                                                                            <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                <div class="text-tiny">Showing 10 entries</div>
-                                                                                                <ul class="wg-pagination">
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">1</a>
-                                                                                                    </li>
-                                                                                                    <li class="active">
-                                                                                                        <a href="#">2</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">3</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <!-- /all-user -->
+
+                                                                                        </form>
+                                                                                        <!-- /add-new-user -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                 </div>
@@ -656,5 +612,5 @@
                                                         </body>
 
 
-                                                        <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+                                                        <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
                                                         </html>
