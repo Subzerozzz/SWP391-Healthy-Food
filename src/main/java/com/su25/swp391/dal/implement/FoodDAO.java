@@ -20,77 +20,105 @@ import java.util.Map;
  */
 public class FoodDAO extends DBContext implements I_DAO<Food> {
 
-  @Override
-  public List<Food> findAll() {
-    // Chuẩn bị 1 mảng để chứa dữ liệu
-    List<Food> list = new ArrayList<>();
-    // Chuẩn bị câu lệnh SQL
-    String sql = "SELECT * FROM Food";
-    try {
-      // Chuẩn bị đối tượng statement
-      PreparedStatement statement = connection.prepareStatement(sql);
-      // Thực thi câu lệnh SQL trả về đối tượng resultSet
-      ResultSet resultSet = statement.executeQuery();
-      // Duyệt qua từng bản ghi trong resultSet
-      while (resultSet.next()) {
-        // Lấy dữ liệu từ resultSet gán vào đối tượng produc
-        list.add(getFromResultSet(resultSet));
-      }
-    } catch (SQLException e) {
-      System.out.println("Lỗi truy vấn");
-    }
-    return list;
-  }
-
-  @Override
-  public Map<Integer, Food> findAllMap() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean update(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean delete(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public int insert(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public Food getFromResultSet(ResultSet resultSet) throws SQLException {
-    Food product = new Food();
-    product.setId(resultSet.getInt("id"));
-    product.setName(resultSet.getString("name"));
-    product.setDescription(resultSet.getString("description"));
-    product.setPrice(resultSet.getDouble("price"));
-    product.setImage_url(resultSet.getString("image_url"));
-    product.setStatus(resultSet.getString("status"));
-    product.setCreated_at(resultSet.getTimestamp("created_at"));
-    product.setUpdated_at(resultSet.getTimestamp("updated_at"));
-    product.setCategory_id(resultSet.getInt("category_id"));
-    return product;
-  }
-
-  @Override
-  public Food findById(Integer id) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-  
-    public static void main(String[] args) {
-        for(Food a : new FoodDAO().findAll()){
-            System.out.println(a.toString());
+    @Override
+    public List<Food> findAll() {
+        // Chuẩn bị 1 mảng để chứa dữ liệu
+        List<Food> list = new ArrayList<>();
+        // Chuẩn bị câu lệnh SQL
+        String sql = "SELECT * FROM Food";
+        try {
+            // Chuẩn bị đối tượng statement
+            statement = connection.prepareStatement(sql);
+            // Thực thi câu lệnh SQL trả về đối tượng resultSet
+            ResultSet resultSet = statement.executeQuery();
+            // Duyệt qua từng bản ghi trong resultSet
+            while (resultSet.next()) {
+                // Lấy dữ liệu từ resultSet gán vào đối tượng produc
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi truy vấn");
         }
+        return list;
+    }
+
+    @Override
+    public Map<Integer, Food> findAllMap() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean update(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean delete(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int insert(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Food getFromResultSet(ResultSet resultSet) throws SQLException {
+        Food product = new Food();
+        product.setId(resultSet.getInt("id"));
+        product.setName(resultSet.getString("name"));
+        product.setDescription(resultSet.getString("description"));
+        product.setPrice(resultSet.getDouble("price"));
+        product.setImage_url(resultSet.getString("image_url"));
+        product.setStatus(resultSet.getString("status"));
+        product.setCreated_at(resultSet.getTimestamp("created_at"));
+        product.setUpdated_at(resultSet.getTimestamp("updated_at"));
+        product.setCategory_id(resultSet.getInt("category_id"));
+        return product;
+    }
+
+    @Override
+    public Food findById(Integer id) {
+        List<Food> listFood = new ArrayList();
+        String sql = "SELECT * FROM Food WHERE id = ?";
+        try {
+            // Chuẩn bị đối tượng statement
+            PreparedStatement statement = connection.prepareStatement(sql);
+            //set giá trị
+            statement.setInt(1, id);
+            // Thực thi câu lệnh SQL trả về đối tượng resultSet
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                listFood.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi truy vấn");
+        }
+        return listFood.get(0);
+    }
+
+    public Integer getBiggestId() {
+        String sql = "SELECT MAX(id) AS id"
+                + " FROM Food_draft;";
+        try {
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery(sql);
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Loi day" + e);
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new FoodDAO().findById(4));
     }
 
 }

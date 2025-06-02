@@ -6,7 +6,7 @@ package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Food_category;
+import com.su25.swp391.entity.FoodCategory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ import java.util.Map;
  *
  * @author Dell
  */
-public class FoodCategoryDAO extends DBContext implements I_DAO<Food_category> {
+public class FoodCategoryDAO extends DBContext implements I_DAO<FoodCategory> {
 
   @Override
-  public List<Food_category> findAll() {
+  public List<FoodCategory> findAll() {
     // Chuẩn bị 1 mảng để chứa dữ liệu
-    List<Food_category> list = new ArrayList<>();
+    List<FoodCategory> list = new ArrayList<>();
     // Chuẩn bị câu lệnh SQL
     String sql = "SELECT * FROM Food_category";
     try {
@@ -42,32 +42,32 @@ public class FoodCategoryDAO extends DBContext implements I_DAO<Food_category> {
   }
 
   @Override
-  public Map<Integer, Food_category> findAllMap() {
+  public Map<Integer, FoodCategory> findAllMap() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean update(Food_category t) {
+  public boolean update(FoodCategory t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean delete(Food_category t) {
+  public boolean delete(FoodCategory t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public int insert(Food_category t) {
+  public int insert(FoodCategory t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public Food_category getFromResultSet(ResultSet resultSet) throws SQLException {
-    Food_category product = new Food_category();
+  public FoodCategory getFromResultSet(ResultSet resultSet) throws SQLException {
+    FoodCategory product = new FoodCategory();
     product.setId(resultSet.getInt("id"));
     product.setName(resultSet.getString("name"));
     product.setDescription(resultSet.getString("description"));
@@ -77,13 +77,13 @@ public class FoodCategoryDAO extends DBContext implements I_DAO<Food_category> {
   }
 
   @Override
-  public Food_category findById(Integer id) {
+  public FoodCategory findById(Integer id) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
   
     public static void main(String[] args) {
-        for(Food_category a : new FoodCategoryDAO().findAll()){
+        for(FoodCategory a : new FoodCategoryDAO().findAll()){
             System.out.println(a.toString());
         }
     }

@@ -23,7 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Food_category {
+public class FoodCategory {
   private Integer id;
   private String name;
   private String description;
