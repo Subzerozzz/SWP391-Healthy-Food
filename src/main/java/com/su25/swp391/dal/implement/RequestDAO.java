@@ -85,9 +85,9 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
               Request request = Request
                       .builder()
                       .id(resultSet.getInt("id"))
-                      .typeOfRequest(resultSet.getString("typeOfRequest"))
+                      
                       .foodDraftId(resultSet.getInt("foodDraftId"))
-                      .status(resultSet.getString("status"))
+                      
                       .build();
        return request;
     }
@@ -116,7 +116,11 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
        public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
         dao.updateRequestFoodDraftById(3);
-        
+        List<Request> lits = dao.findAll();
+           for (Request lit : lits) {
+               System.out.println(lit);
+           }
         
     }
+       
 }

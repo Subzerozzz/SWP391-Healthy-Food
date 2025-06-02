@@ -158,14 +158,14 @@
                                                <c:forEach items="${listFoodDraft}" var="foodDraft">
                                             <li class="product-item gap14">
                                                 <div class="image no-bg">
-                                                    <img src="${foodDraft.image_url}" alt="">
+                                                    <img src="${foodDraft.image}" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
                                                         <a href="product-list.html" class="body-title-2"></a>
                                                     </div>
                                                     <div class="body-text">${foodDraft.name}</div>
-                                                    <div class="body-text">${foodDraft.create_At}</div>
+                                                    <div class="body-text">${foodDraft.created_at}</div>
                                                     <div class="body-text"></div>
                                                     <div class="body-text">${foodDraft.status}</div>
                                                     <div >
