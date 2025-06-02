@@ -54,17 +54,19 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public boolean update(Account t) {
         try {
             String sql = "UPDATE account SET email = ?, password = ?, full_name = ?, "
-                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ? WHERE id = ?";
+                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getEmail());
             statement.setString(2, t.getPassword());
             statement.setString(3, t.getFull_name());
             statement.setString(4, t.getUser_name());
-            statement.setDate(5, t.getBirth_date());
-            statement.setString(6, t.getRole());
-            statement.setString(7, t.getAddress());
-            statement.setInt(8, t.getMobie());
-            statement.setInt(9, t.getId());
+            statement.setBoolean(5, t.getGender());
+            statement.setDate(6, t.getBirth_date());
+            statement.setString(7, t.getRole());
+            statement.setString(8, t.getAddress());
+            statement.setInt(9, t.getMobie());
+            statement.setString(10, t.getStatus());
+            statement.setInt(11, t.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -92,19 +94,19 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public int insert(Account t) {
         try {
-            String sql = "INSERT INTO account (email, password, full_name, user_name, gender, birth_date, role, address, mobie ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO account (email, password, full_name, user_name, gender, birth_date, role, address, mobie, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, t.getEmail());
             statement.setString(2, t.getPassword());
             statement.setString(3, t.getFull_name());
             statement.setString(4, t.getUser_name());
-//            statement.setBoolean(5, t.isGender());
-            statement.setDate(5, t.getBirth_date());
-            statement.setString(6, t.getRole());
-            statement.setString(7, t.getAddress());
-            statement.setInt(8,t.getMobie());
-            statement.setString(9, t.getStatus());
+            statement.setBoolean(5, t.getGender());
+            statement.setDate(6, t.getBirth_date());
+            statement.setString(7, t.getRole());
+            statement.setString(8, t.getAddress());
+            statement.setInt(9,t.getMobie());
+            statement.setObject(10, t.getStatus());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -123,7 +125,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return Account.builder()
                 .id(resultSet.getInt("id"))
                 .email(resultSet.getString("email"))
-                .email(resultSet.getString("email"))
                 .password(resultSet.getString("password"))
                 .full_name(resultSet.getString("full_name"))
                 .user_name(resultSet.getString("user_name"))
@@ -134,6 +135,23 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
                 .mobie(resultSet.getInt("mobie"))
                 .status(resultSet.getString("status"))
                 .build();
+    }
+    public Account findByEmail(Account t) {
+        String sql = "SELECT * FROM account WHERE email = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getEmail());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
     }
 
     @Override
@@ -150,17 +168,11 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             ex.printStackTrace();
         } finally {
             closeResources();
-        }
+        }     
         return null;
     }
-    
-    public static void main(String[] args) {
-        new AccountDAO().findAll().forEach(item -> {
-            System.out.println(item);
-        });
-    }
-     public Account findByEmailOrUsernameAndPass(Account t) {
-        String sql = "SELECT * FROM account WHERE (email = ? OR username = ?) AND password = ?";
+    public Account findByEmailOrUsernameAndPass(Account t) {
+        String sql = "SELECT * FROM account WHERE (email = ? OR user_name = ?) AND password = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -178,5 +190,31 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
+    
+    public static void main(String[] args) {
+    // Tạo một đối tượng DAO (nơi chứa phương thức findByEmailOrUsernameAndPass)
+    AccountDAO dao = new AccountDAO();
+
+    // Tạo một tài khoản mẫu để tìm
+    Account input = new Account();
+    input.setEmail("abc@gmail.com");      // email tồn tại trong DB
+    input.setUser_name("abc@gmail.com");        // hoặc username tồn tại
+    input.setPassword("123@123");              // đúng mật khẩu trong DB
+
+    // Gọi hàm và lấy kết quả
+    Account result = dao.findByEmailOrUsernameAndPass(input);
+
+    // In kết quả
+    if (result != null) {
+        System.out.println("Đăng nhập thành công:");
+        System.out.println("ID: " + result.getId());
+        System.out.println("Username: " + result.getUser_name());
+        System.out.println("Email: " + result.getEmail());
+    } else {
+        System.out.println("Sai email/username hoặc mật khẩu.");
+    }
+}
+
+     
 
 }

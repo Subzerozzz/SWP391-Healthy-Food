@@ -4,10 +4,26 @@
  */
 package com.su25.swp391.utils;
 
+
+import java.util.Random;
+
 /**
  *
- * @author Dell
+ * @author ADMIN
  */
 public class GlobalUtils {
-    
+
+    public static int generateOTP(int length) {
+        Random rand = new Random();
+        StringBuilder otp = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            otp.append(rand.nextInt(10));
+        }
+
+        return Integer.parseInt(otp.toString());
+    }
+  // public String validate...
+  // Check blank
+    // Valid FE
 }

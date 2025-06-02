@@ -375,17 +375,17 @@
                     <div class="user-form">
                         <div class="contact-form">
                             <h2>Log In</h2>
-                            <form>
+                            <form action="login" method="post">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" required data-error="Please enter your Username or Email" placeholder="Username or Email">
+                                            <input type="text" class="form-control" name="username"  required data-error="Please enter your Username or Email" value="abc@gmail.com" placeholder="Username or Email">
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="password" name="password" placeholder="Password">
+                                            <input class="form-control" type="password" name="password" value="123@123" placeholder="Password">
                                         </div>
                                     </div>
 
