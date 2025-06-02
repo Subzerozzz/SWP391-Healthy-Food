@@ -171,7 +171,8 @@ public class ManageBlogController extends HttpServlet{
 
         // Forward to the view
 //        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutrition/listBlog.jsp");
-        //dispatcher.forward(request, response);
+//        dispatcher.forward(request, response);
+           request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
 
     @Override

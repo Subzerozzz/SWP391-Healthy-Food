@@ -141,7 +141,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     public List<Blog> findBlogsWithFilter(String searchTitle, String statusFilter, int page, int pageSize) {
         List<Blog> blogs = new ArrayList<>();
         try {
-            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE id=1");
             List<Object> params = new ArrayList<>();
             if (searchTitle != null && !searchTitle.trim().isEmpty()) {
                 sql.append(" AND title LIKE ?");
@@ -173,7 +173,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     public int countBlogsWithFilter(String searchTitle, String statusFilter) {
         int count = 0;
         try {
-            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE id=1");
             List<Object> params = new ArrayList<>();
             if (searchTitle != null && !searchTitle.trim().isEmpty()) {
                 sql.append(" AND title LIKE ?");
@@ -197,5 +197,6 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             closeResources();
         }
         return count;
-    }
+    } 
+    
 }

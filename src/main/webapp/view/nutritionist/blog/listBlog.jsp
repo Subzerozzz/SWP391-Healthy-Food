@@ -119,13 +119,13 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="add-product.html"><i class="icon-plus"></i>Add new</a>
+                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/blog/addBlog.jsp"<i class="icon-plus"></i>Add new</a>
                                     </div>
                                     <div class="wg-table table-product-list">
                                         <!--Heading table-->
                                         <ul class="table-title flex gap20 mb-14">
                                             <li>
-                                                <div class="body-title">Blog</div>
+                                                <div class="body-title">Blog image</div>
                                             </li>    
                                             <li>
                                                 <div class="body-title">Blog ID</div>
@@ -153,9 +153,9 @@
                                         <!--body table-->
                                         <ul class="flex flex-column">
                                         <c:forEach items="${blogs}" var = "blog">
-                                                <li class="product-item gap14">
+                                                 <li class="product-item gap14">
                                                 <div class="image no-bg">
-                                                    <img src="images/products/41.png" alt="">
+                                                    <img src="${blog.thumbnailblogs}" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
@@ -164,9 +164,9 @@
                                                     <div class="body-text">${blog.id}</div>
                                                     <div class="body-text">${blog.author}</div>
                                                     <div class="body-text">${blog.brief_info}</div>
-                                                    <div class="body-text">${blog.context}/div>
+                                                    <div class="body-text">${blog.context}</div>
                                                     <div>
-                                                        <div class="block-not-available">${blog.thumbnailblogs}/div>
+                                                        <div class="block-not-available">Out of stock</div>
                                                     </div>
                                                     <div class="body-text">$28,672.36</div>
                                                     <div class="list-icon-function">
@@ -181,7 +181,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </li>
+                                            </li>                                        </li>
                                             </c:forEach>
                                         </ul>
                                     </div>
