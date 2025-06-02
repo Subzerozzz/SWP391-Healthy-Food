@@ -379,19 +379,26 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" required data-error="Please enter your Username" placeholder="Enter Your Username">
+                                            <input type="text" class="form-control" required data-error="Please enter your Username" placeholder="Enter Your Username(k sử dụng ký tự đặc biệt)">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" required data-error="Please enter your Username or Email" placeholder="Enter Your Email">
+                                            <input type="email" class="form-control" required data-error="Please enter your Username or Email" placeholder="Enter Your Email(ex:example@gmail.com)">
                                         </div>
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-lg-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="password" name="password" placeholder="Password">
+                                            <input class="form-control" type="password" name="password" placeholder="Password (ex:8-32char)">
+                                        </div>
+                                    </div>
+                                    
+                                 <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="OTP" required data-error="OTP wrong! Try again!" placeholder="OTP">
+                                            <button>Seen</button>
                                         </div>
                                     </div>
     

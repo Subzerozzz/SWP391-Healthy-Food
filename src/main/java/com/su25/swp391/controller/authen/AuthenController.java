@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.controller.authen;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.MD5PasswordEncoderUtils;
@@ -15,12 +16,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = { "/authencontroller"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/home"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -31,10 +33,12 @@ public class AuthenController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private static final String LOGIN_PAGE = "view/Authen/login.jsp";
-    private static final String REGISTER_PAGE = "view/Authen/register.jsp";
+    private static final String LOGIN_PAGE = "view/Authen/Login.jsp";
+    private static final String REGISTER_PAGE = "view/Authen/Register.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
+
     AccountDAO accountDAO = new AccountDAO();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -49,6 +53,7 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/home":
                 request.getRequestDispatcher("view/homePage/home.jsp").forward(request, response);
+                break;
             default:
                 break;
         }
@@ -70,26 +75,101 @@ public class AuthenController extends HttpServlet {
         switch (path) {
             case "/login":
                 loginDoPost(request, response);
-
                 break;
             case "/register":
                 registerDoPost(request, response);
-
                 break;
             default:
                 break;
         }
     }
 
-    private void registerDoPost(HttpServletRequest request, HttpServletResponse response) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registerDoPost'");
-    }
-
-    private void loginDoPost(HttpServletRequest request, HttpServletResponse response) {
+    private String registerDoPost(HttpServletRequest request, HttpServletResponse response) {
         String url = null;
         HttpSession session = request.getSession();
-        
+
+        String user_name = request.getParameter("user_name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        request.setAttribute("formdata", Map.of(
+                "user_name", user_name != null ? user_name : "",
+                "email", email != null ? email : "",
+                "password", password != null ? password : ""));
+
+        if (user_name == null || user_name.trim().isEmpty()
+                || email == null || email.trim().isEmpty()
+                || password == null || password.trim().isEmpty()) {
+            session.setAttribute("toastMessage", "All fields are required");
+            session.setAttribute("toastType", "error");
+            return REGISTER_PAGE;
+        }
+        // Cần kiểm tra
+        try {
+            if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                session.setAttribute("toastMessage", "Email correct format");
+                session.setAttribute("toastType", "error");
+            }
+            if (password.matches("^[A-Za-z0-9+_.-]{8,32}$")) {
+                session.setAttribute("toastMessage", "Password correct format");
+                session.setAttribute("toastType", "error");
+            }
+            if (user_name.matches("^[a-zA-Z0-9]{3,20}$")) {
+                session.setAttribute("toastMessage", "Username correct format");
+                session.setAttribute("toastType", "error");
+            }
+
+        } catch (Exception e) {
+            session.setAttribute("toastMessage", "Some inputs are incorrect, please check again");
+            session.setAttribute("toastType", "error");
+            return REGISTER_PAGE;
+        }
+
+        Account account = Account.builder()
+                .email(email)
+                .user_name(user_name)
+                .password(password)
+                .build();
+
+        Account accountFoundByEmail = accountDAO.findByEmail(account);
+
+        if (accountFoundByEmail != null) {
+            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
+                session.setAttribute("toastMessage", "Username already exists!");
+                session.setAttribute("toastType", "error");
+            } else {
+                session.setAttribute("toastMessage", "Email already exists!");
+                session.setAttribute("toastType", "error");
+            }
+            url = REGISTER_PAGE;
+        } else {
+            int accountId = accountDAO.insert(account);
+            if (accountId > 0) {
+                account.setId(accountId);
+                session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+                session.setAttribute("email", email);
+                session.setMaxInactiveInterval(5 * 60);
+
+//                // Gửi OTP
+//                String otp = EmailUtils.sendOTPMail(email);
+//                session.setAttribute("otp", otp);
+//                session.setAttribute("otp_purpose", "activation"); // Thêm mục đích OTP
+//
+//                url = VERIFY_OTP_PAGE;
+            } else {
+                session.setAttribute("toastMessage", "Failed to create account. Please try again.");
+                session.setAttribute("toastType", "error");
+                url = REGISTER_PAGE;
+            }
+        }
+        return url;
+
+    }
+
+    private void loginDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+
         // get về các thong tin người dufg nhập
         String usernameOrEmail = request.getParameter("username");
         String password = request.getParameter("password");
@@ -97,38 +177,28 @@ public class AuthenController extends HttpServlet {
         Account account = Account.builder()
                 .user_name(usernameOrEmail)
                 .email(usernameOrEmail)
-                .password(MD5PasswordEncoderUtils.encodeMD5(password))
+                .password(password)
                 .build();
         Account accFoundByUsernamePass = accountDAO.findByEmailOrUsernameAndPass(account);
         // true => trang home ( set account vao trong session )
         if (accFoundByUsernamePass != null) {
             // Kiểm tra status của account
-            if (!accFoundByUsernamePass.getStatus()) {
+            if (accFoundByUsernamePass.getStatus().equals("banned")) {
                 session.setAttribute("toastMessage", "Your account is banned. Please contact admin to discuss.");
                 session.setAttribute("toastType", "error");
-                return LOGIN_PAGE;
+                url = LOGIN_PAGE;
+            } else {
+                session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
+                url = HOME_PAGE;
             }
-            
+
             // Lưu thông tin người dùng vào session
-            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
-            url = HOME_PAGE;
         } else {
             session.setAttribute("toastMessage", "Username or password incorrect!!");
             session.setAttribute("toastType", "error");
             url = LOGIN_PAGE;
         }
-        return url;
+        request.getRequestDispatcher(url).forward(request, response);
     }
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
