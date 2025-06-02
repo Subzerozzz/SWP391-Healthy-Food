@@ -34,7 +34,7 @@
       <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
 
       <!-- Icon -->
-      <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style_1.css">
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
 
       <!-- Favicon and Touch Icons  -->
       <link rel="shortcut icon"
@@ -108,11 +108,13 @@
                             </div>
                           </form>
                         </div>
-                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-category?action=view"><i class="icon-plus"></i>Add new</a>
+                        <a class="tf-button style-1 w208"
+                          href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
+                          new</a>
                       </div>
-                        <c:if test="${isSuccess}">
-                            alert("Yêu cầu tạo món ăn đã được gửi đi thành công!");
-                        </c:if>
+                      <c:if test="${isSuccess}">
+                        alert("Yêu cầu tạo món ăn đã được gửi đi thành công!");
+                      </c:if>
                       <div class="wg-table table-product-list">
                         <ul class="table-title flex gap20 mb-14">
                           <li>
@@ -158,10 +160,16 @@
                                 <div class="body-text">${item.getUpdated_at()}</div>
                                 <div class="list-icon-function">
                                   <div class="item eye">
-                                    <i class="icon-eye"></i>
+                                    <a>
+                                      <i class="icon-eye"></i>
+                                    </a>
+
                                   </div>
                                   <div class="item edit">
-                                    <i class="icon-edit-3"></i>
+                                    <a
+                                      href="${pageContext.request.contextPath}/manage-food?action=update&id=${item.id}">
+                                      <i class="icon-edit-3" style="color: green"></i>
+                                    </a>
                                   </div>
                                   <div class="item trash">
                                     <i class="icon-trash-2"></i>

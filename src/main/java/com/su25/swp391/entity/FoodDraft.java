@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Food_draft {
+public class FoodDraft {
   private Integer id;
   private String name;
   private String description;
@@ -30,5 +30,7 @@ public class Food_draft {
   private Integer category_id;
   private Timestamp created_at;
   private Timestamp updated_at;
+  private Integer foodId;
+  private String type;
 
 }

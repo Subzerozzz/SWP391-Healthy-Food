@@ -6,7 +6,7 @@ package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Food_draft;
+import com.su25.swp391.entity.FoodDraft;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,34 +21,34 @@ import java.util.logging.Logger;
  *
  * @author Dell
  */
-public class FoodDraftDAO extends DBContext implements I_DAO<Food_draft> {
+public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 
   @Override
-  public List<Food_draft> findAll() {
+  public List<FoodDraft> findAll() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public Map<Integer, Food_draft> findAllMap() {
+  public Map<Integer, FoodDraft> findAllMap() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean update(Food_draft t) {
+  public boolean update(FoodDraft t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public boolean delete(Food_draft t) {
+  public boolean delete(FoodDraft t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
-  public int insert(Food_draft t) {
+  public int insert(FoodDraft t) {
     String sql = "INSERT INTO Food_draft (name, description, price, image_url, status, category_id, created_at, updated_at)"
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     try {
@@ -79,8 +79,8 @@ public class FoodDraftDAO extends DBContext implements I_DAO<Food_draft> {
   }
 
   @Override
-  public Food_draft getFromResultSet(ResultSet resultSet) throws SQLException {
-    Food_draft product = new Food_draft();
+  public FoodDraft getFromResultSet(ResultSet resultSet) throws SQLException {
+    FoodDraft product = new FoodDraft();
     product.setId(resultSet.getInt("id"));
     product.setName(resultSet.getString("name"));
     product.setDescription(resultSet.getString("description"));
@@ -94,7 +94,7 @@ public class FoodDraftDAO extends DBContext implements I_DAO<Food_draft> {
   }
 
   @Override
-  public Food_draft findById(Integer id) {
+  public FoodDraft findById(Integer id) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }

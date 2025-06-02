@@ -67,17 +67,17 @@
                     <!-- main-content-wrap -->
                     <div class="main-content-wrap">
                       <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                        <h3>Add Product</h3>
+                        <h3>Update Food</h3>
                       </div>
                       <!-- form-add-product -->
                       <form class="tf-section-2 form-add-product"
-                        action="${pageContext.request.contextPath}/manage-food?action=add" method="POST">
+                        action="${pageContext.request.contextPath}/manage-food?action=update" method="POST">
                         <div class="wg-box">
                           <!--Name-->
                           <fieldset class="name">
                             <div class="body-title mb-10">Product name <span class="tf-color-1">*</span></div>
                             <input class="mb-10" type="text" placeholder="Enter food name" name="name" tabindex="0"
-                              value="" aria-required="true" required="">
+                              value="${foodUpdate.getName()}" aria-required="true" required="">
                             <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
                           </fieldset>
 
@@ -100,13 +100,13 @@
                           <fieldset class="price">
                             <div class="body-title mb-10">Price <span class="tf-color-1">*</span></div>
                             <input class="mb-10" type="text" placeholder="Enter price" name="price" tabindex="0"
-                              value="" aria-required="true" required="">
+                              value="${foodUpdate.getPrice()}" aria-required="true" required="">
                           </fieldset>
 
                           <!--Status-->
                           <fieldset class="price" style="display: none">
                             <div class="body-title mb-10">Price <span class="tf-color-1">*</span></div>
-                            <input class="mb-10" type="text" name="status" tabindex="0" value="init"
+                            <input class="mb-10" type="text" name="status" tabindex="0" value="${foodUpdate.getStatus()}"
                               aria-required="true" required="">
                           </fieldset>
 
@@ -114,7 +114,7 @@
                           <fieldset class="description">
                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
                             <textarea class="mb-10" name="description" placeholder="Description" tabindex="0"
-                              aria-required="true" required=""></textarea>
+                                        aria-required="true" required>${foodUpdate.getDescription()}</textarea>
                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
                           </fieldset>
                         </div>
