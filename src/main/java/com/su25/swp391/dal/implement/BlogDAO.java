@@ -53,14 +53,15 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public boolean update(Blog t) {
         try {
-            String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content = ?, thumbnailblogs = ? WHERE id = ?";
+            String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content = ?, thumbnailblogs = ?, status = ? WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getTitle());
             statement.setString(2, t.getAuthor());
             statement.setString(3, t.getBrief_info());
             statement.setString(4, t.getContext());
             statement.setString(5, t.getThumbnailblogs());
-            statement.setInt(6, t.getId());
+            statement.setString(6, t.getStatus());
+            statement.setInt(7, t.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -88,13 +89,14 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public int insert(Blog t) {
         try {
-            String sql = "INSERT INTO blogs (title, author, brief_info, content, thumbnailblogs) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO blogs (title, author, brief_info, content, thumbnailblogs, status) VALUES (?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getTitle());
             statement.setString(2, t.getAuthor());
             statement.setString(3, t.getBrief_info());
             statement.setString(4, t.getContext());
             statement.setString(5, t.getThumbnailblogs());
+            statement.setString(6, t.getStatus());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -117,6 +119,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
                 .brief_info(resultSet.getString("brief_info"))
                 .context(resultSet.getString("content"))
                 .thumbnailblogs(resultSet.getString("thumbnailblogs"))
+                .status(resultSet.getString("status"))
                 .build();
     }
 
@@ -141,7 +144,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     public List<Blog> findBlogsWithFilter(String searchTitle, String statusFilter, int page, int pageSize) {
         List<Blog> blogs = new ArrayList<>();
         try {
-            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE id=1");
+            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
             List<Object> params = new ArrayList<>();
             if (searchTitle != null && !searchTitle.trim().isEmpty()) {
                 sql.append(" AND title LIKE ?");
@@ -173,7 +176,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     public int countBlogsWithFilter(String searchTitle, String statusFilter) {
         int count = 0;
         try {
-            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE id=1");
+            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
             List<Object> params = new ArrayList<>();
             if (searchTitle != null && !searchTitle.trim().isEmpty()) {
                 sql.append(" AND title LIKE ?");

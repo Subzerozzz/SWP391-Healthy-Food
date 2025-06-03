@@ -95,7 +95,7 @@
                                 <div class="wg-box">
                                     <div class="title-box">
                                         <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which you can rely on to find the exact product you need.</div>
+                                        <div class="body-text">Tip search by Blog ID: Each blog is provided with a unique ID, which you can rely on to find the exact product you need.</div>
                                     </div>
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="wg-filter flex-grow">
@@ -121,70 +121,78 @@
                                         </div>
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/blog/addBlog.jsp"<i class="icon-plus"></i>Add new</a>
                                     </div>
-                                    <div class="wg-table table-product-list">
-                                        <!--Heading table-->
-                                        <ul class="table-title flex gap20 mb-14">
-                                            <li>
-                                                <div class="body-title">Blog image</div>
-                                            </li>    
-                                            <li>
-                                                <div class="body-title">Blog ID</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Author</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Brief Info</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Context</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Thumbnailblogs</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Start date</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
-                                        </ul>
-                                        
-                                        <!--body table-->
-                                        <ul class="flex flex-column">
-                                        <c:forEach items="${blogs}" var = "blog">
-                                                 <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <img src="${blog.thumbnailblogs}" alt="">
-                                                </div>
-                                                <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">${blog.title}</a>
-                                                    </div>
-                                                    <div class="body-text">${blog.id}</div>
-                                                    <div class="body-text">${blog.author}</div>
-                                                    <div class="body-text">${blog.brief_info}</div>
-                                                    <div class="body-text">${blog.context}</div>
-                                                    <div>
-                                                        <div class="block-not-available">Out of stock</div>
-                                                    </div>
-                                                    <div class="body-text">$28,672.36</div>
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>                                        </li>
-                                            </c:forEach>
-                                        </ul>
+                                <style>
+                                    .table-header, .table-row {
+                                        display: flex;
+                                        align-items: center;
+                                        padding: 10px 0;
+                                        border-bottom: 1px solid #ddd;
+                                    }
+
+                                    .table-header {
+                                        font-weight: bold;
+                                    }
+
+                                    .col {
+                                        flex: 1;
+                                        padding: 0 10px;
+                                        min-width: 150px;
+                                        word-break: break-word;
+                                    }
+
+                                    .actions {
+                                        display: flex;
+                                        gap: 12px;
+                                    }
+
+                                    .actions .icon-eye {
+                                        color: #007bff; /* blue */
+                                    }
+
+                                    .actions .icon-edit-3 {
+                                        color: #28a745; /* green */
+                                    }
+
+                                    .actions .icon-trash-2 {
+                                        color: #dc3545; /* red */
+                                    }
+
+                                    .actions i:hover {
+                                        opacity: 0.7;
+                                        transform: scale(1.1);
+                                        transition: all 0.2s;
+                                    }
+                                </style>
+
+                                <div class="wg-table table-product-list">
+                                    <!-- Header -->
+                                    <div class="table-header">
+                                        <div class="col">Blog</div>
+                                        <div class="col">Blog ID</div>
+                                        <div class="col">Author</div>
+                                        <div class="col">Status</div>
+                                        <div class="col">Action</div>
                                     </div>
+
+                                    <!-- Data Rows -->
+                                    <c:forEach items="${blogs}" var="blog">
+                                        <div class="table-row">
+                                            <div class="col">
+                                                <a href="product-list.html" class="body-title-2">${blog.title}</a>
+                                            </div>
+                                            <div class="col">${blog.id}</div>
+                                            <div class="col">${blog.author}</div>
+                                            <div class="col">${blog.status}</div>
+                                            <div class="col actions">
+                                                <i class="icon-eye"></i>
+                                                <i class="icon-edit-3"></i>
+                                                <i class="icon-trash-2"></i>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing 10 entries</div>
@@ -240,7 +248,5 @@
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 </body>
-
-
 <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:40 GMT -->
 </html>
