@@ -2,6 +2,7 @@ package com.su25.swp391.controller.nutri;
 
 import com.su25.swp391.dal.implement.BlogDAO;
 import com.su25.swp391.entity.Blog;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +14,7 @@ import java.io.File;
 import java.util.List;
 
 @WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
-public class ManageBlogController extends HttpServlet{
+public class ManageBlogController extends HttpServlet {
 
     private BlogDAO blogDAO;
 
@@ -29,172 +30,98 @@ public class ManageBlogController extends HttpServlet{
         }
         switch (action) {
             case "list":
-                blogListDoGet(request, response);
+                listBlogDoGet(request, response);
                 break;
-            case "create":
-                blogCreateDoGet(request, response);
+            case "add":
+                showAddDoGet(request, response);
                 break;
-            case "delete":
-                blogDeleteDoGet(request, response);
-                break;
-            case "update":
-                blogUpdateDoGet(request, response);
+            case "edit":
+                showEditDoGet(request, response);
                 break;
         }
     }
 
-    private void blogUpdateDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        BlogDAO blogDao = new BlogDAO();
-        Blog blog = blogDao.findById(id);
-        if (blog != null) {
-            List<Blog> Blogs = blogDao.findAll();
-            request.setAttribute("blog", blog);
-            request.getRequestDispatcher("/view/nutrition/blog_edit").forward(request, response);
-
-        }
-        response.sendRedirect(request.getContextPath() + "view/nutritionist/dashboard.jsp");
-    }
-
-    private void blogDeleteDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        BlogDAO blogDao = new BlogDAO();
-        Blog blog = blogDao.findById(id);
-        if (blog != null) {
-            boolean deleted = blogDao.delete(blog);
-            if (deleted) {
-                request.getSession().setAttribute("toastMessage", "Blog deleted successfully");
-                request.getSession().setAttribute("toastType", "success");
-            } else {
-                request.getSession().setAttribute("toastMessage", "Failed to delete blog");
-                request.getSession().setAttribute("toastType", "error");
-            }
-        } else {
-            request.getSession().setAttribute("toastMessage", "Blog not found");
-            request.getSession().setAttribute("toastType", "error");
-        }
-
-        // Redirect to list page
-        response.sendRedirect(request.getContextPath() + "/view/nutrition/dashboard");
-    }
-
-    private void blogCreateDoGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            String title = request.getParameter("title");
-            String author = request.getParameter("author");
-            String brief_info = request.getParameter("brief_info");
-            String context = request.getParameter("context");
-            String thumbnailblogs = request.getParameter("thumbnailblogs");
-            //image
-            Part part = request.getPart("image");
-            if (part.getSubmittedFileName() == null || part.getSubmittedFileName().trim().isEmpty() || part == null) {
-
-            } else {
-                //duong dan luu anh
-                String path = request.getServletContext().getRealPath("/image");
-                File dir = new File(path);
-                // Xem duong dan da ton tai chua
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                File image = new File(dir, part.getSubmittedFileName());
-                //ghi file vao trong duong dan
-                part.write(image.getAbsolutePath());
-                // Lay ra cai context cua project
-                String pathOfFile = request.getContextPath() + "/image/" + image.getName();
-            }
-            BlogDAO blogDao = new BlogDAO();
-            Blog blog = Blog.builder().id(id)
-                    .title(title)
-                    .author(author)
-                    .brief_info(brief_info)
-                    .context(context)
-                    .thumbnailblogs(thumbnailblogs)
-                    .build();
-            blogDao.insert(blog);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    private void blogListDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        BlogDAO blogDao = new BlogDAO();
-//        List<Blog> blog = blogDao.findAll();
-//        request.setAttribute("blogs", blog);
-//        request.getRequestDispatcher("manage-blog.jsp").forward(request, response);
-
-        BlogDAO blogDAO = new BlogDAO();
-
-        // Get filter parameters
-        String searchTitle = request.getParameter("searchTitle");
-        String statusFilter = request.getParameter("status");
-
-        // Get pagination parameters
-        int page = 1;
-        int pageSize = 10;
-
-        try {
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                if (page < 1) {
-                    page = 1;
-                }
-            }
-            if (request.getParameter("pageSize") != null) {
-                pageSize = Integer.parseInt(request.getParameter("pageSize"));
-                if (pageSize < 1) {
-                    pageSize = 10;
-                }
-            }
-        } catch (NumberFormatException e) {
-            // Use default values if parameters are invalid
-        }
-
-        // Get blogs with filtering and pagination
-        List<Blog> blogs = blogDAO.findBlogsWithFilter(searchTitle, statusFilter, page, pageSize);
-        int totalBlogs = blogDAO.countBlogsWithFilter(searchTitle, statusFilter);
-
-        // Calculate pagination info
-        int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
-
-        // Set attributes for the view
-        request.setAttribute("blogs", blogs);
-        request.setAttribute("searchTitle", searchTitle);
-        request.setAttribute("statusFilter", statusFilter);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("pageSize", pageSize);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalBlogs", totalBlogs);
-
-        // Forward to the view
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutrition/listBlog.jsp");
-//        dispatcher.forward(request, response);
-           request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
-    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-//        if (action == null) {
-//            action = "list";
-//        }
-//        switch (action) {
-//            case "list":
-//                blogListDoPost(request, response);
-//                break;
-//            case "create":
-//                blogCreateDoPost(request, response);
-//                break;
-//            case "delete":
-//                blogDeleteDoPost(request, response);
-//                break;
-//            case "update":
-//                blogUpdateDoPost(request, response);
-//                break;
-//        }
+        if (action == null) {
+            action = "list";
+        }
+        switch (action) {
+            case "add":
+                blogCreateDoPost(request, response);
+                break;
+            case "edit":
+                blogUpdateDoPost(request, response);
+                break;
+        }
     }
-   
+
+    private void blogCreateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String title = request.getParameter("title");
+        String author = request.getParameter("author");
+        String briefinfo = request.getParameter("briefinfo");
+        String context = request.getParameter("context");
+        String date = request.getParameter("date");
+        String filename = request.getParameter("filename"); // For file upload, use getPart instead
+
+        Blog newBlog = new Blog();
+        newBlog.setTitle(title);
+        newBlog.setAuthor(author);
+        newBlog.setBriefInfo(briefinfo);
+        newBlog.setDescription(description);
+        newBlog.setDate(date);
+        newBlog.setImage(filename); // Adjust if you handle file upload via Part
+
+        try {
+            blogDAO.insert(newBlog);
+            response.sendRedirect("manage-blog");
+        } catch (Exception e) {
+            request.setAttribute("error", "Failed to create blog: " + e.getMessage());
+            request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
+        }
+    }
+
+    private void blogUpdateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String title = request.getParameter("title");
+        String author = request.getParameter("author");
+        String briefinfo = request.getParameter("briefinfo");
+        String description = request.getParameter("description");
+        String date = request.getParameter("date");
+        String filename = request.getParameter("filename");
+
+        Blog blog = new Blog();
+        blog.setId(id);
+        blog.setTitle(title);
+        blog.setAuthor(author);
+        blog.setBriefInfo(briefinfo);
+        blog.setDescription(description);
+        blog.setDate(date);
+        blog.setImage(filename);
+
+        try {
+            blogDAO.update(blog);
+            response.sendRedirect("manage-blog");
+        } catch (Exception e) {
+            request.setAttribute("error", "Failed to update blog: " + e.getMessage());
+            request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp").forward(request, response);
+        }
+    }
+
+    private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) {
+       RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
+       dispatcher.forward(request, response);
+    }
+
+    private void showAddDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp");
+       dispatcher.forward(request, response);
+    }
+
+    private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
