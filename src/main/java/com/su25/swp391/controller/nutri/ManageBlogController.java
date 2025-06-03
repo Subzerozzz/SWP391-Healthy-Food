@@ -11,7 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.sql.Date;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 @WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
 public class ManageBlogController extends HttpServlet {
@@ -64,16 +67,19 @@ public class ManageBlogController extends HttpServlet {
         String briefinfo = request.getParameter("briefinfo");
         String context = request.getParameter("context");
         String date = request.getParameter("date");
-        String filename = request.getParameter("filename"); // For file upload, use getPart instead
 
         Blog newBlog = new Blog();
         newBlog.setTitle(title);
         newBlog.setAuthor(author);
-        newBlog.setBriefInfo(briefinfo);
-        newBlog.setDescription(description);
-        newBlog.setDate(date);
-        newBlog.setImage(filename); // Adjust if you handle file upload via Part
-
+        newBlog.setBrief_info(briefinfo);
+        newBlog.setContext(context);
+        try {
+            if (date != null && !date.isEmpty()) {
+                newBlog.setBirth_date((Date) new java.text.SimpleDateFormat("yyyy-MM-dd").parse(date));
+            }
+        } catch (ParseException e) {
+            newBlog.setBirth_date(null);
+        }
         try {
             blogDAO.insert(newBlog);
             response.sendRedirect("manage-blog");
@@ -96,11 +102,15 @@ public class ManageBlogController extends HttpServlet {
         blog.setId(id);
         blog.setTitle(title);
         blog.setAuthor(author);
-        blog.setBriefInfo(briefinfo);
-        blog.setDescription(description);
-        blog.setDate(date);
-        blog.setImage(filename);
-
+        blog.setBrief_info(briefinfo);
+        blog.setContext(description);
+        try {
+            if (date != null && !date.isEmpty()) {
+                blog.setBirth_date((Date) new java.text.SimpleDateFormat("yyyy-MM-dd").parse(date));
+            }
+        } catch (ParseException e) {
+            blog.setBirth_date(null);
+        }
         try {
             blogDAO.update(blog);
             response.sendRedirect("manage-blog");
@@ -110,7 +120,7 @@ public class ManageBlogController extends HttpServlet {
         }
     }
 
-    private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) {
+    private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
        dispatcher.forward(request, response);
     }
@@ -120,8 +130,9 @@ public class ManageBlogController extends HttpServlet {
        dispatcher.forward(request, response);
     }
 
-    private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp");
+        dispatcher.forward(request, response);
     }
 
 }

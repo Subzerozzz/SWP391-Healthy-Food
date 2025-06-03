@@ -53,7 +53,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public boolean update(Blog t) {
         try {
-            String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content = ?, thumbnailblogs = ?, status = ? WHERE id = ?";
+            String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content = ?, thumbnailblogs = ?, status = ?, birth_date = ? WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getTitle());
             statement.setString(2, t.getAuthor());
@@ -61,7 +61,8 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(4, t.getContext());
             statement.setString(5, t.getThumbnailblogs());
             statement.setString(6, t.getStatus());
-            statement.setInt(7, t.getId());
+            statement.setDate(7, t.getBirth_date() != null ? new java.sql.Date(t.getBirth_date().getTime()) : null);
+            statement.setInt(8, t.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -89,7 +90,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public int insert(Blog t) {
         try {
-            String sql = "INSERT INTO blogs (title, author, brief_info, content, thumbnailblogs, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO blogs (title, author, brief_info, content, thumbnailblogs, status, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getTitle());
             statement.setString(2, t.getAuthor());
@@ -97,6 +98,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(4, t.getContext());
             statement.setString(5, t.getThumbnailblogs());
             statement.setString(6, t.getStatus());
+            statement.setDate(7, t.getBirth_date() != null ? new java.sql.Date(t.getBirth_date().getTime()) : null);
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -120,6 +122,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
                 .context(resultSet.getString("content"))
                 .thumbnailblogs(resultSet.getString("thumbnailblogs"))
                 .status(resultSet.getString("status"))
+                .birth_date(resultSet.getDate("birth_date"))
                 .build();
     }
 

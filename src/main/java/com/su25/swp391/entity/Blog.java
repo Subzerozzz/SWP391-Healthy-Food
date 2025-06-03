@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.entity;
 
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,4 +33,5 @@ public class Blog {
     private String context;
     private String thumbnailblogs;
     private String status;
+    private Date birth_date;
 }
