@@ -85,9 +85,9 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
               Request request = Request
                       .builder()
                       .id(resultSet.getInt("id"))
-                      
+                      .result(resultSet.getString("result"))
                       .foodDraftId(resultSet.getInt("foodDraftId"))
-                      
+                      .statusRequest(resultSet.getString("statusRequest"))
                       .build();
        return request;
     }

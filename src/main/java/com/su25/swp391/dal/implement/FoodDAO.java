@@ -126,10 +126,10 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getName());
-            statement.setInt(2,t.getNutriId());
+            statement.setInt(2,t.getNutri_id());
             statement.setString(3, t.getDescription());
             statement.setDouble(4,t.getPrice());
-            statement.setString(5, t.getImage());
+            statement.setString(5, t.getImage_url());
             statement.setString(6, "Approved");
             statement.setTimestamp(7, new java.sql.Timestamp(t.getCreated_at().getTime()));
             statement.setInt(8,t.getCategory_id());
@@ -152,18 +152,16 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
         Food food = Food
-                 .builder()
+                .builder()
                 .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
-                .nutriId(resultSet.getInt("id_Nutri"))
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
-                .image(resultSet.getString("image_url"))
-                .status(resultSet.getString("status"))
-                .created_at(resultSet.getDate("create_At"))
+                .image_url(resultSet.getString("image_url"))
                 .category_id(resultSet.getInt("category_id"))
-               
-              
+                .created_at(resultSet.getTimestamp("created_at"))
+                .updated_at(resultSet.getTimestamp("updated_at"))
+                .nutri_id(resultSet.getInt("nutri_id"))
                 .build();
                 
           return food;
@@ -190,17 +188,16 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     
     public static void main(String[] args) {
         FoodDAO dao = new FoodDAO();
-        Date d = new Date(2002,02,02);
+     //  Timestamp a = new Timestamp(02,02,2004,00,00,00);
         Food_Draft food = Food_Draft
                          .builder()
                          .id(1)
                          .name("ĐÂY")
-                         .nutriId(1)
+                         .nutri_id(1)
                          .description("Oke la")
                          .price(20.0)
-                         .image("")
-                         .status("pending")
-                         .created_at(d)
+                         .image_url("")
+                       //  .created_at(d)
                          .category_id(1)
                          
                          .build();
