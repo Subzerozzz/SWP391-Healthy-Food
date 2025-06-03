@@ -26,11 +26,11 @@ public class FoodDraft {
   private String description;
   private Double price;
   private String image_url;
-  private String status;
   private Integer category_id;
   private Timestamp created_at;
   private Timestamp updated_at;
-  private Integer foodId;
+  private Integer food_id;
   private String type;
+  private Integer nutri_id;
 
 }

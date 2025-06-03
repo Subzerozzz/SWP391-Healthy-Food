@@ -112,9 +112,6 @@
                           href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
                           new</a>
                       </div>
-                      <c:if test="${isSuccess}">
-                        alert("Yêu cầu tạo món ăn đã được gửi đi thành công!");
-                      </c:if>
                       <div class="wg-table table-product-list">
                         <ul class="table-title flex gap20 mb-14">
                           <li>
@@ -146,7 +143,7 @@
                           <c:forEach items="${listFood}" var="item">
                             <li class="product-item gap14">
                               <div class="image no-bg">
-                                <img src="images/products/41.png" alt="">
+                                <img src=${item.getImage_url()} alt="">
                               </div>
                               <div class="flex items-center justify-between gap20 flex-grow">
                                 <div class="name">

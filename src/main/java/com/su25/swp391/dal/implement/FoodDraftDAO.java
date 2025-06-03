@@ -49,8 +49,8 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 
   @Override
   public int insert(FoodDraft t) {
-    String sql = "INSERT INTO Food_draft (name, description, price, image_url, status, category_id, created_at, updated_at)"
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO Food_draft (name, description, price, image_url, category_id, created_at, updated_at,food_id,type,nutri_id)"
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     try {
       // gan giá tri vao
       statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -58,10 +58,12 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
       statement.setString(2, t.getDescription());
       statement.setDouble(3, t.getPrice());
       statement.setString(4, t.getImage_url());
-      statement.setString(5, t.getStatus());
-      statement.setInt(6, t.getCategory_id());
-      statement.setTimestamp(7, t.getCreated_at());
-      statement.setTimestamp(8, t.getUpdated_at());
+      statement.setInt(5, t.getCategory_id());
+      statement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+      statement.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+      statement.setInt(8, t.getFood_id());
+      statement.setString(9, t.getType());
+      statement.setInt(10, t.getNutri_id());
 
       // thuc thi cau lenh
       statement.executeUpdate();
@@ -86,10 +88,12 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
     product.setDescription(resultSet.getString("description"));
     product.setPrice(resultSet.getDouble("price"));
     product.setImage_url(resultSet.getString("image_url"));
-    product.setStatus(resultSet.getString("status"));
+    product.setCategory_id(resultSet.getInt("category_id"));
     product.setCreated_at(resultSet.getTimestamp("created_at"));
     product.setUpdated_at(resultSet.getTimestamp("updated_at"));
-    product.setCategory_id(resultSet.getInt("category_id"));
+    product.setFood_id(resultSet.getInt("food_id"));
+    product.setType(resultSet.getString("type"));
+    product.setNutri_id(resultSet.getInt("nutri_id"));
     return product;
   }
 
@@ -99,25 +103,24 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
-
   public Integer getBiggestId() {
-      String sql = "SELECT MAX(id) AS id"
-                    +" FROM Food_draft;";
-      try {
-        statement = connection.prepareStatement(sql);
-        resultSet = statement.executeQuery(sql);
+    String sql = "SELECT MAX(id) AS id"
+        + " FROM Food_draft;";
+    try {
+      statement = connection.prepareStatement(sql);
+      resultSet = statement.executeQuery(sql);
 
-        if(resultSet.next()){
-          return resultSet.getInt(1);
-        }
-      } catch (Exception e) {
-        System.out.println("Loi day" + e);
+      if (resultSet.next()) {
+        return resultSet.getInt(1);
       }
-      return -1;
-  }
-  
-    public static void main(String[] args) {
-        System.out.println(new FoodDraftDAO().getBiggestId());
+    } catch (Exception e) {
+      System.out.println("Loi day" + e);
     }
-  
+    return -1;
+  }
+
+  public static void main(String[] args) {
+    System.out.println(new FoodDraftDAO().getBiggestId());
+  }
+
 }

@@ -35,5 +35,6 @@ public class Food {
   private Integer category_id;
   private Timestamp created_at;
   private Timestamp updated_at;
+  private Integer nutri_id;
 
 }
