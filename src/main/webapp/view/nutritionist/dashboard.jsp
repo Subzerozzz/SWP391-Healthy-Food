@@ -100,17 +100,14 @@
                                         <div class="body-text">Find request food_Draft by type of request</div>
                                     </div>
                                     <div  style="width: 300px ;">
-                                        <form action="search" method="post">
-
+                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get">
+                                            <input type="hidden" name="action" value="option">
                                             <h3>Choose an option:</h3>
                                             <select name="select">
                                                 <option value="-1">--All Type Of Request--</option>
                                             <c:forEach items="${type}" var="t">
                                                 <option value="${t}">--${t}--</option>
                                             </c:forEach>
-
-
-
                                         </select>
                                         <button type="submit" >Submit Option</button>
 
@@ -142,10 +139,10 @@
                                                 <div class="body-title">View Detail</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Accept</div>
+                                                <div class="body-title">Acction</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Reject</div>
+                                                <div class="body-title"></div>
                                             </li>
                                         </ul>
                                         <ul class="flex flex-column">
@@ -169,25 +166,26 @@
                                                             <button type="submit" class="btn-blue">View Detail</button>
                                                        </form>
                                                     </div>   
-                                                    <div >
+                                                            <div style="display: flex;gap: 12px">
                                                         <form action="menu-category" method="get">
                                                             <input type="hidden" name="action" value="accept">
                                                             <input type="hidden" name="id" value="${foodDraft.id}">
-                                                           <button type="submit" class="btn-blue" style="background-color: blueviolets"
+                                                           <button type="submit" class="btn-blue" style="background-color: blue"
                                                                    onclick="return confirm('Are you want to Accept this food')" >
                                                                Accept
                                                            </button>
                                                        </form>
-                                                    </div>
-                                                    <div>
                                                         <form action="menu-category" method="get">
                                                             <input type="hidden" name="action" value="reject">
                                                              <input type="hidden" name="id" value="${foodDraft.id}">
                                                            <button type="submit" class="btn-blue" style="background-color: red"
                                                              onclick="return confirm('Are you want to Reject this food')"        >
-                                                               Reject
+                                                                Reject 
                                                            </button>
                                                        </form>     
+                                                    </div>
+                                                    <div>
+                                                           
                                                     </div>
                                                   
                                                 </div>

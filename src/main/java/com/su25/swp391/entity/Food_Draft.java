@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import java.sql.Date;
+import java.sql.Timestamp;
 @ToString
 @Builder
 @Data
@@ -24,14 +24,15 @@ public class Food_Draft {
     private String name;
     private String description;
     private Double price;
-    private String image;
-    private String status;
-    private String stock;
+    private String image_url;
     private Integer category_id;
-    private Integer nutriId;
-    private Date created_at;
-    private Date updated_at;
-    private Integer foodId;
+    private Timestamp created_at;
+    private Timestamp updated_at;
+    private Integer food_id;
     private String type;
+    private Integer nutri_id;
+    
+    
+    
   
 }

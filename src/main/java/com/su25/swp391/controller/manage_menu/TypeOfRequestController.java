@@ -43,6 +43,7 @@ public class TypeOfRequestController extends HttpServlet {
     throws ServletException, IOException {
        // Get request from Nutritionist
         String action = request.getParameter("action");
+        String select = request.getParameter("select");
         if (action == null) {
             action = "list"; // Assign action = list 
         }
@@ -61,6 +62,22 @@ public class TypeOfRequestController extends HttpServlet {
                 break;
             case "reject":
                 rejectFoodDraft(request,response);
+                break;
+            case "option":
+                switch(select){
+                    case "Create":
+                        listTypeOfCreate(request, response);
+                        break;
+                    case "Update":
+                        listTypeOfUpdate(request, response);
+                        break;
+                    case "Delete":
+                        listTypeOfDelete(request, response);
+                        break;
+                    default:
+                        listTypeOfRequest(request,response);
+                        break;
+                }
                 break;
             default:
                listTypeOfRequest(request,response);
@@ -123,12 +140,39 @@ public class TypeOfRequestController extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void showViewDetail(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Food_Draft foodDraft = foodDraftDAO.findById(id);
+        request.setAttribute("foodD", foodDraft);
+        request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
     }
 
     private void addToFood(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Food_Draft> list = foodDraftDAO.findAllByType("Create");
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+
+    private void listTypeOfUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Food_Draft> list = foodDraftDAO.findAllByType("Update");
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+
+    private void listTypeOfDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Food_Draft> list = foodDraftDAO.findAllByType("Delete");
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
 
 }

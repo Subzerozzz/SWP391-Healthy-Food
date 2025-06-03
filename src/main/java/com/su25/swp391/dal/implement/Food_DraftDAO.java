@@ -52,6 +52,24 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
+    public List<Food_Draft> findAllByType(String type) {
+          String sql = "select * from  Food_Draft where type = ? ";
+        List< Food_Draft> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, type);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
 
     public List<Food_Draft> findAllFoodDrartByRequest() {
         String sql = "select f.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
@@ -152,15 +170,13 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
-                .image(resultSet.getString("image"))
-                .status(resultSet.getString("status"))
-                .stock(resultSet.getString("stock"))
+                .image_url(resultSet.getString("image_url"))
                 .category_id(resultSet.getInt("category_id"))
-                .nutriId(resultSet.getInt("nutriId"))
-                .created_at(resultSet.getDate("created_at"))
-                .updated_at(resultSet.getDate("updated_at"))
-                .foodId(resultSet.getInt("foodId"))
+                .created_at(resultSet.getTimestamp("created_at"))
+                .updated_at(resultSet.getTimestamp("updated_at"))
+                .food_id(resultSet.getInt("food_id"))
                 .type(resultSet.getString("type"))
+                .nutri_id(resultSet.getInt("nutri_id"))
                 .build();
 
         return food;
@@ -168,11 +184,8 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
     @Override
     public Food_Draft findById(Integer id) {
-         String sql = "select f.* from swp391_healthy_food.Request as r"
-                 + " inner join swp391_healthy_food.Food_Draft as f " 
-                       +"on r.foodDraftId = f.id  WHERE f.id = ? ";
-           try {
-     
+         String sql = "select * from swp391_healthy_food.Food_Draft where id = ? ";
+          try {
       connection =getConnection();
       statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
@@ -214,7 +227,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
       Food_Draft f = dao.findById(4);
 //        dao.updateStatus(1);
         // System.out.println(f);
-        for (Food_Draft f2 : dao.findAll()) {
+        for (Food_Draft f2 : dao.findAllByType("Create")) {
             System.out.println(f2);
         }
         System.out.println("--");

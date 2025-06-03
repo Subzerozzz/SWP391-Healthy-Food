@@ -98,8 +98,8 @@
                                         <div class="tf-product-media-wrap">
                                             <div class="thumbs-slider">
                                                <div class="item">
-                                                    <a href="${foodD.image_url}" target="_blank" data-pswp-width="1000px" data-pswp-height="1000px">
-                                                        <img  data-zoom="images/products/product-detail-2.png" src="${foodD.image_url}" alt="">
+                                                    <a href="${foodD.image}" target="_blank" data-pswp-width="1000px" data-pswp-height="1000px">
+                                                        <img  data-zoom="images/products/product-detail-2.png" src="${foodD.image}" alt="">
                                                     </a>
                                                </div>
                                                </div>
@@ -114,7 +114,7 @@
                                                 <div>
                                                     <h3>Type Request: </h3>
                                                     <h3>Description: ${foodD.description}</h3>
-                                                    <h3>Create At: ${foodD.create_At}</h3>
+                                                    <h3>Create At: ${foodD.created_at}</h3>
                                                 </div>
                                                
                                                <br/>
