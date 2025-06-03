@@ -47,13 +47,13 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
 
   @Override
   public int insert(Request t) {
-    String sql = "INSERT INTO Request(type, foodDraftId, status)"
+    String sql = "INSERT INTO Request(result, foodDraftId, statusRequest)"
         + " VALUES(?, ?, ?);";
     try {
       statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-      statement.setString(1, t.getType());
+      statement.setString(1, t.getResult());
       statement.setInt(2, t.getFoodDraftId());
-      statement.setString(3, t.getStatus());
+      statement.setString(3, t.getStatusRequest());
       statement.executeUpdate();
       ResultSet resultSet = statement.getGeneratedKeys();
 
@@ -78,6 +78,5 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
                                                                    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
-  
 
 }
