@@ -379,13 +379,13 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="username"  required data-error="Please enter your Username or Email" value="abc@gmail.com" placeholder="Username or Email">
+                                            <input type="text" class="form-control" name="username"  required data-error="Please enter your Username or Email"  placeholder="Username or Email">
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="password" name="password" value="123@123" placeholder="Password">
+                                            <input class="form-control" type="password" name="password"  placeholder="Password">
                                         </div>
                                     </div>
 
