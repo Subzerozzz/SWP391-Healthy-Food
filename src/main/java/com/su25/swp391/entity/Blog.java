@@ -31,4 +31,5 @@ public class Blog {
     private String brief_info;
     private String context;
     private String thumbnailblogs;
+    private String status;
 }
