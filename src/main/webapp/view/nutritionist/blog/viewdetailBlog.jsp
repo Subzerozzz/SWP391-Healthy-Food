@@ -122,77 +122,99 @@
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/blog/addBlog.jsp"<i class="icon-plus"></i>Add new</a>
                                     </div>
                          <style>
+                             body {
+                                 font-family: Arial, sans-serif;
+                                 margin: 20px;
+                             }
+
+                             h2 {
+                                 text-align: center;
+                             }
+
+                             .table-container {
+                                 width: 100%;
+                                 border: 1px solid #ccc;
+                                 border-radius: 8px;
+                                 overflow-x: auto;
+                             }
+
                              .table-header, .table-row {
                                  display: flex;
                                  align-items: center;
-                                 padding: 10px 0;
-                                 border-bottom: 1px solid #ddd;
+                                 padding: 10px;
+                                 border-bottom: 1px solid #eee;
                              }
 
                              .table-header {
                                  font-weight: bold;
+                                 background-color: #f5f5f5;
                              }
 
                              .col {
                                  flex: 1;
                                  padding: 0 10px;
-                                 min-width: 150px;
+                                 min-width: 120px;
                                  word-break: break-word;
                              }
 
                              .actions {
                                  display: flex;
-                                 gap: 12px;
+                                 gap: 10px;
                              }
 
-                             .actions .icon-eye {
-                                 color: #007bff; /* blue */
-                             }
-
-                             .actions .icon-edit-3 {
-                                 color: #28a745; /* green */
-                             }
-
-                             .actions .icon-trash-2 {
-                                 color: #dc3545; /* red */
+                             .actions i {
+                                 cursor: pointer;
+                                 transition: transform 0.2s, opacity 0.2s;
                              }
 
                              .actions i:hover {
                                  opacity: 0.7;
                                  transform: scale(1.1);
-                                 transition: all 0.2s;
                              }
+
+                             .icon-eye {
+                                 color: #007bff;
+                             }       /* View */
+                             .icon-edit-3 {
+                                 color: #28a745;
+                             }    /* Edit */
+                             .icon-trash-2 {
+                                 color: #dc3545;
+                             }   /* Delete */
                          </style>
+                </head>
+                <body>
+                    <div class="table-container">
+                        <!-- Table Header -->
+                        <div class="table-header">
+                            <div class="col">Blog</div>
+                            <div class="col">Blog ID</div>
+                            <div class="col">Author</div>
+                            <div class="col">Date</div>
+                            <div class="col">Status</div>
+                            <div class="col">Brief Info</div>
+                            <div class="col">Context</div>
+                            <div class="col">Action</div>
+                        </div>
 
-                         <div class="wg-table table-product-list">
-                             <!-- Header -->
-                             <div class="table-header">
-                                 <div class="col">Blog</div>
-                                 <div class="col">Blog ID</div>
-                                 <div class="col">Author</div>
-                                 <div class="col">Date</div> 
-                                 <div class="col">Status</div>
-                                 <div class="col">Action</div>
-                             </div>
-
-                             <!-- Data Rows -->
-                             <c:forEach items="${blogs}" var="blog">
-                                 <div class="table-row">
-                                     <div class="col">
-                                         <a href="list.jsp" class="body-title-2">${blog.title}</a>
-                                     </div>
-                                     <div class="col">${blog.id}</div>
-                                     <div class="col">${blog.author}</div>
-                                     <div class="col">${blog.date}</div> 
-                                     <div class="col">${blog.status}</div>
-                                     <div class="col actions">
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"><i class="icon-eye"></i></a>
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"> <i class="icon-edit-3"></i></a>
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"><i class="icon-trash-2"></i></a>
-                                     </div>
-                                 </div>
-                             </c:forEach>
-                         </div>
+                        <!-- Table Rows -->
+                        <c:forEach items="${blogs}" var="blog">
+                            <div class="table-row">
+                                <div class="col"><a href="detail.jsp?id=${blog.id}">${blog.title}</a></div>
+                                <div class="col">${blog.id}</div>
+                                <div class="col">${blog.author}</div>
+                                <div class="col">${blog.date}</div>
+                                <div class="col">${blog.status}</div>
+                                <div class="col">${blog.briefinfo}</div>
+                                <div class="col">${blog.context}</div>
+                                <div class="col actions">
+                                    <i class="icon-eye" title="View"></i>
+                                    <i class="icon-edit-3" title="Edit"></i>
+                                    <i class="icon-trash-2" title="Delete"></i>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing 10 entries</div>
