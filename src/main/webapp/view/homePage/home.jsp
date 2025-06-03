@@ -33,7 +33,7 @@
             <div class="d-table">
                 <div class="d-table-cell">
                     <img src="${pageContext.request.contextPath}/images/preloder-img.png" alt="Images">
-                    <h2>Hilo</h2>
+                    <h2>GreenBite</h2>
                 </div>
             </div>
         </div>

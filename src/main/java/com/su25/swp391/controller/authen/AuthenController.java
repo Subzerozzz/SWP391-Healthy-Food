@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/home"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/home", "/OTP"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -36,6 +36,7 @@ public class AuthenController extends HttpServlet {
     private static final String LOGIN_PAGE = "view/Authen/Login.jsp";
     private static final String REGISTER_PAGE = "view/Authen/Register.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
+    private static final String OTP_PAGE = "view/Authen/OTP.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
 
@@ -53,6 +54,9 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/home":
                 request.getRequestDispatcher("view/homePage/home.jsp").forward(request, response);
+                break;
+            case "/OTP":
+                request.getRequestDispatcher("view/Authen/OTP.jsp").forward(request, response);
                 break;
             default:
                 break;
@@ -79,18 +83,21 @@ public class AuthenController extends HttpServlet {
             case "/register":
                 registerDoPost(request, response);
                 break;
+            case "/OTP":
+                otpDoPost(request, response);
+                break;
             default:
                 break;
         }
     }
 
-    private String registerDoPost(HttpServletRequest request, HttpServletResponse response) {
+    private String registerDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
         String url = null;
         HttpSession session = request.getSession();
 
-        String user_name = request.getParameter("user_name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+       String user_name = request.getParameter("user_name");
+       String email =request.getParameter("email");
+       String password = request.getParameter("password");
 
         request.setAttribute("formdata", Map.of(
                 "user_name", user_name != null ? user_name : "",
@@ -104,26 +111,34 @@ public class AuthenController extends HttpServlet {
             session.setAttribute("toastType", "error");
             return REGISTER_PAGE;
         }
-        // Cần kiểm tra
-        try {
-            if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+
+       
+            if (validEmail(email) == true) {
                 session.setAttribute("toastMessage", "Email correct format");
                 session.setAttribute("toastType", "error");
             }
-            if (password.matches("^[A-Za-z0-9+_.-]{8,32}$")) {
+            else{
+                session.setAttribute("toastMessage", "Email incorrect format");
+                session.setAttribute("toastType", "error");
+            }
+            if (validPassword(password) == true) {
                 session.setAttribute("toastMessage", "Password correct format");
                 session.setAttribute("toastType", "error");
             }
-            if (user_name.matches("^[a-zA-Z0-9]{3,20}$")) {
+            else{
+                session.setAttribute("toastMessage", "Password incorrect format");
+                session.setAttribute("toastType", "error");
+            }
+            if (validUsername(user_name) == true) {
                 session.setAttribute("toastMessage", "Username correct format");
                 session.setAttribute("toastType", "error");
             }
+            else{
+                session.setAttribute("toastMessage", "Username incorrect format");
+                session.setAttribute("toastType", "error");
+            }
 
-        } catch (Exception e) {
-            session.setAttribute("toastMessage", "Some inputs are incorrect, please check again");
-            session.setAttribute("toastType", "error");
-            return REGISTER_PAGE;
-        }
+        
 
         Account account = Account.builder()
                 .email(email)
@@ -134,7 +149,7 @@ public class AuthenController extends HttpServlet {
         Account accountFoundByEmail = accountDAO.findByEmail(account);
 
         if (accountFoundByEmail != null) {
-            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
+            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(email)) {
                 session.setAttribute("toastMessage", "Username already exists!");
                 session.setAttribute("toastType", "error");
             } else {
@@ -155,7 +170,7 @@ public class AuthenController extends HttpServlet {
 //                session.setAttribute("otp", otp);
 //                session.setAttribute("otp_purpose", "activation"); // Thêm mục đích OTP
 //
-//                url = VERIFY_OTP_PAGE;
+                url = OTP_PAGE;
             } else {
                 session.setAttribute("toastMessage", "Failed to create account. Please try again.");
                 session.setAttribute("toastType", "error");
@@ -200,5 +215,23 @@ public class AuthenController extends HttpServlet {
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
+    private void otpDoPost(HttpServletRequest request, HttpServletResponse response) {
+        
+    }
+
+    private boolean validEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$") && !email.trim().isEmpty() && email != null;
+
+    }
+
+    private boolean validPassword(String password) {
+        return password.matches("^[A-Za-z0-9+_.-]{8,32}$") && !password.trim().isEmpty() && password != null;
+    }
+
+    private boolean validUsername(String user_name) {
+        return user_name.matches("^[a-zA-Z0-9]{3,20}$") && !user_name.trim().isEmpty() && user_name != null;
+    }
+
+    
 
 }

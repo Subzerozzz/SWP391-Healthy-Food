@@ -375,17 +375,17 @@
                     <div class="user-form">
                         <div class="contact-form">
                             <h2>Register Now</h2>
-                            <form>
+                            <form action="register" method="post">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" required data-error="Please enter your Username" placeholder="Enter Your Username(k sử dụng ký tự đặc biệt)">
+                                            <input type="text" class="form-control" name="user_name" required data-error="Please enter your Username" placeholder="Enter Your Username(k sử dụng ký tự đặc biệt)">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" required data-error="Please enter your Username or Email" placeholder="Enter Your Email(ex:example@gmail.com)">
+                                            <input type="email" class="form-control" name="email" required data-error="Please enter your Username or Email" placeholder="Enter Your Email(ex:example@gmail.com)">
                                         </div>
                                     </div>
 
@@ -395,11 +395,6 @@
                                         </div>
                                     </div>
                                     
-                                 <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="OTP" required data-error="OTP wrong! Try again!" placeholder="OTP">
-                                            <button>Seen</button>
-                                        </div>
                                     </div>
     
                                     <div class="col-lg-12 ">
