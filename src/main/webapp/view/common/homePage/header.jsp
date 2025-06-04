@@ -10,6 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <div class="main-nav nav-three">
@@ -251,6 +252,16 @@
                             </ul>
 
                             <div class="nav-bar-side-2">
+                                <c:choose>
+                                    <c:when test="${sessionScope.account == null}">
+                                        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary">Login</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="#" >
+                                            <i class="fas fa-2x fa-user-circle"></i>
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
                                 <div class="language-nav-list">
                                     <select class="language-list-item">
                                         <option>English</option>

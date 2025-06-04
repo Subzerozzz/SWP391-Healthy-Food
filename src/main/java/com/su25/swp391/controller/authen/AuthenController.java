@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.controller.authen;
 
+import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
@@ -188,8 +189,10 @@ public class AuthenController extends HttpServlet {
         } else {
             // Nếu email chưa tồn tại
             String otp = EmailUtils.sendOTPMail(email);
+            session.setAttribute("otp", otp);
+            session.setAttribute("account", account);
+            url = OTP_PAGE;
             
-           
         }
         request.getRequestDispatcher(url).forward(request, response);
 
@@ -243,8 +246,36 @@ public class AuthenController extends HttpServlet {
      *
      * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
      * @param response HttpServletResponse để gửi phản hồi về client.
+     * @throws IOException 
+     * @throws ServletException 
      */
-    private void otpDoPost(HttpServletRequest request, HttpServletResponse response) {
+    private void otpDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        //get ve OTP
+        HttpSession session = request.getSession();
+        String otp = (String) session.getAttribute("otp");
+        Account accountFoundByEmail = (Account) session.getAttribute("account");
+        
+        // get ve OTP tu form
+        String otp1 = request.getParameter("otp1");
+        String otp2 = request.getParameter("otp2");
+        String otp3 = request.getParameter("otp3");
+        String otp4 = request.getParameter("otp4");
+        String otp5 = request.getParameter("otp5");
+        String otp6 = request.getParameter("otp6");
+        String otpForm = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+        // so sanh OTP
+        if (otp.equals(otpForm)) {
+            accountDAO.insert(accountFoundByEmail);
+            session.setAttribute("toastMessage", "Register success!");
+            session.setAttribute("toastType", "success");
+            url = HOME_PAGE;
+        } else {
+            session.setAttribute("toastMessage", "OTP incorrect!");
+            session.setAttribute("toastType", "error");
+            url = OTP_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
 
     }
 
