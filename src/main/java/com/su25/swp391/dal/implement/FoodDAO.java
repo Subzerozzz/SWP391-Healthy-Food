@@ -22,72 +22,86 @@ import java.util.logging.Logger;
  */
 public class FoodDAO extends DBContext implements I_DAO<Food> {
 
-  @Override
-  public List<Food> findAll() {
-    String sqlString = "SELECT * FROM Food";
-    List<Food> foodList = new ArrayList<>();
-    try {
-      statement = connection.prepareStatement(sqlString);
-      ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        Food food = getFromResultSet(resultSet);
-        foodList.add(food);
-      }
-    } catch (SQLException ex) {
-      Logger.getLogger(FoodDAO.class.getName()).log(Level.SEVERE, null, ex);
+    @Override
+    public List<Food> findAll() {
+        String sqlString = "SELECT * FROM Food";
+        List<Food> foodList = new ArrayList<>();
+        try {
+            statement = connection.prepareStatement(sqlString);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Food food = getFromResultSet(resultSet);
+                foodList.add(food);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return foodList;
     }
-    return foodList;
-  }
 
-  @Override
-  public Map<Integer, Food> findAllMap() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean update(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean delete(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public int insert(Food t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public Food getFromResultSet(ResultSet resultSet) throws SQLException {
-    Food food = new Food();
-    food.setId(resultSet.getInt("id"));
-    food.setName(resultSet.getString("name"));
-    food.setDescription(resultSet.getString("description"));
-    food.setPrice(resultSet.getDouble("price"));
-    food.setImage_url(resultSet.getString("image_url"));
-    food.setStatus(resultSet.getString("status"));
-    food.setCategory_id(resultSet.getInt("category_id"));
-    food.setCreated_at(resultSet.getTimestamp("created_at"));
-    food.setUpdated_at(resultSet.getTimestamp("updated_at"));
-    return food;
-  }
-
-  @Override
-  public Food findById(Integer id) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  public static void main(String[] args) {
-    for (Food a : new FoodDAO().findAll()) {
-      System.out.println(a);
+    @Override
+    public Map<Integer, Food> findAllMap() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-  }
+
+    @Override
+    public boolean update(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean delete(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int insert(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Food getFromResultSet(ResultSet resultSet) throws SQLException {
+        Food food = new Food();
+        food.setId(resultSet.getInt("id"));
+        food.setName(resultSet.getString("name"));
+        food.setDescription(resultSet.getString("description"));
+        food.setPrice(resultSet.getDouble("price"));
+        food.setImage_url(resultSet.getString("image_url"));
+        food.setStatus(resultSet.getString("status"));
+        food.setCategory_id(resultSet.getInt("category_id"));
+        food.setCreated_at(resultSet.getTimestamp("created_at"));
+        food.setUpdated_at(resultSet.getTimestamp("updated_at"));
+        return food;
+    }
+
+    @Override
+    public Food findById(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Food checkExistFoodName(String name) {
+        Food food = null;
+        String sql = "Select * From Food WHERE name = ?";
+        try {
+            statement = connection.prepareStatement(sql);
+            //set giá trị vào name
+            statement.setString(1, name);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                food = getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+        }
+        return food;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new FoodDAO().checkExistFoodName("Vegan Buddha Bowl"));
+    }
 
 }

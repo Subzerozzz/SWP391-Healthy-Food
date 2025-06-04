@@ -20,8 +20,8 @@ import java.util.List;
  *
  * @author Dell
  */
-@WebServlet(name = "ManagerDashboard", urlPatterns = {"/manager-dashboard"})
-public class ManagerDashboard extends HttpServlet {
+@WebServlet(name = "ManagerDashboardController", urlPatterns = {"/manager-dashboard"})
+public class ManagerDashboardController extends HttpServlet {
     
     FoodDAO foodDao = new FoodDAO();
 

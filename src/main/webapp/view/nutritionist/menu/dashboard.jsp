@@ -157,7 +157,7 @@
                                 <div class="body-text">${item.getUpdated_at()}</div>
                                 <div class="list-icon-function">
                                   <div class="item eye">
-                                    <a>
+                                    <a href="${pageContext.request.contextPath}/manage-food?action=viewDetail&id=${item.id}">
                                       <i class="icon-eye"></i>
                                     </a>
 

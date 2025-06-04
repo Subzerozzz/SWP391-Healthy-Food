@@ -24,12 +24,12 @@ public class FoodCategoryDAO extends DBContext implements I_DAO<FoodCategory> {
     // Chuẩn bị 1 mảng để chứa dữ liệu
     List<FoodCategory> list = new ArrayList<>();
     // Chuẩn bị câu lệnh SQL
-    String sql = "SELECT * FROM Food_category";
+    String sql = "SELECT * FROM FoodCategory";
     try {
       // Chuẩn bị đối tượng statement
       statement = connection.prepareStatement(sql);
       // Thực thi câu lệnh SQL trả về đối tượng resultSet
-      ResultSet resultSet = statement.executeQuery();
+      resultSet = statement.executeQuery();
       // Duyệt qua từng bản ghi trong resultSet
       while (resultSet.next()) {
         // Lấy dữ liệu từ resultSet gán vào đối tượng produc
@@ -37,6 +37,7 @@ public class FoodCategoryDAO extends DBContext implements I_DAO<FoodCategory> {
       }
     } catch (SQLException e) {
       System.out.println("Lỗi truy vấn");
+      System.out.println(e);
     }
     return list;
   }

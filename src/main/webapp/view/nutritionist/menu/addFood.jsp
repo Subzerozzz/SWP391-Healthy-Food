@@ -71,7 +71,7 @@
                       </div>
                       <!-- form-add-product -->
                       <form class="tf-section-2 form-add-product"
-                        action="${pageContext.request.contextPath}/manage-food?action=add" method="POST">
+                        action="${pageContext.request.contextPath}/manage-food?action=add" method="POST" enctype="multipart/form-data">
                         <div class="wg-box">
                           <!--Name-->
                           <fieldset class="name">
