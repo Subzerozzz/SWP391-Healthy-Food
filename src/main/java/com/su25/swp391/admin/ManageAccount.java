@@ -42,9 +42,15 @@ public class ManageAccount extends HttpServlet {
             case "add":
                 showAddForm(request, response);
                 break;
-
             case "edit":
                 showEditForm(request, response);
+                break;
+            case "viewDetail":
+                viewDetail(request,response);
+                break;
+                
+            case "delete":
+                deleteAccount(request, response);
                 break;
             case "deactive":
                 deactivateAccount(request, response);
@@ -54,6 +60,9 @@ public class ManageAccount extends HttpServlet {
                 break;
             case "list":
                 listAccount(request, response);
+                break;
+            case "filter":
+                handleFilter(request, response);
                 break;
             default:
                 listAccount(request, response);
@@ -132,13 +141,20 @@ public class ManageAccount extends HttpServlet {
             setToastMessage(request, "Invalid account Id", "Err");
         }
         //chuyen huong ve trang list 
-        response.sendRedirect("/manage-account-dashbost");
+        response.sendRedirect("manage-account-dashbost");
         return;
     }
 
     private void listAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("manage-account-dashbost").forward(request, response);
+
+        AccountDAO account = new AccountDAO();
+        List<Account> listAccount = account.findAll();
+
+        request.setAttribute("listAccount", listAccount);
+
+        
+        request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
     }
 
     private void addAccount(HttpServletRequest request, HttpServletResponse response)
@@ -152,19 +168,22 @@ public class ManageAccount extends HttpServlet {
             String address = request.getParameter("address");
             String role = request.getParameter("role");
             Boolean status = Boolean.parseBoolean(request.getParameter("status"));
-            String dateStr = request.getParameter("birth_data");
+            String dateStr = request.getParameter("birth_date");
             //Xu ly thong tin ve nhap date
             Date date = null;
             try {
                 if (dateStr != null && dateStr.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    date = (Date) sdf.parse(dateStr);
+                    java.util.Date utilDate = sdf.parse(dateStr);
+                    date = new java.sql.Date(utilDate.getTime()); // ép sang java.sql.Date
                 }
             } catch (ParseException e) {
                 request.setAttribute("error", "Đinh dang sai form ");
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
+            String mobile = request.getParameter("mobile");
+            String gender = request.getParameter("gender");
             //validate input data 
             Map<String, String> errors = validateAccountData(full_name, email, password, 0);
             if (!errors.isEmpty()) {
@@ -179,13 +198,15 @@ public class ManageAccount extends HttpServlet {
             //Tạo đối tượng account mới
             Account newAccount = Account.builder()
                     .full_name(full_name)
-                    .use_name(user_name)
+                    .user_name(user_name)
                     .email(email)
                     .password(password)
                     .address(address)
                     .role(role)
                     .status(status)
-                    .birth_data(date)
+                    .birth_date(date)
+                    .mobile(mobile)
+                    .gender(gender)
                     .build();
             AccountDAO accountDao = new AccountDAO();
             boolean isSuccses = accountDao.insert(newAccount) > 0;
@@ -193,35 +214,44 @@ public class ManageAccount extends HttpServlet {
                 request.getSession().setAttribute("totalMess", "Add new Account Success");
                 request.getSession().setAttribute("totalType", "Success");
                 listAccount(request, response);
-                return; // THÊM DÒNG NÀY
+//                response.sendRedirect("manage-account-dashbost");
+//                return; // THÊM DÒNG NÀY
             } else {
                 setToastMessage(request, "totalMess", "Fail to add Account");
                 setToastMessage(request, "totalType", "Err");
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
+                return;
             }
 
         } catch (Exception e) {
             request.getSession().setAttribute("totalMess", "Fail to add Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            e.printStackTrace();
             request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
         }
-//        response.sendRedirect("manage-account-dashbost");
-
     }
 
     private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int accountId = Integer.parseInt(request.getParameter("id"));
             String full_name = request.getParameter("full_name");
+            String user_name = request.getParameter("user_name");
             String email = request.getParameter("email");
+            String role = request.getParameter("role");
             Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+            String mobile = request.getParameter("mobile");
+            String gender = request.getParameter("gender");
             //lay account tu database 
             AccountDAO accountDao = new AccountDAO();
             Account account = accountDao.findById(accountId);
             //cap nhap nhung thong tin co the thay doi
             account.setFull_name(full_name);
             account.setEmail(email);
+            account.setUser_name(user_name);
+            account.setRole(role);
             account.setStatus(status);
+            account.setMobile(mobile);
+            account.setGender(gender);
             //thuc hien update
             boolean isSuccess = accountDao.update(account);
             //xu ly ket qua 
@@ -229,21 +259,24 @@ public class ManageAccount extends HttpServlet {
                 request.getSession().setAttribute("totalMess", "update new Account Success");
                 request.getSession().setAttribute("totalType", "Success");
                 response.sendRedirect("manage-account");
-                return; // THÊM DÒNG NÀY
+                return;
             } else {
-                 setToastMessage(request, "totalMess", "Fail to update Account");
+                setToastMessage(request, "totalMess", "Fail to update Account");
                 setToastMessage(request, "totalType", "Err");
                 request.setAttribute("error", "Update failed");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
                 dispatcher.forward(request, response);
+                return;
             }
         } catch (Exception e) {
             request.getSession().setAttribute("totalMess", "Fail to Update Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
+            dispatcher.forward(request, response);
+            return;
+
         }
 
-        response.sendRedirect("manage-account-dashbost");
-        return;
     }
 
     private Map<String, String> validateAccountData(String full_name, String email, String password, int id) {
@@ -291,8 +324,70 @@ public class ManageAccount extends HttpServlet {
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int accountId = Integer.parseInt(request.getParameter("id"));
+        Account account = new AccountDAO().findById(accountId);
+
+        request.setAttribute("account", account);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
         dispatcher.forward(request, response);
     }
 
+    private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String role = request.getParameter("role");
+        String statusParam = request.getParameter("status");
+        Boolean status = (statusParam != null && !statusParam.isEmpty()) ? Boolean.parseBoolean(statusParam) : null;
+
+        AccountDAO accountDAO = new AccountDAO();
+        List<Account> filteredAccounts = accountDAO.filterAccounts(role, status);
+
+        request.setAttribute("listAccount", filteredAccounts);
+        request.setAttribute("role", role);
+        request.setAttribute("status", statusParam);
+        request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
+    }
+    private void deleteAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int idStr = Integer.parseInt(request.getParameter("id"));
+        AccountDAO accountdao = new AccountDAO();
+        Account accont = accountdao.findById(idStr);
+        if (accont != null) {
+            Boolean deleteAccount = accountdao.delete(accont);
+            if (deleteAccount) {
+                setToastMessage(request, "totalMess", "Delete SuccsessFully");
+
+                setToastMessage(request, "typeMess", "SuccsessFully");
+
+            } else {
+                setToastMessage(request, "totalMess", "Fail to add Account");
+                setToastMessage(request, "totalType", "Err");
+            }
+        } else {
+            setToastMessage(request, "totalMess", "Fail to add Account");
+            setToastMessage(request, "totalType", "Err");
+        }
+        response.sendRedirect(request.getContextPath()+"/manage-account");
+    }
+
+   private void viewDetail(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        int accountId = Integer.parseInt(request.getParameter("id"));
+
+        AccountDAO accountDao = new AccountDAO();
+        Account account = accountDao.findById(accountId);
+
+        if (account != null) {
+            request.setAttribute("account", account);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/viewDetail.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+            request.getSession().setAttribute("totalType", "Err");
+            response.sendRedirect(request.getContextPath() + "/manage-account");
+        }
+    } catch (Exception e) {
+        request.getSession().setAttribute("totalMess", "Có lỗi xảy ra khi xem chi tiết.");
+        request.getSession().setAttribute("totalType", "Err");
+        response.sendRedirect(request.getContextPath() + "/manage-account");
+    }
+}
 }

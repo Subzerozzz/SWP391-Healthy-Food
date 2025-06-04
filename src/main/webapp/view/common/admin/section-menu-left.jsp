@@ -184,22 +184,13 @@
                                                                                                         </a>
                                                                                                         
                                                                                                     </li>
-                                                                                                    <li class="sub-menu-item">
+<!--                                                                                                    <li class="sub-menu-item">
                                                                                                         <a href="${pageContext.request.contextPath}/manage-account?action=edit" >
                                                                                                             <div class="text">Edit User</div>
                                                                                                         </a>
                                                                                                         
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="login.html" class="">
-                                                                                                            <div class="text">Login</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="sign-up.html" class="">
-                                                                                                            <div class="text">Sign up</div>
-                                                                                                        </a>
-                                                                                                    </li>
+                                                                                                    </li>-->
+                                                                                                    
                                                                                                 </ul>
                                                                                             </li>
                                                                                             <li class="menu-item has-children">
@@ -282,11 +273,7 @@
                                                                                                             <div class="text">New page</div>
                                                                                                         </a>
                                                                                                     </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="edit-page.html" class="">
-                                                                                                            <div class="text">Edit page</div>
-                                                                                                        </a>
-                                                                                                    </li>
+
                                                                                                 </ul>
                                                                                             </li>
                                                                                         </ul>

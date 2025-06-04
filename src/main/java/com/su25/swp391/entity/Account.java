@@ -23,12 +23,15 @@ import lombok.ToString;
 public class Account {
     private int id;
     private String full_name;
-    private String use_name;
+    private String user_name;
     private String email;
     private String password;
     private String address;
     private String role;
     private Boolean status;
-    private Date birth_data;
+    private Date birth_date;
+    private String mobile;
+    private String gender;
+            
     
 }
