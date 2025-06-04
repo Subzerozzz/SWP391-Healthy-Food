@@ -56,7 +56,7 @@ public class EmailUtils {
         return otp+"";
     }
     
-    public static void main(String[] args) {
-        sendOTPMail("kieuducmanh2004vinhphuc@gmail.com");
-    }
+//    public static void main(String[] args) {
+//        sendMail("kieuducmanh2004vinhphuc@gmail.com","test gửi email","Hello");
+//    }
 }
