@@ -1,6 +1,5 @@
 package com.su25.swp391.utils;
 
-
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.utils.GlobalUtils;
 import java.util.Properties;
@@ -19,7 +18,7 @@ public class EmailUtils {
 
     public static boolean sendMail(String to, String subject, String content) throws AddressException, MessagingException {
         Properties props = new Properties();
-         // Thiết lập các thuộc tính cho phiên gửi mail
+        // Thiết lập các thuộc tính cho phiên gửi mail
         props.put("mail.smtp.host", "smtp.gmail.com");  // SMTP server của Gmail
         props.put("mail.smtp.port", "587"); // Cổng TLS của Gmail
         props.put("mail.smtp.auth", "true");
@@ -53,10 +52,14 @@ public class EmailUtils {
             Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return otp+"";
+        return otp + "";
     }
-    
-//    public static void main(String[] args) {
-//        sendMail("kieuducmanh2004vinhphuc@gmail.com","test gửi email","Hello");
-//    }
+
+    public static void main(String[] args) {
+        try {
+            sendMail("kieuducmanh2004vinhphuc@gmail.com","test gửi email","Hello");
+        } catch (MessagingException ex) {
+            Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

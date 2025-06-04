@@ -17,7 +17,7 @@ public class GlobalConfig {
     /**
      * USERNAME_EMAIL: Địa chỉ email được sử dụng để gửi email từ ứng dụng
      */
-    public static final String USERNAME_EMAIL = "service.kieuducmanh2004vinhphuc@gmail.com";
+    public static final String USERNAME_EMAIL = "kieuducmanh2004vinhphuc@gmail.com";
 
     /**
      * PASSWORD_APP_EMAIL: Mật khẩu của địa chỉ email được sử dụng để gửi email từ
