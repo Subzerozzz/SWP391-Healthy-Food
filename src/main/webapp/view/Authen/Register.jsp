@@ -76,27 +76,15 @@
                             <form action="register" method="post">
                                 <div class="row">
 
-                                    <div class="col-lg-12" >
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="full_name" required data-error="Please enter your full_name" placeholder="Enter Your FullName">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12 ">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="user_name" required data-error="Please enter your Username" placeholder="Enter Your Username">
-                                        </div>
-                                    </div>
-
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
                                             <input type="email" class="form-control" name="email" required data-error="Please enter your Username or Email" placeholder="Enter Your Email">
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="mobile" placeholder="mobile">
+                                            <input type="text" class="form-control" name="user_name" required data-error="Please enter your Username" placeholder="Enter Your Username">
                                         </div>
                                     </div>
 
@@ -109,21 +97,6 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="confirmpassword" placeholder="Confirm password">
-                                        </div>
-                                    </div>
-<!--                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <input class="form-control" type="date" name="birth_date" placeholder="Birthday">
-                                        </div>
-                                    </div>-->
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" name="password" placeholder="Address">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" name="gender" placeholder="Gender">
                                         </div>
                                     </div>
                                 </div>

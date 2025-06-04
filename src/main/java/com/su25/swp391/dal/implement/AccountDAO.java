@@ -113,7 +113,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                return resultSet.getInt(1);        //
+                return resultSet.getInt(1);        
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -218,5 +218,4 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 //    }
 //
 //}
-
 }
