@@ -17,7 +17,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public List<Blog> findAll() {
         List<Blog> blogs = new ArrayList<>();
-        String sql = "SELECT * FROM blogs ORDER BY created_at DESC";
+        String sql = "SELECT * FROM blogs ";
 
         try {
             connection = getConnection();
@@ -200,4 +200,21 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
         return false;
     }
+
+    public static void main(String[] args) {
+        BlogDAO blogDAO = new BlogDAO();
+
+        // Tạo blog cần xóa với ID cụ thể (giả sử blog có ID = 3 cần xóa)
+        Blog blogToDelete = new Blog();
+        blogToDelete.setId(2); // Đặt đúng ID của blog bạn muốn xóa trong DB
+
+        boolean isDeleted = blogDAO.delete(blogToDelete);
+
+        if (isDeleted) {
+            System.out.println("Blog deleted successfully.");
+        } else {
+            System.out.println("Failed to delete blog.");
+        }
+    }
+
 }

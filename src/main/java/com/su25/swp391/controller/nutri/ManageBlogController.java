@@ -229,7 +229,7 @@ public class ManageBlogController extends HttpServlet {
             request.getSession().setAttribute("toatMessage", "Blog not found");
             request.getSession().setAttribute("toastType", "error");
         }
-        response.sendRedirect(request.getContextPath() + "view/nutritionist/blog/manage-blog");
+        response.sendRedirect(request.getContextPath() + "/manage-blog");
 
     }
 

@@ -75,7 +75,7 @@
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Add Blog</h3>
+                                    <h3>Detail Blog</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
                                             <a href="index"><div class="text-tiny">Dashboard</div></a>
@@ -89,37 +89,34 @@
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
-                                        <li>
-                                            <div class="text-tiny">Add Blog</div>
-                                        </li>
                                     </ul>
                                 </div>
                                 <!-- form-add-product -->
                                 <form class="tf-section-2 form-add-product" >
                                     <div class="wg-box">
                                         <fieldset class="title">
-                                            <div class="body-title mb-10">Blog Title <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="text" tabindex="0" value="" aria-required="true" required="">
-                                            <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
+                                            <div class="body-title mb-10">Blog Title: <span class="tf-color-1">*</span></div>
+                                            <div class="col" style="color: red; font-size: 24px; font-weight: bold;">${blog.title}</div>
                                         </fieldset>
                                         <div class="gap22 cols">
                                             <fieldset class="author">
-                                                <div class="body-title mb-10">Author <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter author" name="text" tabindex="0" value="" aria-required="true" required="">
-                                                <div class="text-tiny">Do not exceed 20 characters when entering the author.</div>
+                                                <div class="body-title mb-10">Author:<span class="tf-color-1">*</span></div>
+                                                <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.author}</div>
                                             </fieldset>
                                             <fieldset class="briefinfo">
-                                                <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter briefinfo" name="text" tabindex="0" value="" aria-required="true" required="">
-                                                <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
+                                               <div class="body-title mb-10">Brief_info: <span class="tf-color-1">*</span></div>
+                                            <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.brief_info}</div>
                                             </fieldset>
                                         </div>
                          
-                                        <fieldset class="Context">
-                                            <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
-                                            <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
-                                        </fieldset>
+                                            < fieldset class="Context">
+                                            <div class="body-title mb-10">
+                                                Description: <span class="tf-color-1">*</span>
+                                            </div>
+                                            <div class="col" style="color: black; font-size: 20px; font-weight: bold; white-space: normal; overflow: visible; text-overflow: unset;">
+                                                ${blog.context}
+                                            </div>
+                                            </fieldset>
                                     </div>
                                     <div class="wg-box">
                                             <div class="upload-image mb-16">
@@ -136,15 +133,9 @@
                                             <fieldset class="name">
                                                 <div class="body-title mb-10">Product date</div>
                                                 <div class="select">
-                                                    <input type="date" name="date" value="2023-11-20">
+                                                    <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.birth_date}</div>
                                                 </div>
                                             </fieldset>
-                                       
-                                        <div class="cols gap10">
-                                            <button class="tf-button w-full" type="submit">Add product</button>
-                                            <button class="tf-button style-1 w-full" type="submit">Save product</button>
-                                            <a href="#" class="tf-button style-2 w-full">Schedule</a>
-                                        </div>
                                     </div>
                                 </form>
                                 <!-- /form-add-product -->

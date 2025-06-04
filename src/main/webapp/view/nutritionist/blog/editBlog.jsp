@@ -54,8 +54,7 @@
                                     <li><div class="text-tiny">Edit Blog</div></li>
                                 </ul>
                             </div>
-
-                            <form class="tf-section-2 form-add-product" action="editBlog" method="post" enctype="multipart/form-data">
+                            <form class="tf-section-2 form-add-product"
                                 <input type="hidden" name="id" value="${blog.id}" />
                                 <div class="wg-box">
                                     <fieldset class="title">
@@ -63,7 +62,6 @@
                                         <input class="mb-10" type="text" name="title" value="${blog.title}" required>
                                         <div class="text-tiny">Do not exceed 20 characters when entering the blog title.</div>
                                     </fieldset>
-
                                     <div class="gap22 cols">
                                         <fieldset class="author">
                                             <div class="body-title mb-10">Author <span class="tf-color-1">*</span></div>
@@ -73,18 +71,17 @@
 
                                         <fieldset class="briefinfo">
                                             <div class="body-title mb-10">Brief Info <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" name="briefInfo" value="${blog.briefInfo}" required>
+                                            <input class="mb-10" type="text" name="briefInfo" value="${blog.brief_info}" required>
                                             <div class="text-tiny">Do not exceed 100 characters for brief info.</div>
                                         </fieldset>
                                     </div>
 
                                     <fieldset class="Context">
                                         <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                        <textarea class="mb-10" name="description" required>${blog.description}</textarea>
+                                        <textarea class="mb-10" name="description" required>${blog.context}</textarea>
                                         <div class="text-tiny">Do not exceed 1000 characters for the description.</div>
                                     </fieldset>
                                 </div>
-
                                 <div class="wg-box">
                                     <div class="upload-image mb-16">
                                         <div class="item up-load">
@@ -99,7 +96,7 @@
                                     <fieldset class="name">
                                         <div class="body-title mb-10">Product Date</div>
                                         <div class="select">
-                                            <input type="date" name="date" value="${blog.date}">
+                                            <input type="date" name="date" value="${blog.birth_date}">
                                         </div>
                                     </fieldset>
 
