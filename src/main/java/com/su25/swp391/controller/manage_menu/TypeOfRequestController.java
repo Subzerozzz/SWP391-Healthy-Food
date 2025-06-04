@@ -47,9 +47,23 @@ public class TypeOfRequestController extends HttpServlet {
         if (action == null) {
             action = "list"; // Assign action = list 
         }
+        
         switch (action) {
             case "accept":
-                addToFood(request, response);
+                 switch(select){
+                    case "CREATE":
+                        addToFood(request, response);
+                        break;
+                    case "UPDATE":
+                        updateToFood(request, response);
+                        break;
+                    case "DELETE":
+                        deleteToFood(request, response);
+                        break;
+                    default:
+                        listTypeOfRequest(request,response);
+                        break;
+                }
                 break;
             case "view":
                 showViewDetail(request, response);
@@ -61,17 +75,30 @@ public class TypeOfRequestController extends HttpServlet {
                 activateCategory(request, response);
                 break;
             case "reject":
-                rejectFoodDraft(request,response);
+                 switch(select){
+                    case "CREATE":
+                        rejectByCreate(request, response);
+                        break;
+                    case "UPDATE":
+                        rejectByUpdate(request, response);
+                        break;
+                    case "DELETE":
+                        rejectByDelete(request, response);
+                        break;
+                    default:
+                        listTypeOfRequest(request,response);
+                        break;
+                }
                 break;
             case "option":
                 switch(select){
-                    case "Create":
+                    case "CREATE":
                         listTypeOfCreate(request, response);
                         break;
-                    case "Update":
+                    case "UPDATE":
                         listTypeOfUpdate(request, response);
                         break;
-                    case "Delete":
+                    case "DELETE":
                         listTypeOfDelete(request, response);
                         break;
                     default:
@@ -93,10 +120,9 @@ public class TypeOfRequestController extends HttpServlet {
         if (action == null) {
             action = "list"; // Default action
         }
-
         switch (action) {
             case "add":
-                
+
                 break;
             case "update":
                 updateCategory(request, response);
@@ -120,15 +146,7 @@ public class TypeOfRequestController extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void listTypeOfRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          List<Food_Draft> list = foodDraftDAO.findAll();
-          List<String> listType = foodDraftDAO.findAllType();
-          request.setAttribute("listFoodDraft", list);
-          request.setAttribute("type", listType);
-          request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
-    }
-
-    private void rejectFoodDraft(HttpServletRequest request, HttpServletResponse response) {
+     private void rejectFoodDraft(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -139,40 +157,159 @@ public class TypeOfRequestController extends HttpServlet {
     private void deactivateCategory(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
+   // SHOW DETAIL ABOUT A FOOD_DRAFT YOU CHOICE
     private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Food_Draft foodDraft = foodDraftDAO.findById(id);
         request.setAttribute("foodD", foodDraft);
         request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
     }
-
-    private void addToFood(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     
+    // VIEW LIST ALL OF FOOD_DRAFT
+    private void listTypeOfRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+          List<Food_Draft> list = foodDraftDAO.findAll();
+          List<String> listType = foodDraftDAO.findAllType();
+          request.setAttribute("listFoodDraft", list);
+          request.setAttribute("type", listType);
+          request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
-
-    private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Food_Draft> list = foodDraftDAO.findAllByType("Create");
+    
+    // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF CREATE
+     private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String select = request.getParameter("select");
+        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
-
+    
+     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF UPDATE
     private void listTypeOfUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Food_Draft> list = foodDraftDAO.findAllByType("Update");
+        String select = request.getParameter("select");
+        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
-
+    
+    // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF DELETE
     private void listTypeOfDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Food_Draft> list = foodDraftDAO.findAllByType("Delete");
+        String select = request.getParameter("select");
+        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+    
+    // INSERT A FOOD_DRAFT TO TABLE FOOD
+    private void addToFood(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String select = request.getParameter("select");
+        Food_Draft foodDraft = foodDraftDAO.findById(id);
+        foodDAO.insertFoodfromFoodDraft(foodDraft);
+        Boolean check = requestDAO.updateResult("Accept", id);
+        if (check) {
+            request.setAttribute("mess", "Accept successful");
+        } else {
+            request.setAttribute("mess", "Accept not successful");
+        }
+        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+    
+    // UPDATE A FOOD_DRAFT TO TABLE FOOD FROM A FOOD_DRAFT GET BY ID_FOOD
+    private void updateToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String select = request.getParameter("select");
+        Food_Draft foodD = foodDraftDAO.findById(id);
+        Boolean check1 = foodDAO.updateFoodbyFoodDraft(foodD);
+        Boolean check2 = requestDAO.updateResult("Accept", id);
+        if (check1 && check2) {
+            request.setAttribute("mess", "Update successful");
+        } else {
+            request.setAttribute("mess", "Update not successful");
+        }
+        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+    
+    // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
+    private void deleteToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Food_Draft food_D = foodDraftDAO.findById(id);
+        Boolean check1 = foodDAO.deleteById(food_D);
+        Boolean check2 = requestDAO.updateResult("Accept", id);
+        if(check1 && check2){
+            request.setAttribute("mess", "Delete successful");
+        }else{
+            request.setAttribute("mess", "Delete not successful");
+        }
+        String select = request.getParameter("select");
+        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
 
+    // REJECT A FOOD_DRAFT BY TYPE CREATE OF FOOD
+    private void rejectByCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String select = request.getParameter("select");
+        Boolean check = requestDAO.updateResult("Reject", id);
+        if (check) {
+            request.setAttribute("mess", "Reject Accept successful");
+        } else {
+            request.setAttribute("mess", "Reject Accept not successful");
+        }
+        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+    // REJECT A FOOD_DRAFT BY TYPE UPDATE OF FOOD
+    private void rejectByUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String select = request.getParameter("select");
+        Boolean check = requestDAO.updateResult("Reject", id);
+        if (check) {
+            request.setAttribute("mess", "Reject Updatesuccessful");
+        } else {
+            request.setAttribute("mess", "Reject Update not successful");
+        }
+        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+   // REJECT A FOOD_DRAFT BY TYPE OF DELETE FOOD
+    private void rejectByDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       int id = Integer.parseInt(request.getParameter("id"));
+        String select = request.getParameter("select");
+        Boolean check = requestDAO.updateResult("Reject", id);
+        if (check) {
+            request.setAttribute("mess", "Reject Delete successful");
+        } else {
+            request.setAttribute("mess", "Reject Delete not successful");
+        }
+        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("type", listType);
+        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+    }
+
+    
 }
