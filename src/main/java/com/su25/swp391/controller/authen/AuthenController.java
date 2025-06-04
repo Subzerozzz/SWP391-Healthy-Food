@@ -8,17 +8,13 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
-import com.su25.swp391.utils.GlobalUtils;
-import com.su25.swp391.utils.MD5PasswordEncoderUtils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  *
@@ -43,6 +39,14 @@ public class AuthenController extends HttpServlet {
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
 
+        /**
+     * Xử lý các yêu cầu GET từ client.
+     *
+     * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
+     * @param response HttpServletResponse để gửi phản hồi về client.
+     * @throws ServletException Nếu có lỗi liên quan đến servlet.
+     * @throws IOException      Nếu có lỗi liên quan đến I/O.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -72,8 +76,13 @@ public class AuthenController extends HttpServlet {
      *
      * @param request servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+    /**
+     * Xử lý các yêu cầu POST từ client.
+     *
+     * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
+     * @param response HttpServletResponse để gửi phản hồi về client.
+     * @throws ServletException Nếu có lỗi liên quan đến servlet.
+     * @throws IOException      Nếu có lỗi liên quan đến I/O.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -94,40 +103,35 @@ public class AuthenController extends HttpServlet {
         }
     }
 
+    /**
+     * Xử lý yêu cầu đăng ký tài khoản từ client.
+     *
+     * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
+     * @param response HttpServletResponse để gửi phản hồi về client.
+     * @throws ServletException Nếu có lỗi liên quan đến servlet.
+     * @throws IOException      Nếu có lỗi liên quan đến I/O.
+     */
     private void registerDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
+        // Lấy thông tin từ request
         String email = request.getParameter("email");
         String user_name = request.getParameter("user_name");
         String password = request.getParameter("password");
-        String full_name = request.getParameter("full_name");
-        String mobile = request.getParameter("mobile");
+//        String full_name = request.getParameter("full_name");
+//        String mobile = request.getParameter("mobile");
         String cfpassword = request.getParameter("confirmpassword");
-        String birth_date = request.getParameter("birth_date");
-        String gender = request.getParameter("gender");
+//        String birth_date = request.getParameter("birth_date");
+//        String gender = request.getParameter("gender");
         String address = request.getParameter("address");
         
 
-        request.setAttribute("formdata", Map.of(
-                "address", address != null ? address : "",
-                "gender", gender != null ? gender : "",
-                "birth_date", birth_date != null ? birth_date : "",
-                "cfpassword", cfpassword != null ? cfpassword : "",
-                "mobile", mobile != null ? mobile : "",
-                "full_name", full_name != null ? full_name : "",
-                "user_name", user_name != null ? user_name : "",
-                "email", email != null ? email : "",
-                "password", password != null ? password : ""));
-
+        // Kiểm tra các trường bắt buộc
         if (user_name == null || user_name.trim().isEmpty()
                 || email == null || email.trim().isEmpty()
-                || full_name == null || full_name.trim().isEmpty()
-                || mobile == null || mobile.trim().isEmpty()
-                || cfpassword == null || cfpassword.trim().isEmpty()
-                || birth_date == null || birth_date.trim().isEmpty()
-                || gender == null || gender.trim().isEmpty()
-                || address == null || address.trim().isEmpty() ) {
+                || password == null || password.trim().isEmpty()
+                || cfpassword == null || cfpassword.trim().isEmpty()) {
             session.setAttribute("toastMessage", "All fields are required");
             session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
@@ -156,55 +160,49 @@ public class AuthenController extends HttpServlet {
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
-        if (!validFullname(full_name)) {
-            session.setAttribute("toastMessage", "Fullname incorrect format");
-            session.setAttribute("toastType", "error");
-            url = REGISTER_PAGE;
-            request.getRequestDispatcher(url).forward(request, response);
-            return;
-        }
-        if (!validMobile(mobile)) {
-            session.setAttribute("toastMessage", "mobie incorrect format");
-            session.setAttribute("toastType", "error");
-            url = REGISTER_PAGE;
-            request.getRequestDispatcher(url).forward(request, response);
-            return;
-        }
       
         
-               
-
+        // Tạo đối tượng Account từ thông tin đã lấy
         Account account = Account.builder()
                 .email(email)
                 .user_name(user_name)
                 .password(password)
-                .full_name(full_name)
-                .mobie(mobile)
-                .gender(gender)
                 .address(address)
-//                .birth_date(birth_date)
                 .build();
 
+        // Kiểm tra xem email đã tồn tại trong database chưa
         Account accountFoundByEmail = accountDAO.findByEmail(account);
 
+        // Nếu email đã tồn tại
         if (accountFoundByEmail != null) {
+            // Nếu username trùng với email
             if (accountFoundByEmail.getUser_name().equalsIgnoreCase(email)) {
                 session.setAttribute("toastMessage", "Username already exists!");
                 session.setAttribute("toastType", "error");
             } else {
+                // Nếu email đã tồn tại
                 session.setAttribute("toastMessage", "Email already exists!");
                 session.setAttribute("toastType", "error");
             }
             url = REGISTER_PAGE;
         } else {
- //           String otp = EmailUtils.sendOTPMail(email);
-
+            // Nếu email chưa tồn tại
+            String otp = EmailUtils.sendOTPMail(email);
+            
            
         }
         request.getRequestDispatcher(url).forward(request, response);
 
     }
 
+    /**
+     * Xử lý yêu cầu đăng nhập từ client.
+     *
+     * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
+     * @param response HttpServletResponse để gửi phản hồi về client.
+     * @throws ServletException Nếu có lỗi liên quan đến servlet.
+     * @throws IOException      Nếu có lỗi liên quan đến I/O.
+     */
     private void loginDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
@@ -240,21 +238,45 @@ public class AuthenController extends HttpServlet {
         request.getRequestDispatcher(url).forward(request, response);
     }
 
+    /**
+     * Xử lý yêu cầu OTP từ client.
+     *
+     * @param request  HttpServletRequest chứa thông tin yêu cầu từ client.
+     * @param response HttpServletResponse để gửi phản hồi về client.
+     */
     private void otpDoPost(HttpServletRequest request, HttpServletResponse response) {
 
     }
 
+    /**
+     * Kiểm tra định dạng email.
+     *
+     * @param email Email cần kiểm tra.
+     * @return true nếu email hợp lệ, false nếu không.
+     */
     private boolean validEmail(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
+    /**
+     * Kiểm tra định dạng mật khẩu.
+     *
+     * @param password Mật khẩu cần kiểm tra.
+     * @return true nếu mật khẩu hợp lệ, false nếu không.
+     */
     private boolean validPassword(String password) {
-        if (password.length() > 8 && password.length() < 16) {
+        if (password.length() >= 8 && password.length() <= 16) {
             return password.matches("^[A-Za-z0-9+_.-]+$");
         }
         return false;
     }
 
+    /**
+     * Kiểm tra định dạng tên người dùng.
+     *
+     * @param user_name Tên người dùng cần kiểm tra.
+     * @return true nếu tên người dùng hợp lệ, false nếu không.
+     */
     private boolean validUsername(String user_name) {
         if (user_name.length() > 3 && user_name.length() < 32) {
             return user_name.matches("^[A-Za-z0-9+_.-]+$");
@@ -262,12 +284,24 @@ public class AuthenController extends HttpServlet {
         return false;
     }
 
+    /**
+     * Kiểm tra định dạng tên đầy đủ.
+     *
+     * @param full_name Tên đầy đủ cần kiểm tra.
+     * @return true nếu tên đầy đủ hợp lệ, false nếu không.
+     */
     private boolean validFullname(String full_name) {
         if (full_name.length() > 3 && full_name.length() < 32) {
             return full_name.matches("^[A-Za-z0-9+_.-]+$");
         }
         return false;
     }
+    /**
+     * Kiểm tra định dạng số điện thoại.
+     *
+     * @param mobile Số điện thoại cần kiểm tra.
+     * @return true nếu số điện thoại hợp lệ, false nếu không.
+     */
     private boolean validMobile(String mobile) {
         if (mobile.length() > 9 && mobile.length() <= 11) {
             return mobile.matches("^[A-Za-z0-9+_.-]+$");
