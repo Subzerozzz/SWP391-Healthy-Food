@@ -30,7 +30,7 @@ public class Blog {
     private String title;
     private String author;
     private String brief_info;
-    private String context;
+    private String content;
     private String thumbnailblogs;
     private String status;
     private Date birth_date;

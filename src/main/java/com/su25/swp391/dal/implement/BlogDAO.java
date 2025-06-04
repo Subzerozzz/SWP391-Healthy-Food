@@ -57,15 +57,17 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
     @Override
     public boolean update(Blog blog) {
-        String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content=?,created_date=?  WHERE blog_id = ?";
+        String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content=?,created_date=?, thumbnailblogs=?  WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, blog.getTitle());
             statement.setString(2, blog.getAuthor());
             statement.setString(3, blog.getBrief_info());
-            statement.setString(4, blog.getContext());
+            statement.setString(4, blog.getContent());
             statement.setDate(5, blog.getBirth_date());
+            statement.setString(6, blog.getThumbnailblogs());
+            statement.setInt(7, blog.getId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -95,7 +97,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
     @Override
     public int insert(Blog blog) {
-        String sql = "INSERT INTO blogs (title, author, brief_info, content,created_date) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO blogs (title, author, brief_info, content, created_date, thumbnailblogs) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             connection = getConnection();
@@ -103,8 +105,9 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(1, blog.getTitle());
             statement.setString(2, blog.getAuthor());
             statement.setString(3, blog.getBrief_info());
-            statement.setString(4, blog.getContext());
+            statement.setString(4, blog.getContent());
             statement.setDate(5, blog.getBirth_date());
+            statement.setString(6, blog.getThumbnailblogs());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -132,7 +135,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         blog.setTitle(rs.getString("title"));
         blog.setAuthor(rs.getString("author"));
         blog.setBrief_info(rs.getString("brief_info"));
-        blog.setContext(rs.getString("content"));
+        blog.setContent(rs.getString("content"));
         blog.setThumbnailblogs(rs.getString("thumbnailblogs"));
         blog.setStatus(rs.getString("status"));
         blog.setBirth_date(rs.getDate("created_date"));
@@ -203,6 +206,36 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
     public static void main(String[] args) {
         BlogDAO blogDAO = new BlogDAO();
+
+        // Test insert method
+        Blog newBlog = new Blog();
+        newBlog.setTitle("New Blog Title");
+        newBlog.setAuthor("Author Name");
+        newBlog.setBrief_info("Brief information about the blog");
+        newBlog.setContent("Content of the blog");
+		newBlog.setThumbnailblogs("thumbnailblogs");
+        newBlog.setBirth_date(new java.sql.Date(System.currentTimeMillis()));
+        int newBlogId = blogDAO.insert(newBlog);
+        if (newBlogId != -1) {
+            System.out.println("Blog inserted successfully with ID: " + newBlogId);
+        } else {
+            System.out.println("Failed to insert blog.");
+        }
+
+        // Test update method
+        Blog blogToUpdate = blogDAO.findById(newBlogId);
+        if (blogToUpdate != null) {
+			blogToUpdate.setThumbnailblogs("Updated thumbnailblogs");
+            blogToUpdate.setTitle("Updated Blog Title");
+            boolean isUpdated = blogDAO.update(blogToUpdate);
+            if (isUpdated) {
+                System.out.println("Blog updated successfully.");
+            } else {
+                System.out.println("Failed to update blog.");
+            }
+        } else {
+            System.out.println("Blog not found for update.");
+        }
 
         // Tạo blog cần xóa với ID cụ thể (giả sử blog có ID = 3 cần xóa)
         Blog blogToDelete = new Blog();
