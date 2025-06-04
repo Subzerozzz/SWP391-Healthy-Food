@@ -1,7 +1,10 @@
+<%-- 
+    Document   : addBlog
+    Created on : May 30, 2025, 3:32:10 PM
+    Author     : Predator
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -9,7 +12,7 @@
 <!--<![endif]-->
 
 
-<!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
+<!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:33 GMT -->
 <head>
     <!-- Basic Page Needs -->
     <meta charset="utf-8">
@@ -63,7 +66,7 @@
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                <jsp:include page="../../common/nutritionist/headerdashboard.jsp"></jsp:include>    
+                    <jsp:include page="../../common/nutritionist/headerdashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -72,10 +75,10 @@
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Blog List</h3>
+                                    <h3>Add Blog</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -87,166 +90,71 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Product List</div>
+                                            <div class="text-tiny">Add Blog</div>
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- product-list -->
-                                <div class="wg-box">
-                                    <div class="title-box">
-                                        <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Blog ID: Each blog is provided with a unique ID, which you can rely on to find the exact product you need.</div>
-                                    </div>
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
-                                            <div class="show">
-                                                <div class="text-tiny">Showing</div>
-                                                <div class="select">
-                                                    <select class="">
-                                                        <option>10</option>
-                                                        <option>20</option>
-                                                        <option>30</option>
-                                                    </select>
-                                                </div>
-                                                <div class="text-tiny">entries</div>
-                                            </div>
-                                            <form class="form-search">
-                                                <fieldset class="name">
-                                                    <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                </fieldset>
-                                                <div class="button-submit">
-                                                    <button class="" type="submit"><i class="icon-search"></i></button>
-                                                </div>
-                                            </form>
+                                <!-- form-add-product -->
+                                <form class="tf-section-2 form-add-product" >
+                                    <div class="wg-box">
+                                        <fieldset class="title">
+                                            <div class="body-title mb-10">Blog Title <span class="tf-color-1">*</span></div>
+                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="text" tabindex="0" value="" aria-required="true" required="">
+                                            <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
+                                        </fieldset>
+                                        <div class="gap22 cols">
+                                            <fieldset class="author">
+                                                <div class="body-title mb-10">Author <span class="tf-color-1">*</span></div>
+                                                <input class="mb-10" type="text" placeholder="Enter author" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                <div class="text-tiny">Do not exceed 20 characters when entering the author.</div>
+                                            </fieldset>
+                                            <fieldset class="briefinfo">
+                                                <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
+                                                <input class="mb-10" type="text" placeholder="Enter briefinfo" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
+                                            </fieldset>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/blog/addBlog.jsp"<i class="icon-plus"></i>Add new</a>
+                         
+                                        <fieldset class="Context">
+                                            <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
+                                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
+                                            <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
+                                        </fieldset>
                                     </div>
-                         <style>
-                             body {
-                                 font-family: Arial, sans-serif;
-                                 margin: 20px;
-                             }
-
-                             h2 {
-                                 text-align: center;
-                             }
-
-                             .table-container {
-                                 width: 100%;
-                                 border: 1px solid #ccc;
-                                 border-radius: 8px;
-                                 overflow-x: auto;
-                             }
-
-                             .table-header, .table-row {
-                                 display: flex;
-                                 align-items: center;
-                                 padding: 10px;
-                                 border-bottom: 1px solid #eee;
-                             }
-
-                             .table-header {
-                                 font-weight: bold;
-                                 background-color: #f5f5f5;
-                             }
-
-                             .col {
-                                 flex: 1;
-                                 padding: 0 10px;
-                                 min-width: 120px;
-                                 word-break: break-word;
-                             }
-
-                             .actions {
-                                 display: flex;
-                                 gap: 10px;
-                             }
-
-                             .actions i {
-                                 cursor: pointer;
-                                 transition: transform 0.2s, opacity 0.2s;
-                             }
-
-                             .actions i:hover {
-                                 opacity: 0.7;
-                                 transform: scale(1.1);
-                             }
-
-                             .icon-eye {
-                                 color: #007bff;
-                             }       /* View */
-                             .icon-edit-3 {
-                                 color: #28a745;
-                             }    /* Edit */
-                             .icon-trash-2 {
-                                 color: #dc3545;
-                             }   /* Delete */
-                         </style>
-                </head>
-                <body>
-                    <div class="table-container">
-                        <!-- Table Header -->
-                        <div class="table-header">
-                            <div class="col">Blog</div>
-                            <div class="col">Blog ID</div>
-                            <div class="col">Author</div>
-                            <div class="col">Date</div>
-                            <div class="col">Status</div>
-                            <div class="col">Brief Info</div>
-                            <div class="col">Context</div>
-                            <div class="col">Action</div>
-                        </div>
-
-                        <!-- Table Rows -->
-                        <c:forEach items="${blogs}" var="blog">
-                            <div class="table-row">
-                                <div class="col"><a href="detail.jsp?id=${blog.id}">${blog.title}</a></div>
-                                <div class="col">${blog.id}</div>
-                                <div class="col">${blog.author}</div>
-                                <div class="col">${blog.date}</div>
-                                <div class="col">${blog.status}</div>
-                                <div class="col">${blog.briefinfo}</div>
-                                <div class="col">${blog.context}</div>
-                                <div class="col actions">
-                                    <i class="icon-eye" title="View"></i>
-                                    <i class="icon-edit-3" title="Edit"></i>
-                                    <i class="icon-trash-2" title="Delete"></i>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                                    <div class="divider"></div>
-                                    <div class="flex items-center justify-between flex-wrap gap10">
-                                        <div class="text-tiny">Showing 10 entries</div>
-                                        <ul class="wg-pagination">
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-left"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">1</a>
-                                            </li>
-                                            <li class="active">
-                                                <a href="#">2</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">3</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-right"></i></a>
-                                            </li>
-                                        </ul>
+                                    <div class="wg-box">
+                                            <div class="upload-image mb-16">
+                                                <div class="item up-load">
+                                                    <label class="uploadfile" for="myFile">
+                                                        <span class="icon">
+                                                            <i class="icon-upload-cloud"></i>
+                                                        </span>
+                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click to browse</span></span>
+                                                        <input type="file" id="myFile" name="filename">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <fieldset class="name">
+                                                <div class="body-title mb-10">Product date</div>
+                                                <div class="select">
+                                                    <input type="date" name="date" value="2023-11-20">
+                                                </div>
+                                            </fieldset>
+                                       
+                                        <div class="cols gap10">
+                                            <button class="tf-button w-full" type="submit">Add product</button>
+                                            <button class="tf-button style-1 w-full" type="submit">Save product</button>
+                                            <a href="#" class="tf-button style-2 w-full">Schedule</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- /product-list -->
+                                </form>
+                                <!-- /form-add-product -->
                             </div>
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
                         <div class="bottom-page">
-                            <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                            <i class="icon-heart"></i>
-                            <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
+                            
                         </div>
                         <!-- /bottom-page -->
                     </div>
@@ -270,5 +178,7 @@
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 </body>
-<!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:40 GMT -->
+
+
+<!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
 </html>

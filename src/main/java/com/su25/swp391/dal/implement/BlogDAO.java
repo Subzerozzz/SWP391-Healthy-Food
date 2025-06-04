@@ -6,6 +6,7 @@ import com.su25.swp391.entity.Blog;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,18 +17,22 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     @Override
     public List<Blog> findAll() {
         List<Blog> blogs = new ArrayList<>();
+        String sql = "SELECT * FROM blogs ORDER BY created_at DESC";
+
         try {
-            String sql = "SELECT * FROM blogs";
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
                 blogs.add(getFromResultSet(resultSet));
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error getting all blogs: " + e.getMessage());
         } finally {
             closeResources();
         }
+
         return blogs;
     }
 
@@ -51,85 +56,94 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     }
 
     @Override
-    public boolean update(Blog t) {
+    public boolean update(Blog blog) {
+        String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content=?,created_date=?  WHERE blog_id = ?";
         try {
-            String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content = ?, thumbnailblogs = ?, status = ?, birth_date = ? WHERE id = ?";
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, t.getTitle());
-            statement.setString(2, t.getAuthor());
-            statement.setString(3, t.getBrief_info());
-            statement.setString(4, t.getContext());
-            statement.setString(5, t.getThumbnailblogs());
-            statement.setString(6, t.getStatus());
-            statement.setDate(7, t.getBirth_date() != null ? new java.sql.Date(t.getBirth_date().getTime()) : null);
-            statement.setInt(8, t.getId());
-            return statement.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            statement.setString(1, blog.getTitle());
+            statement.setString(2, blog.getAuthor());
+            statement.setString(3, blog.getBrief_info());
+            statement.setString(4, blog.getContext());
+            statement.setDate(5, blog.getBirth_date());
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating blog: " + e.getMessage());
+            return false;
         } finally {
             closeResources();
         }
-        return false;
     }
 
     @Override
-    public boolean delete(Blog t) {
+    public boolean delete(Blog blog) {
+        String sql = "DELETE FROM blogs WHERE id = ?";
         try {
-            String sql = "DELETE FROM blogs WHERE id = ?";
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getId());
-            return statement.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            statement.setInt(1, blog.getId());
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting blog: " + e.getMessage());
+            return false;
         } finally {
             closeResources();
         }
-        return false;
     }
 
     @Override
-    public int insert(Blog t) {
+    public int insert(Blog blog) {
+        String sql = "INSERT INTO blogs (title, author, brief_info, content,created_date) VALUES (?, ?, ?, ?, ?)";
+
         try {
-            String sql = "INSERT INTO blogs (title, author, brief_info, content, thumbnailblogs, status, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            statement.setString(1, t.getTitle());
-            statement.setString(2, t.getAuthor());
-            statement.setString(3, t.getBrief_info());
-            statement.setString(4, t.getContext());
-            statement.setString(5, t.getThumbnailblogs());
-            statement.setString(6, t.getStatus());
-            statement.setDate(7, t.getBirth_date() != null ? new java.sql.Date(t.getBirth_date().getTime()) : null);
-            statement.executeUpdate();
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, blog.getTitle());
+            statement.setString(2, blog.getAuthor());
+            statement.setString(3, blog.getBrief_info());
+            statement.setString(4, blog.getContext());
+            statement.setDate(5, blog.getBirth_date());
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating blog failed, no rows affected.");
+            }
+
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 return resultSet.getInt(1);
+            } else {
+                throw new SQLException("Creating blog failed, no ID obtained.");
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error adding blog: " + e.getMessage());
+            return -1;
         } finally {
             closeResources();
         }
-        return -1;
     }
 
     @Override
-    public Blog getFromResultSet(ResultSet resultSet) throws SQLException {
-        return Blog.builder()
-                .id(resultSet.getInt("id"))
-                .title(resultSet.getString("title"))
-                .author(resultSet.getString("author"))
-                .brief_info(resultSet.getString("brief_info"))
-                .context(resultSet.getString("content"))
-                .thumbnailblogs(resultSet.getString("thumbnailblogs"))
-                .status(resultSet.getString("status"))
-                .birth_date(resultSet.getDate("birth_date"))
-                .build();
+    public Blog getFromResultSet(ResultSet rs) throws SQLException {
+        Blog blog = new Blog();
+        blog.setId(rs.getInt("id"));
+        blog.setTitle(rs.getString("title"));
+        blog.setAuthor(rs.getString("author"));
+        blog.setBrief_info(rs.getString("brief_info"));
+        blog.setContext(rs.getString("content"));
+        blog.setThumbnailblogs(rs.getString("thumbnailblogs"));
+        blog.setStatus(rs.getString("status"));
+        blog.setBirth_date(rs.getDate("created_date"));
+        return blog;
     }
 
     @Override
     public Blog findById(Integer id) {
         try {
             String sql = "SELECT * FROM blogs WHERE id = ?";
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
@@ -144,65 +158,46 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         return null;
     }
 
-    public List<Blog> findBlogsWithFilter(String searchTitle, String statusFilter, int page, int pageSize) {
-        List<Blog> blogs = new ArrayList<>();
+    public boolean isBlogTitleExists(String title) {
+        String sql = "SELECT COUNT(*) FROM blogs WHERE title = ?";
         try {
-            StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
-            List<Object> params = new ArrayList<>();
-            if (searchTitle != null && !searchTitle.trim().isEmpty()) {
-                sql.append(" AND title LIKE ?");
-                params.add("%" + searchTitle + "%");
-            }
-            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
-                sql.append(" AND status = ?");
-                params.add(statusFilter);
-            }
-            sql.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
-            params.add(pageSize);
-            params.add((page - 1) * pageSize);
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, title);
             resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                blogs.add(getFromResultSet(resultSet));
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error checking blog title: " + e.getMessage());
         } finally {
             closeResources();
         }
-        return blogs;
+        return false;
     }
 
-    public int countBlogsWithFilter(String searchTitle, String statusFilter) {
-        int count = 0;
+    public boolean isBlogTitleExists(String title, Integer id) {
+        String sql = "SELECT COUNT(*) FROM blogs WHERE title = ? AND blog_id != ?";
+
         try {
-            StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
-            List<Object> params = new ArrayList<>();
-            if (searchTitle != null && !searchTitle.trim().isEmpty()) {
-                sql.append(" AND title LIKE ?");
-                params.add("%" + searchTitle + "%");
-            }
-            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
-                sql.append(" AND status = ?");
-                params.add(statusFilter);
-            }
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, title);
+            statement.setInt(2, id);
             resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                count = resultSet.getInt(1);
+                return resultSet.getInt(1) > 0;
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error checking blog title: " + e.getMessage());
         } finally {
             closeResources();
         }
-        return count;
-    } 
-    
+
+        return false;
+    }
 }
