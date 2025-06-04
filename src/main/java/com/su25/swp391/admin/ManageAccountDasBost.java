@@ -21,7 +21,7 @@ import java.util.List;
  */
 @WebServlet(name = "ManageAccountDashBost", urlPatterns = {"/manage-account-dashbost"})
 public class ManageAccountDasBost extends HttpServlet {
-
+  
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -33,10 +33,10 @@ public class ManageAccountDasBost extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AccountDAO account = new AccountDAO();
-        List<Account> listAccount = account.findAll();
-        request.setAttribute("listAccount", listAccount);
-        request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
+        AccountDAO accountdao = new AccountDAO();
+      List<Account> listAccount = accountdao.findAll();
+      request.setAttribute("listAccount", listAccount);
+       request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
     }
 
     /**

@@ -98,14 +98,19 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public boolean update(Account t) {
         List<Account> updateAccount = new ArrayList<>();
-        String sql = "UPDATE Swp301_pr.account SET  full_name = ?, email = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE Swp301_pr.account SET  full_name = ?,user_name = ?, email = ?,role=?, status = ?,mobile=?,gender=?,address=? WHERE id = ?";
         try {
-
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getFull_name());
-            statement.setString(2, t.getEmail());
-            statement.setBoolean(3, t.getStatus());
-            statement.setInt(4,t.getId());
+            statement.setString(2, t.getUser_name());
+            statement.setString(3, t.getEmail());
+            statement.setString(4, t.getRole());
+            statement.setBoolean(5, t.getStatus());
+            statement.setString(6, t.getMobile());
+            statement.setString(7, t.getGender());
+            statement.setString(8, t.getAddress());
+            statement.setInt(9, t.getId());
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -121,6 +126,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         List<Account> deleteAccount = new ArrayList<>();
         String sql = "DELETE FROM Swp301_pr.account WHERE id = ?";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, t.getId());
             return statement.executeUpdate() > 0;
@@ -132,22 +138,59 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return false;
     }
+public List<Account> filterAccounts(String role, Boolean status) {
+        List<Account> accounts = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
 
+        if (role != null && !role.isEmpty()) {
+            sql.append(" AND role = ?");
+        }
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            if (role != null && !role.isEmpty()) {
+                statement.setString(paramIndex++, role);
+            }
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
+            }
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                accounts.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering accounts: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+
+        return accounts;
+    }
     @Override
     public int insert(Account t) {
         List<Account> insertAccount = new ArrayList<>();
-        String sql = "INSERT INTO Swp301_pr.account (full_name, user_name, email, password, address, role, status, brith_date) VALUES"
+        String sql = "INSERT INTO Swp301_pr.account (full_name, user_name, email, password, address, role, status, brith_date,mobile,gender) VALUES"
                 + "( ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // BẮT BUỘC PHẢI CÓ ĐOẠN NÀY
             statement.setString(1, t.getFull_name());
-            statement.setString(2, t.getUse_name());
+            statement.setString(2, t.getUser_name());
             statement.setString(3, t.getEmail());
             statement.setString(4, t.getPassword());
             statement.setString(5, t.getAddress());
             statement.setString(6, t.getRole());
             statement.setBoolean(7, t.getStatus());
-            statement.setDate(8, t.getBirth_data());
+            statement.setDate(8, t.getBirth_date());
+            statement.setString(9, t.getMobile());
+            statement.setString(10, t.getGender());
 
             //Lấy khóa chính được tạo tự động sau khi insert
             int affectedRow = statement.executeUpdate();
@@ -170,13 +213,15 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return Account.builder()
                 .id(resultSet.getInt("id"))
                 .full_name(resultSet.getString("full_name"))
-                .use_name(resultSet.getString("user_name"))
+                .user_name(resultSet.getString("user_name"))
                 .address(resultSet.getString("address"))
                 .email(resultSet.getString("email"))
                 .password(resultSet.getString("password")) // Thêm password
                 .role(resultSet.getString("role"))
                 .status(resultSet.getBoolean("status")) // Thêm status
-                .birth_data(resultSet.getDate("brith_date")) // Thêm birth_date (chú ý tên cột trong DB là "brith_date")
+                .birth_date(resultSet.getDate("brith_date")) // Thêm birth_date (chú ý tên cột trong DB là "brith_date")
+                .mobile(resultSet.getString("mobile"))
+                .gender(resultSet.getString("gender"))
                 .build();
     }
 
@@ -216,56 +261,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return false;
     }
-//   
-//    public static void main(String[] args) {
-//        AccountDAO dao = new AccountDAO();
-//
-//        // Nhập id của account bạn muốn deactivate (giả sử là 5)
-//        int accountId = 5;
-//
-//        boolean result = dao.deactivateAccount(accountId);
-//
-//        if (result) {
-//            System.out.println("Account " + accountId + " has been deactivated successfully.");
-//        } else {
-//            System.out.println("Failed to deactivate account " + accountId + ".");
-//        }
-//    }
-//    
 
-    public static void main(String[] args) {
-        AccountDAO dao = new AccountDAO();
 
-        // Test findAll()
-        System.out.println("----- Test findAll() -----");
-        List<Account> accounts = dao.findAll();
-        for (Account acc : accounts) {
-            System.out.println(acc); // Cần override toString() trong Account để dễ đọc
-        }
-
-    }
-
-//    public static void main(String[] args) {
-//    // Tạo 1 đối tượng Account giả lập
-//    Account t = new Account();
-//    t.setFull_name("Nguyen Van A");
-//    t.setUse_name("nguyenvana"); // Nếu là getUsername() thì sửa lại nhé
-//    t.setEmail("a@gmail.com");
-//    t.setPassword("H@12345678");
-//    t.setAddress("Ha Noi");
-//    t.setRole("user");
-//    t.setStatus(true);
-//    t.setBirth_data(Date.valueOf("2000-01-01")); // import java.sql.Date
-//
-//    // Gọi insert
-//    AccountDAO dao = new AccountDAO();
-//    int generatedId = dao.insert(t);
-//
-//    // In ra id nếu insert thành công
-//    if (generatedId != -1) {
-//        System.out.println("Insert thành công! ID: " + generatedId);
-//    } else {
-//        System.out.println("Insert thất bại!");
-//    }
-//}
+  
 }

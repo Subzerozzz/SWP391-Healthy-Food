@@ -10,44 +10,10 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-    <style>
-        /* Container fieldset */
-fieldset.name {
-    border: none;
-    padding: 0;
-    margin-bottom: 24px;
-}
 
-/* Label title */
-.body-title {
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 6px;
-}
-
-/* Select box */
-select.form-control {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #fff;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s ease;
-}
-
-select.form-control:focus {
-    border-color: #1e80ff;
-    box-shadow: 0 0 0 2px rgba(30, 128, 255, 0.2);
-    background-color: #fefefe;
-}
-        </style>
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
-        
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -109,7 +75,7 @@ select.form-control:focus {
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                <h3>Edit User</h3>
+                                                                                                <h3>Account Detail</h3>
                                                                                                 <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                     <li>
                                                                                                         <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -124,77 +90,62 @@ select.form-control:focus {
                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="text-tiny">Edit User</div>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                            <!-- add-new-user -->
-                                                                                            <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=edit" method="Post">
+                                                                                                        <div class="text-tiny">Account Detail:${param.id} </div>
+                                                                                                </li>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                        <!-- add-new-user -->
+                                                                                        <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=viewDetail" method="get">
                                                                                             <div class="wg-box">
                                                                                                 <div class="left">
-                                                                                                    <h5 class="mb-4">Account</h5>
-                                                                                                    <div class="body-text">Fill in the information below to edit account</div>
-                                                                                                </div>
+                                                                                                    <h5 class="mb-4">Account Detail</h5>
 
+                                                                                                </div>
                                                                                                 <div class="right flex-grow">
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Id_User</div>
-                                                                                                        <input class="flex-grow" type="text" name="id" value="${param.id}" readonly>
+                                                                                                        <div class="body-title mb-10">Id_User:${param.id}</div>
+
                                                                                                     </fieldset>
 
 
                                                                                                     <!-- Full Name -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Full Name</div>
-                                                                                                        <input type="text" class="form-control" name="full_name" value="${account.full_name}" required>
+                                                                                                        <div class="body-title mb-10">Full Name: ${account.full_name}</div>
+
                                                                                                     </fieldset>
 
                                                                                                     <!-- User Name -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">User Name</div>
-                                                                                                        <input type="text" class="form-control" name="user_name" value="${account.user_name}" required>
+                                                                                                        <div class="body-title mb-10">User Name:${account.user_name}</div>
+
                                                                                                     </fieldset>
 
                                                                                                     <!-- Email -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Email</div>
-                                                                                                        <input class="flex-grow" type="email" name="email" value="${account.email}" required>
+                                                                                                        <div class="body-title mb-10">Email:${account.email}</div>
+
                                                                                                     </fieldset>
 
                                                                                                     <!-- Mobile -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Mobile</div>
-                                                                                                        <input class="form-control" type="text" name="mobile" value="${account.mobile}">
+                                                                                                        <div class="body-title mb-10">Mobile:${account.mobile}</div>
+
                                                                                                     </fieldset>
 
-                                                                                                    <!-- Gender -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Gender</div>
-                                                                                                        <select name="gender" class="form-control">
-                                                                                                            <option value="male" ${account.gender == 'male' ? 'selected' : ''}>Male</option>
-                                                                                                            <option value="female" ${account.gender == 'female' ? 'selected' : ''}>Female</option>
-                                                                                                            <option value="other" ${account.gender == 'other' ? 'selected' : ''}>Other</option>
-                                                                                                        </select>
+                                                                                                        <div class="body-title mb-10">Gender:<span>${account.gender == 'male' ? 'Male' : (account.gender == 'female' ? 'Female' : 'Other')}</span></div>
+                                                                                                        
                                                                                                     </fieldset>
 
-                                                                                                    <!-- Role -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Role</div>
-                                                                                                        <select name="role" class="form-control">
-                                                                                                            <option value="admin" ${account.role == 'admin' ? 'selected' : ''}>Admin</option>
-                                                                                                            <option value="user" ${account.role == 'user' ? 'selected' : ''}>User</option>
-                                                                                                        </select>
+                                                                                                        <div class="body-title mb-10">Role:<span>${account.role == 'admin' ? 'Admin' : 'User'}</span></div>
+                                                                                                        
                                                                                                     </fieldset>
 
-                                                                                                    <!-- Status -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Status</div>
-                                                                                                        <select name="status" class="form-control">
-                                                                                                            <option value="true" ${account.status ? 'selected' : ''}>Active</option>
-                                                                                                            <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
-                                                                                                        </select>
+                                                                                                        <div class="body-title mb-10">Status: <span>${account.status ? 'Active' : 'Deactive'}</span></div>
+                                                                                                       
                                                                                                     </fieldset>
-
 
                                                                                                 </div>
 
@@ -202,7 +153,7 @@ select.form-control:focus {
 
 
                                                                                             <div class="bot">
-                                                                                                <button class="tf-button w180" type="submit">Save</button>
+                                                                                             <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/manage-account'">Back</button>
                                                                                             </div>
 
                                                                                         </form>
