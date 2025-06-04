@@ -183,12 +183,12 @@
                                      </div>
                                      <div class="col">${blog.id}</div>
                                      <div class="col">${blog.author}</div>
-                                     <div class="col">${blog.date}</div> 
+                                     <div class="col">${blog.birth_date}</div> 
                                      <div class="col">${blog.status}</div>
                                      <div class="col actions">
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"><i class="icon-eye"></i></a>
+                                         <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"> <i class="icon-edit-3"></i></a>
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"><i class="icon-trash-2"></i></a>
+                                         <a href="${pageContext.request.contextPath}/manage-blog?action=delete&id=${blog.id}"><i class="icon-trash-2"></i></a>
                                      </div>
                                  </div>
                              </c:forEach>
