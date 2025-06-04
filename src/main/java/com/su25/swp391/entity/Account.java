@@ -24,12 +24,12 @@ import java.sql.Date;
 public class Account {
     private Integer id;
     private String email;
-    private Integer mobie;
+    private String mobie;
     private String password;
     private String user_name;
     private String full_name;
     private Date birth_date;
-    private Boolean gender;
+    private String gender;
     private String role;
     private String address;
     private String status;

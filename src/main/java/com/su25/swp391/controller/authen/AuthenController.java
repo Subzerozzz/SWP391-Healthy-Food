@@ -7,6 +7,8 @@ package com.su25.swp391.controller.authen;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.utils.EmailUtils;
+import com.su25.swp391.utils.GlobalUtils;
 import com.su25.swp391.utils.MD5PasswordEncoderUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,13 +18,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.net.URLDecoder;
 import java.util.Map;
 
 /**
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/home", "/OTP"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/forgetpassword", "/home", "/OTP"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -37,8 +40,10 @@ public class AuthenController extends HttpServlet {
     private static final String REGISTER_PAGE = "view/Authen/Register.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String OTP_PAGE = "view/Authen/OTP.jsp";
+    private static final String FORGETPASSWORD_PAGE = "view/Authen/ForgetPassword.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
+    EmailUtils emailotp = new EmailUtils();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -57,6 +62,9 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/OTP":
                 request.getRequestDispatcher("view/Authen/OTP.jsp").forward(request, response);
+                break;
+            case "/forgetpassword":
+                request.getRequestDispatcher("view/Authen/ForgetPassword.jsp").forward(request, response);
                 break;
             default:
                 break;
@@ -86,70 +94,122 @@ public class AuthenController extends HttpServlet {
             case "/OTP":
                 otpDoPost(request, response);
                 break;
+            case "/forgetpassword":
+                forgetpasswordDoPost(request, response);
+                break;
             default:
                 break;
         }
     }
 
-    private String registerDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
+    private void registerDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
-       String user_name = request.getParameter("user_name");
-       String email =request.getParameter("email");
-       String password = request.getParameter("password");
+        // Lấy thông tin người dùng nhập
+        String fullname = request.getParameter("full_name");
+        String username = request.getParameter("user_name");
+        String address = request.getParameter("address");
+        //String birth_date = request.getParameter("birth_date");
+        String genderParam = request.getParameter("gender");
+        String email = request.getParameter("email");
+        String mobie = request.getParameter("mobie");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-        request.setAttribute("formdata", Map.of(
-                "user_name", user_name != null ? user_name : "",
+        // Store form data in request to preserve it in case of validation failure
+        request.setAttribute("formData", Map.of(
+                "fullname", fullname != null ? fullname : "",
+                "username", username != null ? username : "",
+                "address", address != null ? address : "",
+                // "birth_date", birth_date != null ? birth_date : "",
+                "gender", genderParam != null ? genderParam : "",
                 "email", email != null ? email : "",
-                "password", password != null ? password : ""));
+                "mobie", mobie != null ? mobie : ""
+        ));
 
-        if (user_name == null || user_name.trim().isEmpty()
+        // Server-side validation
+        if (fullname == null || fullname.trim().isEmpty()
+                || username == null || username.trim().isEmpty()
+                || address == null || address.trim().isEmpty()
+                || //  birth_date == null || birth_date.trim().isEmpty() ||
+                genderParam == null || genderParam.trim().isEmpty()
                 || email == null || email.trim().isEmpty()
-                || password == null || password.trim().isEmpty()) {
+                || mobie == null || mobie.trim().isEmpty()
+                || password == null || password.trim().isEmpty()
+                || confirmPassword == null || confirmPassword.trim().isEmpty()) {
+
             session.setAttribute("toastMessage", "All fields are required");
             session.setAttribute("toastType", "error");
-            return REGISTER_PAGE;
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
         }
 
-       
-            if (validEmail(email) == true) {
-                session.setAttribute("toastMessage", "Email correct format");
-                session.setAttribute("toastType", "error");
-            }
-            else{
-                session.setAttribute("toastMessage", "Email incorrect format");
-                session.setAttribute("toastType", "error");
-            }
-            if (validPassword(password) == true) {
-                session.setAttribute("toastMessage", "Password correct format");
-                session.setAttribute("toastType", "error");
-            }
-            else{
-                session.setAttribute("toastMessage", "Password incorrect format");
-                session.setAttribute("toastType", "error");
-            }
-            if (validUsername(user_name) == true) {
-                session.setAttribute("toastMessage", "Username correct format");
-                session.setAttribute("toastType", "error");
-            }
-            else{
-                session.setAttribute("toastMessage", "Username incorrect format");
-                session.setAttribute("toastType", "error");
-            }
+       // boolean gender = Boolean.parseBoolean(genderParam);
 
-        
+        if (!validEmail(email)) {
+            session.setAttribute("toastMessage", "Email incorect format");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if (!validFullname(fullname)) {
+            session.setAttribute("toastMessage", "Your name incorect format");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if (!validMobile(mobie)) {
+            session.setAttribute("toastMessage", "mobie incorect format");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if (!validPassword(password)) {
+            session.setAttribute("toastMessage", "Password incorect format");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if (!validUsername(username)) {
+            session.setAttribute("toastMessage", "Username incorect format");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
 
+        // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp không
+        if (!password.equals(confirmPassword)) {
+            session.setAttribute("toastMessage", "Password and confirm password do not match");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
+        // Kiểm tra xem email đã tồn tại trong db chưa
         Account account = Account.builder()
+                .full_name(fullname)
+                .user_name(username)
+                .address(address)
+                //               .birth_date(birth_date)
+                .mobie(mobie)
                 .email(email)
-                .user_name(user_name)
-                .password(password)
+                .password(MD5PasswordEncoderUtils.encodeMD5(password))
+                .role(GlobalConfig.ROLE_USER)
+                // .stat(false)
+                .status("active")
                 .build();
-
         Account accountFoundByEmail = accountDAO.findByEmail(account);
 
         if (accountFoundByEmail != null) {
-            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(email)) {
+            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(username)) {
                 session.setAttribute("toastMessage", "Username already exists!");
                 session.setAttribute("toastType", "error");
             } else {
@@ -158,26 +218,31 @@ public class AuthenController extends HttpServlet {
             }
             url = REGISTER_PAGE;
         } else {
+            // Lưu tài khoản vào database
             int accountId = accountDAO.insert(account);
             if (accountId > 0) {
+                // Tạo session cho việc kích hoạt tài khoản sau này
                 account.setId(accountId);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
                 session.setAttribute("email", email);
+
+                // Đặt thời gian hết hạn cho session (5 phút)
                 session.setMaxInactiveInterval(5 * 60);
 
-//                // Gửi OTP
-//                String otp = EmailUtils.sendOTPMail(email);
-//                session.setAttribute("otp", otp);
-//                session.setAttribute("otp_purpose", "activation"); // Thêm mục đích OTP
-//
+                // Gửi OTP
+                String otp = EmailUtils.sendOTPMail(email);
+                session.setAttribute("otp", otp);
+                session.setAttribute("otp_purpose", "activation"); // Thêm mục đích OTP
+
                 url = OTP_PAGE;
+
             } else {
                 session.setAttribute("toastMessage", "Failed to create account. Please try again.");
                 session.setAttribute("toastType", "error");
                 url = REGISTER_PAGE;
             }
         }
-        return url;
+        request.getRequestDispatcher(url).forward(request, response);
 
     }
 
@@ -215,23 +280,73 @@ public class AuthenController extends HttpServlet {
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
+
+    private void forgetpasswordDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+
+        String usernameOrEmail = request.getParameter("username");
+        Account account = Account.builder()
+                .user_name(usernameOrEmail)
+                .email(usernameOrEmail)
+                .build();
+        Account accFoundByUsernamePass = accountDAO.findByEmailOrUsernameAndPass(account);
+        if (accFoundByUsernamePass != null) {
+            if (accFoundByUsernamePass.getStatus().equals("banned")) {
+                session.setAttribute("toastMessage", "Your account is banned. Please contact admin to discuss.");
+                session.setAttribute("toastType", "error");
+                url = FORGETPASSWORD_PAGE;
+            } else {
+                //otp
+            }
+        } else {
+            session.setAttribute("toastMessage", "Your account is banned. Please contact admin to discuss.");
+            session.setAttribute("toastType", "error");
+            url = FORGETPASSWORD_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
+    }
     private void otpDoPost(HttpServletRequest request, HttpServletResponse response) {
-        
+
     }
 
     private boolean validEmail(String email) {
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$") && !email.trim().isEmpty() && email != null;
-
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
 
     private boolean validPassword(String password) {
-        return password.matches("^[A-Za-z0-9+_.-]{8,32}$") && !password.trim().isEmpty() && password != null;
+        if (password.length() >= 8 && password.length() < 16) {
+            return password.matches("^[A-Za-z0-9+_.-]+$");
+        }
+        return false;
     }
 
     private boolean validUsername(String user_name) {
-        return user_name.matches("^[a-zA-Z0-9]{3,20}$") && !user_name.trim().isEmpty() && user_name != null;
+        if (user_name.length() > 3 && user_name.length() < 32) {
+            return user_name.matches("^[A-Za-z0-9+_.-]+$");
+        }
+        return false;
     }
 
-    
+    private boolean validFullname(String full_name) {
+        if (full_name.length() > 3 && full_name.length() < 32) {
+            return full_name.matches("^[\\p{L} .'-]+$");
+        }
+        return false;
+    }
+
+    private boolean validMobile(String mobie) {
+        if (mobie.length() > 9 && mobie.length() <= 11) {
+            return mobie.matches("^[A-Za-z0-9+_.-]+$");
+        }
+        return false;
+    }
+//    private boolean validFullname(String full_name) {
+//        if (full_name.length() > 3 && full_name.length() < 32) {
+//            return full_name.matches("^[A-Za-z0-9+_.-]+$");
+//        }
+//        return false;
+//    } 
+  
 
 }
