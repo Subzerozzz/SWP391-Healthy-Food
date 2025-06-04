@@ -78,20 +78,31 @@
 
                                     <fieldset class="Context">
                                         <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                        <textarea class="mb-10" name="description" required>${blog.context}</textarea>
+                                        <textarea class="mb-10" name="content" required>${blog.content}</textarea>
                                         <div class="text-tiny">Do not exceed 1000 characters for the description.</div>
                                     </fieldset>
                                 </div>
                                 <div class="wg-box">
-                                    <div class="upload-image mb-16">
-                                        <div class="item up-load">
-                                            <label class="uploadfile" for="myFile">
-                                                <span class="icon"><i class="icon-upload-cloud"></i></span>
-                                                <span class="text-tiny">Drop a new image or <span class="tf-color">click to browse</span></span>
-                                                <input type="file" id="myFile" name="filename">
-                                            </label>
+                                    <!--Image-->
+                                    <fieldset>
+                                        <div class="body-title mb-10">Upload images</div>
+                                        <div class="upload-image mb-16">
+                                            <div class="item">
+                                                <img src="images/upload/upload-1.png" alt="">
+                                            </div>
+                                            <div class="item up-load">
+                                                <label class="uploadfile" for="myFile">
+                                                    <span class="icon">
+                                                        <i class="icon-upload-cloud"></i>
+                                                    </span>
+                                                    <span class="text-tiny">Drop your images here or select <span class="tf-color">click
+                                                            to
+                                                            browse</span></span>
+                                                    <input type="file" id="myFile" name="filename">
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </fieldset>
 
                                     <fieldset class="name">
                                         <div class="body-title mb-10">Product Date</div>
@@ -123,5 +134,23 @@
 <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+<script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('myFile');
+            const imageContainer = document.querySelector('.item img');
+
+            fileInput.addEventListener('change', function () {
+              if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                  imageContainer.src = e.target.result;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+              }
+            });
+          });
+</script>
 </body>
 </html>

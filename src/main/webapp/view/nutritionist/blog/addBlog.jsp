@@ -119,7 +119,7 @@
                                             </fieldset>
                                         </div>
                          
-                                        <fieldset class="Context">
+                                        <fieldset class="Content">
                                             <div class="body-title mb-10">Content <span class="tf-color-1">*</span></div>
                                             <textarea class="mb-10" name="content" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
                                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
