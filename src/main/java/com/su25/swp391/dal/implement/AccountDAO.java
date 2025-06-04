@@ -82,6 +82,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public boolean delete(Account t) {
         try {
+            connection = getConnection();
             String sql = "DELETE FROM account WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, t.getId());
@@ -97,6 +98,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public int insert(Account t) {
         try {
+            connection = getConnection();
             String sql = "INSERT INTO account (email, password, full_name, user_name, gender, birth_date, role, address, mobie, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -108,12 +110,12 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement.setObject(6, t.getBirth_date());
             statement.setObject(7, t.getRole());
             statement.setObject(8, t.getAddress());
-            statement.setObject(9,t.getMobie());
+            statement.setObject(9, t.getMobie());
             statement.setObject(10, t.getStatus());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                return resultSet.getInt(1);        
+                return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -139,6 +141,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
                 .status(resultSet.getString("status"))
                 .build();
     }
+
     public Account findByEmail(Account t) {
         String sql = "SELECT * FROM account WHERE email = ?";
         try {
@@ -160,6 +163,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public Account findById(Integer id) {
         try {
+            connection = getConnection();
             String sql = "SELECT * FROM account WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
@@ -171,9 +175,10 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             ex.printStackTrace();
         } finally {
             closeResources();
-        }     
+        }
         return null;
     }
+
     public Account findByEmailOrUsernameAndPass(Account t) {
         String sql = "SELECT * FROM account WHERE (email = ? OR user_name = ?) AND password = ?";
         try {
@@ -193,7 +198,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
-    
+
 //    public static void main(String[] args) {
 //         try {
 //        // 1. Tạo đối tượng DAO
