@@ -150,6 +150,7 @@ public class ManageBlogController extends HttpServlet {
                     .content(content)
                     .birth_date(date)
                     .thumbnailblogs(fileName != null ? UPLOAD_DIRECTORY + "/" + fileName : null)
+                    .status("Inactive")
                     .build();
 
             BlogDAO BlogDao = new BlogDAO();
