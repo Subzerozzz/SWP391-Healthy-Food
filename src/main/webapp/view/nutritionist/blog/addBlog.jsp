@@ -95,29 +95,33 @@
                                     </ul>
                                 </div>
                                 <!-- form-add-product -->
-                                <form class="tf-section-2 form-add-product" >
+                                <form class="tf-section-2 form-add-product" 
+                                    action="manage-blog?action=add"
+                                     method="POST"
+                                     enctype="multipart/form-data"
+                                     >
                                     <div class="wg-box">
                                         <fieldset class="title">
                                             <div class="body-title mb-10">Blog Title <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="text" tabindex="0" value="" aria-required="true" required="">
+                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="title" tabindex="0" value="" aria-required="true" required="">
                                             <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
                                         </fieldset>
                                         <div class="gap22 cols">
                                             <fieldset class="author">
                                                 <div class="body-title mb-10">Author <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter author" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                <input class="mb-10" type="text" placeholder="Enter author" name="author" tabindex="0" value="" aria-required="true" required="">
                                                 <div class="text-tiny">Do not exceed 20 characters when entering the author.</div>
                                             </fieldset>
                                             <fieldset class="briefinfo">
                                                 <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter briefinfo" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                <input class="mb-10" type="text" placeholder="Enter briefinfo" name="briefinfo" tabindex="0" value="" aria-required="true" required="">
                                                 <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
                                             </fieldset>
                                         </div>
                          
                                         <fieldset class="Context">
-                                            <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
+                                            <div class="body-title mb-10">Content <span class="tf-color-1">*</span></div>
+                                            <textarea class="mb-10" name="content" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
                                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
                                         </fieldset>
                                     </div>
@@ -149,69 +153,61 @@
                                                 </div>
                                             </fieldset>
                                        
-                                        <div class="cols gap10">
-                                            <button class="tf-button w-full" type="submit">Add product</button>
-                                            <button class="tf-button style-1 w-full" type="submit">Save product</button>
-                                            <a href="#" class="tf-button style-2 w-full">Schedule</a>
-                                        </div>
-                                    </div>
-                                </form>
-                                <!-- /form-add-product -->
-                            </div>
-                            <!-- /main-content-wrap -->
-                        </div>
-                        <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        <div class="bottom-page">
-                            
-                        </div>
-                        <!-- /bottom-page -->
-                    </div>
-                    <!-- /main-content -->
-                </div>
-                <!-- /section-content-right -->
-            </div>
-            <!-- /layout-wrap -->
-        </div>
-        <!-- /#page -->
-    </div>
-    <!-- /#wrapper -->
+                                         <div class="cols gap10">
+                                             <button class="tf-button w-full" type="submit">Add Blog</button>
+                                         </div>
+                                     </div>
+                                 </form>
+                                 <!-- /form-add-product -->
+                             </div>
+                             <!-- /main-content-wrap -->
+                         </div>
+                         <!-- /main-content-wrap -->
+                         <!-- bottom-page -->
+                         <div class="bottom-page">
+                             
+                         </div>
+                         <!-- /bottom-page -->
+                     </div>
+                     <!-- /main-content -->
+                 </div>
+                 <!-- /section-content-right -->
+             </div>
+             <!-- /layout-wrap -->
+         </div>
+         <!-- /#page -->
+     </div>
+     <!-- /#wrapper -->
 
-    <!-- Javascript -->
-    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-    <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-    <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-    <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-    <script src="${pageContext.request.contextPath}/js/main.js"></script>
-    <script>
+     <!-- Javascript -->
+     <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+     <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+     <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+     <script>
           document.addEventListener('DOMContentLoaded', function () {
-            // Lấy tham chiếu đến input file và container hiển thị ảnh
             const fileInput = document.getElementById('myFile');
             const imageContainer = document.querySelector('.item img');
 
-            // Thêm event listener cho sự kiện thay đổi file
             fileInput.addEventListener('change', function () {
-              // Kiểm tra xem người dùng đã chọn file chưa
               if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
 
-                // Khi FileReader đã load xong file
                 reader.onload = function (e) {
-                  // Cập nhật src của thẻ img để hiển thị ảnh
                   imageContainer.src = e.target.result;
                 };
 
-                // Đọc file dưới dạng URL data
                 reader.readAsDataURL(fileInput.files[0]);
               }
             });
           });
-        </script>
+         </script>
 
-</body>
+ </body>
 
 
-<!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
-</html>
+ <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
+ </html>

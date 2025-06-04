@@ -5,23 +5,29 @@ import com.su25.swp391.entity.Blog;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import static jakarta.ws.rs.core.Response.status;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import static junit.runner.Version.id;
+import java.util.UUID;
 
 @WebServlet(name = "ManageBlogController", urlPatterns = {"/manage-blog"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ManageBlogController extends HttpServlet {
+    private final String UPLOAD_DIRECTORY = "uploads";
 
     private BlogDAO blogDAO;
 
@@ -79,44 +85,73 @@ public class ManageBlogController extends HttpServlet {
             String title = request.getParameter("title");
             String author = request.getParameter("author");
             String briefinfo = request.getParameter("briefinfo");
-            String context = request.getParameter("context");
-            String dateStr = request.getParameter("birth_date");
-            //Xu ly thong tin ve nhap date
+            String content = request.getParameter("content");
+            String dateStr = request.getParameter("date");
+
             Date date = null;
             try {
-                if (dateStr != null && dateStr.isEmpty()) {
+                if (dateStr != null && !dateStr.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr);
-                    date = new java.sql.Date(utilDate.getTime()); // ép sang java.sql.Date
+                    date = new java.sql.Date(utilDate.getTime());
                 }
             } catch (ParseException e) {
-                request.setAttribute("error", "Đinh dang sai form ");
+                request.setAttribute("error", "Invalid date format");
                 request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
                 return;
             }
-            // Validate form data
-            Map<String, String> errors = validateBlogData(title, context, 0);
+
+            Map<String, String> errors = validateBlogData(title, content, 0);
             if (!errors.isEmpty()) {
-                // Store errors and form data in session for redisplay
                 request.getSession().setAttribute("errors", errors);
-                Map<String, String[]> formData = new HashMap<>();
-                if (!errors.isEmpty()) {
-                    //nếu có lỗi nhập thông tin loi
-                    request.getSession().setAttribute("Err", errors);
-                    //laay du lieu trc do nguoi dung nhap 
-                    request.getSession().setAttribute("formData", request.getParameterMap());
-                    //chuyen huong ve form them tai khoan
-                    request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
-                }
+                request.getSession().setAttribute("formData", request.getParameterMap());
+                request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
+                return;
             }
-            //Tạo đối tượng blog mới
+
+            String fileName = null;
+            try {
+                Part filePart = request.getPart("filename");
+                if (filePart != null && filePart.getSize() > 0) {
+                    String originalFileName = filePart.getSubmittedFileName();
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    fileName = UUID.randomUUID().toString() + fileExtension;
+
+                    String applicationPath = request.getServletContext().getRealPath("");
+                    String uploadPath = applicationPath + File.separator + UPLOAD_DIRECTORY;
+
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                    }
+
+                    InputStream inputStream = filePart.getInputStream();
+                    String filePath = uploadPath + File.separator + fileName;
+                    FileOutputStream outputStream = new FileOutputStream(filePath);
+
+                    int read;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    outputStream.close();
+                }
+            } catch (Exception e) {
+                request.getSession().setAttribute("totalMess", "Error uploading image: " + e.getMessage());
+                request.getSession().setAttribute("totalType", "Err");
+                request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
+                return;
+            }
+
             Blog newBlog = Blog.builder()
                     .title(title)
                     .author(author)
                     .brief_info(briefinfo)
-                    .context(context)
+                    .content(content)
                     .birth_date(date)
+                    .thumbnailblogs(fileName != null ? UPLOAD_DIRECTORY + "/" + fileName : null)
                     .build();
+
             BlogDAO BlogDao = new BlogDAO();
             boolean isSuccses = BlogDao.insert(newBlog) > 0;
             if (isSuccses) {
@@ -130,8 +165,8 @@ public class ManageBlogController extends HttpServlet {
                 return;
             }
         } catch (Exception e) {
-            request.getSession().setAttribute("totalMess", "Fail to add Account");
-            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            request.getSession().setAttribute("totalMess", "Fail to add Account: " + e.getMessage());
+            request.getSession().setAttribute("totalType", "Err");
             e.printStackTrace();
             request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
         }
@@ -163,7 +198,7 @@ public class ManageBlogController extends HttpServlet {
             blog.setTitle(title);
             blog.setAuthor(author);
             blog.setBrief_info(briefinfo);
-            blog.setContext(description);
+            blog.setContent(description);
             blog.setBirth_date(date);
             boolean isSuccess = blogDao.update(blog);
             if (isSuccess) {
