@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.Date;
 import java.sql.Timestamp;
 /**
  *
@@ -82,14 +81,24 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         return map;
       }
 
-    @Override
-    public boolean update(Food t) {
-        String sql = "UPDATE Food SET status = ? Where id = ?";
+   
+    public boolean updateFoodbyFoodDraft(Food_Draft t) {
+        String sql = "UPDATE Food SET name = ? , description = ? , price = ? , image_url = ? ,"
+                + " status = ? ,category_id = ? ,"
+                + "created_at = ? , updated_at = ? , nutri_id = ? Where id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, t.getStatus());
-            statement.setInt(2, t.getId());
+            statement.setString(1, t.getName());
+            statement.setString(2, t.getDescription());
+            statement.setDouble(3, t.getPrice());
+            statement.setString(4, t.getImage_url());
+            statement.setString(5, "active");
+            statement.setInt(6, t.getCategory_id());
+            statement.setTimestamp(7, t.getCreated_at());
+            statement.setTimestamp(8, t.getUpdated_at());
+            statement.setInt(9, t.getNutri_id());
+            statement.setInt(10, t.getFood_id());
             statement.executeUpdate();
             return statement.executeUpdate()>0;
             
@@ -118,23 +127,38 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
         return false;
     }
+    
+     public boolean deleteById(Food_Draft t) {
+       String sql = "DELETE from Food Where id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, t.getFood_id());
+            return statement.executeUpdate()>0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+     
     // INSERT FOOD_DRAFT INTO FOOD TABLE WHEN ACCEPT CREATE
     public int insertFoodfromFoodDraft(Food_Draft t) {
-      String sql = "INSERT into Food(name,id_Nutri,description,price,image_url,status,create_At,category_id,stock,idFoodDraft)"
-              + " values(?,?,?,?,?,?,?,?,?,?) ";
+      String sql = "INSERT into Food(name,description,price,image_url,status,category_id,created_at,updated_at,nutri_id)"
+              + " values(?,?,?,?,?,?,?,?,?) ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, t.getName());
-            statement.setInt(2,t.getNutri_id());
-            statement.setString(3, t.getDescription());
-            statement.setDouble(4,t.getPrice());
-            statement.setString(5, t.getImage_url());
-            statement.setString(6, "Approved");
-            statement.setTimestamp(7, new java.sql.Timestamp(t.getCreated_at().getTime()));
-            statement.setInt(8,t.getCategory_id());
-           
-            statement.setInt(10,t.getId());
+            statement.setString(2, t.getDescription());
+            statement.setDouble(3,t.getPrice());
+            statement.setString(4, t.getImage_url());
+            statement.setString(5, "active");
+            statement.setInt(6, t.getCategory_id());
+            statement.setTimestamp(7,t.getCreated_at());
+            statement.setTimestamp(8,t.getUpdated_at());
+            statement.setInt(9,t.getNutri_id());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
@@ -158,6 +182,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                 .description(resultSet.getString("description"))
                 .price(resultSet.getDouble("price"))
                 .image_url(resultSet.getString("image_url"))
+                .status(resultSet.getString("status"))
                 .category_id(resultSet.getInt("category_id"))
                 .created_at(resultSet.getTimestamp("created_at"))
                 .updated_at(resultSet.getTimestamp("updated_at"))
@@ -186,24 +211,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         return null;
     }
     
-    public static void main(String[] args) {
-        FoodDAO dao = new FoodDAO();
-     //  Timestamp a = new Timestamp(02,02,2004,00,00,00);
-        Food_Draft food = Food_Draft
-                         .builder()
-                         .id(1)
-                         .name("ĐÂY")
-                         .nutri_id(1)
-                         .description("Oke la")
-                         .price(20.0)
-                         .image_url("")
-                       //  .created_at(d)
-                         .category_id(1)
-                         
-                         .build();
-           dao.insertFoodfromFoodDraft(food);
-    }
-     
+    
     public boolean isCategoryNameExist( String name,int id){
         String sql =" Select COUNT(*) from Food WHERE id != ? and name = ?";
         try {
@@ -231,5 +239,28 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     public int insert(Food t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+    public static void main(String[] args) {
+        FoodDAO dao = new FoodDAO();
+     //  Timestamp a = new Timestamp(02,02,2004,00,00,00);
+      Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
+
+        Food_Draft food = Food_Draft
+                         .builder()
+                         .name("ĐÂY")
+                         .description("Oke la")
+                         .price(20.0)
+                         .image_url("")
+                         .category_id(1)
+                         .created_at(timestampNow)
+                         .updated_at(timestampNow)
+                         .nutri_id(1)
+                         .build();
+           dao.insertFoodfromFoodDraft(food);
+    }
+
+    @Override
+    public boolean update(Food t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+     
 }

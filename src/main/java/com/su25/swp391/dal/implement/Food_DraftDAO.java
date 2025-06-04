@@ -19,7 +19,8 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
     @Override
     public List< Food_Draft> findAll() {
-        String sql = "select * from  Food_Draft ";
+        String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = 'Not done' ";
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
@@ -35,8 +36,28 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
+    public List< Food_Draft> findAllByResult(String option) {
+        String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = 'Not done' and f.type = ?";
+        List< Food_Draft> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, option);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+    
     public List<String> findAllType() {
-        String sql = "select type from  Food_Draft Group by type";
+        String sql = "select type from  FoodDraft  Group by type";
         List<String> list = new ArrayList<>();
         try {
             connection = getConnection();
@@ -53,7 +74,9 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         return list;
     }
     public List<Food_Draft> findAllByType(String type) {
-          String sql = "select * from  Food_Draft where type = ? ";
+          String sql = "select * from  FoodDraft as f"
+                  + " inner join Request as r on f.id = r.foodDraftId "
+                  + "where r.statusRequest = 'Not done' and f.type = ? ";
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
@@ -181,10 +204,11 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
         return food;
     }
+    
 
     @Override
     public Food_Draft findById(Integer id) {
-         String sql = "select * from swp391_healthy_food.Food_Draft where id = ? ";
+         String sql = "select * from swp391_healthy_food.FoodDraft where id = ? ";
           try {
       connection =getConnection();
       statement = connection.prepareStatement(sql);

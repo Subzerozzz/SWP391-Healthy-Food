@@ -19,7 +19,7 @@
                                     <li class="menu-item has-children">
                                         <a href="javascript:void(0);" class="menu-item-button">
                                             <div class="icon"><i class="icon-shopping-cart"></i></div>
-                                            <div class="text">Check Requests</div>
+                                            <div class="text">List Requests</div>
                                         </a>
                                         <ul class="sub-menu">
                                             <li class="sub-menu-item">

@@ -36,10 +36,10 @@
 
     <!-- Icon -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
-        <<link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleButton.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styleButton.css"/>
     <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon.png">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
+    <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
 
 </head>
 
@@ -103,13 +103,13 @@
                                         <form action="${pageContext.request.contextPath}/type-of-request" method="get">
                                             <input type="hidden" name="action" value="option">
                                             <h3>Choose an option:</h3>
-                                            <select name="select">
-                                                <option value="-1">--All Type Of Request--</option>
+                                            <select name="select" style="background-color: #F0E68C">
+                                                <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
                                             <c:forEach items="${type}" var="t">
-                                                <option value="${t}">--${t}--</option>
+                                                <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
                                             </c:forEach>
                                         </select>
-                                        <button type="submit" >Submit Option</button>
+                                            <button type="submit" style="background-color: #C71585" >Submit Option</button>
 
                                     </form>  
                                 </div>
@@ -133,7 +133,7 @@
                                                 <div class="body-title"></div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Status</div>
+                                                <div class="body-title">Type</div>
                                             </li>
                                             <li>
                                                 <div class="body-title">View Detail</div>
@@ -149,37 +149,39 @@
                                                <c:forEach items="${listFoodDraft}" var="foodDraft">
                                             <li class="product-item gap14">
                                                 <div class="image no-bg">
-                                                    <img src="${foodDraft.image}" alt="">
+                                                    <img src="${foodDraft.image_url}" alt="">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a href="product-list.html" class="body-title-2"></a>
-                                                    </div>
+                                                        <a href="product-list.html" class="body-title-2">${foodDraft.name}</a>
+                                                     </div>
                                                     <div class="body-text">${foodDraft.name}</div>
                                                     <div class="body-text">${foodDraft.created_at}</div>
                                                     <div class="body-text"></div>
-                                                    <div class="body-text">${foodDraft.status}</div>
+                                                    <div class="body-text">${foodDraft.type}</div>
                                                     <div >
-                                                        <form action="menu-category" method="get">
+                                                        <form action="type-of-request" method="get">
                                                               <input type="hidden" name="action" value="view">
                                                               <input type="hidden" name="id" value="${foodDraft.id}">
-                                                            <button type="submit" class="btn-blue">View Detail</button>
+                                                                  <button type="submit" class="btn-blue" style="background-color: #66CDAA">View Detail</button>
                                                        </form>
                                                     </div>   
                                                             <div style="display: flex;gap: 12px">
-                                                        <form action="menu-category" method="get">
+                                                        <form action="type-of-request" method="get">
+                                                             <input type="hidden" name="select" value="${foodDraft.type}">
                                                             <input type="hidden" name="action" value="accept">
                                                             <input type="hidden" name="id" value="${foodDraft.id}">
-                                                           <button type="submit" class="btn-blue" style="background-color: blue"
-                                                                   onclick="return confirm('Are you want to Accept this food')" >
+                                                           <button type="submit" class="btn-blue" style="background-color: #00FFFF"
+                                                                   onclick="return confirm('Are you want to Accept ${foodDraft.type} this food')" >
                                                                Accept
                                                            </button>
                                                        </form>
-                                                        <form action="menu-category" method="get">
+                                                        <form action="type-of-request" method="get">
+                                                            <input type="hidden" name="select" value="${foodDraft.type}">
                                                             <input type="hidden" name="action" value="reject">
                                                              <input type="hidden" name="id" value="${foodDraft.id}">
-                                                           <button type="submit" class="btn-blue" style="background-color: red"
-                                                             onclick="return confirm('Are you want to Reject this food')"        >
+                                                           <button type="submit" class="btn-blue" style="background-color: #FF4500"
+                                                             onclick="return confirm('Are you want to Reject ${foodDraft.type} this food')"        >
                                                                 Reject 
                                                            </button>
                                                        </form>     

@@ -27,8 +27,10 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
-
-
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/detail_food.css"/>
+        
+    
+<!--css-->
 
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
@@ -91,53 +93,39 @@
                                         </li>
                                     </ul>
                                 </div>
-                                      
-                                <!-- Product Detail -->
-                                <div class="wg-box">
-                                    <div class="tf-main-product section-image-zoom flex">
-                                        <div class="tf-product-media-wrap">
-                                            <div class="thumbs-slider">
-                                               <div class="item">
-                                                    <a href="${foodD.image}" target="_blank" data-pswp-width="1000px" data-pswp-height="1000px">
-                                                        <img  data-zoom="images/products/product-detail-2.png" src="${foodD.image}" alt="">
-                                                    </a>
-                                               </div>
-                                               </div>
-                                        </div>
-                                        <div class="tf-product-info-wrap relative flex-grow">
-                                            <div class="tf-zoom-main"></div>
-                                            <div class="tf-product-info-list other-image-zoom">
-                                                <div class="tf-product-info-title">
-                                                    <h3>${foodD.name}<br>Nutritionist:</h3>
-                                                    <div class="price body-title">$${foodD.price}</div>
-                                                </div>
-                                                <div>
-                                                    <h3>Type Request: </h3>
-                                                    <h3>Description: ${foodD.description}</h3>
-                                                    <h3>Create At: ${foodD.created_at}</h3>
-                                                </div>
-                                               
-                                               <br/>
-                                                </div>
-                                                <div style="display: flex;justify-content: center;gap: 100px">
-                                                  <div>
-                                                   <form action="action">
-                                                           <button type="submit" class="btn-blue" style="background-color: greenyellow">Accept</button>
-                                                    </form>
-                                                  
-                                               </div>  
-                                                <div>
-                                                   <form action="action">
-                                                           <button type="submit" class="btn-blue" style="background-color: red">Reject</button>
-                                                   </form>     
-                                                </div>   
-                                                </div>
-                                           
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <!-- /Product Detail -->
+                                <div class="product-detail">
+                                    <div class="product-image">
+                                        <img src="https://mediawinwin.vn/upload/images/sanpham/bao-gia-chup-mon-an-dich-vu-chup-anh-do-an-chuyen-nghiep-5.JPG" alt="Black Fresh Berry">
+                                    </div>
+                                    <div class="product-info">
+                                        <h2>${foodD.name}</h2>
+                                        <h3>Created at: ${foodD.created_at}</h3>
+                                        <div class="price">
+                                            <span class="current">${foodD.price}</span>
+<!--                                            <span class="original">$330.00</span>-->
+                                        </div>
+                                    <p>Type: ${foodD.type}</p>
+                                        <p class="description">
+                                            ${foodD.description}
+                                        </p>
+                                        <p>Black Fresh Berry is a delicious and nutritious fruit, rich in antioxidants and flavor. Perfect for a healthy snack or to add freshness to your desserts and smoothies.</p>
+                                        <div class="buttons">
+                                           <div>
+                                                   <form action="action">
+                                                           <button type="submit" class="btn-blue" style="background-color: #00FFFF">Accept</button>
+                                                    </form>
+                                                  
+                                            </div> 
+                                            <div>
+                                                   <form action="action">
+                                                           <button type="submit" class="btn-blue" style="background-color: #FF4500">Reject</button>
+                                                   </form>     
+                                                </div> 
+                                        </div>
+                                     </div>
+                                </div>
                             </div>
                             <!-- /main-content-wrap -->
                         </div>

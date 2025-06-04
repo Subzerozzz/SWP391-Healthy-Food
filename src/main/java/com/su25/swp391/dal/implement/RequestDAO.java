@@ -69,6 +69,22 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     public boolean update(Request t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    public boolean updateResult(String result,int id){
+        String sql = "Update Request Set statusRequest = 'Done' ,result = ? where foodDraftId = ? ";
+        try {
+            connection= getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, result);
+            statement.setInt(2, id);
+            return statement.executeUpdate() > 0;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
 
     @Override
     public boolean delete(Request t) {
@@ -111,7 +127,21 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
      
     @Override
     public Request findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      String sql = "Select * from Request where idFoodDraft = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet =   statement.executeQuery();
+            if(resultSet.next()){
+               return getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
     }
        public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
@@ -122,5 +152,6 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
            }
         
     }
+       
        
 }
