@@ -122,17 +122,26 @@
                                         </fieldset>
                                     </div>
                                     <div class="wg-box">
+                                        <!--Image-->
+                                        <fieldset>
+                                            <div class="body-title mb-10">Upload images</div>
                                             <div class="upload-image mb-16">
+                                                <div class="item">
+                                                    <img src="images/upload/upload-1.png" alt="">
+                                                </div>
                                                 <div class="item up-load">
                                                     <label class="uploadfile" for="myFile">
                                                         <span class="icon">
                                                             <i class="icon-upload-cloud"></i>
                                                         </span>
-                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click to browse</span></span>
+                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click
+                                                                to
+                                                                browse</span></span>
                                                         <input type="file" id="myFile" name="filename">
                                                     </label>
                                                 </div>
                                             </div>
+                                        </fieldset>
                                             <fieldset class="name">
                                                 <div class="body-title mb-10">Product date</div>
                                                 <div class="select">
@@ -176,6 +185,30 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            // Lấy tham chiếu đến input file và container hiển thị ảnh
+            const fileInput = document.getElementById('myFile');
+            const imageContainer = document.querySelector('.item img');
+
+            // Thêm event listener cho sự kiện thay đổi file
+            fileInput.addEventListener('change', function () {
+              // Kiểm tra xem người dùng đã chọn file chưa
+              if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                // Khi FileReader đã load xong file
+                reader.onload = function (e) {
+                  // Cập nhật src của thẻ img để hiển thị ảnh
+                  imageContainer.src = e.target.result;
+                };
+
+                // Đọc file dưới dạng URL data
+                reader.readAsDataURL(fileInput.files[0]);
+              }
+            });
+          });
+        </script>
 
 </body>
 

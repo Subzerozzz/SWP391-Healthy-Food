@@ -119,7 +119,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/view/nutritionist/blog/addBlog.jsp"<i class="icon-plus"></i>Add new</a>
+                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"<i class="icon-plus"></i>Add new</a>
                                     </div>
                          <style>
                              .table-header, .table-row {
