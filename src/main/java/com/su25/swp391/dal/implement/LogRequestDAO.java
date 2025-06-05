@@ -7,6 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.mysql.cj.xdevapi.Result;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
+import com.su25.swp391.entity.Food_Draft;
 import com.su25.swp391.entity.LogRequest;
 import com.su25.swp391.entity.Request;
 
@@ -46,14 +47,15 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
     public int insert(LogRequest t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    public int insertToLogRequest(Request t) {
-      String sql = "Insert into swp391_healthy_food.LogRequest(result,foodDraftId,statusRequest) values (?,?,?)";
+    public int insertToLogRequest(Request t, Food_Draft f) {
+      String sql = "Insert into swp391_healthy_food.LogRequest(result,foodDraftId,statusRequest,nutri_id) values (?,?,?,?)";
         try {
             connection = getConnection();
             statement=connection.prepareStatement(sql);
             statement.setString(1, t.getResult());
             statement.setInt(2, t.getFoodDraftId());
             statement.setString(3, t.getStatusRequest());
+            statement.setInt(4, f.getNutri_id());
             return statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +67,13 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
 
     @Override
     public LogRequest getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+          return LogRequest
+                  .builder()
+                  .result(resultSet.getString("result"))
+                  .foodDraftId(resultSet.getInt("foodDraftId"))
+                  .statusRequest(resultSet.getString("statusRequest"))
+                  .nutri_id(resultSet.getInt("nutri_id"))
+                  .build();
     }
 
     @Override
