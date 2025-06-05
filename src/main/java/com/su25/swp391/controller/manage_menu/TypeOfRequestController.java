@@ -7,6 +7,7 @@ package com.su25.swp391.controller.manage_menu;
 
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.Food_DraftDAO;
+import com.su25.swp391.dal.implement.LogRequestDAO;
 import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Food_Draft;
 import com.su25.swp391.entity.Request;
@@ -29,12 +30,13 @@ public class TypeOfRequestController extends HttpServlet {
     private Food_DraftDAO foodDraftDAO;
     private RequestDAO requestDAO;
     private FoodDAO foodDAO;
+    private LogRequestDAO logReqDAO;
     @Override
     public void init() throws ServletException{
         foodDraftDAO = new Food_DraftDAO();
         requestDAO = new RequestDAO();
         foodDAO = new FoodDAO();
-        
+        logReqDAO = new LogRequestDAO();
     }
 
     
@@ -213,9 +215,12 @@ public class TypeOfRequestController extends HttpServlet {
         foodDAO.insertFoodfromFoodDraft(foodDraft);
         Boolean check = requestDAO.updateResult("Accept", id);
         if (check) {
-            request.setAttribute("mess", "Accept successful");
+            request.setAttribute("mess", "Accept Create successful");
+            Request req = requestDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, foodDraft);
+            requestDAO.delete(req);
         } else {
-            request.setAttribute("mess", "Accept not successful");
+            request.setAttribute("mess", "Accept Create not successful");
         }
         List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
         List<String> listType = foodDraftDAO.findAllType();
@@ -232,9 +237,12 @@ public class TypeOfRequestController extends HttpServlet {
         Boolean check1 = foodDAO.updateFoodbyFoodDraft(foodD);
         Boolean check2 = requestDAO.updateResult("Accept", id);
         if (check1 && check2) {
-            request.setAttribute("mess", "Update successful");
+            request.setAttribute("mess", "Accept Update successful");
+            Request req = requestDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, foodD);
+            requestDAO.delete(req);
         } else {
-            request.setAttribute("mess", "Update not successful");
+            request.setAttribute("mess", "Accept Update not successful");
         }
         List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
         List<String> listType = foodDraftDAO.findAllType();
@@ -250,9 +258,12 @@ public class TypeOfRequestController extends HttpServlet {
         Boolean check1 = foodDAO.deleteById(food_D);
         Boolean check2 = requestDAO.updateResult("Accept", id);
         if(check1 && check2){
-            request.setAttribute("mess", "Delete successful");
+            request.setAttribute("mess", "Accept Delete successful");
+            Request req = requestDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, food_D);
+            requestDAO.delete(req);
         }else{
-            request.setAttribute("mess", "Delete not successful");
+            request.setAttribute("mess", "Accept Delete not successful");
         }
         String select = request.getParameter("select");
         List<Food_Draft> list = foodDraftDAO.findAllByType(select);
@@ -268,9 +279,13 @@ public class TypeOfRequestController extends HttpServlet {
         String select = request.getParameter("select");
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
-            request.setAttribute("mess", "Reject Accept successful");
+            request.setAttribute("mess", "Reject Create successful");
+            Request req = requestDAO.findById(id);
+            Food_Draft food_D = foodDraftDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, food_D);
+            requestDAO.delete(req);
         } else {
-            request.setAttribute("mess", "Reject Accept not successful");
+            request.setAttribute("mess", "Reject Create not successful");
         }
         List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
         List<String> listType = foodDraftDAO.findAllType();
@@ -284,7 +299,11 @@ public class TypeOfRequestController extends HttpServlet {
         String select = request.getParameter("select");
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
-            request.setAttribute("mess", "Reject Updatesuccessful");
+            request.setAttribute("mess", "Reject Update successful");
+            Request req = requestDAO.findById(id);
+            Food_Draft food_D = foodDraftDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, food_D);
+            requestDAO.delete(req);
         } else {
             request.setAttribute("mess", "Reject Update not successful");
         }
@@ -301,6 +320,10 @@ public class TypeOfRequestController extends HttpServlet {
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
             request.setAttribute("mess", "Reject Delete successful");
+            Request req = requestDAO.findById(id);
+            Food_Draft food_D = foodDraftDAO.findById(id);
+            logReqDAO.insertToLogRequest(req, food_D);
+            requestDAO.delete(req);
         } else {
             request.setAttribute("mess", "Reject Delete not successful");
         }

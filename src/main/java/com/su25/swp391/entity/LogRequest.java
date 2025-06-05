@@ -24,5 +24,5 @@ public class LogRequest {
     private String result;
     private Integer foodDraftId;
     private String statusRequest;
-    private Integer id_result;
+    private Integer nutri_id;
 }

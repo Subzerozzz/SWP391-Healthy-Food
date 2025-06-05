@@ -39,6 +39,8 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         }
         return list;
     }
+    
+    
        public List<Request> findAllRequest() {
         String sql = "select r.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
                 + "on r.foodDraftId = f.id ";
@@ -88,9 +90,20 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
 
     @Override
     public boolean delete(Request t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       try {
+      String sql = "DELETE FROM Request WHERE foodDraftId = ?";
+      connection = getConnection();
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, t.getFoodDraftId());
+      return statement.executeUpdate() > 0;
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    } finally {
+      closeResources();
     }
-
+    return false;
+    }
+    
     @Override
     public int insert(Request t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -109,7 +122,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     }
      // Update status DONE when Accept or Reject a Food_Draft
     public boolean updateRequestFoodDraftById(int id) {
-      String sql = "UPDATE Request SET status = 'DONE' where foodDraftId = ?";
+      String sql = "UPDATE Request SET statusRequest = 'DONE' where foodDraftId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -127,7 +140,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
      
     @Override
     public Request findById(Integer id) {
-      String sql = "Select * from Request where idFoodDraft = ?";
+      String sql = "Select * from Request where foodDraftId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -150,7 +163,8 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
            for (Request lit : lits) {
                System.out.println(lit);
            }
-        
+           System.out.println(dao.findById(6));
+         
     }
        
        
