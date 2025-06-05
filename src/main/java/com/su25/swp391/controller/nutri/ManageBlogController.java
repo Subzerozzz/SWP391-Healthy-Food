@@ -184,7 +184,7 @@ public class ManageBlogController extends HttpServlet {
             //Xu ly thong tin ve nhap date
             Date date = null;
             try {
-                if (dateStr != null && dateStr.isEmpty()) {
+                if (dateStr != null && !dateStr.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr);
                     date = new java.sql.Date(utilDate.getTime()); // ép sang java.sql.Date
@@ -211,8 +211,7 @@ public class ManageBlogController extends HttpServlet {
                 request.getSession().setAttribute("totalMess", "Fail to update Account");
                 request.getSession().setAttribute("totalType", "Err");
                 request.setAttribute("error", "Update failed");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp");
-                dispatcher.forward(request, response);
+                response.sendRedirect("/view/nutritionist/blog/editBlog.jsp");
                 return;
             }
         } catch (Exception e) {
