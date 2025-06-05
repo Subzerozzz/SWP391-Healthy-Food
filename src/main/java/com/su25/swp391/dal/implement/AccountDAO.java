@@ -42,6 +42,58 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return account;
     }
 
+    public List<Account> pagingAccount(int index) {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT * FROM Swp301_pr.account\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?;";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (index - 1) * 10);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // BẮT BUỘC CÓ
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+public  static void main (String[] args ){
+    AccountDAO account = new AccountDAO();
+    List<Account> list = account.pagingAccount(3);
+    for (Account account1 : list) {
+        System.out.println(account1);
+    }
+}
+
+    //dem so luong account trong db
+    public int getTotalAccount() {
+        String sql = "select count(*) from Swp301_pr.account";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+//    public static void main(String[] args) {
+//        AccountDAO dao = new AccountDAO();
+//        int count = dao.getTotalAccount();
+//        System.out.println(count);
+//
+//    }
     @Override
     public Map<Integer, Account> findAllMap() {
         Map<Integer, Account> accountMap = new HashMap<>();
@@ -138,7 +190,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return false;
     }
-public List<Account> filterAccounts(String role, Boolean status) {
+
+    public List<Account> filterAccounts(String role, Boolean status) {
         List<Account> accounts = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
 
@@ -173,6 +226,7 @@ public List<Account> filterAccounts(String role, Boolean status) {
 
         return accounts;
     }
+
     @Override
     public int insert(Account t) {
         List<Account> insertAccount = new ArrayList<>();
@@ -262,6 +316,4 @@ public List<Account> filterAccounts(String role, Boolean status) {
         return false;
     }
 
-
-  
 }

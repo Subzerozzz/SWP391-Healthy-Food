@@ -148,13 +148,24 @@ public class ManageAccount extends HttpServlet {
     private void listAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        AccountDAO account = new AccountDAO();
-        List<Account> listAccount = account.findAll();
-
-        request.setAttribute("listAccount", listAccount);
-
+        String indexPage = request.getParameter("index");
+        if(indexPage==null){
+            indexPage = "1";
+        };
+        int index = Integer.parseInt(indexPage);
         
+        AccountDAO accountdao = new AccountDAO();
+        int count = accountdao.getTotalAccount();
+        int endPage = count/10;
+        if(count%10 != 0){
+            endPage++;   
+        }
+        List <Account> listAccount =accountdao.pagingAccount(index);
+        request.setAttribute("listAccount", listAccount);
+        request.setAttribute("endP", endPage);
         request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
+        
+
     }
 
     private void addAccount(HttpServletRequest request, HttpServletResponse response)
@@ -390,4 +401,5 @@ public class ManageAccount extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/manage-account");
     }
 }
+   
 }

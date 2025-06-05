@@ -116,6 +116,34 @@
 .form-search .tf-button:hover {
     background-color: #1066d3;
 }
+.pagination li a {
+    color: #333;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+/* Hover các trang không active */
+.pagination li:not(.active) a:hover {
+    background-color: #ddd;
+}
+
+/* Trang active giữ màu xanh cố định */
+.pagination li.active a {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Khi hover vào trang active, vẫn giữ màu xanh */
+.pagination li.active a:hover {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
 </style>
 
 
@@ -303,7 +331,12 @@
                                                                                                     <li>
                                                                                                         <a href="#"><i class="icon-chevron-left"></i></a>
                                                                                                     </li>
-                                                                                                    <li>
+                                                                                                    <c:forEach begin="1" end="${endP}" var="i">
+                                                                                                        <li>
+                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?index=${i}">${i}</a>
+                                                                                                    </li>
+                                                                                                    </c:forEach>
+<!--                                                                                                    <li>
                                                                                                         <a href="#">1</a>
                                                                                                     </li>
                                                                                                     <li class="active">
@@ -311,7 +344,7 @@
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <a href="#">3</a>
-                                                                                                    </li>
+                                                                                                    </li>-->
                                                                                                     <li>
                                                                                                         <a href="#"><i class="icon-chevron-right"></i></a>
                                                                                                     </li>
@@ -324,11 +357,7 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
-                                                                                <div class="bottom-page">
-                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                    <i class="icon-heart"></i>
-                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                </div>
+                                                                                
                                                                                 <!-- /bottom-page -->
                                                                             </div>
                                                                             <!-- /main-content -->
