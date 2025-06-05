@@ -77,7 +77,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" required data-error="Please enter username or email" placeholder="Username or Email">
+                                            <input type="text" class="form-control" name="emailorusername" required data-error="Please enter username or email" placeholder="Email">
                                         </div>
                                     </div>
     
