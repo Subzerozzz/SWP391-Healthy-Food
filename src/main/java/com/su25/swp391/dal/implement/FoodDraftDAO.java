@@ -49,8 +49,8 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 
     @Override
     public int insert(FoodDraft t) {
-        String sql = "INSERT INTO FoodDraft (name, description, price, image_url, category_id, created_at, updated_at,type,nutri_id)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO FoodDraft (name, description, price, image_url, category_id, created_at, updated_at,type,nutri_id,food_id)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             // gan giá tri vao
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -63,6 +63,13 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
             statement.setTimestamp(7, t.getUpdated_at());
             statement.setString(8, t.getType());
             statement.setInt(9, t.getNutri_id());
+            
+            if (t.getFood_id() != null) {
+                statement.setInt(10, t.getFood_id());
+            } else {
+                System.out.println("hhhh");
+                statement.setNull(10, java.sql.Types.INTEGER);
+            }
 
             // thuc thi cau lenh
             statement.executeUpdate();
@@ -119,26 +126,25 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 
     public static void main(String[] args) {
         FoodDraftDAO dao = new FoodDraftDAO();
-//
-//        FoodDraft foodDraft = new FoodDraft();
-//        foodDraft.setName("Test món ăn");
-//        foodDraft.setDescription("Món ăn này dùng để test");
-//        foodDraft.setPrice(99.99);
-//        foodDraft.setImage_url("uploads/products/test.jpg"); // Giả sử bạn đã upload ảnh và có đường dẫn
-//        foodDraft.setCategory_id(1); // Thay bằng ID thực trong DB
-//        foodDraft.setType("CREATE");  // Hoặc "Main", "Drink" v.v.
-//        foodDraft.setNutri_id(1);    // ID thực trong bảng Nutrition (nếu có)
-//        foodDraft.setCreated_at(new Timestamp(System.currentTimeMillis()));
-//        foodDraft.setUpdated_at(new Timestamp(System.currentTimeMillis()));
-//
-//        int result = dao.insert(foodDraft);
-//
-//        if (result > 0) {
-//            System.out.println("Thêm FoodDraft thành công với ID = " + result);
-//        } else {
-//            System.out.println("Thêm FoodDraft thất bại.");
-//        }
-        System.out.println(dao.getBiggestId());
+        FoodDraft foodDraft = new FoodDraft();
+        foodDraft.setName("Test món ăn");
+        foodDraft.setDescription("Món ăn này dùng để test");
+        foodDraft.setPrice(99.99);
+        foodDraft.setImage_url("uploads/products/test.jpg"); // Giả sử bạn đã upload ảnh và có đường dẫn
+        foodDraft.setCategory_id(1); // Thay bằng ID thực trong DB
+        foodDraft.setType("UPDATE");  // Hoặc "Main", "Drink" v.v.
+        foodDraft.setNutri_id(1);    // ID thực trong bảng Nutrition (nếu có)
+        foodDraft.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        foodDraft.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+        foodDraft.setFood_id(2);
+
+        int result = dao.insert(foodDraft);
+
+        if (result > 0) {
+            System.out.println("Thêm FoodDraft thành công với ID = " + result);
+        } else {
+            System.out.println("Thêm FoodDraft thất bại.");
+        }
     }
 
     

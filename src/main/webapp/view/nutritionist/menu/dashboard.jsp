@@ -77,6 +77,40 @@
                       <h3>Food List</h3>
 
                     </div>
+                    <!-- Thêm modal xác nhận xóa -->
+                    <div id="customDeleteModal" class="custom-modal-overlay" style="display:none;">
+                      <div class="custom-modal">
+                        <button onclick="hideFormModal1()" class="custom-modal-close"
+                          id="closeModalBtn">&times;</button>
+                        <div class="custom-modal-icon">
+                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="24" fill="#FEE2E2" />
+                            <g>
+                              <rect x="18" y="20" width="12" height="12" rx="2" stroke="#EF4444" stroke-width="2"
+                                fill="none" />
+                              <rect x="21" y="16" width="6" height="2" rx="1" fill="#EF4444" />
+                            </g>
+                            <line x1="20" y1="24" x2="20" y2="28" stroke="#EF4444" stroke-width="2"
+                              stroke-linecap="round" />
+                            <line x1="24" y1="24" x2="24" y2="28" stroke="#EF4444" stroke-width="2"
+                              stroke-linecap="round" />
+                            <line x1="28" y1="24" x2="28" y2="28" stroke="#EF4444" stroke-width="2"
+                              stroke-linecap="round" />
+                          </svg>
+                        </div>
+                        <h3>Delete</h3>
+                        <!-- <p>Bạn có chắc chắn muốn gửi yêu cầu xóa món ăn này?</p> -->
+                        <p class="data-name-delete"></p>
+                        <p>Bạn có chắc chắn muốn gửi yêu cầu xóa ?</p>
+                        <div class="custom-modal-actions">
+                          <button onclick="hideFormModal1()" class="custom-btn custom-btn-cancel"
+                            id="cancelDeleteBtn">Cancel</button>
+                          <button onclick="hideFormModal2()" class="custom-btn custom-btn-confirm"
+                            id="confirmDeleteBtn">Confirm</button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /Thêm modal xác nhận xóa -->
                     <!-- product-list -->
                     <div class="wg-box">
                       <div class="title-box">
@@ -157,8 +191,9 @@
                                 <div class="body-text">${item.getUpdated_at()}</div>
                                 <div class="list-icon-function">
                                   <div class="item eye">
-                                    <a href="${pageContext.request.contextPath}/manage-food?action=viewDetail&id=${item.id}">
-                                      <i class="icon-eye"></i>
+                                    <a
+                                      href="${pageContext.request.contextPath}/manage-food?action=viewDetail&id=${item.id}">
+                                      <i class="icon-eye" style="color: blue"></i>
                                     </a>
 
                                   </div>
@@ -168,8 +203,9 @@
                                       <i class="icon-edit-3" style="color: green"></i>
                                     </a>
                                   </div>
-                                  <div class="item trash">
-                                    <i class="icon-trash-2"></i>
+                                  <div class="item delete" id="item-delete">
+                                    <i class="icon-trash-2 item-trash" style="color: red;" data-id="${item.getId()}"
+                                      data-name="${item.getName()}" onclick="showModalForm(event)"></i>
                                   </div>
                                 </div>
                               </div>
@@ -233,6 +269,135 @@
       <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
       <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
       <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+      <style>
+        .item-delete {
+          font-size: 20px;
+        }
+
+        .custom-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        }
+
+        .custom-modal {
+          background: #fff;
+          border-radius: 16px;
+          padding: 32px 24px 24px 24px;
+          box-shadow: 0 2px 24px rgba(0, 0, 0, 0.08);
+          min-width: 320px;
+          max-width: 90vw;
+          text-align: center;
+          position: relative;
+        }
+
+        .custom-modal-icon {
+          margin-bottom: 12px;
+        }
+
+        .custom-modal-close {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .custom-modal-actions {
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+          margin-top: 24px;
+        }
+
+        .custom-btn {
+          padding: 8px 24px;
+          border-radius: 8px;
+          border: none;
+          font-size: 16px;
+          cursor: pointer;
+        }
+
+        .custom-btn-cancel {
+          background: #fff;
+          color: #333;
+          border: 1px solid #ddd;
+        }
+
+        .custom-btn-confirm {
+          background: #EF4444;
+          color: #fff;
+        }
+      </style>
+      <script>
+        const showModalForm = (event) => {
+          //Hiện form modal
+          const modal = document.getElementById('customDeleteModal');
+          modal.style.display = 'flex';
+          //lấy thông tin
+          const target = event.target;
+          const foodId = target.dataset.id;
+          const foodName = target.dataset.name
+          //Tạo form ảo gửi lên controller
+          const form = document.createElement('form');
+          form.id = "formDelete";
+          form.method = 'POST';
+          form.action = '${pageContext.request.contextPath}/manage-food?action=delete&id=' + foodId;
+          //Tạo input ẩn chứa id
+          const inputId = document.createElement('input');
+          inputId.type = 'hidden';
+          inputId.name = 'id';
+          inputId.value = foodId;
+          form.appendChild(inputId);
+          //Thêm form vào body
+          document.body.appendChild(form);
+        }
+
+        const hideFormModal = () => {
+          const modal = document.getElementById('customDeleteModal');
+          modal.style.display = 'none';
+        }
+
+        const hideFormModal1 = () => {
+          const formDelete = document.getElementById("formDelete")
+          if (formDelete) {
+            //Xóa form
+            document.body.removeChild(formDelete);
+            //Ẩn form
+            hideFormModal();
+          }
+          else {
+            alert("Form not found");
+          }
+        }
+
+        const hideFormModal2 = () => {
+          const formDelete = document.getElementById("formDelete")
+          if (formDelete) {
+            //Gửi form
+            formDelete.submit();
+            //Xóa form
+            document.body.removeChild(formDelete);
+            //Ẩn form
+            hideFormModal();
+          }
+          else {
+            alert("Form not found");
+          }
+        }
+
+
+      </script>
 
 
 

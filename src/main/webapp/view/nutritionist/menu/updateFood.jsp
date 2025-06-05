@@ -71,7 +71,8 @@
                       </div>
                       <!-- form-add-product -->
                       <form class="tf-section-2 form-add-product"
-                        action="${pageContext.request.contextPath}/manage-food?action=update" method="POST">
+                        action="${pageContext.request.contextPath}/manage-food?action=update&id=${idUpdate}"
+                        method="POST" enctype="multipart/form-data">
                         <div class="wg-box">
                           <!--Name-->
                           <fieldset class="name">
@@ -88,7 +89,8 @@
                               <div class="select">
                                 <select name="category" class="">
                                   <c:forEach items="${listCategory}" var="item">
-                                    <option value="${item.getId()}">${item.getMinBMI()} -
+                                    <option value="${item.getId()}" ${foodUpdate.getCategory_id()==item.getId()
+                                      ? 'selected' : '' }>${item.getMinBMI()} -
                                       ${item.getMaxBMI()}(${item.getName()})</option>
                                   </c:forEach>
                                 </select>
@@ -106,15 +108,15 @@
                           <!--Status-->
                           <fieldset class="price" style="display: none">
                             <div class="body-title mb-10">Price <span class="tf-color-1">*</span></div>
-                            <input class="mb-10" type="text" name="status" tabindex="0" value="${foodUpdate.getStatus()}"
-                              aria-required="true" required="">
+                            <input class="mb-10" type="text" name="status" tabindex="0"
+                              value="${foodUpdate.getStatus()}" aria-required="true" required="">
                           </fieldset>
 
                           <!--Description-->
                           <fieldset class="description">
                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
                             <textarea class="mb-10" name="description" placeholder="Description" tabindex="0"
-                                        aria-required="true" required>${foodUpdate.getDescription()}</textarea>
+                              aria-required="true" required>${foodUpdate.getDescription()}</textarea>
                             <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
                           </fieldset>
                         </div>
