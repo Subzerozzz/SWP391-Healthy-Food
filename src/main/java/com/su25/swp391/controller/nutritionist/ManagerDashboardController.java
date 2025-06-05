@@ -22,7 +22,7 @@ import java.util.List;
  */
 @WebServlet(name = "ManagerDashboardController", urlPatterns = {"/manager-dashboard"})
 public class ManagerDashboardController extends HttpServlet {
-    
+
     FoodDAO foodDao = new FoodDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
