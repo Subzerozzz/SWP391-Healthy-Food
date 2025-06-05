@@ -40,7 +40,6 @@
             <jsp:include page="../../common/nutritionist/sidebar.jsp" />
             <div class="section-content-right">
                 <jsp:include page="../../common/nutritionist/headerdashboard.jsp" />
-
                 <div class="main-content">
                     <div class="main-content-inner">
                         <div class="main-content-wrap">
@@ -54,7 +53,10 @@
                                     <li><div class="text-tiny">Edit Blog</div></li>
                                 </ul>
                             </div>
-                            <form class="tf-section-2 form-add-product"
+                            <form class="tf-section-2 form-add-product" 
+                                  action="manage-blog?action=edit"
+                                     method="POST"
+                                     enctype="multipart/form-data">
                                 <input type="hidden" name="id" value="${blog.id}" />
                                 <div class="wg-box">
                                     <fieldset class="title">
@@ -71,7 +73,7 @@
 
                                         <fieldset class="briefinfo">
                                             <div class="body-title mb-10">Brief Info <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" name="briefInfo" value="${blog.brief_info}" required>
+                                            <input class="mb-10" type="text" name="briefinfo" value="${blog.brief_info}" required>
                                             <div class="text-tiny">Do not exceed 100 characters for brief info.</div>
                                         </fieldset>
                                     </div>

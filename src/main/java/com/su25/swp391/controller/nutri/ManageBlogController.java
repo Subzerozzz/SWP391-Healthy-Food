@@ -87,7 +87,7 @@ public class ManageBlogController extends HttpServlet {
             String briefinfo = request.getParameter("briefinfo");
             String content = request.getParameter("content");
             String dateStr = request.getParameter("date");
-
+            String status=request.getParameter("status");
             Date date = null;
             try {
                 if (dateStr != null && !dateStr.isEmpty()) {
@@ -150,7 +150,7 @@ public class ManageBlogController extends HttpServlet {
                     .content(content)
                     .birth_date(date)
                     .thumbnailblogs(fileName != null ? UPLOAD_DIRECTORY + "/" + fileName : null)
-                    .status("Inactive")
+                    .status("Inactive") 
                     .build();
 
             BlogDAO BlogDao = new BlogDAO();
@@ -178,9 +178,9 @@ public class ManageBlogController extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             String title = request.getParameter("title");
             String author = request.getParameter("author");
-            String briefinfo = request.getParameter("brief_info");
-            String description = request.getParameter("context");
-            String dateStr = request.getParameter("birth_date");
+            String briefinfo = request.getParameter("briefinfo");
+            String description = request.getParameter("content");
+            String dateStr = request.getParameter("date");
             //Xu ly thong tin ve nhap date
             Date date = null;
             try {
