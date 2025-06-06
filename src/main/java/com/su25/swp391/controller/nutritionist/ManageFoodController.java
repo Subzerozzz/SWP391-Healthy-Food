@@ -92,17 +92,17 @@ public class ManageFoodController extends HttpServlet {
     request.getRequestDispatcher("manager-dashboard").forward(request, response);
   }
 
-  private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  private void showAddForm(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
     List<FoodCategory> listCategory = new ArrayList<>();
     listCategory = categoryDao.findAll();
-    // lấy ra luu lên session
-    HttpSession session = request.getSession();
-    session.setAttribute("listCategory", listCategory);
+    request.setAttribute("listCategory", listCategory);
     // chuyen huong nguoi dung
-    response.sendRedirect("view/nutritionist/menu/addFood.jsp");
+    request.getRequestDispatcher("view/nutritionist/menu/addFood.jsp").forward(request, response);
   }
 
-  private void showUpdateForm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  private void showUpdateForm(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
     // Lấy ra id của food
     Integer idUpdate = Integer.parseInt(request.getParameter("id"));
     // lấy ra Food cần update
@@ -111,12 +111,11 @@ public class ManageFoodController extends HttpServlet {
     List<FoodCategory> listCategory = new ArrayList<>();
     listCategory = categoryDao.findAll();
     // set các giá trị để gửi lên updateFood.jsp
-    HttpSession session = request.getSession();
-    session.setAttribute("listCategory", listCategory);
-    session.setAttribute("foodUpdate", foodNeedUpdate);
-    session.setAttribute("idUpdate", idUpdate);
+    request.setAttribute("listCategory", listCategory);
+    request.setAttribute("foodUpdate", foodNeedUpdate);
+    request.setAttribute("idUpdate", idUpdate);
     // Chuyển về trang updateFood
-    response.sendRedirect("view/nutritionist/menu/updateFood.jsp");
+    request.getRequestDispatcher("view/nutritionist/menu/updateFood.jsp").forward(request, response);
   }
 
   private void viewFoodDeatail(HttpServletRequest request, HttpServletResponse response)
@@ -206,9 +205,13 @@ public class ManageFoodController extends HttpServlet {
       }
 
       if (!errors.isEmpty()) {
+        for (Map.Entry<String, String> entry : errors.entrySet()) {
+          System.out.println("Error: " + entry.getKey() + " - " + entry.getValue());
+        }
         request.setAttribute("errors", errors);
         request.setAttribute("formData", request.getParameterMap());
         showAddForm(request, response);
+        return;
       }
 
       // Tạo 1 đối tượng FoodDraft và lưu vào DB
@@ -238,7 +241,7 @@ public class ManageFoodController extends HttpServlet {
       requestDao.insert(newRequest);
 
       // chuyển hướng về trang dashboard
-      request.getRequestDispatcher("manager-dashboard").forward(request, response);
+      response.sendRedirect("manager-dashboard");
 
     } catch (Exception e) {
       System.out.println(e);
@@ -246,9 +249,38 @@ public class ManageFoodController extends HttpServlet {
   }
 
   private void deleteFood(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String id = request.getParameter("id");
-    PrintWriter out = response.getWriter();
-    out.println(id);
+    Integer id = Integer.parseInt(request.getParameter("id"));
+    // Lấy ra đối tượng Food
+    Food foodDelete = foodDao.findById(id);
+    // Tạo 1 đối tượng foodDraft
+    FoodDraft foodDraft = FoodDraft.builder()
+        .name(foodDelete.getName())
+        .description(foodDelete.getDescription())
+        .price(foodDelete.getPrice())
+        .image_url(foodDelete.getImage_url())
+        .category_id(foodDelete.getCategory_id())
+        .created_at(foodDelete.getCreated_at())
+        .updated_at(foodDelete.getUpdated_at())
+        .type("DELETE")
+        .food_id(id)
+        .nutri_id(foodDelete.getNutri_id())
+        .build();
+    // Lưu vào DB
+    foodDraftDao.insert(foodDraft);
+    // Tạo 1 đối tượng request
+    String result = "Pending";
+    String statusRequest = "Not done";
+    Integer foodDraftId = foodDraftDao.getBiggestId();
+
+    Request newRequest = Request.builder()
+        .result(result)
+        .foodDraftId(foodDraftId)
+        .statusRequest(statusRequest)
+        .build();
+
+    requestDao.insert(newRequest);
+    // chuyển hướng về trang dashboard
+    response.sendRedirect("manager-dashboard");
   }
 
   private void updateFood(HttpServletRequest request, HttpServletResponse response)
@@ -300,6 +332,42 @@ public class ManageFoodController extends HttpServlet {
         fileName = "uploads/products/" + fileName;
       }
       // Validate dữ liệu
+      Map<String, String> errors = new HashMap<>();
+      // Validate name
+      if (name == null || name.trim().isEmpty()) {
+        errors.put("name", "Food name is required");
+      }
+      // Validate price
+      if (priceStr == null || priceStr.trim().isEmpty()) {
+        errors.put("price", "Price is required");
+      } else {
+        try {
+          Double price = Double.parseDouble(priceStr);
+          if (price < 0) {
+            errors.put("price", "Price cannot be negative");
+          }
+        } catch (Exception e) {
+          errors.put("price", "Price must be number");
+        }
+      }
+      // Validate description
+      if (description == null || description.trim().isEmpty()) {
+        errors.put("description", "Description is required");
+      }
+      // Validte image
+      if (filePart == null || filePart.getSize() == 0) {
+        errors.put("filename", "Food image is required");
+      }
+
+      if (!errors.isEmpty()) {
+        for (Map.Entry<String, String> entry : errors.entrySet()) {
+          System.out.println("Error: " + entry.getKey() + " - " + entry.getValue());
+        }
+        request.setAttribute("errors", errors);
+        request.setAttribute("formData", request.getParameterMap());
+        showUpdateForm(request, response);
+        return;
+      }
 
       // Tạo 1 bản foodDraft với type là Update
       FoodDraft newFoodDraft = FoodDraft.builder()
@@ -329,7 +397,7 @@ public class ManageFoodController extends HttpServlet {
 
       requestDao.insert(newRequest);
       // chuyển hướng về trang dashboard và thông báo gửi request thành công
-      request.getRequestDispatcher("manager-dashboard").forward(request, response);
+      response.sendRedirect("manager-dashboard");
 
     } catch (Exception e) {
       System.out.println(e);
