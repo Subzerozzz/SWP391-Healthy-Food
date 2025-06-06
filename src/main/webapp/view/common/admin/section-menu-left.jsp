@@ -25,148 +25,12 @@
                                                                             <div class="section-menu-left-wrap">
                                                                                 <div class="center">
                                                                                     <div class="center-item">
-                                                                                        <div class="center-heading">Main Home</div>
-                                                                                        <ul class="menu-list">
-                                                                                            <li class="menu-item has-children">
-                                                                                                <a href="javascript:void(0);" class="menu-item-button">
-                                                                                                    <div class="icon"><i class="icon-grid"></i></div>
-                                                                                                    <div class="text">Dashboard</div>
-                                                                                                </a>
-                                                                                                <ul class="sub-menu">
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="index.html" class="">
-                                                                                                            <div class="text">Home 01</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-2.html" class="">
-                                                                                                            <div class="text">Home 02</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-3.html" class="">
-                                                                                                            <div class="text">Home 03</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-4.html" class="">
-                                                                                                            <div class="text">Home 04</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-boxed.html" class="">
-                                                                                                            <div class="text">Home Boxed</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-menu-icon-hover.html" class="">
-                                                                                                            <div class="text">Home Menu Icon Hover</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="home-menu-icon-default.html" class="">
-                                                                                                            <div class="text">Home Menu Icon Default</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
-                                                                                        </ul>
+                                                                                        
                                                                                     </div>
                                                                                     <div class="center-item">
                                                                                         <div class="center-heading">All page</div>
                                                                                         <ul class="menu-list">
-                                                                                            <li class="menu-item has-children">
-                                                                                                <a href="javascript:void(0);" class="menu-item-button">
-                                                                                                    <div class="icon"><i class="icon-shopping-cart"></i></div>
-                                                                                                    <div class="text">Ecommerce</div>
-                                                                                                </a>
-                                                                                                <ul class="sub-menu">
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="add-product.html" class="">
-                                                                                                            <div class="text">Add Product</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="product-list.html" class="">
-                                                                                                            <div class="text">Product List</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="product-detail-1.html" class="">
-                                                                                                            <div class="text">Product Detail 1</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="product-detail-2.html" class="">
-                                                                                                            <div class="text">Product Detail 2</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="product-detail-3.html" class="">
-                                                                                                            <div class="text">Product Detail 3</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
-                                                                                            <li class="menu-item has-children">
-                                                                                                <a href="javascript:void(0);" class="menu-item-button">
-                                                                                                    <div class="icon"><i class="icon-layers"></i></div>
-                                                                                                    <div class="text">Category</div>
-                                                                                                </a>
-                                                                                                <ul class="sub-menu">
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="category-list.html" class="">
-                                                                                                            <div class="text">Category list</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="new-category.html" class="">
-                                                                                                            <div class="text">New category</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
-                                                                                            <li class="menu-item has-children">
-                                                                                                <a href="javascript:void(0);" class="menu-item-button">
-                                                                                                    <div class="icon"><i class="icon-box"></i></div>
-                                                                                                    <div class="text">Attributes</div>
-                                                                                                </a>
-                                                                                                <ul class="sub-menu">
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="attributes.html" class="">
-                                                                                                            <div class="text">Attributes</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="add-attributes.html" class="">
-                                                                                                            <div class="text">Add attributes</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
-                                                                                            <li class="menu-item has-children">
-                                                                                                <a href="javascript:void(0);" class="menu-item-button">
-                                                                                                    <div class="icon"><i class="icon-file-plus"></i></div>
-                                                                                                    <div class="text">Order</div>
-                                                                                                </a>
-                                                                                                <ul class="sub-menu">
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="oder-list.html" class="">
-                                                                                                            <div class="text">Order list</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="oder-detail.html" class="">
-                                                                                                            <div class="text">Order detail</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                    <li class="sub-menu-item">
-                                                                                                        <a href="oder-tracking.html" class="">
-                                                                                                            <div class="text">Order tracking</div>
-                                                                                                        </a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </li>
+                                                                                            
                                                                                             <li class="menu-item has-children active">
                                                                                                 <a href="javascript:void(0);" class="menu-item-button">
                                                                                                     <div class="icon"><i class="icon-user"></i></div>
@@ -211,18 +75,7 @@
                                                                                                     </li>
                                                                                                 </ul>
                                                                                             </li>
-                                                                                            <li class="menu-item">
-                                                                                                <a href="gallery.html" class="">
-                                                                                                    <div class="icon"><i class="icon-image"></i></div>
-                                                                                                    <div class="text">Gallery</div>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                            <li class="menu-item">
-                                                                                                <a href="report.html" class="">
-                                                                                                    <div class="icon"><i class="icon-pie-chart"></i></div>
-                                                                                                    <div class="text">Report</div>
-                                                                                                </a>
-                                                                                            </li>
+                                                                                            
                                                                                         </ul>
                                                                                     </div>
                                                                                     <div class="center-item">
@@ -278,17 +131,7 @@
                                                                                             </li>
                                                                                         </ul>
                                                                                     </div>
-                                                                                    <div class="center-item">
-                                                                                        <div class="center-heading">Components</div>
-                                                                                        <ul class="menu-list">
-                                                                                            <li class="menu-item">
-                                                                                                <a href="components.html" class="">
-                                                                                                    <div class="icon"><i class="icon-database"></i></div>
-                                                                                                    <div class="text">Components</div>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </div>
+                                                                                    
                                                                                     <div class="center-item">
                                                                                         <div class="center-heading">Support</div>
                                                                                         <ul class="menu-list">

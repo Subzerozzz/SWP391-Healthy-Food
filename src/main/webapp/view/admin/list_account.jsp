@@ -1,3 +1,4 @@
+
 <%-- 
     Document   : all-acc.jsp
     Created on : May 27, 2025, 10:00:36 AM
@@ -10,6 +11,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 <style>
 /* Gợi ý: Bắt đầu CSS cải tiến */
 
@@ -143,7 +145,55 @@
     color: white;
     font-weight: bold;
 }
+.fa-circle-check {
+    color: #28a745; /* xanh lá đẹp, như trong Bootstrap */
+}
+.fa-circle-check:hover {
+    color: #007BFF; /* Màu xanh biển khi hover */
+}
+.list-icon-function .item.eye i {
+    color: #FFC107; /* màu vàng */
+}
 
+.list-icon-function .item.edit i {
+    color: #FF3B3B; /* đỏ tươi */
+}
+.wg-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.wg-pagination li a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* Trang đang chọn */
+.wg-pagination li.active a {
+    background-color: #1e74fd;
+    color: white;
+    border-color: #1e74fd;
+}
+
+/* Hover các trang khác */
+.wg-pagination li a:hover {
+    background-color: #eee;
+    border-color: #aaa;
+}
 </style>
 
 
@@ -311,7 +361,7 @@
                                                                                                                         <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i class="icon-edit-3"></i></a>
                                                                                                                     </div>
                                                                                                                     <div class="item trash">
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=${account.status ?'deactive' :'activate'}&id=${account.id}"><i class="icon-trash-2"></i></a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=${account.status ?'deactive' :'activate'}&id=${account.id}"><i class="fa-solid fa-circle-check"></i></a>
                                                                                                                     </div>
                                                                                                                     <div class="item trash">
                                                                                                                         <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
@@ -332,9 +382,9 @@
                                                                                                         <a href="#"><i class="icon-chevron-left"></i></a>
                                                                                                     </li>
                                                                                                     <c:forEach begin="1" end="${endP}" var="i">
-                                                                                                        <li>
-                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?index=${i}">${i}</a>
-                                                                                                    </li>
+                                                                                                        <li class = "${i == index ? 'active' : ''}">
+                                                                                                            <a href="${pageContext.request.contextPath}/manage-account?index=${i}">${i}</a>
+                                                                                                        </li>
                                                                                                     </c:forEach>
 <!--                                                                                                    <li>
                                                                                                         <a href="#">1</a>

@@ -10,7 +10,72 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
+    <style>
+/* Container box */
+.wg-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    max-width: 700px;
+    margin: 30px auto;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
 
+/* Title */
+.wg-box h5 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+/* Each detail item */
+fieldset.name {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.body-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #34495e;
+    display: flex;
+    justify-content: space-between;
+}
+
+.body-title span {
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Back button */
+.bot {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.bot button {
+    background-color: #007BFF;
+    border: none;
+    color: #ffffff;
+    padding: 12px 28px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.bot button:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
+
+
+        </style>
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
@@ -163,11 +228,7 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
-                                                                                <div class="bottom-page">
-                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                    <i class="icon-heart"></i>
-                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                </div>
+                                                                               
                                                                                 <!-- /bottom-page -->
                                                                             </div>
                                                                             <!-- /main-content -->

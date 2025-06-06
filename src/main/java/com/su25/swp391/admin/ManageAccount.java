@@ -121,7 +121,7 @@ public class ManageAccount extends HttpServlet {
         } else {
             setToastMessage(request, "Invalid account Id", "Err");
         }
-        response.sendRedirect("manage-account-dashbost");
+         response.sendRedirect(request.getContextPath()+"/manage-account");
         return;
     }
 
@@ -141,7 +141,7 @@ public class ManageAccount extends HttpServlet {
             setToastMessage(request, "Invalid account Id", "Err");
         }
         //chuyen huong ve trang list 
-        response.sendRedirect("manage-account-dashbost");
+         response.sendRedirect(request.getContextPath()+"/manage-account");
         return;
     }
 
@@ -162,6 +162,7 @@ public class ManageAccount extends HttpServlet {
         }
         List <Account> listAccount =accountdao.pagingAccount(index);
         request.setAttribute("listAccount", listAccount);
+        request.setAttribute("index", index);
         request.setAttribute("endP", endPage);
         request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
         
