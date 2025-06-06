@@ -108,13 +108,11 @@
                                             <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.brief_info}</div>
                                             </fieldset>
                                         </div>
-                         
-                                            < fieldset class="Context">
                                             <div class="body-title mb-10">
                                                 Description: <span class="tf-color-1">*</span>
                                             </div>
                                             <div class="col" style="color: black; font-size: 20px; font-weight: bold; white-space: normal; overflow: visible; text-overflow: unset;">
-                                                ${blog.context}
+                                                ${blog.content}
                                             </div>
                                             </fieldset>
                                     </div>

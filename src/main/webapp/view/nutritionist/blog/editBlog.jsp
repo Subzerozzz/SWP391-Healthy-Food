@@ -80,7 +80,7 @@
 
                                     <fieldset class="Context">
                                         <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                        <textarea class="mb-10" name="content" required>${blog.content}</textarea>
+                                        <textarea class="mb-10" type="text" name="content" required>${blog.content}</textarea>
                                         <div class="text-tiny">Do not exceed 1000 characters for the description.</div>
                                     </fieldset>
                                 </div>

@@ -27,6 +27,7 @@ import java.util.UUID;
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ManageBlogController extends HttpServlet {
+
     private final String UPLOAD_DIRECTORY = "uploads";
 
     private BlogDAO blogDAO;
@@ -87,7 +88,7 @@ public class ManageBlogController extends HttpServlet {
             String briefinfo = request.getParameter("briefinfo");
             String content = request.getParameter("content");
             String dateStr = request.getParameter("date");
-            String status=request.getParameter("status");
+            String status = request.getParameter("status");
             Date date = null;
             try {
                 if (dateStr != null && !dateStr.isEmpty()) {
@@ -150,7 +151,7 @@ public class ManageBlogController extends HttpServlet {
                     .content(content)
                     .birth_date(date)
                     .thumbnailblogs(fileName != null ? UPLOAD_DIRECTORY + "/" + fileName : null)
-                    .status("Inactive") 
+                    .status("Inactive")
                     .build();
 
             BlogDAO BlogDao = new BlogDAO();
@@ -235,14 +236,25 @@ public class ManageBlogController extends HttpServlet {
     }
 
     private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp");
-        dispatcher.forward(request, response);
+        int id =Integer.parseInt(request.getParameter("id"));
+        BlogDAO blogDao=new BlogDAO();
+        Blog blog= blogDao.findById(id);
+        if (blog != null) {
+            request.setAttribute("blog", blog);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            request.getSession().setAttribute("toastMessage", "Blog not found");
+            request.getSession().setAttribute("toastType", "error");
+            response.sendRedirect(request.getContextPath() + "/view/nutritionist/blog/editBlog.jsp");
+        }
+        
     }
 
     private void showDetailDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Blog list = blogDAO.findById(id);
-        request.setAttribute("blog", list);
+        Blog blog = blogDAO.findById(id);
+        request.setAttribute("blog", blog);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/viewdetailBlog.jsp");
         dispatcher.forward(request, response);
     }
