@@ -134,4 +134,28 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     }
   }
 
+  public List<Food> getFoodByName(String foodName) {
+    List<Food> listFood = null;
+    String sql = "SELECT * FROM Food"
+        + " WHERE name LIKE ?" ;
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, "%" + foodName + "%");
+      resultSet = statement.executeQuery();
+      listFood = new ArrayList<>();
+      while (resultSet.next()) {
+        listFood.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return listFood;
+  }
+  
+    public static void main() {
+        for(Food a: new FoodDAO().getFoodByName("gà")){
+            System.out.println(a);
+        }
+    }
+
 }

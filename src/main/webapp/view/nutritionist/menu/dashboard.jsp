@@ -132,7 +132,7 @@
                             <div class="filter-select-wrap" id="filterSelectWrap">
                               <select class="filter-select" onchange="filterByCategory(this)">
                                 <c:forEach items="${listCategory}" var="item">
-                                  <option value="${item.getId()}" ${item.getId() == categoryID? 'selected' : ''}>
+                                  <option value="${item.getId()}" ${item.getId()==categoryID? 'selected' : '' }>
                                     ${item.getName()}
                                   </option>
                                 </c:forEach>
@@ -140,15 +140,18 @@
                             </div>
                           </div>
                           <!-- search -->
-                          <form class="form-search">
+                          <form class="form-search"
+                            action="${pageContext.request.contextPath}/manage-food" method="GET">
                             <fieldset class="name">
-                              <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value=""
-                                aria-required="true" required="">
+                               <input type="hidden" name="action" value="search">     
+                              <input type="text" placeholder="Search by food name here..." class="" name="name"
+                                tabindex="2" value="${not empty foodName? foodName : ""}" aria-required="true" required="">
                             </fieldset>
                             <div class="button-submit">
                               <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
                           </form>
+                            
                         </div>
                         <a class="tf-button style-1 w208"
                           href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
