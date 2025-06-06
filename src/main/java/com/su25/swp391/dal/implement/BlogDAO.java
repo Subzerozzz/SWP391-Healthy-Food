@@ -183,7 +183,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     }
 
     public boolean isBlogTitleExists(String title, Integer id) {
-        String sql = "SELECT COUNT(*) FROM blogs WHERE title = ? AND blog_id != ?";
+        String sql = "SELECT COUNT(*) FROM blogs WHERE title = ? AND id != ?";
 
         try {
             connection = getConnection();
@@ -203,5 +203,49 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
 
         return false;
+    }
+    public List<Blog> findBlogsWithFilter(String title, String status, int page, int pageSize) {
+        List<Blog> blogs = new ArrayList<>();
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+        
+        // Add title filter if provided
+        if (title != null && !title.isEmpty()) {
+            sqlBuilder.append(" AND title LIKE ?");
+            params.add("%" + title + "%");
+        }
+        
+        // Add status filter if provided
+        if (status != null && !status.isEmpty()) {
+            sqlBuilder.append(" AND status = ?");
+            params.add(status);
+        }
+        
+        // Add ordering and pagination
+        sqlBuilder.append(" ORDER BY created_date DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+        
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sqlBuilder.toString());
+            
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            
+            resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                blogs.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding blogs with filter: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        
+        return blogs;
     }
 }
