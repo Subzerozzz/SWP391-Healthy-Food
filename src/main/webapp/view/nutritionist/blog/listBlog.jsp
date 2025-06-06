@@ -87,7 +87,7 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Product List</div>
+                                            <div class="text-tiny">Blog List</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -184,7 +184,11 @@
                                      <div class="col">${blog.id}</div>
                                      <div class="col">${blog.author}</div>
                                      <div class="col">${blog.birth_date}</div> 
-                                     <div class="col">${blog.status}</div>
+                                     <div class="col">
+                                         <span style="background-color: red; color: black; padding: 2px 6px; border-radius: 3px; display: inline-block; font-weight: bold;">
+                                             ${blog.status}
+                                         </span>
+                                     </div>
                                      <div class="col actions">
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"> <i class="icon-edit-3"></i></a>

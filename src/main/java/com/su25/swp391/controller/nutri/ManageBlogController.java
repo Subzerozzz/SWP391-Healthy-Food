@@ -95,6 +95,8 @@ public class ManageBlogController extends HttpServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr);
                     date = new java.sql.Date(utilDate.getTime());
+                } else {
+                    date = new java.sql.Date(System.currentTimeMillis());
                 }
             } catch (ParseException e) {
                 request.setAttribute("error", "Invalid date format");
@@ -143,10 +145,9 @@ public class ManageBlogController extends HttpServlet {
                 request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp").forward(request, response);
                 return;
             }
-
             Blog newBlog = Blog.builder()
                     .title(title)
-                    .author(author)
+                    .author("HarryPorter")
                     .brief_info(briefinfo)
                     .content(content)
                     .birth_date(date)
@@ -189,6 +190,8 @@ public class ManageBlogController extends HttpServlet {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr);
                     date = new java.sql.Date(utilDate.getTime()); // ép sang java.sql.Date
+                } else {
+                    date = new java.sql.Date(System.currentTimeMillis());
                 }
             } catch (ParseException e) {
                 request.setAttribute("error", "Đinh dang sai form ");
@@ -236,9 +239,9 @@ public class ManageBlogController extends HttpServlet {
     }
 
     private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id =Integer.parseInt(request.getParameter("id"));
-        BlogDAO blogDao=new BlogDAO();
-        Blog blog= blogDao.findById(id);
+        int id = Integer.parseInt(request.getParameter("id"));
+        BlogDAO blogDao = new BlogDAO();
+        Blog blog = blogDao.findById(id);
         if (blog != null) {
             request.setAttribute("blog", blog);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/editBlog.jsp");
@@ -248,7 +251,7 @@ public class ManageBlogController extends HttpServlet {
             request.getSession().setAttribute("toastType", "error");
             response.sendRedirect(request.getContextPath() + "/view/nutritionist/blog/editBlog.jsp");
         }
-        
+
     }
 
     private void showDetailDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

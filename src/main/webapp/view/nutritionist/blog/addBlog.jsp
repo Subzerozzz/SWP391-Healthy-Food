@@ -106,19 +106,13 @@
                                             <input class="mb-10" type="text" placeholder="Enter blog title" name="title" tabindex="0" value="" aria-required="true" required="">
                                             <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
                                         </fieldset>
-                                        <div class="gap22 cols">
-                                            <fieldset class="author">
-                                                <div class="body-title mb-10">Author <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter author" name="author" tabindex="0" value="" aria-required="true" required="">
-                                                <div class="text-tiny">Do not exceed 20 characters when entering the author.</div>
-                                            </fieldset>
-                                            <fieldset class="briefinfo">
-                                                <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="text" placeholder="Enter briefinfo" name="briefinfo" tabindex="0" value="" aria-required="true" required="">
+                                        <fieldset class="briefinfo">
+                                            <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
+                                            <input class="mb-10" type="text" placeholder="Enter briefinfo" name="briefinfo" tabindex="0" value="" aria-required="true" required="">
                                                 <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
-                                            </fieldset>
-                                        </div>
-                         
+                                        </fieldset>
+
+
                                         <fieldset class="Content">
                                             <div class="body-title mb-10">Content <span class="tf-color-1">*</span></div>
                                             <textarea class="mb-10" name="content" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
@@ -146,13 +140,6 @@
                                                 </div>
                                             </div>
                                         </fieldset>
-                                            <fieldset class="name">
-                                                <div class="body-title mb-10">Product date</div>
-                                                <div class="select">
-                                                    <input type="date" name="date" value="2023-11-20">
-                                                </div>
-                                            </fieldset>
-                                       
                                          <div class="cols gap10">
                                              <button class="tf-button w-full" type="submit">Add Blog</button>
                                          </div>
