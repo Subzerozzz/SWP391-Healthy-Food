@@ -91,7 +91,7 @@
                                                                                                 </div>
 
                                                                                                 <!--Message about Alert-->
-                                                                                                <div id="mess">${mess}</div> 
+                                                                                                <div id="mess" ><input type="hidden" name="name" value="${mess}"></div> 
 
 
                                                                                             </div>
@@ -152,26 +152,30 @@
                                                                                                                                                                     </div>
                                                                                                                                                                     <!--end table-->
                                                                                                                                                                     </div>
-                                                                                                                                                                    <div class="divider"></div>
-                                                                                                                                                                    <div class="flex items-center justify-between flex-wrap gap10">
+                                                                                                                                                                 
+                                                                                                                                                    <div class="flex items-center justify-between flex-wrap gap10">
                                                                                                                                                                         <div class="text-tiny">Showing 10 entries</div>
                                                                                                                                                                         <ul class="wg-pagination">
                                                                                                                                                                             <li>
                                                                                                                                                                                 <a href="#"><i class="icon-chevron-left"></i></a>
                                                                                                                                                                             </li>
-                                                                                                                                                                            <li>
-                                                                                                                                                                                <a href="#">1</a>
-                                                                                                                                                                            </li>
-                                                                                                                                                                            <li class="active">
-                                                                                                                                                                                <a href="#">2</a>
-                                                                                                                                                                            </li>
-                                                                                                                                                                            <li>
-                                                                                                                                                                                <a href="#">3</a>
-                                                                                                                                                                            </li>
+                                                                                                                                                                              <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                                                                                                                                <c:choose>
+                                                                                                                                                                                    <c:when test="${i == currentPage}">
+                                                                                                                                                                                        <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 40px;display: flex;justify-content: center;align-items: center">${i}</li>
+                                                                                                                                                                                    </c:when>
+                                                                                                                                                                                    <c:otherwise>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                           <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                      
+                                                                                                                                                                                    </c:otherwise>
+                                                                                                                                                                                </c:choose>
+                                                                                                                                                                            </c:forEach> 
                                                                                                                                                                             <li>
                                                                                                                                                                                 <a href="#"><i class="icon-chevron-right"></i></a>
                                                                                                                                                                             </li>
-                                                                                                                                                                        </ul>
+                                                                                                                                                                         </ul>
                                                                                                                                                                     </div>
                                                                                                                                                                     </div>
                                                                                                                                                                     <!-- /product-list -->
@@ -211,14 +215,10 @@
 
                                                                                                                                                                     <!--Alert Information about AccpetFood-->
                                                                                                                                                                     <script>
-//                                                                                                                                                                                                        const mess = document.getElementById("mess");
-//                                                                                                                                                                                                        if (mess !== null && mess.innerText.trim() !== "") {
-//                                                                                                                                                                                                        alert(mess.innerText);
-//                                                                                                                                                                                                        }
+                                                                                                                                                                                                        const input = document.querySelector('#mess input[type="hidden"]');
+                                                                                                                                                                                                       if (input !== null && input.value.trim() !== "") { alert(input.value);}
  
-                                                                                                                                                                                                       if(${mess}!==null && mess.trim() !== ""){
-                                                                                                                                                                                                           alert(${mess});
-                                                                                                                                                                                                       }
+
                                                                                                                                                                                                         
                                                                                                                                                                     </script>
                                                                                                                                                                     </body>
