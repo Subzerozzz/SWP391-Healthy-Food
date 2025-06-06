@@ -42,27 +42,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return account;
     }
 
-    public List<Account> pagingAccount(int index) {
-        List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM Swp301_pr.account\n"
-                + "ORDER BY id\n"
-                + "LIMIT 10 OFFSET ?;";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, (index - 1) * 10);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-
-                list.add(getFromResultSet(resultSet));
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // BẮT BUỘC CÓ
-        } finally {
-            closeResources();
-        }
-        return list;
-    }
+ 
 public  static void main (String[] args ){
     AccountDAO account = new AccountDAO();
     List<Account> list = account.pagingAccount(3);
@@ -190,7 +170,27 @@ public  static void main (String[] args ){
         }
         return false;
     }
+   public List<Account> pagingAccount(int index) {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT * FROM Swp301_pr.account\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?;";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (index - 1) * 10);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
 
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // BẮT BUỘC CÓ
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
     public List<Account> filterAccounts(String role, Boolean status) {
         List<Account> accounts = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
