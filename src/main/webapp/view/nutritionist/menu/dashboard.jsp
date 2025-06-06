@@ -27,7 +27,7 @@
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
-
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 
       <!-- Font -->
@@ -75,7 +75,6 @@
                   <div class="main-content-wrap">
                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Food List</h3>
-
                     </div>
                     <!-- Thêm modal xác nhận xóa -->
                     <div id="customDeleteModal" class="custom-modal-overlay" style="display:none;">
@@ -121,17 +120,25 @@
                       </div>
                       <div class="flex items-center justify-between gap10 flex-wrap">
                         <div class="wg-filter flex-grow">
-                          <div class="show">
-                            <div class="text-tiny">Showing</div>
-                            <div class="select">
-                              <select class="">
-                                <option>10</option>
-                                <option>20</option>
-                                <option>30</option>
+                          <!-- filter -->
+                          <div class="filter-dropdown">
+                            <button class="filter-btn" type="button" id="filterToggle">
+                              <span class="filter-icon">
+                                <i class="fa-solid fa-filter"></i>
+                                </svg>
+                              </span>
+                              <span>Filter by category</span>
+                            </button>
+                            <div class="filter-select-wrap" id="filterSelectWrap">
+                              <select class="filter-select">
+                                <c:forEach items="${listCategory}" var="item">
+                                  <option value="${item.getId()}" onClick="filterByCategory()">${item.getName()}
+                                  </option>
+                                </c:forEach>
                               </select>
                             </div>
-                            <div class="text-tiny">entries</div>
                           </div>
+                          <!-- search -->
                           <form class="form-search">
                             <fieldset class="name">
                               <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value=""
@@ -184,7 +191,13 @@
                                   <a href="product-list.html" class="body-title-2">${item.getName()}</a>
                                 </div>
                                 <div class="body-text">#0000${item.getId()}</div>
-                                <div class="body-text">${item.getCategory_id()}</div>
+                                <div class="body-text">
+                                  <c:forEach items="${listCategory}" var="itemCategory">
+                                    <c:if test="${itemCategory.getId() == item.getCategory_id()}">
+                                      ${itemCategory.getName()}
+                                    </c:if>
+                                  </c:forEach>
+                                </div>
                                 <div class="body-text">${item.getPrice()}</div>
                                 <div class="body-text">${item.getStatus()}</div>
                                 <div class="body-text">${item.getCreated_at()}</div>
@@ -338,6 +351,61 @@
           background: #EF4444;
           color: #fff;
         }
+
+        .filter-dropdown {
+          position: relative;
+          display: flex;
+          padding: 10px;
+        }
+
+        .filter-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          border: 1.5px solid #95989D;
+          background: #fff;
+          color: #95989D;
+          border-radius: 22px;
+          padding: 4px 18px;
+          font-weight: 500;
+          font-size: 15px;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .filter-btn:hover {
+          background: #e3f2fd;
+        }
+
+        .filter-icon {
+          display: flex;
+          align-items: center;
+        }
+
+        .filter-select-wrap {
+          display: none;
+          position: absolute;
+          top: 110%;
+          left: 0;
+          background: #fff;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          padding: 8px 12px;
+          z-index: 10;
+        }
+
+        .filter-select {
+          min-width: 140px;
+          padding: 6px 10px;
+          border-radius: 4px;
+          border: 1px solid #bdbdbd;
+          font-size: 15px;
+        }
+
+        .filter-dropdown.active .filter-select-wrap {
+          display: block;
+        }
       </style>
       <script>
         const showModalForm = (event) => {
@@ -395,6 +463,21 @@
             alert("Form not found");
           }
         }
+        // Filter 
+        // Hiển thị select khi bấm nút Filter
+        const filterDropdown = document.querySelector('.filter-dropdown');
+        const filterToggle = document.getElementById('filterToggle');
+        filterToggle.addEventListener('click', function (e) {
+          filterDropdown.classList.toggle('active');
+        });
+        // Ẩn select khi click ra ngoài
+        window.addEventListener('click', function (e) {
+          if (!filterDropdown.contains(e.target)) {
+            filterDropdown.classList.remove('active');
+          }
+        });
+        // End Filter 
+
 
 
       </script>
