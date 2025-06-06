@@ -47,6 +47,7 @@ public class ManageFoodController extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String action = request.getParameter("action");
+    System.out.println(action);
     if (action == null) {
       action = "view";
     }
@@ -65,6 +66,9 @@ public class ManageFoodController extends HttpServlet {
         break;
       case "filter":
         filterByCategory(request, response);
+        break;
+      case "search":
+        searchByName(request, response);
         break;
       default:
         throw new AssertionError();
@@ -418,6 +422,21 @@ public class ManageFoodController extends HttpServlet {
     } catch (Exception e) {
       System.out.println(e);
     }
+  }
+
+  private void searchByName(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    String foodName = request.getParameter("name");
+    // Lấy ra listFood
+    List<Food> listFood = foodDao.getFoodByName(foodName);
+    //lấy ra listCategory
+    List<FoodCategory> listCategory = categoryDao.findAll();
+    // set gia tri vao request
+    request.setAttribute("listFood", listFood);
+    request.setAttribute("listCategory", listCategory);
+    request.setAttribute("foodName", foodName);
+    request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
+
   }
 
 }
