@@ -112,8 +112,26 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     return food;
   }
 
+  public List<Food> findByCategoryId(Integer categoryId) {
+    List<Food> foodList = new ArrayList<>();
+    String sql = "SELECT * FROM Food WHERE category_id = ?";
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, categoryId);
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        foodList.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return foodList;
+  }
+
   public static void main(String[] args) {
-    System.out.println(new FoodDAO().findById(3));
+    for (Food f : new FoodDAO().findByCategoryId(2)) {
+      System.out.println(f);
+    }
   }
 
 }

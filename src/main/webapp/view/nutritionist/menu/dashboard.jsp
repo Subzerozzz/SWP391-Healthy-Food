@@ -130,9 +130,10 @@
                               <span>Filter by category</span>
                             </button>
                             <div class="filter-select-wrap" id="filterSelectWrap">
-                              <select class="filter-select">
+                              <select class="filter-select" onchange="filterByCategory(this)">
                                 <c:forEach items="${listCategory}" var="item">
-                                  <option value="${item.getId()}" onClick="filterByCategory()">${item.getName()}
+                                  <option value="${item.getId()}" ${item.getId() == categoryID? 'selected' : ''}>
+                                    ${item.getName()}
                                   </option>
                                 </c:forEach>
                               </select>
@@ -352,10 +353,10 @@
           color: #fff;
         }
 
+        /* filter  */
         .filter-dropdown {
           position: relative;
           display: flex;
-          padding: 10px;
         }
 
         .filter-btn {
@@ -366,7 +367,7 @@
           background: #fff;
           color: #95989D;
           border-radius: 22px;
-          padding: 4px 18px;
+          padding: 10px 20px;
           font-weight: 500;
           font-size: 15px;
           cursor: pointer;
@@ -476,10 +477,11 @@
             filterDropdown.classList.remove('active');
           }
         });
+        const filterByCategory = (e) => {
+          const id = e.value;
+          window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
+        }
         // End Filter 
-
-
-
       </script>
 
 
