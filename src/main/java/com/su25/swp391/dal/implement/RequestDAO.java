@@ -39,6 +39,24 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         }
         return list;
     }
+    public boolean checkReload(Integer foodDraftId){
+                String sql = "Select 1 from Request where foodDraftId = ? and statusRequest = 'Not done'";
+      
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, foodDraftId);
+            resultSet = statement.executeQuery();
+            if(resultSet.next()) {
+               return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
     
     
        public List<Request> findAllRequest() {
@@ -164,7 +182,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
                System.out.println(lit);
            }
            System.out.println(dao.findById(6));
-         
+           System.out.println(dao.checkReload(132)); 
     }
        
        
