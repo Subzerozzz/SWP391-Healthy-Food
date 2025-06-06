@@ -1,0 +1,73 @@
+/*.manage-request{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+}
+table{
+    width: 100%;
+
+}
+
+th, td {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  Font đẹp, hiện đại 
+    font-size: 16px;       Cỡ chữ vừa mắt (có thể dùng 15px tùy nhu cầu) 
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;  Căn giữa theo chiều ngang 
+}
+th, td, img{
+    width: 80px;        hoặc bạn dùng 60px, 80px tùy ý 
+    height: auto;        tự điều chỉnh chiều cao theo tỷ lệ 
+    object-fit: cover;   ảnh vừa ô, không bị méo 
+    border-radius: 4px;  bo góc nhẹ nếu muốn 
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;  màu xám nhạt 
+}
+
+tr:nth-child(odd) {
+    background-color: #ffffff;  màu trắng 
+}*/
+.manage-request {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Xoá khoảng giữa các ô */
+    border: none;              /* Không viền ngoài bảng */
+}
+
+th, td {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;  /* Chỉ kẻ viền dưới */
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    background-color: transparent;  /* Đảm bảo không có viền nền khi hover */
+    border-radius: 12px;
+} 
+
+
+/* Áp dụng kiểu ảnh nếu dùng trong <td> */
+td img {
+    width: 80px;
+    height: max-content;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Zebra stripe - có thể giữ hoặc bỏ */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:nth-child(odd) {
+    background-color: #ffffff;
+}

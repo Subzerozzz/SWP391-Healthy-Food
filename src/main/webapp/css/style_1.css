@@ -6515,6 +6515,7 @@ select.h40 {
   .wg-chart-default,
   .wg-box {
     padding: 24px 15px;
+    
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;
