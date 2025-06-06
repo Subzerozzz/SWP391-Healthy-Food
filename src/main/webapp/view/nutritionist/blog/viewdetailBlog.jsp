@@ -129,7 +129,7 @@
                                                 </div>
                                             </div>
                                             <fieldset class="name">
-                                                <div class="body-title mb-10">Product date</div>
+                                                <div class="body-title mb-10">Blog date</div>
                                                 <div class="select">
                                                     <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.birth_date}</div>
                                                 </div>
