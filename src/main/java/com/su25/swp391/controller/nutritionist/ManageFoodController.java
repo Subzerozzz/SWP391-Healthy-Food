@@ -63,6 +63,9 @@ public class ManageFoodController extends HttpServlet {
       case "viewDetail":
         viewFoodDeatail(request, response);
         break;
+      case "filter":
+        filterByCategory(request, response);
+        break;
       default:
         throw new AssertionError();
     }
@@ -403,6 +406,18 @@ public class ManageFoodController extends HttpServlet {
       System.out.println(e);
     }
 
+  }
+
+  private void filterByCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    try {
+      Integer categoryID = Integer.parseInt(request.getParameter("id"));
+      List<Food> listFood = foodDao.findByCategoryId(categoryID);
+      request.setAttribute("listFood", listFood);
+      request.setAttribute("categoryID", categoryID);
+      request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
   }
 
 }
