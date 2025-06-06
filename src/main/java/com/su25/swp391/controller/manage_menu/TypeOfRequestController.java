@@ -18,6 +18,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -109,7 +110,7 @@ public class TypeOfRequestController extends HttpServlet {
                 }
                 break;
             default:
-               listTypeOfRequest(request,response);
+                  listTypeOfRequest(request,response);
                 break;
             }
     } 
@@ -165,44 +166,125 @@ public class TypeOfRequestController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Food_Draft foodDraft = foodDraftDAO.findById(id);
         request.setAttribute("foodD", foodDraft);
+        
         request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
-    }
+    }    
      
     // VIEW LIST ALL OF FOOD_DRAFT
     private void listTypeOfRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          List<Food_Draft> list = foodDraftDAO.findAll();
+          int page = 1;
+        int pageSize =2 ;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if(page < 1){
+                page  = 1;
+            }
+        } catch (Exception e) {
+            page =1;
+        }
+          List<Food_Draft> listF = foodDraftDAO.getFoodDraftByPage(page, pageSize);
+          
+             int totalFoodDraft = foodDraftDAO.getTotalFoodDraftCount();
+             int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+             request.setAttribute("totalPages", totalPages);
+        
+         
+          request.setAttribute("listFoodDraft", listF);
+          request.setAttribute("currentPage", page);
+          
+       //   List<Food_Draft> list = foodDraftDAO.findAll();
           List<String> listType = foodDraftDAO.findAllType();
-          request.setAttribute("listFoodDraft", list);
+      //    request.setAttribute("listFoodDraft", list);
           request.setAttribute("type", listType);
           request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF CREATE
      private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = 1;
+        int pageSize =2 ;
         String select = request.getParameter("select");
-        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if(page < 1){
+                page  = 1;
+            }
+        } catch (Exception e) {
+            page =1;
+        }
+          List<Food_Draft> listF = foodDraftDAO.findAllByType(select,page, pageSize);
+          
+             int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+             int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+             request.setAttribute("totalPages", totalPages);
+        
+          request.setAttribute("select", select);
+          request.setAttribute("listFoodDraft", listF);
+          request.setAttribute("currentPage", page);
+        
+      //  List<Food_Draft> list = foodDraftDAO.findAllByType(select,page,pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+       // request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
     
      // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF UPDATE
     private void listTypeOfUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = 1;
+        int pageSize =2 ;
         String select = request.getParameter("select");
-        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if(page < 1){
+                page  = 1;
+            }
+        } catch (Exception e) {
+            page =1;
+        }
+          List<Food_Draft> listF = foodDraftDAO.findAllByType(select,page, pageSize);
+          
+             int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+             int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+             request.setAttribute("totalPages", totalPages);
+        
+          request.setAttribute("select", select);
+          request.setAttribute("listFoodDraft", listF);
+          request.setAttribute("currentPage", page);
+        
+      //  List<Food_Draft> list = foodDraftDAO.findAllByType(select,page,pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+       // request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF DELETE
     private void listTypeOfDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = 1;
+        int pageSize =2 ;
         String select = request.getParameter("select");
-        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if(page < 1){
+                page  = 1;
+            }
+        } catch (Exception e) {
+            page =1;
+        }
+          List<Food_Draft> listF = foodDraftDAO.findAllByType(select,page, pageSize);
+          
+             int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+             int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+             request.setAttribute("totalPages", totalPages);
+        
+          request.setAttribute("select", select);
+          request.setAttribute("listFoodDraft", listF);
+          request.setAttribute("currentPage", page);
+        
+      //  List<Food_Draft> list = foodDraftDAO.findAllByType(select,page,pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+       // request.setAttribute("listFoodDraft", list);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
@@ -211,6 +293,18 @@ public class TypeOfRequestController extends HttpServlet {
     private void addToFood(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
         String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
         Food_Draft foodDraft = foodDraftDAO.findById(id);
         foodDAO.insertFoodfromFoodDraft(foodDraft);
         Boolean check = requestDAO.updateResult("Accept", id);
@@ -222,9 +316,12 @@ public class TypeOfRequestController extends HttpServlet {
         } else {
             request.setAttribute("mess", "Accept Create not successful");
         }
-        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
@@ -233,6 +330,18 @@ public class TypeOfRequestController extends HttpServlet {
     private void updateToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
         Food_Draft foodD = foodDraftDAO.findById(id);
         Boolean check1 = foodDAO.updateFoodbyFoodDraft(foodD);
         Boolean check2 = requestDAO.updateResult("Accept", id);
@@ -244,9 +353,13 @@ public class TypeOfRequestController extends HttpServlet {
         } else {
             request.setAttribute("mess", "Accept Update not successful");
         }
-        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
@@ -254,7 +367,20 @@ public class TypeOfRequestController extends HttpServlet {
     // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
     private void deleteToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Food_Draft food_D = foodDraftDAO.findById(id);
+        String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+         Food_Draft food_D = foodDraftDAO.findById(id);
         Boolean check1 = foodDAO.deleteById(food_D);
         Boolean check2 = requestDAO.updateResult("Accept", id);
         if(check1 && check2){
@@ -265,10 +391,13 @@ public class TypeOfRequestController extends HttpServlet {
         }else{
             request.setAttribute("mess", "Accept Delete not successful");
         }
-        String select = request.getParameter("select");
-        List<Food_Draft> list = foodDraftDAO.findAllByType(select);
+       
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
@@ -277,6 +406,19 @@ public class TypeOfRequestController extends HttpServlet {
     private void rejectByCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+        
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
             request.setAttribute("mess", "Reject Create successful");
@@ -287,16 +429,32 @@ public class TypeOfRequestController extends HttpServlet {
         } else {
             request.setAttribute("mess", "Reject Create not successful");
         }
-        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
     // REJECT A FOOD_DRAFT BY TYPE UPDATE OF FOOD
     private void rejectByUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+         int id = Integer.parseInt(request.getParameter("id"));
         String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+        
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
             request.setAttribute("mess", "Reject Update successful");
@@ -307,16 +465,33 @@ public class TypeOfRequestController extends HttpServlet {
         } else {
             request.setAttribute("mess", "Reject Update not successful");
         }
-        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+       request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }
    // REJECT A FOOD_DRAFT BY TYPE OF DELETE FOOD
     private void rejectByDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id"));
         String select = request.getParameter("select");
+        int page = 1;
+        int pageSize = 2;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+        } catch (Exception e) {
+            page = 1;
+        }
+        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
+        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
+        
+       
         Boolean check = requestDAO.updateResult("Reject", id);
         if (check) {
             request.setAttribute("mess", "Reject Delete successful");
@@ -327,9 +502,12 @@ public class TypeOfRequestController extends HttpServlet {
         } else {
             request.setAttribute("mess", "Reject Delete not successful");
         }
-        List<Food_Draft> list = foodDraftDAO.findAllByResult(select);
+         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("select", select);
+        request.setAttribute("currentPage", page);
+        List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
         List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", list);
+        request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
     }

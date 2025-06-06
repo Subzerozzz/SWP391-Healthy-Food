@@ -36,6 +36,47 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
+    public List< Food_Draft> getFoodDraftByPage(int page,int pageSize) {
+        String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = 'Not done' LIMIT ? OFFSET ?";
+        int offset = (page - 1) * pageSize;
+        List< Food_Draft> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, pageSize);
+            statement.setInt(2,offset );
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+    
+     public int getTotalFoodDraftCount() {
+   String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = 'Not done'";
+         try {
+             connection= getConnection();
+             statement = connection.prepareStatement(sql);
+             resultSet = statement.executeQuery();
+             if(resultSet.next()){
+                 return resultSet.getInt(1);
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+         } finally {
+             closeResources();
+         }
+     return 0;
+}
+     
+    
     public List< Food_Draft> findAllByResult(String option) {
         String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
                 + "where r.statusRequest = 'Not done' and f.type = ?";
@@ -73,26 +114,48 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
-    public List<Food_Draft> findAllByType(String type) {
+    public List<Food_Draft> findAllByType(String type,int page,int pageSize) {
           String sql = "select * from  FoodDraft as f"
                   + " inner join Request as r on f.id = r.foodDraftId "
-                  + "where r.statusRequest = 'Not done' and f.type = ? ";
+                  + "where r.statusRequest = 'Not done' and f.type = ? LIMIT ? OFFSET ?";
+           int offset = (page - 1) * pageSize;
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, type);
+            statement.setInt(2, pageSize);
+            statement.setInt(3,offset );
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
             }
         } catch (Exception e) {
-            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+            e.printStackTrace();
         } finally {
             closeResources();
         }
         return list;
+       
     }
+       public int getTotalFoodDCountBySelect(String option) {
+   String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = 'Not done' and f.type = ?";
+         try {
+             connection= getConnection();
+             statement = connection.prepareStatement(sql);
+             statement.setString(1, option);
+             resultSet = statement.executeQuery();
+             if(resultSet.next()){
+                 return resultSet.getInt(1);
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+         } finally {
+             closeResources();
+         }
+     return 0;
+}
 
     public List<Food_Draft> findAllFoodDrartByRequest() {
         String sql = "select f.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
@@ -112,6 +175,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
             closeResources();
         }
         return list;
+        
     }
     // Find Type of Request is CREATE FOOD
      public List<Food_Draft> findAllFoodByCreateRequest() {
@@ -251,9 +315,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
       Food_Draft f = dao.findById(4);
 //        dao.updateStatus(1);
         // System.out.println(f);
-        for (Food_Draft f2 : dao.findAllByType("Create")) {
-            System.out.println(f2);
-        }
+       
         System.out.println("--");
         for (String string : dao.findAllType()) {
             System.out.println(string);
