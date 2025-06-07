@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
     
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/forget-password.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:14 GMT -->
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
 <head>
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
@@ -39,7 +39,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-         <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
+       <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
         <!-- End Navbar Area -->
 
         <!-- Inner Banner Area -->
@@ -48,17 +48,17 @@
                 <div class="row align-items-center">
                     <div class="col-lg-5 col-md-4">
                         <div class="inner-content">
-                            <h2>Forget Password</h2>
+                            <h2>Update Password</h2>
                             <ul>
                                 <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-                                <li>Forget Password</li>
+                                <li>Update Password</li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="col-lg-7 col-md-8">
                         <div class="inner-img">
-                            <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner6.png" alt="Images">
+                            <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner4.png" alt="Images">
                         </div>
                     </div>
                 </div>
@@ -72,18 +72,25 @@
                 <div class="user-width">
                     <div class="user-form">
                         <div class="contact-form">
-                            <h2>Forget Password</h2>
-                            <form action="forgetpassword" method="post">
+                            <h2>Update Password</h2>
+                            <form action="newpassword" method="post">
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="email" required data-error="Please enter username or email" placeholder="Email">
+                                            <input type="password" class="form-control" name="password"  placeholder="New Password">
                                         </div>
                                     </div>
-    
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input class="form-control" type="password" name="confirm_password"  placeholder="Confirm Password">
+                                        </div>
+                                    </div>
+
+
                                     <div class="col-lg-12 ">
                                         <button type="submit" class="default-btn btn-bg-three">
-                                            Reset Now
+                                            Update New Password
                                         </button>
                                     </div>
                                 </div>
@@ -122,7 +129,7 @@
                                     </li>
                                     <li>
                                         <i class='bx bx-envelope'></i>
-                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#0b636e6767644b6362676425686466"><span class="__cf_email__" data-cfemail="1b737e7777745b7372777435787476">[email&#160;protected]</span></a>
+                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#1c74797070735c74757073327f7371"><span class="__cf_email__" data-cfemail="335b565f5f5c735b5a5f5c1d505c5e">[email&#160;protected]</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -269,5 +276,5 @@
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
     </body>
 
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/forget-password.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:14 GMT -->
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
 </html>

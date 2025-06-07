@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/login", "/register", "/forgetpassword", "/home", "/OTP"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/home" , "/myaccount" , "/login" , "/register" , "/forgetpassword" , "/OTP" , "/newpassword"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -37,6 +37,8 @@ public class AuthenController extends HttpServlet {
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String OTP_PAGE = "view/Authen/OTP.jsp";
     private static final String FORGETPASSWORD_PAGE = "view/Authen/ForgetPassword.jsp";
+    private static final String MYACCOUNT_PAGE = "view/Authen/MyAccount.jsp";
+    private static final String NEWPASS_PAGE = "view/Authen/NewPassword.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
@@ -70,6 +72,16 @@ public class AuthenController extends HttpServlet {
             case "/forgetpassword":
                 request.getRequestDispatcher("view/Authen/ForgetPassword.jsp").forward(request, response);
                 break;
+            case "/newpassword":
+                request.getRequestDispatcher("view/Authen/NewPassword.jsp").forward(request, response);
+                break;
+            case "/myaccount":
+                request.getRequestDispatcher("view/Authen/MyAccount.jsp").forward(request, response);
+                break;
+            case "/logout":
+                logoutDoGet(request, response);
+                break;
+
             default:
                 break;
         }
@@ -103,6 +115,12 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/forgetpassword":
                 forgetpasswordDoPost(request, response);
+                break;
+            case "/newpassword":
+                newpasswordDoPost(request, response);
+                break;
+            case "/myaccount":
+                myaccountPost(request, response);
                 break;
             default:
                 break;
@@ -190,6 +208,8 @@ public class AuthenController extends HttpServlet {
             String otp = EmailUtils.sendOTPMail(email);
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
+            session.setAttribute("otpType", "register");
+            // session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accountFoundByEmail);
             url = OTP_PAGE;
 
         }
@@ -227,6 +247,8 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("toastType", "error");
                 url = LOGIN_PAGE;
             } else {
+                session.setAttribute("email", usernameOrEmail);
+                session.setAttribute("password", password);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
                 url = HOME_PAGE;
             }
@@ -253,6 +275,7 @@ public class AuthenController extends HttpServlet {
         //get ve OTP
         HttpSession session = request.getSession();
         String otp = (String) session.getAttribute("otp");
+        String otpType = (String) session.getAttribute("otpType");
         Account accountFoundByEmail = (Account) session.getAttribute("account");
 
         // get ve OTP tu form
@@ -265,15 +288,22 @@ public class AuthenController extends HttpServlet {
         String otpForm = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
         // so sanh OTP
         if (otp.equals(otpForm)) {
-            accountDAO.insert(accountFoundByEmail);
-            session.setAttribute("toastMessage", "Register success!");
-            session.setAttribute("toastType", "success");
-            url = LOGIN_PAGE;
+            if ("register".equals(otpType)) {
+                accountDAO.insert(accountFoundByEmail);
+                session.setAttribute("toastMessage", "Register success!");
+                session.setAttribute("toastType", "success");
+                url = HOME_PAGE;
+            } else if ("forgot".equals(otpType)) {
+                session.setAttribute("toastMessage", "OTP verified, please set new password!");
+                session.setAttribute("toastType", "success");
+                url = NEWPASS_PAGE;
+            }
         } else {
             session.setAttribute("toastMessage", "OTP incorrect!");
             session.setAttribute("toastType", "error");
             url = OTP_PAGE;
         }
+
         request.getRequestDispatcher(url).forward(request, response);
 
     }
@@ -282,13 +312,13 @@ public class AuthenController extends HttpServlet {
         String url = null;
         HttpSession session = request.getSession();
 
-        String Email = request.getParameter("emailorusername");
+        String email = request.getParameter("email");
         Account account = Account.builder()
-                .email(Email)
+                .email(email)
                 .build();
-        
+
         Account accFoundByUsernamePass = accountDAO.findByEmail(account);
-        
+
         if (accFoundByUsernamePass != null) {
             // Kiểm tra status của account
             if (accFoundByUsernamePass.getStatus().equals("banned")) {
@@ -296,9 +326,10 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("toastType", "error");
                 url = FORGETPASSWORD_PAGE;
             } else {
-                String otp = EmailUtils.sendOTPMail(Email);
+                String otp = EmailUtils.sendOTPMail(email);
                 session.setAttribute("otp", otp);
                 session.setAttribute("account", account);
+                session.setAttribute("otpType", "forgot");
                 url = OTP_PAGE;
             }
 
@@ -312,9 +343,96 @@ public class AuthenController extends HttpServlet {
 
     }
 
+    private void logoutDoGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false); // lấy session hiện tại, không tạo mới
+        String url = null;
+
+        if (session != null) {
+            session.removeAttribute("account"); // xoá attribute "account"
+            session.invalidate(); // huỷ toàn bộ session nếu cần
+        }
+        url = HOME_PAGE;
+        request.getRequestDispatcher(url).forward(request, response);
+        return;
+    }
+
+    private void newpasswordDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+
+        String password = request.getParameter("password");
+        String confirm_password = request.getParameter("confirm_password");
+
+        if (!validPassword(password)) {
+            session.setAttribute("toastMessage", "password incorect!");
+            session.setAttribute("toastType", "error");
+            url = NEWPASS_PAGE;
+        }
+        if (password.equals(confirm_password)) {
+            session.setAttribute("toastMessage", "Confirm password incorect!");
+            session.setAttribute("toastType", "error");
+            url = NEWPASS_PAGE;
+        }
+
+    }
+    
+    private void myaccountPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+        
+        String current_password = request.getParameter("current_password");
+        String new_password = request.getParameter("new_password");
+        String confirm_password = request.getParameter("confirm_password");
+        String old_password = (String) session.getAttribute("password");
+        
+        if(!current_password.equals(old_password)){
+            session.setAttribute("toastMessage", "Current Password incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if(!validPassword(new_password)){
+            session.setAttribute("toastMessage", "New Password incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        if(!new_password.equals(confirm_password)){
+            session.setAttribute("toastMessage", "Confirm Password incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+        
+        Account account = Account.builder()
+                .email((String) session.getAttribute("email"))
+                .password(new_password)
+                .build();
+        Account accFoundByUsernamePass = accountDAO.findByEmail(account);
+     
+        if(accFoundByUsernamePass != null){
+            accountDAO.updatePasswordByEmail(account);
+            session.setAttribute("toastMessage", "Change Password success!");
+            session.setAttribute("toastType", "success");
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+            url = HOME_PAGE;
+        }else{
+            session.setAttribute("toastMessage", "Email incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
+    }
+
+
     /**
      * Kiểm tra định dạng email.
-     *
+   
      * @param email Email cần kiểm tra.
      * @return true nếu email hợp lệ, false nếu không.
      */
@@ -347,5 +465,7 @@ public class AuthenController extends HttpServlet {
         }
         return false;
     }
+
+    
 
 }

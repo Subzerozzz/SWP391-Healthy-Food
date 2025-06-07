@@ -54,22 +54,38 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     @Override
+    public boolean updatePasswordByEmail(Account t) {
+        try {
+            connection = getConnection();
+            String sql = "UPDATE account SET password = ? WHERE email = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getPassword());
+            statement.setString(2, t.getEmail());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
     public boolean update(Account t) {
         try {
-            String sql = "UPDATE account SET email = ?, password = ?, full_name = ?, "
-                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE id = ?";
+            String sql = "UPDATE account SET password = ?, full_name = ?, "
+                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE email = ?";
             statement = connection.prepareStatement(sql);
-            statement.setObject(1, t.getEmail());
-            statement.setObject(2, t.getPassword());
-            statement.setObject(3, t.getFull_name());
-            statement.setObject(4, t.getUser_name());
+            statement.setObject(1, t.getPassword());
+            statement.setObject(2, t.getFull_name());
+            statement.setObject(3, t.getUser_name());
+            statement.setObject(4, t.getBirth_date());
             statement.setObject(5, t.getGender());
-            statement.setObject(6, t.getBirth_date());
-            statement.setObject(7, t.getRole());
-            statement.setObject(8, t.getAddress());
-            statement.setObject(9, t.getMobie());
-            statement.setObject(10, t.getStatus());
-            statement.setObject(11, t.getId());
+            statement.setObject(6, t.getRole());
+            statement.setObject(7, t.getAddress());
+            statement.setObject(8, t.getMobie());
+            statement.setObject(9, t.getStatus());
+            statement.setObject(10, t.getEmail());
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -199,28 +215,4 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return null;
     }
 
-//    public static void main(String[] args) {
-//         try {
-//        // 1. Tạo đối tượng DAO
-//        AccountDAO accountDAO = new AccountDAO();
-//
-//        // 2. Tạo đối tượng Account
-//        Account account = new Account();
-//        account.setEmail("demo1@example.com");
-//        account.setPassword("securePass123");
-//        account.setUser_name("nguyenvana");
-//
-//        // 3. Gọi insert thông qua DAO
-//        int newId = accountDAO.insert(account);
-//        if (newId != -1) {
-//            System.out.println("Insert thành công! ID mới: " + newId);
-//        } else {
-//            System.out.println("Insert thất bại.");
-//        }
-//
-//    } catch (Exception e) {
-//        e.printStackTrace();
-//    }
-//
-//}
 }

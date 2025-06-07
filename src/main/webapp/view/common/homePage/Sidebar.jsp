@@ -1,22 +1,27 @@
 <%-- 
-    Document   : header
-    Created on : May 24, 2025, 8:28:09 PM
-    Author     : Dell
+    Document   : Sidebar
+    Created on : Jun 4, 2025, 12:48:32 AM
+    Author     : kieud
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    </head>
     <body>
-        <div class="main-nav nav-three">
+        
+<div class="navbar-area">
+            <!-- Menu For Mobile Device -->
+            <div class="mobile-nav">
+                <a href="index.html" class="logo">
+                    <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" alt="Logo">
+                </a>
+            </div>
+
+            <!-- Menu For Desktop Device -->
+            <div class="main-nav nav-three">
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light ">
-                        <a class="navbar-brand" href="index.html">
+                         <a class="navbar-brand" href="index.html">
                             <img src="${pageContext.request.contextPath}/images/logos/logo-2.png" class="logo-one" alt="Logo">
                             <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" class="logo-two" alt="Logo">
                         </a>
@@ -24,7 +29,7 @@
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                             <ul class="navbar-nav m-auto">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active">
+                                    <a href="#" class="nav-link">
                                         Home 
                                         <i class='bx bx-chevron-down'></i>
                                     </a>
@@ -40,14 +45,14 @@
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="index-3.html" class="nav-link active">
+                                            <a href="index-3.html" class="nav-link">
                                                 Home Three
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="#" class="nav-link active">
                                         Pages 
                                         <i class='bx bx-chevron-down'></i>
                                     </a>
@@ -136,7 +141,7 @@
                                         </li>
 
                                         <li class="nav-item">
-                                            <a href="#" class="nav-link">
+                                            <a href="#" class="nav-link active">
                                                 User
                                                 <i class='bx bx-chevron-down'></i>
                                             </a>
@@ -147,7 +152,7 @@
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="${pageContext.request.contextPath}/register" class="nav-link">
+                                                    <a href="${pageContext.request.contextPath}/register" class="nav-link active">
                                                         Registration
                                                     </a>
                                                 </li>
@@ -252,33 +257,6 @@
                             </ul>
 
                             <div class="nav-bar-side-2">
-                                <c:choose>
-                                <c:when test="${sessionScope.account == null}">
-                                    <a href="${pageContext.request.contextPath}/login" style="color: black;">Login  /</a>
-                                     <a href="${pageContext.request.contextPath}/register" style="color: black;">Register</a>
-                                </c:when>
-                                <c:otherwise>
-                                    
-                                    <div class="popup-wrap user type-header user-icon-container" >
-                                    <button class="btn btn-secondary dropdown-toggle show user-icon" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="true">
-                                        <span class="header-user wg-user">
-                                        <a href="${pageContext.request.contextPath}/user/profile" class="user-info" style="color: black; text-decoration: none;">
-                                        <i class="fa-regular fa-user"></i>
-                                        
-                                        </span>
-                                    </a>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end has-content show" aria-labelledby="dropdownMenuButton3" 
-                                        style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 2px);" 
-                                        data-popper-placement="botton-end" data-popper-reference-hidden data-popper-escaped>
-                                        <li><a href="${pageContext.request.contextPath}/myaccount"><i class="fa fa-user"></i> My Account</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/changepassword"><i class="fa fa-envelope"></i> Change Password</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out-alt"></i> Log out</a></li>
-                                    </ul>
-                                    </div>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
                                 <div class="language-nav-list">
                                     <select class="language-list-item">
                                         <option>English</option>
@@ -288,6 +266,7 @@
                                         <option>简体中文</option>
                                     </select>	
                                 </div>
+
                                 <div class="side-nav-cart">
                                     <a href="#"><i class='bx bx-cart'></i></a>
                                     <span>1</span>
@@ -297,5 +276,41 @@
                     </nav>
                 </div>
             </div>
+
+            <div class="side-nav-responsive">
+                <div class="container">
+                    <div class="dot-menu">
+                        <div class="circle-inner">
+                            <div class="circle circle-one"></div>
+                            <div class="circle circle-two"></div>
+                            <div class="circle circle-three"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="container-3">
+                        <div class="side-nav-inner">
+                            <div class="side-nav justify-content-center align-items-center">
+                                <div class="side-nav-item">
+                                     <div class="language-on-list">
+                                        <select class="language-list-item">
+                                            <option>English</option>
+                                            <option>العربيّة</option>
+                                            <option>Deutsch</option>
+                                            <option>Português</option>
+                                            <option>简体中文</option>
+                                        </select>	
+                                    </div>
+    
+                                    <div class="side-nav-cart">
+                                        <a href="#"><i class='bx bx-cart'></i></a>
+                                        <span>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
