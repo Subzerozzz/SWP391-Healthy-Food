@@ -204,7 +204,15 @@
                                   </c:forEach>
                                 </div>
                                 <div class="body-text">${item.getPrice()}</div>
-                                <div class="body-text">${item.getStatus()}</div>
+                                <c:choose>
+                                    <c:when test="${item.getStatus() == 'inactive'}">
+                                        <div class="body-text food-inactive" >${item.getStatus()}</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="body-text food-active" >${item.getStatus()}</div>
+                                    </c:otherwise>
+                                </c:choose>
+                                
                                 <div class="body-text">${item.getCreated_at()}</div>
                                 <div class="body-text">${item.getUpdated_at()}</div>
                                 <div class="list-icon-function">
@@ -238,24 +246,38 @@
                         <ul class="wg-pagination">
 
                           <li>
-                            <a href="#"><i class="icon-chevron-left"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=1"><i class="icon-chevron-left"></i></a>
                           </li>
-                          <c:forEach begin="1" end="${totalPage}" var="i">
-                            <li class="${currentPage == i ? 'active' : ''}">
-                              <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
-                            </li>
-                          </c:forEach>
-                          <!-- <li>
-                            <a href="#">1</a>
-                          </li>
-                          <li class="active">
-                            <a href="#">2</a>
-                          </li>
+                            <c:choose>
+                                <c:when test="${currentPage < totalPage - 2}">
+                                    <li class="active">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage}">${currentPage}</a>
+                                    </li>
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage + 1}">${currentPage + 1}</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <span>...</span>
+                                    </li>
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${totalPage}">${totalPage}</a>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach begin="${totalPage-2}" end="${totalPage}" var="i">
+                                        <li class="${currentPage == i ? 'active' : ''}">
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                </c:otherwise>
+                                
+                            </c:choose>
+                            
                           <li>
-                            <a href="#">3</a>
-                          </li> -->
-                          <li>
-                            <a href="#"><i class="icon-chevron-right"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${totalPage}"><i class="icon-chevron-right"></i></a>
                           </li>
                         </ul>
                       </div>
@@ -416,6 +438,20 @@
 
         .filter-dropdown.active .filter-select-wrap {
           display: block;
+        }
+        
+        /*food-inactive*/
+        .food-inactive{
+            background: #DC143C;
+            color: white !important;
+            text-align: center;
+            border-radius: 10px
+        }
+        .food-active{
+            background: #649F67;
+            color: white !important;
+            text-align: center;
+            border-radius: 10px
         }
       </style>
       <script>
