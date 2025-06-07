@@ -46,9 +46,9 @@ public class ManageAccount extends HttpServlet {
                 showEditForm(request, response);
                 break;
             case "viewDetail":
-                viewDetail(request,response);
+                viewDetail(request, response);
                 break;
-                
+
             case "delete":
                 deleteAccount(request, response);
                 break;
@@ -63,6 +63,9 @@ public class ManageAccount extends HttpServlet {
                 break;
             case "filter":
                 handleFilter(request, response);
+                break;
+            case "search":
+                searchAccount(request,response);
                 break;
             default:
                 listAccount(request, response);
@@ -105,6 +108,26 @@ public class ManageAccount extends HttpServlet {
         request.getSession().setAttribute("toastMessage", message);
         request.getSession().setAttribute("typeToast", type);
     }
+private void searchAccount(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+    String searchKeyword = request.getParameter("search");
+
+    // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
+    if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
+        response.sendRedirect(request.getContextPath() + "/manage-account?action=list");
+        return;
+    }
+
+    searchKeyword = searchKeyword.trim(); // Xóa khoảng trắng 2 đầu
+
+    AccountDAO dao = new AccountDAO();
+    List<Account> result = dao.searchAccountsByNameOrEmail(searchKeyword);
+
+    request.setAttribute("listAccount", result);
+    request.setAttribute("search", searchKeyword); // Hiển thị lại giá trị đã nhập trong ô input
+    request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
+}
 
     private void deactivateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String accountIdStr = request.getParameter("id");
@@ -121,7 +144,7 @@ public class ManageAccount extends HttpServlet {
         } else {
             setToastMessage(request, "Invalid account Id", "Err");
         }
-         response.sendRedirect(request.getContextPath()+"/manage-account");
+        response.sendRedirect(request.getContextPath() + "/manage-account");
         return;
     }
 
@@ -141,33 +164,59 @@ public class ManageAccount extends HttpServlet {
             setToastMessage(request, "Invalid account Id", "Err");
         }
         //chuyen huong ve trang list 
-         response.sendRedirect(request.getContextPath()+"/manage-account");
+        response.sendRedirect(request.getContextPath() + "/manage-account");
         return;
     }
-
     private void listAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String indexPage = request.getParameter("index");
-        if(indexPage==null){
-            indexPage = "1";
-        };
-        int index = Integer.parseInt(indexPage);
         
-        AccountDAO accountdao = new AccountDAO();
-        int count = accountdao.getTotalAccount();
-        int endPage = count/10;
-        if(count%10 != 0){
-            endPage++;   
+        // Lấy tham số phân trang
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+        
+        int currentPage = 1;
+        int pageSize = 10; // Mặc định 10 bản ghi mỗi trang
+        
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) currentPage = 1;
+            }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) pageSize = 5;
+                if (pageSize > 50) pageSize = 50; // Giới hạn tối đa 50 bản ghi
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
         }
-        List <Account> listAccount =accountdao.pagingAccount(index);
-        request.setAttribute("listAccount", listAccount);
-        request.setAttribute("index", index);
-        request.setAttribute("endP", endPage);
-        request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
         
-
+        AccountDAO accountDAO = new AccountDAO();
+        
+        // Lấy danh sách tài khoản với phân trang
+        List<Account> listAccount = accountDAO.findAllWithPagination(currentPage, pageSize);
+        
+        // Tính toán thông tin phân trang
+        int totalAccounts = accountDAO.getTotalAccountCount();
+        int totalPages = (int) Math.ceil((double) totalAccounts / pageSize);
+        
+        // Thiết lập các thuộc tính cho JSP
+        request.setAttribute("listAccount", listAccount);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalAccounts", totalAccounts);
+        
+        // Tính toán phạm vi hiển thị
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalAccounts);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+        
+        request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
     }
+  
 
     private void addAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -180,35 +229,37 @@ public class ManageAccount extends HttpServlet {
             String address = request.getParameter("address");
             String role = request.getParameter("role");
             Boolean status = Boolean.parseBoolean(request.getParameter("status"));
-            String dateStr = request.getParameter("birth_date");
+            //String dateStr = request.getParameter("birth_date");
             //Xu ly thong tin ve nhap date
+            String dateStr = request.getParameter("birth_date");
             Date date = null;
             try {
-                if (dateStr != null && dateStr.isEmpty()) {
+                if (dateStr != null && !dateStr.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr);
-                    date = new java.sql.Date(utilDate.getTime()); // ép sang java.sql.Date
+                    date = new java.sql.Date(utilDate.getTime());
                 }
             } catch (ParseException e) {
-                request.setAttribute("error", "Đinh dang sai form ");
+                request.setAttribute("error", "Định dạng ngày không đúng. Vui lòng dùng yyyy-MM-dd.");
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
             String mobile = request.getParameter("mobile");
             String gender = request.getParameter("gender");
             //validate input data 
-            Map<String, String> errors = validateAccountData(full_name, email, password, 0);
+            Map<String, String> errors = validateAccountData(full_name, email, password,mobile, 0);
             if (!errors.isEmpty()) {
                 //nếu có lỗi nhập thông tin loi
-                request.getSession().setAttribute("Err", errors);
+                request.getSession().setAttribute("errors", errors);
                 //laay du lieu trc do nguoi dung nhap 
                 request.getSession().setAttribute("formData", request.getParameterMap());
                 //chuyen huong ve form them tai khoan
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
-
+                return;
             }
             //Tạo đối tượng account mới
             Account newAccount = Account.builder()
+                    // .id(id)
                     .full_name(full_name)
                     .user_name(user_name)
                     .email(email)
@@ -291,40 +342,58 @@ public class ManageAccount extends HttpServlet {
 
     }
 
-    private Map<String, String> validateAccountData(String full_name, String email, String password, int id) {
-        Map<String, String> errors = new HashMap<>();
-        AccountDAO accountdao = new AccountDAO();
+   private Map<String, String> validateAccountData(String full_name, String email, String password,String mobile, int id) {
+    Map<String, String> errors = new HashMap<>();
+    AccountDAO accountdao = new AccountDAO();
 
-        // Validate full_name
-        if (full_name != null && !full_name.isEmpty()) {
-            if (full_name.length() < 3 || full_name.length() > 50) {
-                errors.put("full_name", "Username must be between 3 and 50 characters");
-            } else if (!Pattern.matches("^[a-zA-Z0-9_]+$", full_name)) {
-                errors.put("full_name", "Username can only contain letters, numbers, and underscores");
-            }
+    // Trim inputs
+    full_name = full_name != null ? full_name.trim() : null;
+    email = email != null ? email.trim() : null;
+    mobile = mobile != null ? mobile.trim() : null;
+    // Validate full_name
+    if (full_name == null || full_name.isEmpty()) {
+        errors.put("full_name", "Username is required");
+    } else {
+        if (full_name.length() < 3 || full_name.length() > 50) {
+            errors.put("full_name", "Username must be between 3 and 50 characters");
+        } else if (!Pattern.matches("^[a-zA-Z0-9_]+$", full_name)) {
+            errors.put("full_name", "Username can only contain letters, numbers, and underscores");
         }
-
-        // Validate email
-        if (email != null && !email.isEmpty()) {
-            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-            if (!Pattern.matches(emailRegex, email)) {
-                errors.put("email", "Invalid email format");
-            } else if (accountdao.isEmailExists(email, id)) {
-                errors.put("email", "Email already exists");
-            }
-        }
-
-        // Validate password
-        if (password != null && !password.isEmpty()) {
-            if (password.length() < 8) {
-                errors.put("password", "Password must be at least 8 characters");
-            } else if (!Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", password)) {
-                errors.put("password", "Password must contain at least one uppercase letter, one lowercase letter, and one number");
-            }
-        }
-
-        return errors;
     }
+
+    // Validate email
+    if (email == null || email.isEmpty()) {
+        errors.put("email", "Email is required");
+    } else {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        if (!Pattern.matches(emailRegex, email)) {
+            errors.put("email", "Invalid email format");
+        } else if (accountdao.isEmailExists(email, id)) {
+            errors.put("email", "Email already exists");
+        }
+    }
+
+    // Validate password (only if provided)
+    if ((id == 0 && (password == null || password.isEmpty())) || (password != null && !password.isEmpty())) {
+        if (password == null || password.length() < 8) {
+            errors.put("password", "Password must be at least 8 characters");
+        } else if (!Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", password)) {
+            errors.put("password", "Password must contain at least one uppercase letter, one lowercase letter, and one number");
+        }
+    }
+    //validate mobile
+      if (mobile == null || mobile.isEmpty()) {
+        errors.put("mobile", "Mobile phone number is required");
+    } else {
+        // Ví dụ: mobile chỉ được gồm 10 đến 11 số, có thể bắt đầu bằng dấu + (cho mã quốc gia)
+        String mobileRegex = "^\\+?\\d{10,11}$";
+        if (!Pattern.matches(mobileRegex, mobile)) {
+            errors.put("mobile", "Mobile phone number must be 10-11 digits and can start with +");
+        }
+    }
+    return errors;
+}
+
 
     private String getParameter(HttpServletRequest request, String fullname) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -344,17 +413,57 @@ public class ManageAccount extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String role = request.getParameter("role");
         String statusParam = request.getParameter("status");
         Boolean status = (statusParam != null && !statusParam.isEmpty()) ? Boolean.parseBoolean(statusParam) : null;
 
-        AccountDAO accountDAO = new AccountDAO();
-        List<Account> filteredAccounts = accountDAO.filterAccounts(role, status);
+        // Lấy tham số phân trang
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+        
+        int currentPage = 1;
+        int pageSize = 10;
+        
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) currentPage = 1;
+            }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) pageSize = 5;
+                if (pageSize > 50) pageSize = 50;
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
+        }
 
+        AccountDAO accountDAO = new AccountDAO();
+        
+        // Lấy danh sách đã lọc với phân trang
+        List<Account> filteredAccounts = accountDAO.filterAccountsWithPagination(role, status, currentPage, pageSize);
+        
+        // Tính toán thông tin phân trang cho bộ lọc
+        int totalAccounts = accountDAO.getTotalAccountCountWithFilter(role, status);
+        int totalPages = (int) Math.ceil((double) totalAccounts / pageSize);
+
+        // Thiết lập các thuộc tính cho JSP
         request.setAttribute("listAccount", filteredAccounts);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalAccounts", totalAccounts);
         request.setAttribute("role", role);
         request.setAttribute("status", statusParam);
+        
+        // Tính toán phạm vi hiển thị
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalAccounts);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+        
         request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
     }
     private void deleteAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -376,31 +485,31 @@ public class ManageAccount extends HttpServlet {
             setToastMessage(request, "totalMess", "Fail to add Account");
             setToastMessage(request, "totalType", "Err");
         }
-        response.sendRedirect(request.getContextPath()+"/manage-account");
+        response.sendRedirect(request.getContextPath() + "/manage-account");
     }
 
-   private void viewDetail(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    try {
-        int accountId = Integer.parseInt(request.getParameter("id"));
+    private void viewDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int accountId = Integer.parseInt(request.getParameter("id"));
 
-        AccountDAO accountDao = new AccountDAO();
-        Account account = accountDao.findById(accountId);
+            AccountDAO accountDao = new AccountDAO();
+            Account account = accountDao.findById(accountId);
 
-        if (account != null) {
-            request.setAttribute("account", account);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/viewDetail.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+            if (account != null) {
+                request.setAttribute("account", account);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/viewDetail.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+                request.getSession().setAttribute("totalType", "Err");
+                response.sendRedirect(request.getContextPath() + "/manage-account");
+            }
+        } catch (Exception e) {
+            request.getSession().setAttribute("totalMess", "Có lỗi xảy ra khi xem chi tiết.");
             request.getSession().setAttribute("totalType", "Err");
             response.sendRedirect(request.getContextPath() + "/manage-account");
         }
-    } catch (Exception e) {
-        request.getSession().setAttribute("totalMess", "Có lỗi xảy ra khi xem chi tiết.");
-        request.getSession().setAttribute("totalType", "Err");
-        response.sendRedirect(request.getContextPath() + "/manage-account");
     }
-}
-   
+
 }

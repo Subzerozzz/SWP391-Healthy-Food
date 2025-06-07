@@ -42,38 +42,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return account;
     }
 
- 
-public  static void main (String[] args ){
-    AccountDAO account = new AccountDAO();
-    List<Account> list = account.pagingAccount(3);
-    for (Account account1 : list) {
-        System.out.println(account1);
-    }
-}
 
-    //dem so luong account trong db
-    public int getTotalAccount() {
-        String sql = "select count(*) from Swp301_pr.account";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (Exception e) {
-        } finally {
-            closeResources();
-        }
-        return 0;
-    }
 
-//    public static void main(String[] args) {
-//        AccountDAO dao = new AccountDAO();
-//        int count = dao.getTotalAccount();
-//        System.out.println(count);
-//
-//    }
     @Override
     public Map<Integer, Account> findAllMap() {
         Map<Integer, Account> accountMap = new HashMap<>();
@@ -170,7 +140,8 @@ public  static void main (String[] args ){
         }
         return false;
     }
-   public List<Account> pagingAccount(int index) {
+
+    public List<Account> pagingAccount(int index) {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM Swp301_pr.account\n"
                 + "ORDER BY id\n"
@@ -191,47 +162,73 @@ public  static void main (String[] args ){
         }
         return list;
     }
-    public List<Account> filterAccounts(String role, Boolean status) {
-        List<Account> accounts = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
-
-        if (role != null && !role.isEmpty()) {
-            sql.append(" AND role = ?");
-        }
-        if (status != null) {
-            sql.append(" AND status = ?");
-        }
-
+    //dem so luong account trong db
+    public int getTotalAccount() {
+        String sql = "select count(*) from Swp301_pr.account";
         try {
             connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            int paramIndex = 1;
-
-            if (role != null && !role.isEmpty()) {
-                statement.setString(paramIndex++, role);
-            }
-            if (status != null) {
-                statement.setBoolean(paramIndex++, status);
-            }
-
+            statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                accounts.add(getFromResultSet(resultSet));
+                return resultSet.getInt(1);
             }
         } catch (Exception e) {
-            System.out.println("Error filtering accounts: " + e.getMessage());
         } finally {
             closeResources();
         }
-
-        return accounts;
+        return 0;
     }
+    public List<Account> filterAccountsPaging(String role, Boolean status, int pageIndex, int pageSize) {
+    List<Account> accounts = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
+
+    if (role != null && !role.isEmpty()) {
+        sql.append(" AND role = ?");
+    }
+    if (status != null) {
+        sql.append(" AND status = ?");
+    }
+
+    sql.append(" ORDER BY id");
+    sql.append(" LIMIT ? OFFSET ?");
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+        int paramIndex = 1;
+
+        // Thêm tham số lọc
+        if (role != null && !role.isEmpty()) {
+            statement.setString(paramIndex++, role);
+        }
+        if (status != null) {
+            statement.setBoolean(paramIndex++, status);
+        }
+
+        // Thêm tham số phân trang
+        statement.setInt(paramIndex++, pageSize); // LIMIT
+        statement.setInt(paramIndex++, (pageIndex - 1) * pageSize); // OFFSET
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            accounts.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        System.out.println("Error filtering and paging accounts: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+
+    return accounts;
+}
+    
+
 
     @Override
     public int insert(Account t) {
         List<Account> insertAccount = new ArrayList<>();
         String sql = "INSERT INTO Swp301_pr.account (full_name, user_name, email, password, address, role, status, brith_date,mobile,gender) VALUES"
-                + "( ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // BẮT BUỘC PHẢI CÓ ĐOẠN NÀY
@@ -260,6 +257,35 @@ public  static void main (String[] args ){
             closeResources();
         }
         return -1;
+    }
+
+    public class Main {
+
+        public static void main(String[] args) {
+            // Tạo đối tượng Account với dữ liệu test
+            Account testAccount = new Account();
+            testAccount.setFull_name("Nguyễn Văn A");
+            testAccount.setUser_name("nguyenvana");
+            testAccount.setEmail("vana@example.com");
+            testAccount.setPassword("123456");
+            testAccount.setAddress("Hà Nội");
+            testAccount.setRole("user");
+            testAccount.setStatus(true);
+            testAccount.setBirth_date(Date.valueOf("2000-01-01")); // java.sql.Date
+            testAccount.setMobile("0987654321");
+            testAccount.setGender("Male");
+
+            // Tạo DAO để gọi phương thức insert
+            AccountDAO dao = new AccountDAO();
+            int generatedId = dao.insert(testAccount);
+
+            // In kết quả
+            if (generatedId != -1) {
+                System.out.println("Insert thành công! ID mới: " + generatedId);
+            } else {
+                System.out.println("Insert thất bại.");
+            }
+        }
     }
 
     @Override
@@ -297,6 +323,69 @@ public  static void main (String[] args ){
         }
         return null;
     }
+     // Phương thức phân trang cho tất cả tài khoản
+    public List<Account> findAllWithPagination(int page, int pageSize) {
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT * FROM Swp301_pr.account ORDER BY id LIMIT ?, ?";
+        
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (page - 1) * pageSize);
+            statement.setInt(2, pageSize);
+            
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                accounts.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error finding accounts with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        
+        return accounts;
+    }
+// Đếm tổng số tài khoản
+    public int getTotalAccountCount() {
+        String sql = "SELECT COUNT(*) FROM Swp301_pr.account";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting accounts: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+    //tim kiem theo ten nguoi dung nhap vao
+    public List<Account> searchAccountsByNameOrEmail(String keyword) {
+    List<Account> accounts = new ArrayList<>();
+    String sql = "SELECT * FROM Swp301_pr.account WHERE full_name LIKE ? OR email LIKE ? OR address LIKE ?";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        String likeKeyword = "%" + keyword + "%";
+        statement.setString(1, likeKeyword);
+        statement.setString(2, likeKeyword);
+        statement.setString(3, likeKeyword);
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            accounts.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        System.out.println("Error searching accounts: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+    return accounts;
+}
 
     public boolean isEmailExists(String email, Integer id) {
         String sql = "SELECT COUNT (*) FROM Swp301_pr.account WHERE email = ?";
@@ -315,5 +404,80 @@ public  static void main (String[] args ){
         }
         return false;
     }
+// Phương thức phân trang với bộ lọc
+    public List<Account> filterAccountsWithPagination(String role, Boolean status, int page, int pageSize) {
+        List<Account> accounts = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
 
+        if (role != null && !role.isEmpty()) {
+            sql.append(" AND role = ?");
+        }
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+        
+        sql.append(" ORDER BY id LIMIT ?, ?");
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            if (role != null && !role.isEmpty()) {
+                statement.setString(paramIndex++, role);
+            }
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
+            }
+            
+            statement.setInt(paramIndex++, (page - 1) * pageSize);
+            statement.setInt(paramIndex++, pageSize);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                accounts.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering accounts with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return accounts;
+    }
+    // Đếm tổng số tài khoản với bộ lọc
+    public int getTotalAccountCountWithFilter(String role, Boolean status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Swp301_pr.account WHERE 1=1");
+
+        if (role != null && !role.isEmpty()) {
+            sql.append(" AND role = ?");
+        }
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            if (role != null && !role.isEmpty()) {
+                statement.setString(paramIndex++, role);
+            }
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting filtered accounts: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
 }

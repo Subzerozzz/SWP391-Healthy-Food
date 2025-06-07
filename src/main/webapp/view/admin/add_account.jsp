@@ -104,7 +104,10 @@
                                                                                                 <div class="right flex-grow">
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Full_Name</div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="full_name" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="Username" name="full_name" tabindex="0" value="${formData['full_name'][0]}" aria-required="true" required="">
+                                                                                                            <c:if test="${errors != null && errors['full_name'] != null}">
+                                                                                                                <span style="color: red;">${errors['full_name']}</span>
+                                                                                                            </c:if>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">User_Name</div>
@@ -113,7 +116,11 @@
 
                                                                                                     <fieldset class="email mb-24">
                                                                                                         <div class="body-title mb-10">Email</div>
-                                                                                                        <input class="flex-grow" type="email" placeholder="Email" name="email" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="email" placeholder="Email" name="email" tabindex="0" value="${formData['email'][0]}" aria-required="true" required="">
+                                                                                                            <c:if test="${errors != null && errors['email'] != null}">
+                                                                                                                <span style="color: red;">${errors['email']}</span>
+                                                                                                            </c:if>
+
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="password mb-24">
@@ -123,7 +130,9 @@
                                                                                                                 <i class="icon-eye view"></i>
                                                                                                                 <i class="icon-eye-off hide"></i>
                                                                                                             </span>
-
+                                                                                                            <c:if test="${errors != null && errors['password'] != null}">
+                                                                                                                <span style="color: red;">${errors['password']}</span>
+                                                                                                            </c:if>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="password">
                                                                                                         <div class="body-title mb-10">Confirm password</div>
@@ -166,20 +175,23 @@
                                                                                                 <!-- mobile -->
                                                                                                 <fieldset class="birth-date mb-24">
                                                                                                     <div class="body-title mb-10">Mobile</div>
-                                                                                                    <input class="flex-grow" type="text" name="mobile" required>
+                                                                                                    <input class="flex-grow" type="text" name="mobile" value ="${formData['mobile'][0]}" required>
+                                                                                                        <c:if test="${errors != null && errors['mobile'] != null}">
+                                                                                                            <span style="color: red;">${errors['mobile']}</span>
+                                                                                                        </c:if>
                                                                                                 </fieldset>
                                                                                                 <!-- Gender -->
-                                                                                            <fieldset class="birth-date mb-24">
-                                                                                                <div class="body-title mb-10">Gender</div>
-                                                                                                <select name="gender" class="flex-grow" required>
-                                                                                                    <option value="">-- Select gender --</option>
-                                                                                                    <option value="male">Male</option>
-                                                                                                    <option value="female">Female</option>
-                                                                                                    <option value="other">Other</option>
-                                                                                                </select>
-                                                                                            </fieldset>
+                                                                                                <fieldset class="birth-date mb-24">
+                                                                                                    <div class="body-title mb-10">Gender</div>
+                                                                                                    <select name="gender" class="flex-grow" required>
+                                                                                                        <option value="">-- Select gender --</option>
+                                                                                                        <option value="male">Male</option>
+                                                                                                        <option value="female">Female</option>
+                                                                                                        <option value="other">Other</option>
+                                                                                                    </select>
+                                                                                                </fieldset>
                                                                                             </div>
-                                                                                            
+
                                                                                     </div>
 
                                                                                 </div>
@@ -195,7 +207,7 @@
                                                                             <!-- /main-content-wrap -->
                                                                         </div>
                                                                         <!-- /main-content-wrap -->
-                                                                       
+
                                                                     </div>
                                                                     <!-- /main-content -->
                                                                 </div>

@@ -11,71 +11,71 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
     <style>
-/* Container box */
-.wg-box {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-    max-width: 700px;
-    margin: 30px auto;
-    font-family: 'Segoe UI', 'Roboto', sans-serif;
-}
+        /* Container box */
+        .wg-box {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            max-width: 700px;
+            margin: 30px auto;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
 
-/* Title */
-.wg-box h5 {
-    font-size: 26px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 10px;
-}
+        /* Title */
+        .wg-box h5 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
 
-/* Each detail item */
-fieldset.name {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
-}
+        /* Each detail item */
+        fieldset.name {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
 
-.body-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: #34495e;
-    display: flex;
-    justify-content: space-between;
-}
+        .body-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #34495e;
+            display: flex;
+            justify-content: space-between;
+        }
 
-.body-title span {
-    font-weight: 600;
-    color: #000000;
-}
+        .body-title span {
+            font-weight: 600;
+            color: #000000;
+        }
 
-/* Back button */
-.bot {
-    text-align: center;
-    margin-top: 30px;
-}
+        /* Back button */
+        .bot {
+            text-align: center;
+            margin-top: 30px;
+        }
 
-.bot button {
-    background-color: #007BFF;
-    border: none;
-    color: #ffffff;
-    padding: 12px 28px;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
+        .bot button {
+            background-color: #007BFF;
+            border: none;
+            color: #ffffff;
+            padding: 12px 28px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
 
-.bot button:hover {
-    background-color: #0056b3;
-    transform: scale(1.02);
-}
+        .bot button:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
 
 
-        </style>
+    </style>
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
@@ -168,48 +168,84 @@ fieldset.name {
                                                                                                 </div>
                                                                                                 <div class="right flex-grow">
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Id_User:${param.id}</div>
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Id_User:</label>
+                                                                                                            <span>${param.id}</span>
+                                                                                                        </div>
 
                                                                                                     </fieldset>
 
 
                                                                                                     <!-- Full Name -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Full Name: ${account.full_name}</div>
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>  Full Name:</label>     
+                                                                                                            <span>${account.full_name}</span>     
+                                                                                                        </div>
 
                                                                                                     </fieldset>
 
                                                                                                     <!-- User Name -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">User Name:${account.user_name}</div>
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>User Name:</label> <span> ${account.user_name}</span></div>
 
                                                                                                     </fieldset>
 
                                                                                                     <!-- Email -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Email:${account.email}</div>
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Email:</label> 
+                                                                                                            <span>${account.email}</span>
+                                                                                                            
+                                                                                                        </div>
 
                                                                                                     </fieldset>
 
                                                                                                     <!-- Mobile -->
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Mobile:${account.mobile}</div>
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Mobile:</label> 
+                                                                                                            <span>${account.mobile}</span>
+                                                                                                           </div>
 
+                                                                                                    </fieldset>
+                                                                                                    <!-- Address -->
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Adress:</label> 
+                                                                                                            <span>${account.address}</span>
+                                                                                                           
+
+                                                                                                    </fieldset>
+                                                                                                                   <!--Phone                                  -->
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Phone:</label> 
+                                                                                                            <span>${account.mobile}</span>
+                                                                 
+                                                                                                    </fieldset>
+                                                                                                                  <!--Birth_date                                  -->
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">
+                                                                                                            <label>Birth_date :</label> 
+                                                                                                            <span>${account.birth_date}</span>
+                                                                 
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Gender:<span>${account.gender == 'male' ? 'Male' : (account.gender == 'female' ? 'Female' : 'Other')}</span></div>
-                                                                                                        
+
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Role:<span>${account.role == 'admin' ? 'Admin' : 'User'}</span></div>
-                                                                                                        
+
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Status: <span>${account.status ? 'Active' : 'Deactive'}</span></div>
-                                                                                                       
+
                                                                                                     </fieldset>
 
                                                                                                 </div>
@@ -218,7 +254,7 @@ fieldset.name {
 
 
                                                                                             <div class="bot">
-                                                                                             <button type="button" onclick="window.location.href='${pageContext.request.contextPath}/manage-account'">Back</button>
+                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/manage-account'">Back</button>
                                                                                             </div>
 
                                                                                         </form>
@@ -228,7 +264,7 @@ fieldset.name {
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
-                                                                               
+
                                                                                 <!-- /bottom-page -->
                                                                             </div>
                                                                             <!-- /main-content -->
