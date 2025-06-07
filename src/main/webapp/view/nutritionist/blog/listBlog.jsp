@@ -119,7 +119,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"<i class="icon-plus"></i>Add new</a>
+                                        <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
                                     </div>
                          <style>
                              .table-header, .table-row {
@@ -199,23 +199,16 @@
                          </div>
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
-                                        <div class="text-tiny">Showing 10 entries</div>
+                                        <div class="text-tiny">Showing ${blogs.size()} entries</div>
                                         <ul class="wg-pagination">
                                             <li>
                                                 <a href="#"><i class="icon-chevron-left"></i></a>
                                             </li>
-                                            <li>
-                                                <a href="#">1</a>
-                                            </li>
-                                            <li class="active">
-                                                <a href="#">2</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">3</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-right"></i></a>
-                                            </li>
+                                            <c:forEach begin="1" end="${endP}" var="i">
+                                                <li class = "${i == index ? 'active' : ''}">
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${i}">${i}</a>
+                                                </li>
+                                            </c:forEach>
                                         </ul>
                                     </div>
                                 </div>

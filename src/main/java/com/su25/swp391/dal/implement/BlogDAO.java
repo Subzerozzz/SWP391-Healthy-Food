@@ -188,7 +188,6 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-
             statement.setString(1, title);
             statement.setInt(2, id);
             resultSet = statement.executeQuery();
@@ -204,48 +203,55 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
         return false;
     }
-    public List<Blog> findBlogsWithFilter(String title, String status, int page, int pageSize) {
-        List<Blog> blogs = new ArrayList<>();
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-        
-        // Add title filter if provided
-        if (title != null && !title.isEmpty()) {
-            sqlBuilder.append(" AND title LIKE ?");
-            params.add("%" + title + "%");
-        }
-        
-        // Add status filter if provided
-        if (status != null && !status.isEmpty()) {
-            sqlBuilder.append(" AND status = ?");
-            params.add(status);
-        }
-        
-        // Add ordering and pagination
-        sqlBuilder.append(" ORDER BY created_date DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-        
+    
+    // dem so luong blog trong database
+    public int getTotalBlog(){
+        String sql= "SELECT COUNT(*) FROM blogs";
         try {
             connection = getConnection();
-            statement = connection.prepareStatement(sqlBuilder.toString());
-            
-            // Set parameters
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-            
+            statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
-            
-            while (resultSet.next()) {
-                blogs.add(getFromResultSet(resultSet));
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Error finding blogs with filter: " + e.getMessage());
+            System.out.println("Error checking blog title: " + e.getMessage());
         } finally {
             closeResources();
         }
-        
-        return blogs;
+        return 0;
+    }
+//    public static void main(String[] args) {
+//        BlogDAO blogDao=new BlogDAO();
+//        int count =blogDao.getTotalBlog();
+//        System.out.println(count);
+//    }
+    
+    public List<Blog> pagingBlog(int index) {
+        List<Blog> list = new ArrayList<>();
+        String sql = "SELECT * FROM blogs\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?;";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (index - 1) * 10);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // BẮT BUỘC CÓ
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+    public static void main(String[] args) {
+        BlogDAO blog = new BlogDAO();
+        List<Blog> list = blog.pagingBlog(1);
+        for (Blog blog1 : list) {
+             System.out.println(blog1);
+        }
     }
 }
