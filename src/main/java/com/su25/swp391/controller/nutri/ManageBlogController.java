@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -57,6 +58,9 @@ public class ManageBlogController extends HttpServlet {
                 break;
             case "delete":
                 deleteBlogDoGet(request, response);
+                break;
+            case "search":
+                searchByNameDoGet(request, response);
                 break;
             default:
                 listBlogDoGet(request, response);
@@ -228,7 +232,7 @@ public class ManageBlogController extends HttpServlet {
     }
 
     private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         String indexPage = request.getParameter("index");
         if (indexPage == null) {
             indexPage = "1";
@@ -244,12 +248,12 @@ public class ManageBlogController extends HttpServlet {
         List<Blog> list = blogDAO.pagingBlog(currentPage);
 
         request.setAttribute("blogs", list);
-        request.setAttribute("currentPage", currentPage); 
-        request.setAttribute("totalPage", totalPage);     
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPage", totalPage);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
         dispatcher.forward(request, response);
-}
+    }
 
     private void showAddDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/addBlog.jsp");
@@ -327,5 +331,20 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
-    
+
+    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String title = request.getParameter("title");
+        List<Blog> listBlog = new ArrayList<>();
+        if (title != null && !title.trim().isEmpty()) {
+            listBlog = blogDAO.getBlogByName(title);
+        } else {
+            // Có thể lấy tất cả blog hoặc trả về danh sách rỗng tùy ý
+            listBlog = blogDAO.findAll();
+        }
+        request.setAttribute("blog", listBlog);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
+        dispatcher.forward(request, response);
+    }
+
 }

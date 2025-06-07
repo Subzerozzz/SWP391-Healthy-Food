@@ -115,8 +115,11 @@
                                                     <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
                                                 </fieldset>
                                                 <div class="button-submit">
-                                                    <button class="" type="submit"><i class="icon-search"></i></button>
-                                                </div>
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?action=search&title=${blog.title}" 
+                                                   class="your-button-class" title="Search">
+                                                    <i class="icon-search"></i>
+                                                </a>
+                                            </div>
                                             </form>
                                         </div>
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
