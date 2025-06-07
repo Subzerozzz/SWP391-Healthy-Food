@@ -38,6 +38,8 @@ import java.util.Map;
 @WebServlet(name = "ManageFoodController", urlPatterns = { "/manage-food" })
 public class ManageFoodController extends HttpServlet {
 
+  public static final int RECORD_PER_PAGE = 10;
+
   FoodDAO foodDao = new FoodDAO();
   FoodDraftDAO foodDraftDao = new FoodDraftDAO();
   RequestDAO requestDao = new RequestDAO();
@@ -47,7 +49,6 @@ public class ManageFoodController extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String action = request.getParameter("action");
-    System.out.println(action);
     if (action == null) {
       action = "view";
     }
@@ -69,6 +70,12 @@ public class ManageFoodController extends HttpServlet {
         break;
       case "search":
         searchByName(request, response);
+        break;
+      case "pagination":
+        paginationPage(request, response);
+        break;
+      case "paginationFilter":
+        paginationFilter(request, response);
         break;
       default:
         throw new AssertionError();
@@ -414,11 +421,24 @@ public class ManageFoodController extends HttpServlet {
 
   private void filterByCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      // lấy categoryID
       Integer categoryID = Integer.parseInt(request.getParameter("id"));
-      List<Food> listFood = foodDao.findByCategoryId(categoryID);
+      // lấy số lượng page
+      List<Food> listFood1 = foodDao.findByCategoryId(categoryID);
+      Integer totalOfRecord = listFood1.size();
+      Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
+          : totalOfRecord / RECORD_PER_PAGE + 1;
+      // lấy ra 10 bản ghi đầu tiên
+      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, 1);
+      // lấy ra listCategory
+      List<FoodCategory> listCategory = categoryDao.findAll();
+      // set giá trị
+      request.setAttribute("listCategory", listCategory);
+      request.setAttribute("totalPage", totalPage);
       request.setAttribute("listFood", listFood);
       request.setAttribute("categoryID", categoryID);
-      request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
+      request.setAttribute("currentPage", 1);
+      request.getRequestDispatcher("view/nutritionist/menu/filterFood.jsp").forward(request, response);
     } catch (Exception e) {
       System.out.println(e);
     }
@@ -429,7 +449,7 @@ public class ManageFoodController extends HttpServlet {
     String foodName = request.getParameter("name");
     // Lấy ra listFood
     List<Food> listFood = foodDao.getFoodByName(foodName);
-    //lấy ra listCategory
+    // lấy ra listCategory
     List<FoodCategory> listCategory = categoryDao.findAll();
     // set gia tri vao request
     request.setAttribute("listFood", listFood);
@@ -437,6 +457,57 @@ public class ManageFoodController extends HttpServlet {
     request.setAttribute("foodName", foodName);
     request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
 
+  }
+
+  private void paginationPage(HttpServletRequest request, HttpServletResponse response) {
+    String currentPageStr = request.getParameter("page");
+    Integer currentPage = null;
+    List<Food> listFood1 = foodDao.findAll();
+    Integer totalOfRecord = listFood1.size();
+    Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
+        : totalOfRecord / RECORD_PER_PAGE + 1;
+    try {
+      currentPage = Integer.parseInt(currentPageStr);
+      if (currentPage < 0) {
+        currentPage = 1;
+      }
+
+      List<Food> listFood = foodDao.findRecordByPage(currentPage);
+      List<FoodCategory> listCategory = categoryDao.findAll();
+      request.setAttribute("totalPage", totalPage);
+      request.setAttribute("listFood", listFood);
+      request.setAttribute("currentPage", currentPage);
+      request.setAttribute("listCategory", listCategory);
+      request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
+    } catch (Exception e) {
+      currentPage = 1;
+    }
+  }
+
+  private void paginationFilter(HttpServletRequest request, HttpServletResponse response) {
+    Integer categoryID = Integer.parseInt(request.getParameter("category"));
+    String currentPageStr = request.getParameter("page");
+    Integer currentPage = null;
+    List<Food> listFood1 = foodDao.findByCategoryId(categoryID);
+    Integer totalOfRecord = listFood1.size();
+    Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
+        : totalOfRecord / RECORD_PER_PAGE + 1;
+    try {
+      currentPage = Integer.parseInt(currentPageStr);
+      if (currentPage < 0) {
+        currentPage = 1;
+      }
+
+      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, currentPage);
+      List<FoodCategory> listCategory = categoryDao.findAll();
+      request.setAttribute("totalPage", totalPage);
+      request.setAttribute("listFood", listFood);
+      request.setAttribute("currentPage", currentPage);
+      request.setAttribute("listCategory", listCategory);
+      request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
+    } catch (Exception e) {
+      currentPage = 1;
+    }
   }
 
 }
