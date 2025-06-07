@@ -77,7 +77,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="password" class="form-control" name="password"  placeholder="New Password">
+                                            <input type="password" class="form-control" name="new_password"  placeholder="New Password">
                                         </div>
                                     </div>
 
