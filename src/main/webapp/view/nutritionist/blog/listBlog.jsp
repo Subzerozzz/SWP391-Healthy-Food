@@ -201,15 +201,46 @@
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing ${blogs.size()} entries</div>
                                         <ul class="wg-pagination">
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-left"></i></a>
+                                            <!-- Nút Trang Trước -->
+                                            <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                                <a href="${currentPage > 1 ? pageContext.request.contextPath += '/manage-blog?index=' += (currentPage - 1) : '#'}">
+                                                    <i class="icon-chevron-left"></i>
+                                                </a>
                                             </li>
-                                            <c:forEach begin="1" end="${endP}" var="i">
-                                                <li class = "${i == index ? 'active' : ''}">
-                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${i}">${i}</a>
-                                                </li>
-                                            </c:forEach>
-                                        </ul>
+
+                                            <c:choose>
+                                                <c:when test="${currentPage < totalPage - 2}">
+                                                    <li class="active">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}">${currentPage}</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}">${currentPage + 1}</a>
+                                                    </li>
+
+                                                    <li><span>...</span></li>
+
+                                                    <li>
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}">${totalPage}</a>
+                                                    </li>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    <c:forEach begin="${totalPage - 2}" end="${totalPage}" var="i">
+                                                        <li class="${currentPage == i ? 'active' : ''}">
+                                                            <a href="${pageContext.request.contextPath}/manage-blog?index=${i}">${i}</a>
+                                                        </li>
+                                                    </c:forEach>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <!-- Nút Trang Sau -->
+                                            <li class="${currentPage == totalPage ? 'disabled' : ''}">
+                                                <a href="${currentPage < totalPage ? pageContext.request.contextPath += '/manage-blog?index=' += (currentPage + 1) : '#'}">
+                                                    <i class="icon-chevron-right"></i>
+                                                </a>
+                                            </li>
+</ul>
                                     </div>
                                 </div>
                                 <!-- /product-list -->
