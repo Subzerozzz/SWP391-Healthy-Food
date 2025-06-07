@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
     
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/forget-password.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:14 GMT -->
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/my-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:20 GMT -->
 <head>
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
@@ -39,7 +39,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-         <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
+        <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
         <!-- End Navbar Area -->
 
         <!-- Inner Banner Area -->
@@ -48,17 +48,17 @@
                 <div class="row align-items-center">
                     <div class="col-lg-5 col-md-4">
                         <div class="inner-content">
-                            <h2>Forget Password</h2>
+                            <h2> My Account</h2>
                             <ul>
                                 <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
-                                <li>Forget Password</li>
+                                <li>  My Account </li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="col-lg-7 col-md-8">
                         <div class="inner-img">
-                            <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner6.png" alt="Images">
+                            <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner2.png" alt="Images">
                         </div>
                     </div>
                 </div>
@@ -66,34 +66,125 @@
         </div>
         <!-- Inner Banner Area End -->
 
-        <!-- User Area -->
-        <div class="user-area pt-100 pb-70">
+        <!-- My Account Area -->
+        <div class="my-account-area ptb-100">
             <div class="container">
-                <div class="user-width">
-                    <div class="user-form">
-                        <div class="contact-form">
-                            <h2>Forget Password</h2>
-                            <form action="forgetpassword" method="post">
-                                <div class="row">
-                                    <div class="col-lg-12 ">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="email" required data-error="Please enter username or email" placeholder="Email">
+                <div class="tab account-tab">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <ul class="tabs">
+                                <li>
+                                    <a href="#">
+                                        My Account
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/myaccount">
+                                        Change Password
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="tab_content current active">
+                                <div class="tabs_item current">
+                                    <div class="account-tab-item">
+                                        <div class="account-details">
+                                            <h2>Profile Details</h2>
+                                            <div class="account-profile">
+                                                <div class="account-profile-img">
+                                                    <img src="${pageContext.request.contextPath}/images/products/product-profile1.jpg" alt="Images">
+                                                </div>
+                                                <ul>
+                                                    <li><a href="#">Upload</a></li>
+                                                    <li><a href="#">Remove</a></li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="account-form">
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <input type="text"  class="form-control" placeholder="Megan">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <input type="text"  class="form-control" placeholder="Fox">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <input type="email"  class="form-control" placeholder="megan@hello.com">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" placeholder="+501-529-1747">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-    
-                                    <div class="col-lg-12 ">
-                                        <button type="submit" class="default-btn btn-bg-three">
-                                            Reset Now
-                                        </button>
+                                </div>
+
+
+                                
+
+                                <div class="tabs_item">
+                                    <div class="account-tab-item">
+                                        <div class="account-form">
+                                                <h3>Change Password</h3>
+                                                <form action="myaccount" method="post">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <input type="password" name="current_password"  class="form-control" placeholder="Current Password">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <input type="password" name="new_password" class="form-control" placeholder="New Password">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <button type="submit" class="default-btn btn-bg-three">
+                                                                Confirm
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="col-lg-8 col-md-6">
+                                                            <button type="submit" class="default-btn btn-bg-three">
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- User Area End -->
+        <!-- My Account Area End -->
 
         <!-- Footer Area -->
         <footer class="footer-area footer-bg">
@@ -122,7 +213,7 @@
                                     </li>
                                     <li>
                                         <i class='bx bx-envelope'></i>
-                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#0b636e6767644b6362676425686466"><span class="__cf_email__" data-cfemail="1b737e7777745b7372777435787476">[email&#160;protected]</span></a>
+                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#85ede0e9e9eac5edece9eaabe6eae8"><span class="__cf_email__" data-cfemail="19717c7575765971707576377a7674">[email&#160;protected]</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -269,5 +360,5 @@
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
     </body>
 
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/forget-password.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:14 GMT -->
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/my-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
 </html>

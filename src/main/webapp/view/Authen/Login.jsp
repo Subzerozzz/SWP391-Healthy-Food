@@ -39,7 +39,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-       <jsp:include page = "/view/common/MasterLayoutAuthen/Sidebar.jsp"></jsp:include>
+       <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
         <!-- End Navbar Area -->
 
         <!-- Inner Banner Area -->

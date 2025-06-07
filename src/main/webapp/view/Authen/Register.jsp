@@ -39,7 +39,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-        <jsp:include page = "/view/common/MasterLayoutAuthen/Sidebar.jsp"></jsp:include>
+         <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
             <!-- End Navbar Area -->
 
             <!-- Inner Banner Area -->
@@ -90,13 +90,13 @@
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="password" placeholder="Password">
+                                            <input class="form-control" type="password" name="password" placeholder="Password">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="confirmpassword" placeholder="Confirm password">
+                                            <input class="form-control" type="password" name="confirmpassword" placeholder="Confirm password">
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +105,6 @@
                                         Register Now
                                     </button>
                                 </div>
-                        </div>
                         </form>
                     </div>
                 </div>
