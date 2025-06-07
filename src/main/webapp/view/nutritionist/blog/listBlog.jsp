@@ -185,9 +185,10 @@
                                      <div class="col">${blog.author}</div>
                                      <div class="col">${blog.birth_date}</div> 
                                      <div class="col">
-                                         <span style="background-color: red; color: black; padding: 2px 6px; border-radius: 3px; display: inline-block; font-weight: bold;">
+                                         <span style="background-color: #E74C3C;; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
                                              ${blog.status}
                                          </span>
+
                                      </div>
                                      <div class="col actions">
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>
