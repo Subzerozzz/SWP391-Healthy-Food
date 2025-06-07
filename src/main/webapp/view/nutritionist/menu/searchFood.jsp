@@ -245,16 +245,16 @@
                         <ul class="wg-pagination">
 
                           <li>
-                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=1"><i class="icon-chevron-left"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=1"><i class="icon-chevron-left"></i></a>
                           </li>
                           <c:choose>
                                 <c:when test="${currentPage < totalPage - 2}">
                                     <li class="active">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${currentPage}">${currentPage}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${currentPage}">${currentPage}</a>
                                     </li>
                                     
                                     <li class="">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${currentPage + 1}">${currentPage + 1}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${currentPage + 1}">${currentPage + 1}</a>
                                     </li>
                                     
                                     <li>
@@ -262,20 +262,20 @@
                                     </li>
                                     
                                     <li class="">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${totalPage}">${totalPage}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${totalPage}">${totalPage}</a>
                                     </li>
                                 </c:when>
                                 <c:otherwise>
                                     <c:forEach begin="${totalPage-2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
-                                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${i}">${i}</a>
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${i}">${i}</a>
                                         </li>
                                     </c:forEach>
                                 </c:otherwise>
                                 
                             </c:choose>
                           <li>
-                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${totalPage}"><i class="icon-chevron-right"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${totalPage}"><i class="icon-chevron-right"></i></a>
                           </li>
                         </ul>
                       </div>
