@@ -161,6 +161,7 @@ public class ManageBlogController extends HttpServlet {
                 request.getSession().setAttribute("totalMess", "Add new Blog Success");
                 request.getSession().setAttribute("totalType", "Success");
                 listBlogDoGet(request, response);
+                return;
             } else {
                 request.getSession().setAttribute("totalMess", "Fail to add Blog");
                 request.getSession().setAttribute("totalType", "Err");
