@@ -10,6 +10,7 @@ import com.su25.swp391.dal.implement.Food_DraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
 import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Food_Draft;
+import com.su25.swp391.entity.LogRequest;
 import com.su25.swp391.entity.Request;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -133,7 +134,7 @@ public class TypeOfRequestController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Food_Draft foodDraft = foodDraftDAO.findById(id);
         request.setAttribute("foodD", foodDraft);
-        request.getRequestDispatcher("/view/nutritionist/detail-food-draft.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/detail-food-draft.jsp").forward(request, response);
     }    
      
     // VIEW LIST ALL OF FOOD_DRAFT
@@ -157,7 +158,7 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("currentPage", page);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF CREATE
@@ -183,7 +184,7 @@ public class TypeOfRequestController extends HttpServlet {
          request.setAttribute("currentPage", page);
          List<String> listType = foodDraftDAO.findAllType();
          request.setAttribute("type", listType);
-         request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+         request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
      // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF UPDATE
@@ -208,7 +209,7 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("currentPage", page);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF DELETE
@@ -233,7 +234,7 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("currentPage", page);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
     // INSERT A FOOD_DRAFT TO TABLE FOOD
@@ -272,7 +273,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
     // UPDATE A FOOD_DRAFT TO TABLE FOOD FROM A FOOD_DRAFT GET BY ID_FOOD
@@ -311,7 +312,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     
     // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
@@ -352,7 +353,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
 
     // REJECT A FOOD_DRAFT BY TYPE CREATE OF FOOD
@@ -391,7 +392,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
     // REJECT A FOOD_DRAFT BY TYPE UPDATE OF FOOD
     private void rejectByUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -429,7 +430,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
    // REJECT A FOOD_DRAFT BY TYPE OF DELETE FOOD
     private void rejectByDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -467,7 +468,7 @@ public class TypeOfRequestController extends HttpServlet {
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
-        request.getRequestDispatcher("/view/nutritionist/dashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
 
     

@@ -9,5 +9,5 @@ package com.su25.swp391.config;
  * @author Dell
  */
 public class GlobalConfig {
-    
+    public static final String STATUS_REQUEST_DONE = "Done";
 }

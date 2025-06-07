@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Admin
  */
-public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
+public class LogRequestDAO extends DBContext implements I_DAO<LogRequest> {
 
     @Override
     public List<LogRequest> findAll() {
@@ -36,7 +36,6 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
     public boolean update(LogRequest t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-   
 
     @Override
     public boolean delete(LogRequest t) {
@@ -44,14 +43,17 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
     }
 
     @Override
-    public int insert(LogRequest t) {
+    public int insert(LogRequest logReuest) {
+        
+        
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
     public int insertToLogRequest(Request t, Food_Draft f) {
-      String sql = "Insert into swp391_healthy_food.LogRequest(result,foodDraftId,statusRequest,nutri_id) values (?,?,?,?)";
+        String sql = "Insert into swp391_healthy_food.LogRequest(result,foodDraftId,statusRequest,nutri_id) values (?,?,?,?)";
         try {
             connection = getConnection();
-            statement=connection.prepareStatement(sql);
+            statement = connection.prepareStatement(sql);
             statement.setString(1, t.getResult());
             statement.setInt(2, t.getFoodDraftId());
             statement.setString(3, t.getStatusRequest());
@@ -67,18 +69,18 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest>{
 
     @Override
     public LogRequest getFromResultSet(ResultSet resultSet) throws SQLException {
-          return LogRequest
-                  .builder()
-                  .result(resultSet.getString("result"))
-                  .foodDraftId(resultSet.getInt("foodDraftId"))
-                  .statusRequest(resultSet.getString("statusRequest"))
-                  .nutri_id(resultSet.getInt("nutri_id"))
-                  .build();
+        return LogRequest
+                .builder()
+                .result(resultSet.getString("result"))
+                .foodDraftId(resultSet.getInt("foodDraftId"))
+                .statusRequest(resultSet.getString("statusRequest"))
+                .nutri_id(resultSet.getInt("nutri_id"))
+                .build();
     }
 
     @Override
     public LogRequest findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

@@ -99,7 +99,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             statement.setTimestamp(8, t.getUpdated_at());
             statement.setInt(9, t.getNutri_id());
             statement.setInt(10, t.getFood_id());
-            statement.executeUpdate();
+            
             return statement.executeUpdate()>0;
             
         } catch (Exception e) {
