@@ -12,42 +12,51 @@
     <!--<![endif]-->
     <style>
         /* Container fieldset */
-fieldset.name {
+        fieldset.name {
+            border: none;
+            padding: 0;
+            margin-bottom: 24px;
+        }
+
+        /* Label title */
+        .body-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        /* Select box */
+        select.form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        select.form-control:focus {
+            border-color: #1e80ff;
+            box-shadow: 0 0 0 2px rgba(30, 128, 255, 0.2);
+            background-color: #fefefe;
+        }
+  .readonly-input[readonly] {
+    background-color: #e9ecef;     /* Bootstrap-like xám */
+    color: #495057;
     border: none;
-    padding: 0;
-    margin-bottom: 24px;
-}
-
-/* Label title */
-.body-title {
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 6px;
-}
-
-/* Select box */
-select.form-control {
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 16px;
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #fff;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s ease;
 }
-
-select.form-control:focus {
-    border-color: #1e80ff;
-    box-shadow: 0 0 0 2px rgba(30, 128, 255, 0.2);
-    background-color: #fefefe;
-}
-        </style>
+    </style>
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
-        
+
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -139,7 +148,7 @@ select.form-control:focus {
                                                                                                 <div class="right flex-grow">
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Id_User</div>
-                                                                                                        <input class="flex-grow" type="text" name="id" value="${param.id}" readonly>
+                                                                                                        <input class="readonly-input" type="text" name="id" value="${param.id}" readonly>
                                                                                                     </fieldset>
 
 
@@ -152,13 +161,13 @@ select.form-control:focus {
                                                                                                     <!-- User Name -->
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">User Name</div>
-                                                                                                        <input type="text" class="form-control" name="user_name" value="${account.user_name}" required>
+                                                                                                        <input type="text" class="readonly-input" name="user_name" value="${account.user_name}" readonly>
                                                                                                     </fieldset>
 
                                                                                                     <!-- Email -->
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Email</div>
-                                                                                                        <input class="flex-grow" type="email" name="email" value="${account.email}" required>
+                                                                                                        <input class="readonly-input" type="email" name="email" value="${account.email}" readonly>
                                                                                                     </fieldset>
 
                                                                                                     <!-- Mobile -->
@@ -177,23 +186,21 @@ select.form-control:focus {
                                                                                                         </select>
                                                                                                     </fieldset>
 
-                                                                                                    <!-- Role -->
+                                                                                                    <!--Role-->                                                                                               
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Role</div>
-                                                                                                        <select name="role" class="form-control">
-                                                                                                            <option value="admin" ${account.role == 'admin' ? 'selected' : ''}>Admin</option>
-                                                                                                            <option value="user" ${account.role == 'user' ? 'selected' : ''}>User</option>
-                                                                                                        </select>
+                                                                                                        <input type="text" class="form-control" name="role" value="${account.role == 'admin' ? 'Admin' : 'User'}" readonly>
                                                                                                     </fieldset>
+                                                                                                   
 
-                                                                                                    <!-- Status -->
-                                                                                                    <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Status</div>
-                                                                                                        <select name="status" class="form-control">
-                                                                                                            <option value="true" ${account.status ? 'selected' : ''}>Active</option>
-                                                                                                            <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
-                                                                                                        </select>
-                                                                                                    </fieldset>
+                                                                                                        <!-- Status -->
+                                                                                                        <fieldset class="name mb-24">
+                                                                                                            <div class="body-title mb-10">Status</div>
+                                                                                                            <select name="status" class="form-control">
+                                                                                                                <option value="true" ${account.status ? 'selected' : ''}>Active</option>
+                                                                                                                <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
+                                                                                                            </select>
+                                                                                                        </fieldset>
 
 
                                                                                                 </div>

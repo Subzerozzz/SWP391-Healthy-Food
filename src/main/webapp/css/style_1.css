@@ -506,7 +506,7 @@ input[type=submit] {
 input[type=checkbox],
 input[type=radio] {
   padding: 0;
-  width: 22px;
+  width: 50px;
   height: 22px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0) !important;
@@ -4132,7 +4132,7 @@ select.h40 {
   gap: 10px;
   border-radius: 50%;
   background: #F0FDF4;
-  color: var(--22-c-55-e);
+ color: var(--22-c-55-e);
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;

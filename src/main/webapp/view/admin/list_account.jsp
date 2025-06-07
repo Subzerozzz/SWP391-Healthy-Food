@@ -12,189 +12,311 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
-<style>
-/* Gợi ý: Bắt đầu CSS cải tiến */
+    <style>
+        /* Gợi ý: Bắt đầu CSS cải tiến */
 
-.table-all-user ul.table-title li,
-.table-all-user .user-item > .flex > div {
-    flex: 1;
-    min-width: 120px;
-    word-break: break-word;
+        .table-all-user ul.table-title li,
+        .table-all-user .user-item > .flex > div {
+            flex: 1;
+            min-width: 120px;
+            word-break: break-word;
+        }
+
+        .table-all-user .user-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+        }
+
+        .user-item .name a {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .user-item .name .text-tiny {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .tf-button {
+            padding: 6px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .wg-pagination li a {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .wg-pagination li.active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .status-badge.active {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-badge.deactive {
+            background-color: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .wg-filter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .form-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Select box style */
+        .form-search select.form-control {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            min-width: 140px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-search select.form-control:focus {
+            border-color: #007bff;
+        }
+
+        /* Button style */
+        .form-search .tf-button {
+            padding: 10px 20px;
+            background-color: #1e80ff;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .form-search .tf-button:hover {
+            background-color: #1066d3;
+        }
+        .pagination li a {
+            color: #333;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        /* Hover các trang không active */
+        .pagination li:not(.active) a:hover {
+            background-color: #ddd;
+        }
+
+        /* Trang active giữ màu xanh cố định */
+        .pagination li.active a {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Khi hover vào trang active, vẫn giữ màu xanh */
+        .pagination li.active a:hover {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .fa-circle-check {
+            color: #28a745; /* xanh lá đẹp, như trong Bootstrap */
+        }
+        .fa-circle-check:hover {
+            color: #007BFF; /* Màu xanh biển khi hover */
+        }
+        .list-icon-function .item.eye i {
+            color: #FFC107; /* màu vàng */
+        }
+
+        .list-icon-function .item.edit i {
+            color: #FF3B3B; /* đỏ tươi */
+        }
+        .wg-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .wg-pagination li a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        /* Trang đang chọn */
+        .wg-pagination li.active a {
+            background-color: #1e74fd;
+            color: white;
+            border-color: #1e74fd;
+        }
+
+        /* Hover các trang khác */
+        .wg-pagination li a:hover {
+            background-color: #eee;
+            border-color: #aaa;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 5px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Nút tròn trắng */
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+            left: 3px;
+            top: 3px;
+        }
+
+        /* Khi là ON */
+        input:checked + .slider {
+            background-color: #4CAF50;
+            justify-content: flex-end;
+        }
+
+        /* Nút tròn chạy qua phải */
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Chữ OFF/ON */
+        .slider::after {
+
+            z-index: 1;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 3px 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box input[type="text"] {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            padding: 8px;
+            color: #333;
+            background-color: transparent;
+        }
+
+        .search-box input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #333;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .search-box button:hover {
+            color: #007bff;
+        }
+        .filter-button {
+  background-color: #2275fc;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.3s ease;
 }
 
-.table-all-user .user-item {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 10px 0;
+.filter-button i {
+  font-size: 16px;
 }
 
-.user-item .name a {
-    font-weight: 600;
-    font-size: 16px;
-    color: #333;
+.filter-button:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
 }
 
-.user-item .name .text-tiny {
-    font-size: 13px;
-    color: #888;
-}
 
-.tf-button {
-    padding: 6px 20px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 6px;
-    border: none;
-}
 
-.wg-pagination li a {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
 
-.wg-pagination li.active a {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.status-badge.active {
-    background-color: #28a745;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.status-badge.deactive {
-    background-color: #dc3545;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-.wg-filter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.form-search {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-/* Select box style */
-.form-search select.form-control {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    min-width: 140px;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-.form-search select.form-control:focus {
-    border-color: #007bff;
-}
-
-/* Button style */
-.form-search .tf-button {
-    padding: 10px 20px;
-    background-color: #1e80ff;
-    color: #fff;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.form-search .tf-button:hover {
-    background-color: #1066d3;
-}
-.pagination li a {
-    color: #333;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: inline-block;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-/* Hover các trang không active */
-.pagination li:not(.active) a:hover {
-    background-color: #ddd;
-}
-
-/* Trang active giữ màu xanh cố định */
-.pagination li.active a {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-}
-
-/* Khi hover vào trang active, vẫn giữ màu xanh */
-.pagination li.active a:hover {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-}
-.fa-circle-check {
-    color: #28a745; /* xanh lá đẹp, như trong Bootstrap */
-}
-.fa-circle-check:hover {
-    color: #007BFF; /* Màu xanh biển khi hover */
-}
-.list-icon-function .item.eye i {
-    color: #FFC107; /* màu vàng */
-}
-
-.list-icon-function .item.edit i {
-    color: #FF3B3B; /* đỏ tươi */
-}
-.wg-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-    gap: 10px;
-}
-
-.wg-pagination li a {
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    color: #000;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-/* Trang đang chọn */
-.wg-pagination li.active a {
-    background-color: #1e74fd;
-    color: white;
-    border-color: #1e74fd;
-}
-
-/* Hover các trang khác */
-.wg-pagination li a:hover {
-    background-color: #eee;
-    border-color: #aaa;
-}
-</style>
+    </style>
 
 
     <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
@@ -272,165 +394,221 @@
                                                                                             <!-- all-user -->
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
+
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form action="${pageContext.request.contextPath}/manage-account" method="GET" class="form-search">
-                                                                                                        <input type="hidden" name="action" value="filter" />
+                                                                                                        <!--tim kiếm theo key-->
+                                                                                                        <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-account">
+                                                                                                        <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                                                                            <input type="hidden" name="action" value="searchAccount">
+                                                                                                                <button type="submit"><i class="fa fa-search"></i></button>
+                                                                                                                </form>  
+                                                                                                                <form action="${pageContext.request.contextPath}/manage-account" method="GET" class="form-search">
+                                                                                                                    <input type="hidden" name="action" value="filter" />
 
-                                                                                                        <select name="role" class="form-control">
-                                                                                                            <option value="">All Roles</option>
-                                                                                                            <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
-                                                                                                            <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
-                                                                                                        </select>
+                                                                                                                    <select name="role" class="form-control">
+                                                                                                                        <option value="">All Roles</option>
+                                                                                                                        <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
+                                                                                                                        <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
+                                                                                                                    </select>
 
-                                                                                                        <select name="status" class="form-control">
-                                                                                                            <option value="">All Status</option>
-                                                                                                            <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
-                                                                                                            <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
-                                                                                                        </select>
-
-                                                                                                        <button type="submit" class="tf-button">Lọc</button>
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add"><i class="icon-plus"></i>Add new</a>
-                                                                                            </div>
-                                                                                            <div class="wg-table table-all-user">
-                                                                                                <ul class="table-title flex gap20 mb-14">
-                                                                                                    <li>
-                                                                                                        <div class="body-title">User</div>
-                                                                                                    </li>   
-
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Address</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Email</div>
-                                                                                                    </li>
-
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Mobile</div>
-                                                                                                    </li>
-
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Gender</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Role</div>
-                                                                                                    </li>
-
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Status</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title">Action</div>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                                <ul class="flex flex-column">
-                                                                                                    <c:forEach items="${listAccount}" var="account">
-                                                                                                        <li class="user-item gap14">
-<!--                                                                                                            <div class="image">
-                                                                                                                <img src="${pageContext.request.contextPath}/images/avatar/user-6.png" alt="">
-                                                                                                            </div>-->
-                                                                                                            <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="name">
-                                                                                                                    <a href="#" class="body-title-2">${account.user_name}</a>
-                                                                                                                    <div class="text-tiny mt-3">${account.full_name}</div>
+                                                                                                                    <select name="status" class="form-control">
+                                                                                                                        <option value="">All Status</option>
+                                                                                                                        <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
+                                                                                                                        <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
+                                                                                                                    </select>
+                                                                                                                    <button type="submit" class="filter-button">
+                                                                                                                       Lọc
+                                                                                                                    </button>
+                                                                                                                </form>
+                                                                                                               
+                                                                                                                </div>                                   
+                                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add"><i class="icon-plus"></i>Add new</a>
                                                                                                                 </div>
-                                                                                                                <div class="body-text">${account.address}</div>
-                                                                                                                <div class="body-text">${account.email}</div>
-                                                                                                                <div class="body-text">${account.mobile}</div>
-                                                                                                                <div class="body-text">${account.gender}</div>
-                                                                                                                <div class="body-text">${account.role}</div>
-                                                                                                                <div class="body-text">
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when test="${account.status == false}">
-                                                                                                                            <span class="status-badge deactive">Deactive</span>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when test="${account.status == true}">
-                                                                                                                            <span class="status-badge active">Active</span>
-                                                                                                                        </c:when>
-                                                                                                                    </c:choose>
+                                                                                                                <div class="wg-table table-all-user">
+                                                                                                                    <ul class="table-title flex gap20 mb-14">
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">User</div>
+                                                                                                                        </li>   
+
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Address</div>
+                                                                                                                        </li>
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Email</div>
+                                                                                                                        </li>
+
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Mobile</div>
+                                                                                                                        </li>
+
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Gender</div>
+                                                                                                                        </li>
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Role</div>
+                                                                                                                        </li>
+
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Status</div>
+                                                                                                                        </li>
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">Action</div>
+                                                                                                                        </li>
+                                                                                                                    </ul>
+                                                                                                                    <ul class="flex flex-column">
+                                                                                                                        <c:forEach items="${listAccount}" var="account">
+                                                                                                                            <li class="user-item gap14">
+                                                                                                                                <!--                                                                                                            <div class="image">
+                                                                                                                                                                                                        <img src="${pageContext.request.contextPath}/images/avatar/user-6.png" alt="">
+                                                                                                                                                                                                        </div>-->
+                                                                                                                                <div class="flex items-center justify-between gap20 flex-grow">
+                                                                                                                                    <div class="name">
+                                                                                                                                        <a href="#" class="body-title-2">${account.user_name}</a>
+                                                                                                                                        <div class="text-tiny mt-3">${account.full_name}</div>
+                                                                                                                                    </div>
+                                                                                                                                    <div class="body-text">${account.address}</div>
+                                                                                                                                    <div class="body-text">${account.email}</div>
+                                                                                                                                    <div class="body-text">${account.mobile}</div>
+                                                                                                                                    <div class="body-text">${account.gender}</div>
+                                                                                                                                    <div class="body-text">${account.role}</div>
+                                                                                                                                    <div class="body-text">
+                                                                                                                                        <c:choose>
+                                                                                                                                            <c:when test="${account.status == false}">
+                                                                                                                                                <span class="status-badge deactive">Deactive</span>
+                                                                                                                                            </c:when>
+                                                                                                                                            <c:when test="${account.status == true}">
+                                                                                                                                                <span class="status-badge active">Active</span>
+                                                                                                                                            </c:when>
+                                                                                                                                        </c:choose>
+
+                                                                                                                                    </div>
+                                                                                                                                    <div class="list-icon-function">
+                                                                                                                                        <div class="item eye">
+                                                                                                                                            <a href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">  <i class="icon-eye"></i>
+                                                                                                                                        </div>
+
+                                                                                                                                        <div class="item edit">
+
+                                                                                                                                            <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i class="icon-edit-3"></i></a>
+                                                                                                                                        </div>
+                                                                                                                                        <label class="switch" title="${account.status ? 'Deactivate' : 'Activate'}">
+                                                                                                                                            <input type="checkbox"
+                                                                                                                                                   onchange="location.href = '${pageContext.request.contextPath}/manage-account?action=${account.status ? 'deactive' : 'activate'}&id=${account.id}'"
+                                                                                                                                                   ${account.status ? 'checked' : ''}>
+                                                                                                                                                <span class="slider"></span>
+                                                                                                                                        </label>
+                                                                                                                                        <div class="item trash">
+                                                                                                                                            <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
+                                                                                                                                                <i class="icon-trash-2"></i>
+                                                                                                                                            </a>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </li>
+                                                                                                                        </c:forEach>
+                                                                                                                    </ul>
+                                                                                                                </div>
+                                                                                                                <div class="divider"></div>
+                                                                                                                <div class="flex items-center justify-between flex-wrap gap10">
+                                                                                                                    <div class="text-tiny">
+                                                                                                                        Showing ${startRecord} to ${endRecord} of ${totalAccounts} entries
+                                                                                                                    </div>
+
+                                                                                                                    <c:if test="${totalPages > 1}">
+                                                                                                                        <ul class="wg-pagination">
+                                                                                                                            <!-- Nút Previous -->
+                                                                                                                            <c:if test="${currentPage > 1}">
+                                                                                                                                <li>
+                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage - 1}&pageSize=${pageSize}">
+                                                                                                                                        <i class="icon-chevron-left"></i>
+                                                                                                                                    </a>
+                                                                                                                                </li>
+                                                                                                                            </c:if>
+
+                                                                                                                            <!-- Hiển thị các trang -->
+                                                                                                                            <c:choose>
+                                                                                                                                <c:when test="${totalPages <= 7}">
+                                                                                                                                    <!-- Hiển thị tất cả trang nếu <= 7 trang -->
+                                                                                                                                    <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                                                                                        <li <c:if test="${i == currentPage}">class="active"</c:if>>
+                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                                                        </li>
+                                                                                                                                    </c:forEach>
+                                                                                                                                </c:when>
+                                                                                                                                <c:otherwise>
+                                                                                                                                    <!-- Hiển thị phân trang thông minh -->
+                                                                                                                                    <c:if test="${currentPage > 1}">
+                                                                                                                                        <li>
+                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=1&pageSize=${pageSize}">1</a>
+                                                                                                                                        </li>
+                                                                                                                                    </c:if>
+
+                                                                                                                                    <c:if test="${currentPage > 3}">
+                                                                                                                                        <li><span>...</span></li>
+                                                                                                                                        </c:if>
+
+                                                                                                                                    <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 1 : 1}" 
+                                                                                                                                               end="${currentPage < totalPages - 1 ? currentPage + 1 : totalPages}">
+                                                                                                                                        <li <c:if test="${i == currentPage}">class="active"</c:if>>
+                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                                                        </li>
+                                                                                                                                    </c:forEach>
+
+                                                                                                                                    <c:if test="${currentPage < totalPages - 2}">
+                                                                                                                                        <li><span>...</span></li>
+                                                                                                                                        </c:if>
+
+                                                                                                                                    <c:if test="${currentPage < totalPages}">
+                                                                                                                                        <li>
+                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">${totalPages}</a>
+                                                                                                                                        </li>
+                                                                                                                                    </c:if>
+                                                                                                                                </c:otherwise>
+                                                                                                                            </c:choose>
+
+                                                                                                                            <!-- Nút Next -->
+                                                                                                                            <c:if test="${currentPage < totalPages}">
+                                                                                                                                <li>
+                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
+                                                                                                                                        <i class="icon-chevron-right"></i>
+                                                                                                                                    </a>
+                                                                                                                                </li>
+                                                                                                                            </c:if>
+                                                                                                                        </ul>
+                                                                                                                    </c:if>
+                                                                                                                </div>
 
                                                                                                                 </div>
-                                                                                                                <div class="list-icon-function">
-                                                                                                                    <div class="item eye">
-                                                                                                                      <a href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">  <i class="icon-eye"></i>
-                                                                                                                    </div>
-
-                                                                                                                    <div class="item edit">
-
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i class="icon-edit-3"></i></a>
-                                                                                                                    </div>
-                                                                                                                    <div class="item trash">
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=${account.status ?'deactive' :'activate'}&id=${account.id}"><i class="fa-solid fa-circle-check"></i></a>
-                                                                                                                    </div>
-                                                                                                                    <div class="item trash">
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
-                                                                                                                            <i class="icon-trash-2"></i>
-                                                                                                                        </a>
-                                                                                                                    </div>
+                                                                                                                <!-- /all-user -->
                                                                                                                 </div>
-                                                                                                            </div>
-                                                                                                        </li>
-                                                                                                    </c:forEach>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                            <div class="divider"></div>
-                                                                                            <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                <div class="text-tiny">Showing 10 entries</div>
-                                                                                                <ul class="wg-pagination">
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                    </li>
-                                                                                                    <c:forEach begin="1" end="${endP}" var="i">
-                                                                                                        <li class = "${i == index ? 'active' : ''}">
-                                                                                                            <a href="${pageContext.request.contextPath}/manage-account?index=${i}">${i}</a>
-                                                                                                        </li>
-                                                                                                    </c:forEach>
-<!--                                                                                                    <li>
-                                                                                                        <a href="#">1</a>
-                                                                                                    </li>
-                                                                                                    <li class="active">
-                                                                                                        <a href="#">2</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">3</a>
-                                                                                                    </li>-->
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <!-- /all-user -->
-                                                                                    </div>
-                                                                                    <!-- /main-content-wrap -->
-                                                                                </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                
-                                                                                <!-- /bottom-page -->
-                                                                            </div>
-                                                                            <!-- /main-content -->
-                                                                        </div>
-                                                                        <!-- /section-content-right -->
-                                                                    </div>
-                                                                    <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                            </div>
-                                                            <!-- /#wrapper -->
+                                                                                                                <!-- /main-content-wrap -->
+                                                                                                                </div>
+                                                                                                                <!-- /main-content-wrap -->
+                                                                                                                <!-- bottom-page -->
 
-                                                            <!-- Javascript -->
-                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                <!-- /bottom-page -->
+                                                                                                                </div>
+                                                                                                                <!-- /main-content -->
+                                                                                                                </div>
+                                                                                                                <!-- /section-content-right -->
+                                                                                                                </div>
+                                                                                                                <!-- /layout-wrap -->
+                                                                                                                </div>
+                                                                                                                <!-- /#page -->
+                                                                                                                </div>
+                                                                                                                <!-- /#wrapper -->
 
-                                                        </body>
+                                                                                                                <!-- Javascript -->
+                                                                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+                                                                                                                </body>
 
 
-                                                        <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
-                                                        </html>
+                                                                                                                <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+                                                                                                                </html>
