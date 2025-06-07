@@ -254,4 +254,20 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
              System.out.println(blog1);
         }
     }
+    public List<Blog> getBlogByName(String blogName) {
+        List<Blog> listBlog = null;
+        String sql = "SELECT * FROM blogs WHERE title LIKE ?";
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, "%" + blogName + "%");
+            resultSet = statement.executeQuery();
+            listBlog = new ArrayList<>();
+            while (resultSet.next()) {
+                listBlog.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return listBlog;
+    }
 }
