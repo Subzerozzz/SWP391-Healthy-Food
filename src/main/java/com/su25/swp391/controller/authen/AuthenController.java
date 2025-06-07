@@ -9,6 +9,7 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
+import com.su25.swp391.utils.MD5PasswordEncoderUtils;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,7 +22,9 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/home" , "/myaccount" , "/login" , "/register" , "/forgetpassword" , "/OTP" , "/newpassword"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/home" , "/myaccount" ,
+    "/login" , "/register" , "/forgetpassword" ,
+    "/OTP" , "/newpassword", "/logout"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -32,13 +35,13 @@ public class AuthenController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private static final String LOGIN_PAGE = "view/Authen/Login.jsp";
-    private static final String REGISTER_PAGE = "view/Authen/Register.jsp";
+    private static final String LOGIN_PAGE = "view/authen/login.jsp";
+    private static final String REGISTER_PAGE = "view/authen/register.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
-    private static final String OTP_PAGE = "view/Authen/OTP.jsp";
-    private static final String FORGETPASSWORD_PAGE = "view/Authen/ForgetPassword.jsp";
-    private static final String MYACCOUNT_PAGE = "view/Authen/MyAccount.jsp";
-    private static final String NEWPASS_PAGE = "view/Authen/NewPassword.jsp";
+    private static final String OTP_PAGE = "view/authen/otp.jsp";
+    private static final String FORGETPASSWORD_PAGE = "view/authen/forgetPassword.jsp";
+    private static final String MYACCOUNT_PAGE = "view/authen/myAccount.jsp";
+    private static final String NEWPASS_PAGE = "view/authen/newPassword.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
@@ -58,25 +61,25 @@ public class AuthenController extends HttpServlet {
 
         switch (path) {
             case "/login":
-                request.getRequestDispatcher("view/Authen/Login.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/login.jsp").forward(request, response);
                 break;
             case "/register":
-                request.getRequestDispatcher("view/Authen/Register.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/register.jsp").forward(request, response);
                 break;
             case "/home":
                 request.getRequestDispatcher("view/homePage/home.jsp").forward(request, response);
                 break;
             case "/OTP":
-                request.getRequestDispatcher("view/Authen/OTP.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/otp.jsp").forward(request, response);
                 break;
             case "/forgetpassword":
-                request.getRequestDispatcher("view/Authen/ForgetPassword.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/forgetPassword.jsp").forward(request, response);
                 break;
             case "/newpassword":
-                request.getRequestDispatcher("view/Authen/NewPassword.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/newPassword.jsp").forward(request, response);
                 break;
             case "/myaccount":
-                request.getRequestDispatcher("view/Authen/MyAccount.jsp").forward(request, response);
+                request.getRequestDispatcher("view/authen/myAccount.jsp").forward(request, response);
                 break;
             case "/logout":
                 logoutDoGet(request, response);
@@ -236,7 +239,7 @@ public class AuthenController extends HttpServlet {
         Account account = Account.builder()
                 .user_name(usernameOrEmail)
                 .email(usernameOrEmail)
-                .password(password)
+                .password(MD5PasswordEncoderUtils.encodeMD5(password))
                 .build();
         Account accFoundByUsernamePass = accountDAO.findByEmailOrUsernameAndPass(account);
         // true => trang home ( set account vao trong session )
@@ -289,6 +292,7 @@ public class AuthenController extends HttpServlet {
         // so sanh OTP
         if (otp.equals(otpForm)) {
             if ("register".equals(otpType)) {
+                accountFoundByEmail.setPassword(MD5PasswordEncoderUtils.encodeMD5(accountFoundByEmail.getPassword()));
                 accountDAO.insert(accountFoundByEmail);
                 session.setAttribute("toastMessage", "Register success!");
                 session.setAttribute("toastType", "success");
@@ -382,7 +386,7 @@ public class AuthenController extends HttpServlet {
         }
         Account account = Account.builder()
                 .email((String) session.getAttribute("email"))
-                .password(new_password)
+                .password(MD5PasswordEncoderUtils.encodeMD5(new_password))
                 .build();
         
         Account accFoundByUsernamePass = accountDAO.findByEmail(account);
@@ -436,7 +440,7 @@ public class AuthenController extends HttpServlet {
         
         Account account = Account.builder()
                 .email((String) session.getAttribute("email"))
-                .password(new_password)
+                .password(MD5PasswordEncoderUtils.encodeMD5(new_password))
                 .build();
         Account accFoundByUsernamePass = accountDAO.findByEmail(account);
      
