@@ -227,8 +227,21 @@ public class ManageBlogController extends HttpServlet {
     }
 
     private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Blog> list = blogDAO.findAll();
+        
+        String indexPage = request.getParameter("index");
+        if(indexPage==null){
+            indexPage = "1";
+        };
+        int index = Integer.parseInt(indexPage);
+        int count = blogDAO.getTotalBlog();
+        int endPage = count/10;
+        if(count%10 != 0){
+            endPage++;   
+        }
+        List<Blog> list = blogDAO.pagingBlog(index);
         request.setAttribute("blogs", list);
+        request.setAttribute("index", index);
+        request.setAttribute("endP", endPage);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
         dispatcher.forward(request, response);
     }
@@ -309,4 +322,5 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
+    
 }
