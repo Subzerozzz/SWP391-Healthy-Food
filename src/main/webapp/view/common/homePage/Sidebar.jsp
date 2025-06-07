@@ -12,7 +12,7 @@
 <div class="navbar-area">
             <!-- Menu For Mobile Device -->
             <div class="mobile-nav">
-                <a href="index.html" class="logo">
+                <a class="logo">
                     <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" alt="Logo">
                 </a>
             </div>
