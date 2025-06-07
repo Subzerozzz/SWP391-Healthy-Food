@@ -128,16 +128,10 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     return foodList;
   }
 
-  public static void main(String[] args) {
-    for (Food f : new FoodDAO().findByCategoryId(2)) {
-      System.out.println(f);
-    }
-  }
-
   public List<Food> getFoodByName(String foodName) {
     List<Food> listFood = null;
     String sql = "SELECT * FROM Food"
-        + " WHERE name LIKE ?" ;
+        + " WHERE name LIKE ?";
     try {
       statement = connection.prepareStatement(sql);
       statement.setString(1, "%" + foodName + "%");
@@ -151,11 +145,57 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     }
     return listFood;
   }
-  
-    public static void main() {
-        for(Food a: new FoodDAO().getFoodByName("gà")){
-            System.out.println(a);
-        }
+
+  public List<Food> findRecordByPage(int i) {
+    List<Food> list = new ArrayList<>();
+    String sql = "SELECT *\n"
+        + "FROM Food\n"
+        + "ORDER BY id\n"
+        + "LIMIT 10 OFFSET ?;";
+    // Tính số bản ghi cần bỏ qua
+    Integer recordOffset = (i - 1) * 10;
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, recordOffset);
+
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        list.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
     }
+    return list;
+  }
+
+  public List<Food> findRecordByPageForCategory(Integer categoryID, int i) {
+    List<Food> list = new ArrayList<>();
+    String sql = "SELECT *\n"
+        + "FROM Food\n"
+        + "WHERE category_id = ?\n"
+        + "ORDER BY id\n"
+        + "LIMIT 10 OFFSET ?";
+    // Tính số bản ghi cần bỏ qua
+    Integer recordOffset = (i - 1) * 10;
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, categoryID);
+      statement.setInt(2, recordOffset);
+
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        list.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return list;
+  }
+
+  public static void main(String[] args) {
+    for (Food a : new FoodDAO().findRecordByPageForCategory(3, 1)) {
+      System.out.println(a);
+    }
+  }
 
 }

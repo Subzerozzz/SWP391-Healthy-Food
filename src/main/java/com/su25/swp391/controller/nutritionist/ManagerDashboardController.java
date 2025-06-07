@@ -28,17 +28,28 @@ public class ManagerDashboardController extends HttpServlet {
 
   FoodDAO foodDao = new FoodDAO();
   FoodCategoryDAO foodCategoryDao = new FoodCategoryDAO();
+  private static final int RECORD_PER_PAGE = 10;
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<Food> listFood = foodDao.findAll();
+    List<Food> listFood1 = foodDao.findAll();
     List<FoodCategory> listCategory = foodCategoryDao.findAll();
+    // pagination
+    // lấy ra tổng số bản ghi
+    Integer totalOfRecord = listFood1.size();
+    // tính ra tổng số page
+    Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
+        : totalOfRecord / RECORD_PER_PAGE + 1;
+    // lấy ra số bản ghi theo từng page
+    List<Food> listFood = foodDao.findRecordByPage(1);
     // luu vao Session
     HttpSession session = request.getSession();
-    session.setAttribute("listFood", listFood);
-    session.setAttribute("listCategory", listCategory);
-    response.sendRedirect("view/nutritionist/menu/dashboard.jsp");
+    request.setAttribute("listFood", listFood);
+    request.setAttribute("listCategory", listCategory);
+    request.setAttribute("totalPage", totalPage);
+    request.setAttribute("currentPage", 1);
+    request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
   }
 
   /**

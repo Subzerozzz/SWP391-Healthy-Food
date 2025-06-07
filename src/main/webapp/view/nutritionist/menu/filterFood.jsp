@@ -242,7 +242,7 @@
                           </li>
                           <c:forEach begin="1" end="${totalPage}" var="i">
                             <li class="${currentPage == i ? 'active' : ''}">
-                              <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
+                              <a href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${i}">${i}</a>
                             </li>
                           </c:forEach>
                           <!-- <li>
