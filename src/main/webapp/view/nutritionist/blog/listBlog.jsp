@@ -112,10 +112,11 @@
                                                 </div>
                                                 <div class="text-tiny">entries</div>
                                             </div>
-                                            <form 
-                                                class="search-box" method="get" action="${pageContext.request.contextPath}/manage-blog">
+                                            <form class="search-box"  action="${pageContext.request.contextPath}/manage-blog" method="get">
+             
                                                 <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                <input type="hidden" name="action" value="search"> <button type="submit"><i class="icon-search"></i></button>
+                                                <input type="hidden" name="action" value="search"> 
+                                                    <button type="submit"><i class="icon-search"></i></button>
                                             </form>
                                                 <style>
                                .blog-table-container {

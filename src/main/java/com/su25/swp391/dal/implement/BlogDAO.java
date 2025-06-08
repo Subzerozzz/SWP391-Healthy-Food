@@ -274,4 +274,5 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return listBlog;
     }
+ 
 }
