@@ -8,6 +8,10 @@
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--IzizToast-->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
         <!--=== Link of CSS Files ===--> 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
@@ -39,7 +43,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-        <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
+        <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
             <!-- End Navbar Area -->
 
             <!-- Inner Banner Area -->
@@ -274,6 +278,27 @@
         <script src="${pageContext.request.contextPath}/js/contact-form-script.js"></script>
         <script src="${pageContext.request.contextPath}/js/mixitup.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
+        
+        <!--Thông báo lỗi đăng nhập--> 
+        
+        <c:if test="${toastType == 'error'}">
+           <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: '${sessionScope.toastMessage}',
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#E53E31"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("toastType");
+                session.removeAttribute("toastMessage");
+            %>
+        </c:if>
     </body>
 
     <!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->

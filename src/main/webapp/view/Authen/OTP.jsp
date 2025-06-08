@@ -5,6 +5,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+         <!--IzizToast-->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+       
         <title>Xác thực OTP</title>
         <style>
             * {
@@ -152,15 +157,15 @@
                     <input type="text" class="otp-input" name="otp6" maxlength="1">
                 </div>
 
-                <input type="hidden" name="email" value="${email}">
-                <input type="hidden" name="action" value="${action}">
+<!--                <input type="hidden" name="email" value="${email}">
+                <input type="hidden" name="action" value="${action}">-->
 
                 <button type="submit" class="btn">Xác nhận</button>
             </form>
 
-            <div class="resend">
+<!--            <div class="resend">
                 Không nhận được mã? <a href="${pageContext.request.contextPath}/authen/resend-otp?email=${email}&action=${POST}">Gửi lại</a>
-            </div>
+            </div>-->
         </div>
 
         <script>
@@ -200,5 +205,26 @@
                 });
             });
         </script>
+        
+        <!--Thông báo lỗi đăng nhập--> 
+        
+        <c:if test="${toastType == 'error'}">
+           <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: '${sessionScope.toastMessage}',
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#E53E31"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("toastType");
+                session.removeAttribute("toastMessage");
+            %>
+        </c:if>
     </body>
 </html>

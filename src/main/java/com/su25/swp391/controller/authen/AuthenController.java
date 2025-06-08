@@ -303,12 +303,8 @@ public class AuthenController extends HttpServlet {
             if ("register".equals(otpType)) {
                 accountFoundByEmail.setPassword(MD5PasswordEncoderUtils.encodeMD5(accountFoundByEmail.getPassword()));
                 accountDAO.insert(accountFoundByEmail);
-                session.setAttribute("toastMessage", "Register success!");
-                session.setAttribute("toastType", "success");
                 url = HOME_PAGE;
             } else if ("forgot".equals(otpType)) {
-                session.setAttribute("toastMessage", "OTP verified, please set new password!");
-                session.setAttribute("toastType", "success");
                 url = NEWPASS_PAGE;
             }
         } else {
@@ -420,8 +416,6 @@ public class AuthenController extends HttpServlet {
 
         if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
-            session.setAttribute("toastMessage", "Change Password success!");
-            session.setAttribute("toastType", "success");
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
             url = HOME_PAGE;
         } else {
@@ -482,8 +476,6 @@ public class AuthenController extends HttpServlet {
 
         if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
-            session.setAttribute("toastMessage", "Change Password success!");
-            session.setAttribute("toastType", "success");
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
             url = HOME_PAGE;
         } else {
