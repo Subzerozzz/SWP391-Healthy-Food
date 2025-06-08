@@ -112,13 +112,14 @@
                                                 </div>
                                                 <div class="text-tiny">entries</div>
                                             </div>
-                                            <form class="search-box"  action="${pageContext.request.contextPath}/manage-blog" method="get">
-             
-                                                <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                <input type="hidden" name="action" value="search"> 
-                                                    <button type="submit"><i class="icon-search"></i></button>
-                                            </form>
-                                                <style>
+                                            <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
+                                                     <div class="search-container">
+                                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                            <input type="hidden" name="action" value="search">
+                                                             <button type="submit"><i class="icon-search"></i></button>
+                                                     </div>
+                                           </form>
+                           <style>
                                .blog-table-container {
                                    font-family: 'Segoe UI', sans-serif;
                                    width: 100%;
@@ -212,7 +213,40 @@
                                .icon-trash-2 {
                                    color: #dc3545; /* Đỏ */
                                }
+                               .search-container {
+                                   display: flex;
+                                   align-items: center;
+                                   border: 1px solid #e2e8f0; /* viền nhạt */
+                                   border-radius: 12px; /* bo góc */
+                                   padding: 8px 12px;
+                                   background-color: white;
+                                   max-width: 600px;
+                                   width: 100%;
+                               }
 
+                               .search-container input[type="text"] {
+                                   border: none;
+                                   outline: none;
+                                   flex: 1;
+                                   font-size: 16px;
+                                   color: #333;
+                               }
+
+                               .search-container input[type="text"]::placeholder {
+                                   color: #a0aec0; /* xám nhạt */
+                               }
+
+                               .search-container button {
+                                   background: none;
+                                   border: none;
+                                   cursor: pointer;
+                                   padding: 0;
+                               }
+
+                               .search-container i.icon-search {
+                                   font-size: 18px;
+                                   color: #333;
+                               }
                            </style>    
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>

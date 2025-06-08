@@ -315,7 +315,6 @@ public class ManageBlogController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/manage-blog");
 
     }
-
     private Map<String, String> validateBlogData(String title, String context, Integer id) {
         Map<String, String> errors = new HashMap<>();
         BlogDAO blogDAO = new BlogDAO();
@@ -346,6 +345,7 @@ public class ManageBlogController extends HttpServlet {
     private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchKeyword = request.getParameter("search");
+        System.out.println(searchKeyword);
 
         // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
         if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
