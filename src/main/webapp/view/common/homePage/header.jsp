@@ -255,8 +255,7 @@
                             <c:choose>
                                 <c:when test="${sessionScope.account == null}">
                                     <div style="display: flex; align-items: center; gap: 10px;">
-                                        <a href="${pageContext.request.contextPath}/login" style="color: black; text-decoration: none;">Login /</a>
-                                        <a href="${pageContext.request.contextPath}/register" style="color: black; text-decoration: none;">Register</a>
+                                        <a href="${pageContext.request.contextPath}/login" style="color: black; text-decoration: none;">Login</a>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
