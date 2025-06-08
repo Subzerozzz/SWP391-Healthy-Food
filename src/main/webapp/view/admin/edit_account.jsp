@@ -43,15 +43,15 @@
             box-shadow: 0 0 0 2px rgba(30, 128, 255, 0.2);
             background-color: #fefefe;
         }
-  .readonly-input[readonly] {
-    background-color: #e9ecef;     /* Bootstrap-like xám */
-    color: #495057;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 16px;
-    width: 100%;
-}
+        .readonly-input[readonly] {
+            background-color: #e9ecef;     /* Bootstrap-like xám */
+            color: #495057;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 16px;
+            width: 100%;
+        }
     </style>
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
@@ -173,7 +173,11 @@
                                                                                                     <!-- Mobile -->
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">Mobile</div>
-                                                                                                        <input class="form-control" type="text" name="mobile" value="${account.mobile}">
+<!--                                                                                                        <input class="form-control" type="text" name="mobile" value="${account.mobile}">-->
+                                                                                                        <input class="form-control" type="text" name="mobile" value="${formData.mobile != null ? formData.mobile : account.mobile}" />
+                                                                                                        <c:if test="${not empty errors.mobile}">
+                                                                                                            <div class="text-danger">${errors.mobile}</div>
+                                                                                                        </c:if>
                                                                                                     </fieldset>
 
                                                                                                     <!-- Gender -->
@@ -191,16 +195,16 @@
                                                                                                         <div class="body-title mb-10">Role</div>
                                                                                                         <input type="text" class="form-control" name="role" value="${account.role == 'admin' ? 'Admin' : 'User'}" readonly>
                                                                                                     </fieldset>
-                                                                                                   
 
-                                                                                                        <!-- Status -->
-                                                                                                        <fieldset class="name mb-24">
-                                                                                                            <div class="body-title mb-10">Status</div>
-                                                                                                            <select name="status" class="form-control">
-                                                                                                                <option value="true" ${account.status ? 'selected' : ''}>Active</option>
-                                                                                                                <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
-                                                                                                            </select>
-                                                                                                        </fieldset>
+
+                                                                                                    <!-- Status -->
+                                                                                                    <fieldset class="name mb-24">
+                                                                                                        <div class="body-title mb-10">Status</div>
+                                                                                                        <select name="status" class="form-control">
+                                                                                                            <option value="true" ${account.status ? 'selected' : ''}>Active</option>
+                                                                                                            <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
+                                                                                                        </select>
+                                                                                                    </fieldset>
 
 
                                                                                                 </div>
@@ -219,11 +223,7 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
-                                                                                <div class="bottom-page">
-                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                    <i class="icon-heart"></i>
-                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                </div>
+                                                                                ư
                                                                                 <!-- /bottom-page -->
                                                                             </div>
                                                                             <!-- /main-content -->

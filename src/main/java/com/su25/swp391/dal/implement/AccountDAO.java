@@ -100,19 +100,17 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public boolean update(Account t) {
         List<Account> updateAccount = new ArrayList<>();
-        String sql = "UPDATE Swp301_pr.account SET  full_name = ?,user_name = ?, email = ?,role=?, status = ?,mobile=?,gender=?,address=? WHERE id = ?";
+        String sql = "UPDATE Swp301_pr.account SET  full_name = ?, status = ?,mobile=?,gender=?,address=? WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getFull_name());
-            statement.setString(2, t.getUser_name());
-            statement.setString(3, t.getEmail());
-            statement.setString(4, t.getRole());
-            statement.setBoolean(5, t.getStatus());
-            statement.setString(6, t.getMobile());
-            statement.setString(7, t.getGender());
-            statement.setString(8, t.getAddress());
-            statement.setInt(9, t.getId());
+           
+            statement.setBoolean(2, t.getStatus());
+            statement.setString(3, t.getMobile());
+            statement.setString(4, t.getGender());
+            statement.setString(5, t.getAddress());
+            statement.setInt(6, t.getId());
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
