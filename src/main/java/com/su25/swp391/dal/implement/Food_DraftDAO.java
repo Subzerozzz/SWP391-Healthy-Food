@@ -264,6 +264,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
                 .food_id(resultSet.getInt("food_id"))
                 .type(resultSet.getString("type"))
                 .nutri_id(resultSet.getInt("nutri_id"))
+                .calo(resultSet.getDouble("calo"))
                 .build();
 
         return food;
