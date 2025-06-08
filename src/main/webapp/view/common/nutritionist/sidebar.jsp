@@ -85,7 +85,7 @@
                                         </ul>
                                     </li>
                                     <li class="menu-item has-children">
-                                        <a href=""${pageContext.request.contextPath}/manage-blog?action=list&id=${blog.id}" class="menu-item-button">
+                                        <a href="${pageContext.request.contextPath}/manage-blog" class="menu-item-button">
                                             <div class="icon"><i class="icon-layers"></i></div>
                                             <div class="text">Blog</div>
                                         </a>
