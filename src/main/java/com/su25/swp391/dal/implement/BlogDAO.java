@@ -203,10 +203,10 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
         return false;
     }
-    
+
     // dem so luong blog trong database
-    public int getTotalBlog(){
-        String sql= "SELECT COUNT(*) FROM blogs";
+    public int getTotalBlog() {
+        String sql = "SELECT COUNT(*) FROM blogs";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -226,7 +226,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 //        int count =blogDao.getTotalBlog();
 //        System.out.println(count);
 //    }
-    
+
     public List<Blog> pagingBlog(int index) {
         List<Blog> list = new ArrayList<>();
         String sql = "SELECT * FROM blogs\n"
@@ -247,17 +247,19 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return list;
     }
-    public static void main(String[] args) {
-        BlogDAO blog = new BlogDAO();
-        List<Blog> list = blog.pagingBlog(1);
-        for (Blog blog1 : list) {
-             System.out.println(blog1);
-        }
-    }
+//    public static void main(String[] args) {
+//        BlogDAO blog = new BlogDAO();
+//        List<Blog> list = blog.pagingBlog(1);
+//        for (Blog blog1 : list) {
+//             System.out.println(blog1);
+//        }
+//    }
+
     public List<Blog> getBlogByName(String blogName) {
         List<Blog> listBlog = null;
         String sql = "SELECT * FROM blogs WHERE title LIKE ?";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, "%" + blogName + "%");
             resultSet = statement.executeQuery();
@@ -266,7 +268,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
                 listBlog.add(getFromResultSet(resultSet));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return listBlog;
     }

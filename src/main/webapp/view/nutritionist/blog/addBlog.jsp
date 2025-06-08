@@ -191,10 +191,7 @@
               }
             });
           });
-         </script>
-
+     </script>
  </body>
-
-
  <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
  </html>
