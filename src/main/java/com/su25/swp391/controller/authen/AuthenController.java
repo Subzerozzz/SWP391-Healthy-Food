@@ -22,9 +22,9 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/home" , "/myaccount" ,
-    "/login" , "/register" , "/forgetpassword" ,
-    "/OTP" , "/newpassword", "/logout"})
+@WebServlet(name = "AuthenController", urlPatterns = {"/home", "/myaccount",
+    "/login", "/register", "/forgetpassword",
+    "/OTP", "/newpassword", "/logout"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -235,6 +235,15 @@ public class AuthenController extends HttpServlet {
         // get về các thong tin người dufg nhập
         String usernameOrEmail = request.getParameter("username");
         String password = request.getParameter("password");
+
+        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()
+                || password == null || password.trim().isEmpty()) {
+            session.setAttribute("toastMessage", "All fields are required");
+            session.setAttribute("toastType", "error");
+            url = LOGIN_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
         // kiểm tra thông tin có tồn tại trong DB ko
         Account account = Account.builder()
                 .user_name(usernameOrEmail)
@@ -317,6 +326,15 @@ public class AuthenController extends HttpServlet {
         HttpSession session = request.getSession();
 
         String email = request.getParameter("email");
+
+        if (email == null || email.trim().isEmpty()) {
+            session.setAttribute("toastMessage", "All fields are required");
+            session.setAttribute("toastType", "error");
+            url = FORGETPASSWORD_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
         Account account = Account.builder()
                 .email(email)
                 .build();
@@ -370,87 +388,105 @@ public class AuthenController extends HttpServlet {
         String new_password = request.getParameter("new_password");
         String confirm_password = request.getParameter("confirm_password");
 
+        if (new_password == null || new_password.trim().isEmpty()
+                || confirm_password == null || confirm_password.trim().isEmpty()) {
+            session.setAttribute("toastMessage", "All fields are required");
+            session.setAttribute("toastType", "error");
+            url = NEWPASS_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
         if (!validPassword(new_password)) {
             session.setAttribute("toastMessage", "password incorect!");
             session.setAttribute("toastType", "error");
             url = NEWPASS_PAGE;
-             request.getRequestDispatcher(url).forward(request, response);
+            request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         if (!new_password.equals(confirm_password)) {
             session.setAttribute("toastMessage", "Confirm password incorect!");
             session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
-             request.getRequestDispatcher(url).forward(request, response);
+            request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         Account account = Account.builder()
                 .email((String) session.getAttribute("email"))
                 .password(MD5PasswordEncoderUtils.encodeMD5(new_password))
                 .build();
-        
+
         Account accFoundByUsernamePass = accountDAO.findByEmail(account);
-        
-        if(accFoundByUsernamePass != null){
+
+        if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
             session.setAttribute("toastMessage", "Change Password success!");
             session.setAttribute("toastType", "success");
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
             url = HOME_PAGE;
-        }else{
+        } else {
             session.setAttribute("toastMessage", "Email incorect!");
             session.setAttribute("toastType", "error");
             url = LOGIN_PAGE;
         }
         request.getRequestDispatcher(url).forward(request, response);
-        
 
     }
-    
+
     private void myaccountPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
-        
+
         String current_password = request.getParameter("current_password");
         String new_password = request.getParameter("new_password");
         String confirm_password = request.getParameter("confirm_password");
         String old_password = (String) session.getAttribute("password");
-        
-        if(!current_password.equals(old_password)){
+
+        if (current_password == null || current_password.trim().isEmpty()
+                || new_password == null || new_password.trim().isEmpty()
+                || confirm_password == null || confirm_password.trim().isEmpty()) {
+            session.setAttribute("toastMessage", "All fields are required");
+            session.setAttribute("toastType", "error");
+            url = NEWPASS_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
+        if (!current_password.equals(old_password)) {
             session.setAttribute("toastMessage", "Current Password incorect!");
             session.setAttribute("toastType", "error");
             url = MYACCOUNT_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
-        if(!validPassword(new_password)){
+        if (!validPassword(new_password)) {
             session.setAttribute("toastMessage", "New Password incorect!");
             session.setAttribute("toastType", "error");
             url = MYACCOUNT_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
-        if(!new_password.equals(confirm_password)){
+        if (!new_password.equals(confirm_password)) {
             session.setAttribute("toastMessage", "Confirm Password incorect!");
             session.setAttribute("toastType", "error");
             url = MYACCOUNT_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
-        
+
         Account account = Account.builder()
                 .email((String) session.getAttribute("email"))
                 .password(MD5PasswordEncoderUtils.encodeMD5(new_password))
                 .build();
         Account accFoundByUsernamePass = accountDAO.findByEmail(account);
-     
-        if(accFoundByUsernamePass != null){
+
+        if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
             session.setAttribute("toastMessage", "Change Password success!");
             session.setAttribute("toastType", "success");
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
             url = HOME_PAGE;
-        }else{
+        } else {
             session.setAttribute("toastMessage", "Email incorect!");
             session.setAttribute("toastType", "error");
             url = MYACCOUNT_PAGE;
@@ -458,10 +494,9 @@ public class AuthenController extends HttpServlet {
         request.getRequestDispatcher(url).forward(request, response);
     }
 
-
     /**
      * Kiểm tra định dạng email.
-   
+     *
      * @param email Email cần kiểm tra.
      * @return true nếu email hợp lệ, false nếu không.
      */
@@ -494,7 +529,5 @@ public class AuthenController extends HttpServlet {
         }
         return false;
     }
-
-    
 
 }

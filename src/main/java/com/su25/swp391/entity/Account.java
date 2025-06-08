@@ -22,6 +22,7 @@ import java.sql.Date;
 @Setter
 
 public class Account {
+
     private Integer id;
     private String email;
     private String mobie;

@@ -251,7 +251,7 @@
                             </li>
                         </ul>
 
-                                                    <div class="nav-bar-side-2" style="display: flex;align-items: center">
+                        <div class="nav-bar-side-2" style="display: flex;align-items: center">
                             <c:choose>
                                 <c:when test="${sessionScope.account == null}">
                                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -274,7 +274,7 @@
                                     </div>
                                 </c:otherwise>
                             </c:choose>
-                                                        <div class="language-nav-list" style="padding-top: 10px">
+                            <div class="language-nav-list" style="padding-top: 10px">
                                 <select class="language-list-item">
                                     <option>English</option>
                                     <option>العربيّة</option>

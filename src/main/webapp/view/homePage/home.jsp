@@ -51,33 +51,34 @@
             <!-- Menu For Desktop Device -->
             <jsp:include page="../common/homePage/header.jsp"></jsp:include>
 
-            <div class="side-nav-responsive">
-                <div class="container">
-                    <div class="dot-menu">
-                        <div class="circle-inner">
-                            <div class="circle circle-one"></div>
-                            <div class="circle circle-two"></div>
-                            <div class="circle circle-three"></div>
+                <div class="side-nav-responsive">
+                    <div class="container">
+                        <div class="dot-menu">
+                            <div class="circle-inner">
+                                <div class="circle circle-one"></div>
+                                <div class="circle circle-two"></div>
+                                <div class="circle circle-three"></div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="container-3">
-                        <div class="side-nav-inner">
-                            <div class="side-nav justify-content-center align-items-center">
-                                <div class="side-nav-item">
-                                    <div class="language-on-list">
-                                        <select class="language-list-item">
-                                            <option>English</option>
-                                            <option>العربيّة</option>
-                                            <option>Deutsch</option>
-                                            <option>Português</option>
-                                            <option>简体中文</option>
-                                        </select>	
-                                    </div>
+                        <div class="container-3">
+                            <div class="side-nav-inner">
+                                <div class="side-nav justify-content-center align-items-center">
+                                    <div class="side-nav-item">
+                                        <div class="language-on-list">
+                                            <select class="language-list-item">
+                                                <option>English</option>
+                                                <option>العربيّة</option>
+                                                <option>Deutsch</option>
+                                                <option>Português</option>
+                                                <option>简体中文</option>
+                                            </select>	
+                                        </div>
 
-                                    <div class="side-nav-cart">
-                                        <a href="#"><i class='bx bx-cart'></i></a>
-                                        <span>1</span>
+                                        <div class="side-nav-cart">
+                                            <a href="#"><i class='bx bx-cart'></i></a>
+                                            <span>1</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -85,25 +86,24 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- End Navbar Area -->
+            <!-- End Navbar Area -->
 
-        <!-- Banner Area Two -->
-        <div class="banner-area-two">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-lg-5">
-                        <div class="banner-content-2">
-                            <span><b>Get 35% Discount,</b> Every Product </span>
-                            <h2>Quality Is the First Not Quantity</h2>
-                            <p>Lorem ipsum dolor sit amet, consetetur sadipscins elitr, seddiams nonumy eirmod.</p>
-                            <a href="#" class="default-btn btn-bg-three border-radius-5">Shop Now</a>
+            <!-- Banner Area Two -->
+            <div class="banner-area-two">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-lg-5">
+                            <div class="banner-content-2">
+                                <span><b>Get 35% Discount,</b> Every Product </span>
+                                <h2>Quality Is the First Not Quantity</h2>
+                                <p>Lorem ipsum dolor sit amet, consetetur sadipscins elitr, seddiams nonumy eirmod.</p>
+                                <a href="#" class="default-btn btn-bg-three border-radius-5">Shop Now</a>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-7">
-                        <div class="banner-img-2">
-                            <img src="${pageContext.request.contextPath}/images/home-three.png" alt="Banner Images">
+                        <div class="col-lg-7">
+                            <div class="banner-img-2">
+                                <img src="${pageContext.request.contextPath}/images/home-three.png" alt="Banner Images">
                         </div>
                     </div>
                 </div>
@@ -730,10 +730,10 @@
 
         <!-- Footer Area -->
         <jsp:include page="../common/homePage/footer.jsp"></jsp:include>
-        <!-- Footer Area End -->
+            <!-- Footer Area End -->
 
-        <!--=== Link of JS Files ===-->
-        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+            <!--=== Link of JS Files ===-->
+            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/jquery.nice-select.min.js"></script>

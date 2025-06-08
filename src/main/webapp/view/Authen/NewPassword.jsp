@@ -2,9 +2,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="zxx">
-    
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
-<head>
+
+    <!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
+    <head>
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,18 +39,18 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-       <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
-        <!-- End Navbar Area -->
+        <jsp:include page = "/view/common/homePage/Sidebar.jsp"></jsp:include>
+            <!-- End Navbar Area -->
 
-        <!-- Inner Banner Area -->
-        <div class="inner-banner-area">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-5 col-md-4">
-                        <div class="inner-content">
-                            <h2>Update Password</h2>
-                            <ul>
-                                <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
+            <!-- Inner Banner Area -->
+            <div class="inner-banner-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-5 col-md-4">
+                            <div class="inner-content">
+                                <h2>Update Password</h2>
+                                <ul>
+                                    <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
                                 <li>Update Password</li>
                             </ul>
                         </div>
@@ -276,5 +276,5 @@
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
     </body>
 
-<!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
+    <!-- Mirrored from templates.hibootstrap.com/hilo/default/log-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:24 GMT -->
 </html>
