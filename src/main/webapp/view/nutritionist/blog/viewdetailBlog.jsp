@@ -232,8 +232,7 @@
                                                 ${blog.content}
                                             </div>
                                             </fieldset>
-                                    </div>
-                                                  
+                                    </div>              
                                     <div class="wg-box">
                                         
                                         <<div class="image-frame">

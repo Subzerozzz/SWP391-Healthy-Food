@@ -63,6 +63,9 @@ public class ManageBlogController extends HttpServlet {
             case "search":
                 searchByNameDoGet(request, response);
                 break;
+            case "filter":
+                handleFilter(request, response);
+                break;
             default:
                 listBlogDoGet(request, response);
                 break;
@@ -308,7 +311,7 @@ public class ManageBlogController extends HttpServlet {
             request.getSession().setAttribute("toatMessage", "Blog not found");
             request.getSession().setAttribute("toastType", "error");
         }
-        
+
         response.sendRedirect(request.getContextPath() + "/manage-blog");
 
     }
@@ -339,8 +342,9 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
+
     private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         String searchKeyword = request.getParameter("search");
 
         // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
@@ -354,4 +358,64 @@ public class ManageBlogController extends HttpServlet {
         request.setAttribute("search", searchKeyword); // Hiển thị lại giá trị đã nhập trong ô input
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
+
+    private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String title = request.getParameter("title");
+        String statusParam = request.getParameter("status");
+        Boolean status = (statusParam != null && !statusParam.isEmpty()) ? Boolean.parseBoolean(statusParam) : null;
+
+        // Lấy tham số phân trang
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+
+        int currentPage = 1;
+        int pageSize = 10;
+
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
+        }
+
+        // Lấy danh sách đã lọc với phân trang
+        List<Blog> filteredBlog = blogDAO.findBlogsWithFilter(title, title, pageSize, pageSize);
+
+        // Tính toán thông tin phân trang cho bộ lọc
+        int totalBlogs = blogDAO.getTotalBlog();
+        int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
+
+        // Thiết lập các thuộc tính cho JSP
+        request.setAttribute("listBlogDoGet", filteredBlog);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalBlogs", totalBlogs);
+        request.setAttribute("title", title);
+        request.setAttribute("status", statusParam);
+
+        // Tính toán phạm vi hiển thị
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalBlogs);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+
+        request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
+    }
 }
+
+
