@@ -57,7 +57,7 @@ public class EmailUtils {
 
     public static void main(String[] args) {
         try {
-            sendMail("kieuducmanh2004vinhphuc@gmail.com","test gửi email","Hello");
+            sendMail("kieuducmanh2004vinhphuc@gmail.com", "test gửi email", "Hello");
         } catch (MessagingException ex) {
             Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
         }

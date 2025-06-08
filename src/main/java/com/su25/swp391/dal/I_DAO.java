@@ -14,7 +14,7 @@ public interface I_DAO<T> {
     public List<T> findAll();
 
     public Map<Integer, T> findAllMap();
-    
+
     public boolean updatePasswordByEmail(T t);
 
     public boolean update(T t);
@@ -24,6 +24,6 @@ public interface I_DAO<T> {
     public int insert(T t);
 
     public T getFromResultSet(ResultSet resultSet) throws SQLException;
-    
+
     public T findById(Integer id);
 }

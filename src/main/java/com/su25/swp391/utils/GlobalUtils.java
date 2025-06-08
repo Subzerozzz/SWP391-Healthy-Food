@@ -4,7 +4,9 @@
  */
 package com.su25.swp391.utils;
 
-
+import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.controller.authen.UserGoogleDto;
+import com.su25.swp391.entity.Account;
 import java.util.Random;
 
 /**
@@ -23,8 +25,14 @@ public class GlobalUtils {
 
         return Integer.parseInt(otp.toString());
     }
-    
-  // public String validate...
-  // Check blank
-    // Valid FE
+
+    public static Account convertToAccount(UserGoogleDto userGoogleDto) {
+        Account account = new Account();
+        account.setUser_name(userGoogleDto.getEmail());
+        account.setEmail(userGoogleDto.getEmail());
+        account.setPassword(""); // Set default or encrypted password
+        account.setRole(GlobalConfig.ROLE_USER); // Default role ID, adjust as needed
+//        account.setIsActive(true);
+        return account;
+    }
 }
