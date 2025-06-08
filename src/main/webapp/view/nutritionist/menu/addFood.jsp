@@ -155,6 +155,13 @@
                                                                                                         </div>
                                                                                                       </fieldset>
                                                                                                     </div>-->
+                            <!--Calo-->
+                            <fieldset class="calo">
+                              <div class="body-title mb-10">Calo <span class="tf-color-1">*</span></div>
+                              <input class="mb-10" type="text" placeholder="Enter calo" name="calo" tabindex="0"
+                                value=""
+                                aria-required="true" required="">
+                            </fieldset>
                             <!--Request-->
                             <div class="cols gap10">
                               <button class="tf-button w-full" type="submit">Make request</button>

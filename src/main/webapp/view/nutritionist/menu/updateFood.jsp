@@ -22,9 +22,9 @@
           <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
           <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
 
-          <!-- IziToast  -->
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+         <!--IzizToast-->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
 
           <!-- Font -->
@@ -131,7 +131,7 @@
                               <div class="body-title mb-10">Upload images</div>
                               <div class="upload-image mb-16">
                                 <div class="item">
-                                  <img src="" alt="">
+                                  <img src="${foodUpdate.getImage_url()}" alt="">
                                 </div>
                                 <div class="item up-load">
                                   <label class="uploadfile" for="myFile">
@@ -142,6 +142,7 @@
                                         to
                                         browse</span></span>
                                     <input type="file" id="myFile" name="filename">
+                                    <input type="hidden" name="oldImage" value="${foodUpdate.getImage_url()}">
                                   </label>
                                 </div>
                               </div>
@@ -156,6 +157,13 @@
                             </div>
                           </fieldset>
                         </div>-->
+                            <!--Calo-->
+                            <fieldset class="calo">
+                              <div class="body-title mb-10">Calo <span class="tf-color-1">*</span></div>
+                              <input class="mb-10" type="text" placeholder="Enter calo" name="calo" tabindex="0"
+                                value="${foodUpdate.getCalo()}"
+                                aria-required="true" required="">
+                            </fieldset>
                             <!--Request-->
                             <div class="cols gap10">
                               <button class="tf-button w-full" type="submit">Make request</button>

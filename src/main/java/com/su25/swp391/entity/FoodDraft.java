@@ -32,5 +32,6 @@ public class FoodDraft {
   private Integer food_id;
   private String type;
   private Integer nutri_id;
+  private Double calo;
 
 }

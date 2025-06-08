@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <%@page contentType="text/html" pageEncoding="UTF-8" %>
-
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <!DOCTYPE html>
     <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
     <!--[if (gte IE 9)|!(IE)]><!-->
@@ -29,7 +29,9 @@
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-
+       <!--IzizToast-->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
       <!-- Font -->
       <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
 
@@ -38,9 +40,9 @@
 
       <!-- Favicon and Touch Icons  -->
       <link rel="shortcut icon"
-        href="${pageContext.request.contextPath}/${pageContext.request.contextPath}/images/favicon_1.png">
+        href="${pageContext.request.contextPath}/images/favicon_1.png">
       <link rel="apple-touch-icon-precomposed"
-        href="${pageContext.request.contextPath}/${pageContext.request.contextPath}/images/favicon_1.png">
+        href="${pageContext.request.contextPath}/images/favicon_1.png">
 
     </head>
 
@@ -131,6 +133,10 @@
                             </button>
                             <div class="filter-select-wrap" id="filterSelectWrap">
                               <select class="filter-select" onchange="filterByCategory(this)">
+                                  <option value="">-- Chọn danh mục --</option>
+                                  <option value="all" class="selected">
+                                      Tất cả
+                                  </option>
                                 <c:forEach items="${listCategory}" var="item">
                                   <option value="${item.getId()}" ${item.getId()==categoryID? 'selected' : '' }>
                                     ${item.getName()}
@@ -152,19 +158,22 @@
                               <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
                           </form>
-
+                        
+                                
+                        <!--Add new food--> 
                         </div>
-                        <a class="tf-button style-1 w208"
-                          href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
-                          new</a>
-                      </div>
+                            <a class="tf-button style-1 w208"
+                              href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
+                              new
+                            </a>
+                        </div>
                       <div class="wg-table table-product-list">
                         <ul class="table-title flex gap20 mb-14">
                           <li>
-                            <div class="body-title">Food</div>
+                            <div class="body-title">Food Name</div>
                           </li>
                           <li>
-                            <div class="body-title">Product ID</div>
+                            <div class="body-title">Calo</div>
                           </li>
                           <li>
                             <div class="body-title">Category</div>
@@ -189,13 +198,13 @@
                           <c:forEach items="${listFood}" var="item">
                             <li class="product-item gap14">
                               <div class="image no-bg">
-                                <img src=${item.getImage_url()} alt="">
+                                  <img src="${item.getImage_url()}" alt="">
                               </div>
                               <div class="flex items-center justify-between gap20 flex-grow">
                                 <div class="name">
                                   <a href="product-list.html" class="body-title-2">${item.getName()}</a>
                                 </div>
-                                <div class="body-text">#0000${item.getId()}</div>
+                                <div class="body-text">${item.getCalo()}</div>
                                 <div class="body-text">
                                   <c:forEach items="${listCategory}" var="itemCategory">
                                     <c:if test="${itemCategory.getId() == item.getCategory_id()}">
@@ -203,7 +212,9 @@
                                     </c:if>
                                   </c:forEach>
                                 </div>
-                                <div class="body-text">${item.getPrice()}</div>
+                                <div class="body-text">
+                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                </div>
                                 <c:choose>
                                     <c:when test="${item.getStatus() == 'inactive'}">
                                         <div class="body-text food-inactive" >${item.getStatus()}</div>
@@ -213,8 +224,12 @@
                                     </c:otherwise>
                                 </c:choose>
                                 
-                                <div class="body-text">${item.getCreated_at()}</div>
-                                <div class="body-text">${item.getUpdated_at()}</div>
+                                <div class="body-text">
+                                    <fmt:formatDate value="${item.getCreated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                </div>
+                                <div class="body-text">
+                                    <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                </div>
                                 <div class="list-icon-function">
                                   <div class="item eye">
                                     <a
@@ -266,14 +281,14 @@
                                         <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${totalPage}">${totalPage}</a>
                                     </li>
                                 </c:when>
+                                
                                 <c:otherwise>
-                                    <c:forEach begin="${totalPage-2}" end="${totalPage}" var="i">
+                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
                                             <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
                                         </li>
                                     </c:forEach>
                                 </c:otherwise>
-                                
                             </c:choose>
                             
                           <li>
@@ -288,13 +303,7 @@
                 </div>
                 <!-- /main-content-wrap -->
                 <!-- bottom-page -->
-                <div class="bottom-page">
-                  <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                  <i class="icon-heart"></i>
-                  <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a>
-                    All
-                    rights reserved.</div>
-                </div>
+                <jsp:include page="../../common/nutritionist/footer.jsp"></jsp:include>
                 <!-- /bottom-page -->
               </div>
               <!-- /main-content -->
@@ -488,7 +497,7 @@
           if (formDelete) {
             //Xóa form
             document.body.removeChild(formDelete);
-            //Ẩn form
+            //Ẩn modal
             hideFormModal();
           }
           else {
@@ -503,13 +512,15 @@
             formDelete.submit();
             //Xóa form
             document.body.removeChild(formDelete);
-            //Ẩn form
+            //Ẩn modal
             hideFormModal();
+            
           }
           else {
             alert("Form not found");
           }
         }
+        
         // Filter 
         // Hiển thị select khi bấm nút Filter
         const filterDropdown = document.querySelector('.filter-dropdown');
@@ -525,11 +536,71 @@
         });
         const filterByCategory = (e) => {
           const id = e.value;
-          window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
+           if (id === "all") {
+            window.location.href = '${pageContext.request.contextPath}/manager-dashboard';
+          }
+          else window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
         }
         // End Filter 
       </script>
-
+        
+        <!--Thông báo xóa--> 
+        <c:if test="${isDelete == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Yêu cầu xóa món ăn của bạn đã được gửi đi",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isDelete");
+            %>
+          </c:if>
+        
+        <!--Thông báo add-->
+        <c:if test="${isAdd == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Yêu cầu tạo món ăn của bạn đã được gửi đi",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isAdd");
+            %>
+          </c:if>
+            
+           <!--Thông báo update--> 
+           
+           <c:if test="${isUpdate == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Yêu cầu chỉnh sửa món ăn của bạn đã được gửi đi",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isUpdate");
+            %>
+          </c:if>
 
 
     </body>
