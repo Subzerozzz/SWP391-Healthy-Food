@@ -352,7 +352,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         } finally {
             closeResources();
         }
-        
         return 0;
     }
+    
 }
