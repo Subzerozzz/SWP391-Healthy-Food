@@ -341,7 +341,6 @@ public class ManageBlogController extends HttpServlet {
     }
     private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-
         String searchKeyword = request.getParameter("search");
 
         // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách

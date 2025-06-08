@@ -46,7 +46,6 @@
 </head>
 
 <body class="body">
-
     <!-- #wrapper -->
     <div id="wrapper">
         <!-- #page -->
@@ -112,12 +111,10 @@
                                                 <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
                                         </fieldset>
 
-
-                                        <fieldset class="Content">
-                                            <div class="body-title mb-10">Content <span class="tf-color-1">*</span></div>
-                                            <textarea class="mb-10" name="content" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
-                                            <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
-                                        </fieldset>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Content <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+                                        </div>
                                     </div>
                                     <div class="wg-box">
                                         <!--Image-->
@@ -172,9 +169,26 @@
      <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
      <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
      <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
      <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
      <script src="${pageContext.request.contextPath}/js/main.js"></script>
      <script>
+         $(document).ready(function() {
+            // Initialize Summernote
+            $('#content').summernote({
+                height: 300,
+                placeholder: 'Write your blog content here...',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        });
           document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('myFile');
             const imageContainer = document.querySelector('.item img');

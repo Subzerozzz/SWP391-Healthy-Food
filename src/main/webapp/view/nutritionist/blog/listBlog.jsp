@@ -112,11 +112,11 @@
                                                 </div>
                                                 <div class="text-tiny">entries</div>
                                             </div>
-                                            <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-blog">
-                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                <input type="hidden" name="action" value="search">
-                                                    <button type="submit"><i class="icon-search"></i></button>
-                                                    </form>  
+                                            <form 
+                                                class="search-box" method="get" action="${pageContext.request.contextPath}/manage-blog">
+                                                <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                <input type="hidden" name="action" value="search"> <button type="submit"><i class="icon-search"></i></button>
+                                            </form>  
                                         </div>
                                             
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
