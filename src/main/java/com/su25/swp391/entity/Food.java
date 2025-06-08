@@ -31,5 +31,5 @@ public class Food {
     private Timestamp created_at;
     private Timestamp updated_at;
     private Integer nutri_id;
-  
+    private Double calo;
 }

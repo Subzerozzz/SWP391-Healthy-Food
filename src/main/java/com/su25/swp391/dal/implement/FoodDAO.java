@@ -85,7 +85,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
     public boolean updateFoodbyFoodDraft(Food_Draft t) {
         String sql = "UPDATE Food SET name = ? , description = ? , price = ? , image_url = ? ,"
                 + " status = ? ,category_id = ? ,"
-                + "created_at = ? , updated_at = ? , nutri_id = ? Where id = ?";
+                + "created_at = ? , updated_at = ? , nutri_id = ? ,calo = ? Where id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -99,7 +99,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             statement.setTimestamp(8, t.getUpdated_at());
             statement.setInt(9, t.getNutri_id());
             statement.setInt(10, t.getFood_id());
-            
+            statement.setDouble(11, t.getCalo());
             return statement.executeUpdate()>0;
             
         } catch (Exception e) {
@@ -145,8 +145,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
      
     // INSERT FOOD_DRAFT INTO FOOD TABLE WHEN ACCEPT CREATE
     public int insertFoodfromFoodDraft(Food_Draft t) {
-      String sql = "INSERT into Food(name,description,price,image_url,status,category_id,created_at,updated_at,nutri_id)"
-              + " values(?,?,?,?,?,?,?,?,?) ";
+      String sql = "INSERT into Food(name,description,price,image_url,status,category_id,created_at,updated_at,nutri_id,calo)"
+              + " values(?,?,?,?,?,?,?,?,?,?) ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -159,6 +159,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
             statement.setTimestamp(7,t.getCreated_at());
             statement.setTimestamp(8,t.getUpdated_at());
             statement.setInt(9,t.getNutri_id());
+            statement.setDouble(10, t.getCalo());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
@@ -187,6 +188,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                 .created_at(resultSet.getTimestamp("created_at"))
                 .updated_at(resultSet.getTimestamp("updated_at"))
                 .nutri_id(resultSet.getInt("nutri_id"))
+                .calo(resultSet.getDouble("calo"))
                 .build();
                 
           return food;

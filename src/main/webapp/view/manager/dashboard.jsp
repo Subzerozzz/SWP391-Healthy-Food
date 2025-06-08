@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-
+   
 
     <!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:43:22 GMT -->
     <head>
@@ -38,6 +38,9 @@
                                                     <!-- Favicon and Touch Icons  -->
                                                     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
+    <!-- iziToast CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+
 
                                                             </head>
 
@@ -85,15 +88,14 @@
                                                                                                                     <i class="ti-arrow-down" style="color: white; font-size: 24px;"></i>
                                                                                                                 </c:forEach>
                                                                                                             </select>
-                                                                                                            <button type="submit" style="background-color: #b2b9c2" >Submit Option</button>
+                                                                                                           <button type="submit" style="background-color: #b2b9c2" >Submit Option</button>
 
                                                                                                     </form>  
                                                                                                 </div>
 
                                                                                                 <!--Message about Alert-->
-                                                                                                <div id="mess" ><input type="hidden" name="name" value="${mess}"></div> 
-
-
+                                                                                                <div id="mess" ><input type="hidden" name="name" value="1"></div> 
+                                                                                              
                                                                                             </div>
                                                                                             <!--start table-->
                                                                                             <div class="manage-request">
@@ -127,17 +129,17 @@
                                                                                                                                                 <input type="hidden" name="action" value="accept">
                                                                                                                                                     <input type="hidden" name="id" value="${foodD.id}">
                                                                                                                                                         <button type="submit"  style="background-color: #02b80b;color: white"
-                                                                                                                                                                onclick="return confirm('Are you want to Accept ${foodD.type} this food')" >
+                                                                                                                                                                onclick="handleAccept(event)" >
                                                                                                                                                             Accept
-                                                                                                                                                        </button>
+                                                                                                                                                         </button>
                                                                                                                                                         </form>
                                                                                                                                                         <form action="type-of-request" method="get">
                                                                                                                                                             <input type="hidden" name="select" value="${foodD.type}">
                                                                                                                                                                 <input type="hidden" name="action" value="reject">
                                                                                                                                                                     <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                                        <button type="submit"  style="background-color: #e60004;color: white"
-                                                                                                                                                                                onclick="return confirm('Are you want to Reject ${foodD.type} this food')"        >
-                                                                                                                                                                            Reject 
+                                                                                                                                                                         <button type="submit"  style="background-color: #e60004;color: white"
+                                                                                                                                                                                onclick="handleReject(event)"  >
+                                                                                                                                                                           Reject 
                                                                                                                                                                         </button>
                                                                                                                                                                         </form>     
                                                                                                                                                                         </div>  
@@ -151,6 +153,7 @@
 
                                                                                                                                                                     </div>
                                                                                                                                                                     <!--end table-->
+                                                                                                                                                                 
                                                                                                                                                                     </div>
                                                                                                                                                                  
                                                                                                                                                     <div class="flex items-center justify-between flex-wrap gap10">
@@ -194,6 +197,7 @@
                                                                                                                                                                         <!-- /layout-wrap -->
                                                                                                                                                                         </div>
                                                                                                                                                                         <!-- /#page -->
+                                                                                                                                                                 
                                                                                                                                                                         </div>
                                                                                                                                                                         <!-- /#wrapper -->
 
@@ -212,14 +216,67 @@
                                                                                                                                                                     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                                                                                                                                     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                                                                                                                     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
-                                                                                                                                                                    <!--Alert Information about AccpetFood-->
+<!-- iziToast JS -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
                                                                                                                                                                     <script>
-                                                                                                                                                                                                        const input = document.querySelector('#mess input[type="hidden"]');
-                                                                                                                                                                                                       if (input !== null && input.value.trim() !== "") { alert(input.value);}
- 
+                                                                                                                                                                                                      
+ function handleAccept(event) {
+    event.preventDefault(); // Ngăn form submit ngay
 
-                                                                                                                                                                                                        
+    Swal.fire({
+        title: 'Are you want to Accept?',
+        text: "This Item will be handle",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+       background:'#fff3cd'
+    }).then((result) => {
+        if (result.isConfirmed) {
+             // Lưu trạng thái
+            localStorage.setItem('showSuccessToast', 'true');
+            // Gửi form thủ công
+            event.target.form.submit();
+              
+        }
+    });
+}
+window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('showSuccessToast') === 'true') {
+        iziToast.success({
+            title: 'Successful',
+            message: 'Processing Successful!',
+            position: 'topRight'
+        });
+        localStorage.removeItem('showSuccessToast'); // Xóa để không hiện lại
+    }
+});
+function handleReject(event) {
+    event.preventDefault(); // Ngăn form submit ngay
+
+    Swal.fire({
+        title: 'Are you want to Reject?',
+        text: "This Item will be handle",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+       background:'#fff3cd'
+    }).then((result) => {
+        if (result.isConfirmed) {
+             // Lưu trạng thái
+            localStorage.setItem('showSuccessToast', 'true');
+            // Gửi form thủ công
+            event.target.form.submit();
+              
+        }
+    });
+}
+    
+              
                                                                                                                                                                     </script>
                                                                                                                                                                     </body>
 
