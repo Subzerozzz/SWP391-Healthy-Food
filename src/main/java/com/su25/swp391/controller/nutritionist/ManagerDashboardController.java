@@ -43,8 +43,6 @@ public class ManagerDashboardController extends HttpServlet {
         : totalOfRecord / RECORD_PER_PAGE + 1;
     // lấy ra số bản ghi theo từng page
     List<Food> listFood = foodDao.findRecordByPage(1);
-    // luu vao Session
-    HttpSession session = request.getSession();
     request.setAttribute("listFood", listFood);
     request.setAttribute("listCategory", listCategory);
     request.setAttribute("totalPage", totalPage);

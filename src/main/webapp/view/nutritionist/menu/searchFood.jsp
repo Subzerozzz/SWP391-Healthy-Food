@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <%@page contentType="text/html" pageEncoding="UTF-8" %>
+  <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
     <!DOCTYPE html>
     <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
@@ -131,6 +132,10 @@
                             </button>
                             <div class="filter-select-wrap" id="filterSelectWrap">
                               <select class="filter-select" onchange="filterByCategory(this)">
+                                  <option value="">-- Chọn danh mục --</option>
+                                  <option value="all" class="selected">
+                                      Tất cả
+                                    </option>
                                 <c:forEach items="${listCategory}" var="item">
                                   <option value="${item.getId()}" ${item.getId()==categoryID? 'selected' : '' }>
                                     ${item.getName()}
@@ -152,7 +157,7 @@
                               <button class="" type="submit"><i class="icon-search"></i></button>
                             </div>
                           </form>
-
+                          <!--add--> 
                         </div>
                         <a class="tf-button style-1 w208"
                           href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
@@ -161,10 +166,10 @@
                       <div class="wg-table table-product-list">
                         <ul class="table-title flex gap20 mb-14">
                           <li>
-                            <div class="body-title">Food</div>
+                            <div class="body-title">Food Name</div>
                           </li>
                           <li>
-                            <div class="body-title">Product ID</div>
+                            <div class="body-title">Calo</div>
                           </li>
                           <li>
                             <div class="body-title">Category</div>
@@ -203,7 +208,9 @@
                                     </c:if>
                                   </c:forEach>
                                 </div>
-                                <div class="body-text">${item.getPrice()}</div>
+                                <div class="body-text">
+                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                </div>
                                 <c:choose>
                                     <c:when test="${item.getStatus() == 'inactive'}">
                                         <div class="body-text food-inactive" >${item.getStatus()}</div>
@@ -212,8 +219,12 @@
                                         <div class="body-text food-active" >${item.getStatus()}</div>
                                     </c:otherwise>
                                 </c:choose>
-                                <div class="body-text">${item.getCreated_at()}</div>
-                                <div class="body-text">${item.getUpdated_at()}</div>
+                                <div class="body-text">
+                                    <fmt:formatDate value="${item.getCreated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                </div>
+                                <div class="body-text">
+                                    <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                </div>
                                 <div class="list-icon-function">
                                   <div class="item eye">
                                     <a
@@ -266,7 +277,7 @@
                                     </li>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach begin="${totalPage-2}" end="${totalPage}" var="i">
+                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
                                             <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${i}">${i}</a>
                                         </li>
@@ -286,13 +297,7 @@
                 </div>
                 <!-- /main-content-wrap -->
                 <!-- bottom-page -->
-                <div class="bottom-page">
-                  <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                  <i class="icon-heart"></i>
-                  <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a>
-                    All
-                    rights reserved.</div>
-                </div>
+                <jsp:include page="../../common/nutritionist/footer.jsp"></jsp:include>
                 <!-- /bottom-page -->
               </div>
               <!-- /main-content -->
@@ -522,7 +527,10 @@
         });
         const filterByCategory = (e) => {
           const id = e.value;
-          window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
+          if (id === "all") {
+            window.location.href = '${pageContext.request.contextPath}/manager-dashboard';
+          }
+          else window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
         }
         // End Filter 
       </script>
