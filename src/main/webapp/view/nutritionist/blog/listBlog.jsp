@@ -116,112 +116,117 @@
                                                 class="search-box" method="get" action="${pageContext.request.contextPath}/manage-blog">
                                                 <input type="text" name="search" placeholder="Search here..." value="${param.search}">
                                                 <input type="hidden" name="action" value="search"> <button type="submit"><i class="icon-search"></i></button>
-                                            </form>  
-                                        </div>
-                                            
+                                            </form>
+                                                <style>
+                               .blog-table-container {
+                                   font-family: 'Segoe UI', sans-serif;
+                                   width: 100%;
+                                   border-radius: 8px;
+                                   overflow: hidden;
+                                   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                   background: #fff;
+                               }
+
+                               .table-header, .table-row {
+                                   display: flex;
+                                   padding: 14px 20px;
+                                   border-bottom: 1px solid #eee;
+                                   align-items: center;
+                               }
+
+                               .table-header {
+                                   font-weight: 600;
+                                   background-color: #f8f9fa;
+                                   color: #333;
+                                   text-transform: uppercase;
+                               }
+
+                               .col {
+                                   flex: 1;
+                                   min-width: 150px;
+                                   word-break: break-word;
+                               }
+
+                               .blog-title {
+                                   font-weight: 500;
+                                   color: #212529;
+                                   text-decoration: none;
+                               }
+
+                               .blog-title:hover {
+                                   text-decoration: underline;
+                               }
+
+                               .status {
+                                   padding: 6px 16px;
+                                   border-radius: 20px;
+                                   font-weight: bold;
+                                   display: inline-block;
+                                   font-size: 13px;
+                               }
+
+                               .status.inactive {
+                                   background-color: #e74c3c;
+                                   color: white;
+                               }
+                               .col.actions a {
+                                   display: inline-flex;
+                                   align-items: center;
+                                   justify-content: center;
+                                   width: 30px;         /* Tăng kích thước nút */
+                                   height: 20px;
+                                   border-radius: 50%;
+                                   background-color: #f1f1f1;
+                                   transition: background-color 0.3s, transform 0.2s;
+                                   text-decoration: none;
+                               }
+                               td.actions {
+                                   text-align: center;
+                                   vertical-align: middle; /* canh giữa theo chiều dọc nếu cần */
+                               }
+
+                               /* Flexbox canh giữa nội dung bên trong */
+                               .col.actions {
+                                   display: inline-flex;
+                                   justify-content: center;
+                                   align-items: center;
+                                   gap: 30px;
+                               }
+                               .col.actions a:hover {
+                                   background-color: #e0e0e0;
+                                   transform: scale(1.1);
+                               }
+
+                               .col.actions i {
+                                   font-size: 25px; /* Tăng kích thước icon */
+                               }
+
+                               /* Icon màu sắc tương ứng */
+                               .icon-eye {
+                                   color: #007bff; /* Xanh biển */
+                               }
+                               .icon-edit-3 {
+                                   color: #28a745; /* Xanh lá */
+                               }
+                               .icon-trash-2 {
+                                   color: #dc3545; /* Đỏ */
+                               }
+
+                           </style>    
+                                        </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
                                     </div>
-                         <style>
-                             .blog-table-container {
-                                 font-family: 'Segoe UI', sans-serif;
-                                 width: 100%;
-                                 border-radius: 8px;
-                                 overflow: hidden;
-                                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                 background: #fff;
-                             }
-
-                             .table-header, .table-row {
-                                 display: flex;
-                                 padding: 14px 20px;
-                                 border-bottom: 1px solid #eee;
-                                 align-items: center;
-                             }
-
-                             .table-header {
-                                 font-weight: 600;
-                                 background-color: #f8f9fa;
-                                 color: #333;
-                                 text-transform: uppercase;
-                             }
-
-                             .col {
-                                 flex: 1;
-                                 min-width: 150px;
-                                 word-break: break-word;
-                             }
-
-                             .blog-title {
-                                 font-weight: 500;
-                                 color: #212529;
-                                 text-decoration: none;
-                             }
-
-                             .blog-title:hover {
-                                 text-decoration: underline;
-                             }
-
-                             .status {
-                                 padding: 6px 16px;
-                                 border-radius: 20px;
-                                 font-weight: bold;
-                                 display: inline-block;
-                                 font-size: 13px;
-                             }
-
-                             .status.inactive {
-                                 background-color: #e74c3c;
-                                 color: white;
-                             }
-
-                             .action-buttons {
-                                 display: flex;
-                                 gap: 20px; /* Tăng khoảng cách giữa các nút */
-                                 align-items: center;
-                                 justify-content: center;
-                             }
-
-                             .action-buttons a {
-                                 display: inline-flex;
-                                 align-items: center;
-                                 justify-content: center;
-                                 width: 70px;
-                                 height: 70px;
-                                 border-radius: 50%;
-                                 background-color: #f1f1f1;
-                                 transition: background-color 0.3s, transform 0.2s;
-                                 text-decoration: none;
-                             }
-
-                             .action-buttons a:hover {
-                                 background-color: #e0e0e0;
-                                 transform: scale(1.1);
-                             }
-
-                             .action-buttons i {
-                                 font-size: 60px; /* Làm icon to hơn */
-                             }
-
-                             /* Icon màu sắc tương ứng */
-                             .icon-eye {
-                                 color: #007bff;
-                             }      /* Xanh biển */
-                             .icon-edit-3 {
-                                 color: #28a745;
-                             }   /* Xanh lá */
-                             .icon-trash-2 {
-                                 color: #dc3545;
-                             }  /* Đỏ */            </style>
+                       
 
                          <div class="wg-table table-product-list">
                              <!-- Header -->
                              <div class="table-header">
                                  <div class="col">Blog</div>
-                                 <div class="col">Blog ID</div>
-                                 <div class="col">Author</div>
-                                 <div class="col">Date</div> 
-                                 <div class="col">Status</div>
-                                 <div class="col">Action</div>
+                                 <div class="col" style="margin-left: 70px">Blog ID</div>
+                                 <div class="col" style="margin-left: 120px">Author</div>
+                                 <div class="col"style="margin-left: 100px">Date</div> 
+                                 <div class="col"style="margin-left: 100px">Status</div>
+                                 <div class="col" style="margin-left: 130px;">Action</div>
                              </div>
 
                              <!-- Data Rows -->
@@ -239,7 +244,7 @@
                                          </span>
 
                                      </div>
-                                     <div class="col actions">
+                                     <div class="col actions ">
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"> <i class="icon-edit-3"></i></a>
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=delete&id=${blog.id}"><i class="icon-trash-2"></i></a>

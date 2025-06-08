@@ -117,11 +117,127 @@
                                             </fieldset>
                                     </div>
                                     <div class="wg-box">
-                                            <div class="upload-image mb-16">
-                                                <div class="item up-load">
-                                                    <image src="${blog.thumbnailblogs}">
-                                                </div>
-                                            </div>
+                                        <style>
+                                            .image-frame {
+                                                position: relative;
+                                                width: 320px;
+                                                height: 240px;
+                                                border-radius: 24px;
+                                                overflow: hidden;
+                                                background: linear-gradient(145deg, #f0f4f8, #e2e8f0);
+                                                box-shadow:
+                                                    0 8px 32px rgba(0, 0, 0, 0.12),
+                                                    0 2px 8px rgba(0, 0, 0, 0.08),
+                                                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                                                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                                                margin: 24px auto;
+                                                cursor: pointer;
+                                                backdrop-filter: blur(10px);
+                                            }
+
+                                            .image-frame::before {
+                                                content: '';
+                                                position: absolute;
+                                                top: 0;
+                                                left: 0;
+                                                right: 0;
+                                                bottom: 0;
+                                                background: linear-gradient(135deg,
+                                                    rgba(255, 255, 255, 0.1) 0%,
+                                                    rgba(255, 255, 255, 0.05) 50%,
+                                                    rgba(0, 0, 0, 0.02) 100%);
+                                                z-index: 2;
+                                                pointer-events: none;
+                                                transition: opacity 0.3s ease;
+                                            }
+
+                                            .image-frame img {
+                                                width: 100%;
+                                                height: 100%;
+                                                object-fit: cover;
+                                                display: block;
+                                                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                                                filter: brightness(1) contrast(1.05) saturate(1.1);
+                                            }
+
+                                            .image-frame:hover {
+                                                transform: translateY(-8px) scale(1.02);
+                                                box-shadow:
+                                                    0 20px 60px rgba(0, 0, 0, 0.15),
+                                                    0 8px 32px rgba(0, 0, 0, 0.1),
+                                                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                                            }
+
+                                            .image-frame:hover::before {
+                                                opacity: 0.7;
+                                            }
+
+                                            .image-frame:hover img {
+                                                transform: scale(1.08);
+                                                filter: brightness(1.1) contrast(1.1) saturate(1.2);
+                                            }
+
+                                            .image-frame:active {
+                                                transform: translateY(-4px) scale(1.01);
+                                                transition: all 0.15s ease;
+                                            }
+
+                                            /* Responsive design */
+                                            @media (max-width: 768px) {
+                                                .image-frame {
+                                                    width: 90%;
+                                                    max-width: 300px;
+                                                    height: 200px;
+                                                    margin: 16px auto;
+                                                }
+                                            }
+
+                                            /* Dark theme variant */
+                                            .image-frame.dark {
+                                                background: linear-gradient(145deg, #1a202c, #2d3748);
+                                                box-shadow:
+                                                    0 8px 32px rgba(0, 0, 0, 0.3),
+                                                    0 2px 8px rgba(0, 0, 0, 0.2),
+                                                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                                            }
+
+                                            .image-frame.dark::before {
+                                                background: linear-gradient(135deg,
+                                                    rgba(255, 255, 255, 0.05) 0%,
+                                                    rgba(255, 255, 255, 0.02) 50%,
+                                                    rgba(0, 0, 0, 0.1) 100%);
+                                            }
+
+                                            /* Glass morphism variant */
+                                            .image-frame.glass {
+                                                background: rgba(255, 255, 255, 0.1);
+                                                backdrop-filter: blur(20px);
+                                                border: 1px solid rgba(255, 255, 255, 0.2);
+                                                box-shadow:
+                                                    0 8px 32px rgba(0, 0, 0, 0.1),
+                                                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                                            }
+
+                                            /* Neon glow variant */
+                                            .image-frame.neon {
+                                                box-shadow:
+                                                    0 0 20px rgba(59, 130, 246, 0.3),
+                                                    0 0 40px rgba(59, 130, 246, 0.1),
+                                                    0 8px 32px rgba(0, 0, 0, 0.12);
+                                                border: 2px solid rgba(59, 130, 246, 0.3);
+                                            }
+
+                                            .image-frame.neon:hover {
+                                                box-shadow:
+                                                    0 0 30px rgba(59, 130, 246, 0.5),
+                                                    0 0 60px rgba(59, 130, 246, 0.2),
+                                                    0 20px 60px rgba(0, 0, 0, 0.15);
+                                                border-color: rgba(59, 130, 246, 0.6);
+                                            }
+                                        </style>
+                                        <<div class="image-frame">
+                                            <img src="${blog.thumbnailblogs}" alt="Blog thumbnail">
+                                        </div>
                                             <fieldset class="name">
                                                 <div class="body-title mb-10">Blog date</div>
                                                 <div class="select">
