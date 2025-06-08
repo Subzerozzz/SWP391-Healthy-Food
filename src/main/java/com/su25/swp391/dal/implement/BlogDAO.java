@@ -268,7 +268,9 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
                 listBlog.add(getFromResultSet(resultSet));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error searching blog: " + e.getMessage());
+        } finally {
+            closeResources();
         }
         return listBlog;
     }
