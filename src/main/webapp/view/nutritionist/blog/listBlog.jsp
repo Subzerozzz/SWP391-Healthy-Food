@@ -28,7 +28,9 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
 
-
+    <!-- Link IzisToast -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
     <!-- Font -->
     <link rel="stylesheet" href="font/fonts.css">
@@ -110,62 +112,106 @@
                                                 </div>
                                                 <div class="text-tiny">entries</div>
                                             </div>
-                                            <form class="form-search">
-                                                <fieldset class="name">
-                                                    <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                </fieldset>
-                                                <div class="button-submit">
-                                                    <a href="${pageContext.request.contextPath}/manage-blog?action=search&title=${blog.title}" 
-                                                   class="your-button-class" title="Search">
-                                                    <i class="icon-search"></i>
-                                                </a>
-                                            </div>
-                                            </form>
+                                            <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-blog">
+                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                <input type="hidden" name="action" value="search">
+                                                    <button type="submit"><i class="icon-search"></i></button>
+                                                    </form>  
                                         </div>
+                                            
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
                                     </div>
                          <style>
+                             .blog-table-container {
+                                 font-family: 'Segoe UI', sans-serif;
+                                 width: 100%;
+                                 border-radius: 8px;
+                                 overflow: hidden;
+                                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                 background: #fff;
+                             }
+
                              .table-header, .table-row {
                                  display: flex;
+                                 padding: 14px 20px;
+                                 border-bottom: 1px solid #eee;
                                  align-items: center;
-                                 padding: 10px 0;
-                                 border-bottom: 1px solid #ddd;
                              }
 
                              .table-header {
-                                 font-weight: bold;
+                                 font-weight: 600;
+                                 background-color: #f8f9fa;
+                                 color: #333;
+                                 text-transform: uppercase;
                              }
 
                              .col {
                                  flex: 1;
-                                 padding: 0 10px;
                                  min-width: 150px;
                                  word-break: break-word;
                              }
 
-                             .actions {
+                             .blog-title {
+                                 font-weight: 500;
+                                 color: #212529;
+                                 text-decoration: none;
+                             }
+
+                             .blog-title:hover {
+                                 text-decoration: underline;
+                             }
+
+                             .status {
+                                 padding: 6px 16px;
+                                 border-radius: 20px;
+                                 font-weight: bold;
+                                 display: inline-block;
+                                 font-size: 13px;
+                             }
+
+                             .status.inactive {
+                                 background-color: #e74c3c;
+                                 color: white;
+                             }
+
+                             .action-buttons {
                                  display: flex;
-                                 gap: 12px;
+                                 gap: 20px; /* Tăng khoảng cách giữa các nút */
+                                 align-items: center;
+                                 justify-content: center;
                              }
 
-                             .actions .icon-eye {
-                                 color: #007bff; /* blue */
+                             .action-buttons a {
+                                 display: inline-flex;
+                                 align-items: center;
+                                 justify-content: center;
+                                 width: 70px;
+                                 height: 70px;
+                                 border-radius: 50%;
+                                 background-color: #f1f1f1;
+                                 transition: background-color 0.3s, transform 0.2s;
+                                 text-decoration: none;
                              }
 
-                             .actions .icon-edit-3 {
-                                 color: #28a745; /* green */
-                             }
-
-                             .actions .icon-trash-2 {
-                                 color: #dc3545; /* red */
-                             }
-
-                             .actions i:hover {
-                                 opacity: 0.7;
+                             .action-buttons a:hover {
+                                 background-color: #e0e0e0;
                                  transform: scale(1.1);
-                                 transition: all 0.2s;
                              }
-                         </style>
+
+                             .action-buttons i {
+                                 font-size: 60px; /* Làm icon to hơn */
+                             }
+
+                             /* Icon màu sắc tương ứng */
+                             .icon-eye {
+                                 color: #007bff;
+                             }      /* Xanh biển */
+                             .icon-edit-3 {
+                                 color: #28a745;
+                             }   /* Xanh lá */
+                             .icon-trash-2 {
+                                 color: #dc3545;
+                             }  /* Đỏ */            </style>
 
                          <div class="wg-table table-product-list">
                              <!-- Header -->
@@ -278,7 +324,63 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <!--Thông báo xóa--> 
+     <c:if test="${isDelete == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Yêu cầu xóa blog của bạn đã được gửi đi",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#d4edda"
+                 });
+           });
+         </script>
+         <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+         <%
+             session.removeAttribute("isDelete");
+         %>
+     </c:if>
 
+     <!--Thông báo add-->
+     <c:if test="${isAdd == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Yêu cầu tạo blog của bạn đã được gửi đi",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#d4edda"
+                 });
+           });
+         </script>
+         <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+         <%
+             session.removeAttribute("isAdd");
+         %>
+     </c:if>
+
+     <!--Thông báo update--> 
+
+     <c:if test="${isUpdate == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Yêu cầu chỉnh sửa blog của bạn đã được gửi đi",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#d4edda"
+                 });
+           });
+         </script>
+         <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+         <%
+             session.removeAttribute("isUpdate");
+         %>
+     </c:if>
 </body>
 <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:40 GMT -->
 </html>

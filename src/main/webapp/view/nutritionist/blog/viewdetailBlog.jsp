@@ -119,13 +119,7 @@
                                     <div class="wg-box">
                                             <div class="upload-image mb-16">
                                                 <div class="item up-load">
-                                                    <label class="uploadfile" for="myFile">
-                                                        <span class="icon">
-                                                            <i class="icon-upload-cloud"></i>
-                                                        </span>
-                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click to browse</span></span>
-                                                        <input type="file" id="myFile" name="filename">
-                                                    </label>
+                                                    <image src="${blog.thumbnailblogs}">
                                                 </div>
                                             </div>
                                             <fieldset class="name">

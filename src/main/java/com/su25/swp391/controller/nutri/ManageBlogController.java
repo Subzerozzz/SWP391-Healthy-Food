@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -162,8 +163,10 @@ public class ManageBlogController extends HttpServlet {
             BlogDAO BlogDao = new BlogDAO();
             boolean isSuccses = BlogDao.insert(newBlog) > 0;
             if (isSuccses) {
+                HttpSession session = request.getSession();
                 request.getSession().setAttribute("totalMess", "Add new Blog Success");
                 request.getSession().setAttribute("totalType", "Success");
+                session.setAttribute("isAdd", true);
                 listBlogDoGet(request, response);
                 return;
             } else {
@@ -212,8 +215,10 @@ public class ManageBlogController extends HttpServlet {
             blog.setBirth_date(date);
             boolean isSuccess = blogDao.update(blog);
             if (isSuccess) {
+                HttpSession session = request.getSession();
                 request.getSession().setAttribute("totalMess", "update new Blog Success");
                 request.getSession().setAttribute("totalType", "Success");
+                session.setAttribute("isUpdate", true);
                 response.sendRedirect("manage-blog");
                 return;
             } else {
@@ -291,8 +296,10 @@ public class ManageBlogController extends HttpServlet {
         if (blog != null) {
             boolean delete = blogDao.delete(blog);
             if (delete) {
+                HttpSession session = request.getSession();
                 request.getSession().setAttribute("toastMessage", "Blog delete succesfull");
                 request.getSession().setAttribute("toastType", "success");
+                session.setAttribute("isDelete", true);
             } else {
                 request.getSession().setAttribute("toastMessage", "Fail to delete blog");
                 request.getSession().setAttribute("toastType", "error");
@@ -301,6 +308,7 @@ public class ManageBlogController extends HttpServlet {
             request.getSession().setAttribute("toatMessage", "Blog not found");
             request.getSession().setAttribute("toastType", "error");
         }
+        
         response.sendRedirect(request.getContextPath() + "/manage-blog");
 
     }
@@ -331,20 +339,20 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
+    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        String title = request.getParameter("title");
-        List<Blog> listBlog = new ArrayList<>();
-        if (title != null && !title.trim().isEmpty()) {
-            listBlog = blogDAO.getBlogByName(title);
-        } else {
-            // Có thể lấy tất cả blog hoặc trả về danh sách rỗng tùy ý
-            listBlog = blogDAO.findAll();
+        String searchKeyword = request.getParameter("search");
+
+        // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
+        if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/manage-blog?action=list");
+            return;
         }
-        request.setAttribute("blog", listBlog);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
-        dispatcher.forward(request, response);
+        searchKeyword = searchKeyword.trim(); // Xóa khoảng trắng 2 đầu
+        List<Blog> listBlog = blogDAO.getBlogByName(searchKeyword);
+        request.setAttribute("blogs", listBlog);
+        request.setAttribute("search", searchKeyword); // Hiển thị lại giá trị đã nhập trong ô input
+        request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
-
 }
