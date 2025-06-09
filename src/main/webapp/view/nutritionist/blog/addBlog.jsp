@@ -41,8 +41,8 @@
 
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="images/favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
-
+    <link rel="apple-touch-icon-precomposied" href="images/favicon.png">
+    <script src="assets/ckeditor/ckeditor/ckeditor.js"></script>
 </head>
 
 <body class="body">
@@ -122,7 +122,7 @@
                                             <div class="body-title mb-10">Upload images</div>
                                             <div class="upload-image mb-16">
                                                 <div class="item">
-                                                    <img src="images/upload/upload-1.png" alt="">
+                                                    <img src="" alt<img id="preview" src="#" alt="Preview Image" style="display:none; width:100%; max-height:500px; object-fit:cover; margin-bottom: 10px; border-radius: 10px;" />
                                                 </div>
                                                 <div class="item up-load">
                                                     <label class="uploadfile" for="myFile">
@@ -130,9 +130,8 @@
                                                             <i class="icon-upload-cloud"></i>
                                                         </span>
                                                         <span class="text-tiny">Drop your images here or select <span class="tf-color">click
-                                                                to
-                                                                browse</span></span>
-                                                        <input type="file" id="myFile" name="filename">
+                                                                to browse</span></span>
+                                                        <input type="file" id="myFile" name="filename" onchange="previewImage(event)">
                                                     </label>
                                                 </div>
                                             </div>
@@ -169,26 +168,25 @@
      <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
      <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
      <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
      <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
      <script src="${pageContext.request.contextPath}/js/main.js"></script>
      <script>
-         $(document).ready(function() {
-            // Initialize Summernote
-            $('#content').summernote({
-                height: 300,
-                placeholder: 'Write your blog content here...',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-        });
+             CKEDITOR.replace('content')
+     </script>
+     <script>
+         function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById("preview");
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
           document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('myFile');
             const imageContainer = document.querySelector('.item img');
