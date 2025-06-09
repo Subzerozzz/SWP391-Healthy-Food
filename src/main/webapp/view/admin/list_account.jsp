@@ -317,9 +317,91 @@
                 background-color: #f0f0f0;
                 border-color: #999;
             }
+            .filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap; /* Để responsive khi thu nhỏ màn hình */
+}
+    .wrapper-flex {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
 
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
+.form-search select,
+.filter-button {
+  height: 36px;
+}
 
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 250px;
+}
+
+.search-box input[type="text"] {
+  flex: 1;
+  height: 36px;
+  padding: 0 10px;
+}
+
+.search-box button {
+  height: 36px;
+}
+
+/* Tăng chiều rộng ô tìm kiếm */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 300px; /* ← tăng tùy ý: 300px, 350px,... */
+}
+
+/* Input trong ô tìm kiếm chiếm đủ không gian */
+.search-box input[type="text"] {
+  flex: 1;
+  height: 36px;
+  padding: 0 10px;
+}
+
+/* Nút tìm kiếm giữ kích cỡ đều */
+.search-box button {
+  height: 36px;
+}
+
+/* Container ngoài căn trái - phải */
+.wg-box > .flex {
+  justify-content: space-between; /* đẩy Add new sang phải */
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Nhóm lọc + tìm kiếm canh trái */
+.wrapper-flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Nhóm bộ lọc ngang hàng */
+.form-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
         </style>
 
@@ -399,37 +481,44 @@
                                                                                                 </div>
                                                                                                 <!-- all-user -->
                                                                                                 <div class="wg-box">
-                                                                                                    <div class="flex items-center justify-between gap10 flex-wrap">
+  <div class="flex items-center justify-between gap10 flex-wrap">
+    
+    <div class="wrapper-flex">
+      <!-- Form lọc (nằm ngang) -->
+      <form class="form-search" action="${pageContext.request.contextPath}/manage-account" method="GET">
+        <input type="hidden" name="action" value="filter" />
+        
+        <div class="filter-group">
+          <select name="role" class="form-control">
+            <option value="">All Roles</option>
+            <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
+            <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
+          </select>
 
-                                                                                                        <div class="wg-filter flex-grow">
-                                                                                                            <!--tim kiếm theo key-->
-                                                                                                            <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-account">
-                                                                                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                                                                                <input type="hidden" name="action" value="search">
-                                                                                                                    <button type="submit"><i class="fa fa-search"></i></button>
-                                                                                                                    </form>  
-                                                                                                                    <form action="${pageContext.request.contextPath}/manage-account" method="GET" class="form-search">
-                                                                                                                        <input type="hidden" name="action" value="filter" />
+          <select name="status" class="form-control">
+            <option value="">All Status</option>
+            <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
+            <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
+          </select>
 
-                                                                                                                        <select name="role" class="form-control">
-                                                                                                                            <option value="">All Roles</option>
-                                                                                                                            <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
-                                                                                                                            <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
-                                                                                                                        </select>
+          <button type="submit" class="filter-button">Lọc</button>
+       
+      </form>
 
-                                                                                                                        <select name="status" class="form-control">
-                                                                                                                            <option value="">All Status</option>
-                                                                                                                            <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
-                                                                                                                            <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
-                                                                                                                        </select>
-                                                                                                                        <button type="submit" class="filter-button">
-                                                                                                                            Lọc
-                                                                                                                        </button>
-                                                                                                                    </form>
+      <!-- Tìm kiếm -->
+      <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-account">
+        <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+        <input type="hidden" name="action" value="search">
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </form>
+    </div>
 
-                                                                                                                    </div>                                   
-                                                                                                                    <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add"><i class="icon-plus"></i>Add new</a>
-                                                                                                                    </div>
+    <!-- Add new -->
+    <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add">
+      <i class="icon-plus"></i>Add new
+    </a>
+  </div>
+</div>
                                                                                                                     <div class="wg-table table-all-user">
                                                                                                                         <ul class="table-title flex gap20 mb-14">
                                                                                                                             <li>
