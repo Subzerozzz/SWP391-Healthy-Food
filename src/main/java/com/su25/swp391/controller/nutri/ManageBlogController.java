@@ -240,25 +240,20 @@ public class ManageBlogController extends HttpServlet {
     }
 
     private void listBlogDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String indexPage = request.getParameter("index");
         if (indexPage == null) {
             indexPage = "1";
         }
         int currentPage = Integer.parseInt(indexPage);
-
         int totalBlogs = blogDAO.getTotalBlog();
         int totalPage = totalBlogs / 10;
         if (totalBlogs % 10 != 0) {
             totalPage++;
         }
-
         List<Blog> list = blogDAO.pagingBlog(currentPage);
-
         request.setAttribute("blogs", list);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPage", totalPage);
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp");
         dispatcher.forward(request, response);
     }
@@ -315,6 +310,7 @@ public class ManageBlogController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/manage-blog");
 
     }
+
     private Map<String, String> validateBlogData(String title, String context, Integer id) {
         Map<String, String> errors = new HashMap<>();
         BlogDAO blogDAO = new BlogDAO();
@@ -341,7 +337,8 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
- private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
+
+    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchKeyword = request.getParameter("search");
         String indexStr = request.getParameter("index");
@@ -372,12 +369,9 @@ public class ManageBlogController extends HttpServlet {
         request.setAttribute("totalPage", totalPage);
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
-
     private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String title = request.getParameter("title");
         String statusParam = request.getParameter("status");
         Boolean status = (statusParam != null && !statusParam.isEmpty()) ? Boolean.parseBoolean(statusParam) : null;
-
         // Lấy tham số phân trang
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
@@ -405,12 +399,11 @@ public class ManageBlogController extends HttpServlet {
             currentPage = 1;
             pageSize = 10;
         }
-
         // Lấy danh sách đã lọc với phân trang
-        List<Blog> filteredBlog = blogDAO.findBlogsWithFilter(title, title, pageSize, pageSize);
+        List<Blog> filteredBlog = blogDAO.filterBlogsWithPagination(status, currentPage, pageSize);
 
         // Tính toán thông tin phân trang cho bộ lọc
-        int totalBlogs = blogDAO.getTotalBlog();
+        int totalBlogs = blogDAO.getTotalBlogCountWithFilter(status);
         int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
 
         // Thiết lập các thuộc tính cho JSP
@@ -419,7 +412,6 @@ public class ManageBlogController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalBlogs", totalBlogs);
-        request.setAttribute("title", title);
         request.setAttribute("status", statusParam);
 
         // Tính toán phạm vi hiển thị
@@ -431,5 +423,3 @@ public class ManageBlogController extends HttpServlet {
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
 }
-
-
