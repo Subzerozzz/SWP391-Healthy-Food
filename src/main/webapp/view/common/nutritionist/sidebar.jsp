@@ -31,7 +31,7 @@
                     </a>
                     <ul class="sub-menu" style="display: block;">
                       <li class="sub-menu-item">
-                        <a href="add-product.html" class="">
+                          <a href="${pageContext.request.contextPath}/manage-food?action=add" class="">
                           <div class="text">Add New Product</div>
                         </a>
                       </li>
@@ -46,13 +46,13 @@
                   <li class="menu-item has-children">
                     <a href="javascript:void(0);" class="menu-item-button">
                       <div class="icon"><i class="icon-layers"></i></div>
-                      <div class="text">Category</div>
+                      <div class="text">Yêu cầu chờ duyệt</div>
                     </a>
                     <ul class="sub-menu">
                       <li class="sub-menu-item">
-                        <a href="category-list.html" class="">
-                          <div class="text">Category list</div>
-                        </a>
+                          <a href="${pageContext.request.contextPath}/manage-food?action=request" class="">
+                            <div class="text">Xem các yêu cầu</div>
+                          </a>
                       </li>
                       <li class="sub-menu-item">
                         <a href="new-category.html" class="">

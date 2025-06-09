@@ -16,41 +16,82 @@ import java.util.Map;
  *
  * @author Dell
  */
-public class AccountDAO extends DBContext implements I_DAO<Account>{
+public class AccountDAO extends DBContext implements I_DAO<Account> {
 
-    @Override
-    public List<Account> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public List<Account> findAll() {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
 
-    @Override
-    public Map<Integer, Account> findAllMap() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public Map<Integer, Account> findAllMap() {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
 
-    @Override
-    public boolean update(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public boolean update(Account t) {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
 
-    @Override
-    public boolean delete(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public boolean delete(Account t) {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
 
-    @Override
-    public int insert(Account t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public int insert(Account t) {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
 
-    @Override
-    public Account getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  @Override
+  public Account getFromResultSet(ResultSet resultSet) throws SQLException {
+    Account account = new Account();
+    account.setId(resultSet.getInt("id"));
+    account.setEmail(resultSet.getString("email"));
+    account.setPassword(resultSet.getString("password"));
+    account.setFull_name(resultSet.getString("full_name"));
+    account.setUser_name(resultSet.getString("user_name"));
+    account.setBirth_date(resultSet.getTimestamp("birth_date"));
+    account.setGender(resultSet.getString("gender"));
+    account.setAddress(resultSet.getString("address"));
+    account.setMobile(resultSet.getString("mobile"));
+    account.setRole(resultSet.getString("role"));
+    account.setStatus(resultSet.getString("status"));
+    return account;
+  }
 
-    @Override
-    public Account findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  @Override
+  public Account findById(Integer id) {
+    throw new UnsupportedOperationException("Not supported yet."); // Generated from
+                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
+
+  public List<Account> findAccountByRole(String nutri) {
+    String sql = "SELECT * FROM Account WHERE role = ?";
+    List<Account> list = new java.util.ArrayList<>();
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, nutri);
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Account account = getFromResultSet(resultSet);
+        list.add(account);
+      }
+    } catch (Exception e) {
+      System.out.println(e);
     }
-    
+    return list;
+  }
+
+  public static void main(String[] args) {
+    for (Account a : new AccountDAO().findAccountByRole("nutri")) {
+      System.out.println(a);
+    }
+  }
+
 }
