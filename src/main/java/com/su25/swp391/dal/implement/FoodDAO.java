@@ -169,6 +169,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
      public Food getFromResultFood_Draft(Food_Draft f) {
         return Food
                 .builder()
+                .id(f.getFood_id())
                 .name(f.getName())
                 .description(f.getDescription())
                 .price(f.getPrice())
@@ -218,7 +219,9 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
                 .updated_at(timestampNow)
                 .nutri_id(1)
                 .build();
-
+      Food f = dao.findById(29);
+        System.out.println(f);
+        dao.insert(f);
     }
 
 }

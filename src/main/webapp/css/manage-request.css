@@ -38,7 +38,7 @@ tr:nth-child(odd) {
 
 table {
     width: 100%;
-    border-collapse: collapse; /* Xoá khoảng giữa các ô */
+     /* Xoá khoảng giữa các ô */
     border: none;              /* Không viền ngoài bảng */
 }
 
@@ -52,7 +52,7 @@ th, td {
     border-right: none;
     border-top: none;
     background-color: transparent;  /* Đảm bảo không có viền nền khi hover */
-    border-radius: 12px;
+    border-radius: 5px;
 } 
 
 
@@ -61,7 +61,7 @@ td img {
     width: 80px;
     height: max-content;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 2px;
 }
 
 /* Zebra stripe - có thể giữ hoặc bỏ */

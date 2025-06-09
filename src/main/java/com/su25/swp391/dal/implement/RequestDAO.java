@@ -166,5 +166,6 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         }
         System.out.println(dao.findById(6));
         System.out.println(dao.checkReload(132));
+        System.out.println(dao.findById(13));
     }
 }
