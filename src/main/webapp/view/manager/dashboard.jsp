@@ -76,27 +76,39 @@
                                                                                                 <div class="main-content-wrap">
 
                                                                                                     <!-- product-list -->
-                                                                                                    <div class="wg-box" style="margin-bottom: 10px">
-                                                                                                        <div class="body-text">Request statistics</div>
-                                                                                                        <div  style="width: 500px ; height: 50px">
-                                                                                                            <form action="${pageContext.request.contextPath}/type-of-request" method="get" style="display: flex">
-                                                                                                            <input type="hidden" name="action" value="option">
-                                                                                                                <select  name="select" style="background-color: #115ec2;color: white;">
-                                                                                                                    <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
-                                                                                                                    <c:forEach items="${type}" var="t">
-                                                                                                                        <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
-                                                                                                                        <i class="ti-arrow-down" style="color: white; font-size: 24px;"></i>
-                                                                                                                    </c:forEach>
-                                                                                                                </select>
-                                                                                                                <button type="submit" style="background-color: #b2b9c2" >Submit Option</button>
-
-                                                                                                        </form>  
-                                                                                                    </div>
-
+                                                                                                    
                                                                                                     <!--Message about Alert-->
                                                                                                     <div id="mess" ><input type="hidden" name="name" value="1"></div> 
 
-                                                                                                </div>
+                                                                                              
+                                                                                                                    <div style="display: flex;margin-bottom: 20px;border: 1px solid red;
+                                                                                                                         padding: 20px;height: 200px;width: 60%;border-radius: 10px;background-color: #FFFFE0;
+                                                                                                                         justify-content: space-between;align-items: start">
+                                                                                                                        <div  style=" ; height: 40px;">
+                                                                                                            <form action="${pageContext.request.contextPath}/type-of-request" method="get" ">
+                                                                                                            <input type="hidden" name="action" value="option">
+                                                                                                                <select  name="select" style="background-color: #115ec2;color: white;height: 50px">
+                                                                                                                    <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
+                                                                                                                    <c:forEach items="${type}" var="t">
+                                                                                                                        <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
+                                                                                                                        <i class="ti-arrow-down" style="color: white; font-size: 15px;"></i>
+                                                                                                                    </c:forEach>
+                                                                                                                </select>
+                                                                                                                <button type="submit" style="background-color: #b2b9c2;height: 20px;display: flex;
+                                                                                                                        align-items: center;border-radius: 5px;width: 150px;margin-top: 5px" >Submit Option</button>
+
+                                                                                                        </form>  
+                                                                                                         </div>    
+                                                                                                                        <div style="">
+                                                                                                                     <form>
+                                                                                                                         <label for="search"><h4>Search:</h4></label>
+                                                                                                                         <input style="background-color: yellow" type="text" id="search" name="search" placeholder="...Search Name Food"/>
+                                                                                                                        <button style="background-color: graytext;height: 30px;display: flex;align-items: center
+                                                                                                                                ;margin-top: 5px" type="submit">Search</button>
+                                                                                                                    </form>  
+                                                                                                                            
+                                                                                                                    </div> 
+                                                                                                                    </div>
                                                                                                 <!--start table-->
                                                                                                 <div class="manage-request">
                                                                                                     <table>

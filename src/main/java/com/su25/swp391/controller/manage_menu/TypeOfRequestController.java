@@ -357,7 +357,7 @@ public class TypeOfRequestController extends HttpServlet {
             // Get foodDraft By Id
             Food_Draft food_D = foodDraftDAO.findById(id);
              // After get foodDraft insert it into Food
-            Food food = foodDAO.findById(food_D.getFood_id());
+            Food food = foodDAO.getFromResultFood_Draft(food_D);
             Boolean checkUpdateFoodDone = foodDAO.update(food);
              // Check after update Result
             Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
@@ -412,17 +412,18 @@ public class TypeOfRequestController extends HttpServlet {
             // Get foodDraft By Id
             Food_Draft food_D = foodDraftDAO.findById(id);
             // After get foodDraft insert it into Food
-            Food food = foodDAO.findById(food_D.getFood_id());
+            Food food = foodDAO.getFromResultFood_Draft(food_D);
             Boolean checkDeleteFoodDone = foodDAO.delete(food);
             // Check after update Result
             Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
+            Request req = requestDAO.findById(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
              // If Update True have a massage
             if (checkDeleteFoodDone && checkUpdateResultDone) {
                 request.setAttribute("mess", "Accept Delete successful");
-                Request req = requestDAO.findById(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
+                
             } else {
                 request.setAttribute("mess", "Accept Delete not successful");
             }

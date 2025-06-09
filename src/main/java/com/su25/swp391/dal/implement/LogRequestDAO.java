@@ -10,7 +10,7 @@ import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Food_Draft;
 import com.su25.swp391.entity.LogRequest;
 import com.su25.swp391.entity.Request;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
