@@ -133,7 +133,7 @@
                             </button>
                             <div class="filter-select-wrap" id="filterSelectWrap">
                               <select class="filter-select" onchange="filterByCategory(this)">
-                                  <option value="">-- Chọn danh mục --</option>
+                                  <option value="" disabled selected>-- Chọn danh mục --</option>
                                   <option value="all" class="selected">
                                       Tất cả
                                   </option>
@@ -324,7 +324,8 @@
       <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
       <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
       <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
+      
+      <!--Style-->
       <style>
         .item-delete {
           font-size: 20px;
@@ -463,6 +464,7 @@
             border-radius: 10px
         }
       </style>
+      <!--Script-->
       <script>
         const showModalForm = (event) => {
           //Hiện form modal
@@ -582,25 +584,25 @@
             %>
           </c:if>
             
-           <!--Thông báo update--> 
-           
-           <c:if test="${isUpdate == true}">
-            <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                iziToast.error({
-                    title: "Thông báo",
-                    message: "Yêu cầu chỉnh sửa món ăn của bạn đã được gửi đi",
-                    position: 'topRight',
-                    timeout: 5000,
-                    backgroundColor:"#d4edda"
-                    });
-              });
-            </script>
-            <!--Xóa đi biến isAdd sau khi đã thông báo--> 
-            <%
-                session.removeAttribute("isUpdate");
-            %>
-          </c:if>
+        <!--Thông báo update--> 
+
+        <c:if test="${isUpdate == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Yêu cầu chỉnh sửa món ăn của bạn đã được gửi đi",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#d4edda"
+                 });
+           });
+         </script>
+         <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+         <%
+             session.removeAttribute("isUpdate");
+         %>
+       </c:if>
 
 
     </body>

@@ -4,10 +4,12 @@
  */
 package com.su25.swp391.controller.nutritionist;
 
+import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.FoodCategoryDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.FoodDraftDAO;
 import com.su25.swp391.dal.implement.RequestDAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.FoodCategory;
 import com.su25.swp391.entity.FoodDraft;
@@ -44,6 +46,7 @@ public class ManageFoodController extends HttpServlet {
   FoodDraftDAO foodDraftDao = new FoodDraftDAO();
   RequestDAO requestDao = new RequestDAO();
   FoodCategoryDAO categoryDao = new FoodCategoryDAO();
+  AccountDAO accountDao = new AccountDAO();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -76,6 +79,9 @@ public class ManageFoodController extends HttpServlet {
         break;
       case "paginationSearch":
         paginationSearch(request, response);
+        break;
+      case "request":
+        showRequestNotDone(request, response);
         break;
       default:
         throw new AssertionError();
@@ -261,7 +267,7 @@ public class ManageFoodController extends HttpServlet {
       requestDao.insert(newRequest);
 
       // chuyển hướng về trang dashboard
-      //Gửi về 1 tín hiệu là yêu cầu thêm đã được gửi đi
+      // Gửi về 1 tín hiệu là yêu cầu thêm đã được gửi đi
       HttpSession session = request.getSession();
       session.setAttribute("isAdd", true);
       response.sendRedirect("manager-dashboard");
@@ -356,9 +362,8 @@ public class ManageFoodController extends HttpServlet {
 
         // Đường dẫn tương đối để lưu vào database
         fileName = "uploads/products/" + fileName;
-      }
-      else{
-          fileName = oldImage;
+      } else {
+        fileName = oldImage;
       }
       // Validate dữ liệu
       Map<String, String> errors = new HashMap<>();
@@ -383,7 +388,7 @@ public class ManageFoodController extends HttpServlet {
       if (description == null || description.trim().isEmpty()) {
         errors.put("description", "Description is required");
       }
-      
+
       // Vaidate calo
       if (caloStr == null || caloStr.trim().isEmpty()) {
         errors.put("calo", "Chưa điền calo cho món ăn!");
@@ -573,6 +578,24 @@ public class ManageFoodController extends HttpServlet {
     } catch (Exception e) {
       currentPage = 1;
     }
+  }
+
+  private void showRequestNotDone(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Lấy ra các request not done
+    List<Request> listRequestNotDone = new RequestDAO().getRequestByStatus("Not done");
+    // Dựa vào foodDraftId trong list not done để lấy ra list đó trong foodDraft
+    List<FoodDraft> listFoodDraft = new ArrayList<>();
+    for (Request a : listRequestNotDone) {
+      listFoodDraft.add(foodDraftDao.findById(a.getFoodDraftId()));
+    }
+    // Lấy ra thông tin của các nutri
+    List<Account> listNutri = accountDao.findAccountByRole("nutri");
+    // Trả cái listFoodDraft về giao diện
+    request.setAttribute("listFoodDraft", listFoodDraft);
+    request.setAttribute("listRequestNotDone", listRequestNotDone);
+    request.setAttribute("listNutri", listNutri);
+    request.getRequestDispatcher("view/nutritionist/menu/requestFood.jsp").forward(request, response);
+    
   }
 
 }

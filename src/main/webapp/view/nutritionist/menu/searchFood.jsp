@@ -132,7 +132,7 @@
                             </button>
                             <div class="filter-select-wrap" id="filterSelectWrap">
                               <select class="filter-select" onchange="filterByCategory(this)">
-                                  <option value="">-- Chọn danh mục --</option>
+                                  <option value="" disabled selected>-- Chọn danh mục --</option>
                                   <option value="all" class="selected">
                                       Tất cả
                                     </option>

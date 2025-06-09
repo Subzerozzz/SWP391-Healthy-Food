@@ -10,6 +10,7 @@ import com.su25.swp391.entity.Request;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,25 +25,25 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
   @Override
   public List<Request> findAll() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public Map<Integer, Request> findAllMap() {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public boolean update(Request t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
   public boolean delete(Request t) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
   @Override
@@ -55,7 +56,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
       statement.setInt(2, t.getFoodDraftId());
       statement.setString(3, t.getStatusRequest());
       statement.executeUpdate();
-      ResultSet resultSet = statement.getGeneratedKeys();
+      resultSet = statement.getGeneratedKeys();
 
       if (resultSet.next()) {
         return resultSet.getInt(1);
@@ -69,14 +70,42 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
 
   @Override
   public Request getFromResultSet(ResultSet resultSet) throws SQLException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    Request request = new Request();
+    request.setId(resultSet.getInt("id"));
+    request.setResult(resultSet.getString("result"));
+    request.setFoodDraftId(resultSet.getInt("foodDraftId"));
+    request.setStatusRequest(resultSet.getString("statusRequest"));
+    return request;
   }
 
   @Override
   public Request findById(Integer id) {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
+
+  public List<Request> getRequestByStatus(String status) {
+    List<Request> list = new ArrayList<>();
+    String sql = "SELECT * FROM Request WHERE statusRequest = ?";
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setString(1, status);
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        Request request = getFromResultSet(resultSet);
+        list.add(request);
+      }
+    } catch (Exception e) {
+      System.out.println("Lỗi");
+      System.out.println(e);
+    }
+    return list;
+  }
+
+  public static void main(String[] args) {
+    for (Request a : new RequestDAO().getRequestByStatus("Not done")) {
+      System.out.println(a);
+    }
   }
 
 }
