@@ -341,20 +341,17 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
-
-    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
+      private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchKeyword = request.getParameter("search");
-        System.out.println(searchKeyword);
-
         // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
         if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/manage-blog?action=list");
             return;
         }
         searchKeyword = searchKeyword.trim(); // Xóa khoảng trắng 2 đầu
-        List<Blog> listBlog = blogDAO.getBlogByName(searchKeyword);
-        request.setAttribute("blogs", listBlog);
+        List<Blog> search = blogDAO.searchBlogsByTitleorStatus(searchKeyword);
+        request.setAttribute("blogs", search);
         request.setAttribute("search", searchKeyword); // Hiển thị lại giá trị đã nhập trong ô input
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }

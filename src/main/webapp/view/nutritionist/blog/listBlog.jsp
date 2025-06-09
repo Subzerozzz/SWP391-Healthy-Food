@@ -1,7 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -113,12 +112,12 @@
                                                 <div class="text-tiny">entries</div>
                                             </div>
                                             <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                                     <div class="search-container">
-                                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                            <input type="hidden" name="action" value="search">
-                                                             <button type="submit"><i class="icon-search"></i></button>
-                                                     </div>
-                                           </form>
+                                            <div class="search-container">
+                                                <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                    <input type="hidden" name="action" value="search">
+                                                        <button type="submit"><i class="icon-search"></i></button>
+                                                        </div>
+                                            </form>
                            <style>
                                .blog-table-container {
                                    font-family: 'Segoe UI', sans-serif;
@@ -293,11 +292,21 @@
                                         <ul class="wg-pagination">
                                             <!-- Nút Trang Trước -->
                                             <li class="${currentPage == 1 ? 'disabled' : ''}">
-                                                <a href="${currentPage > 1 ? pageContext.request.contextPath += '/manage-blog?index=' += (currentPage - 1) : '#'}">
-                                                    <i class="icon-chevron-left"></i>
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${currentPage > 1}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}">
+                                                            <i class="icon-chevron-left"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="javascript:void(0);">
+                                                            <i class="icon-chevron-left"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </li>
 
+                                            <!-- Số trang -->
                                             <c:choose>
                                                 <c:when test="${currentPage < totalPage - 2}">
                                                     <li class="active">
@@ -316,7 +325,8 @@
                                                 </c:when>
 
                                                 <c:otherwise>
-                                                    <c:forEach begin="${totalPage - 2}" end="${totalPage}" var="i">
+                                                    <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
+                                                    <c:forEach begin="${startPage}" end="${totalPage}" var="i">
                                                         <li class="${currentPage == i ? 'active' : ''}">
                                                             <a href="${pageContext.request.contextPath}/manage-blog?index=${i}">${i}</a>
                                                         </li>
@@ -326,12 +336,21 @@
 
                                             <!-- Nút Trang Sau -->
                                             <li class="${currentPage == totalPage ? 'disabled' : ''}">
-                                                <a href="${currentPage < totalPage ? pageContext.request.contextPath += '/manage-blog?index=' += (currentPage + 1) : '#'}">
-                                                    <i class="icon-chevron-right"></i>
-                                                </a>
+                                                <c:choose>
+                                                    <c:when test="${currentPage < totalPage}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}">
+                                                            <i class="icon-chevron-right"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="javascript:void(0);">
+                                                            <i class="icon-chevron-right"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </li>
-</ul>
-                                    </div>
+                                        </ul>
+                                       </div>
                                 </div>
                                 <!-- /product-list -->
                             </div>
