@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-   
+
 
     <!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:43:22 GMT -->
     <head>
@@ -38,248 +38,280 @@
                                                     <!-- Favicon and Touch Icons  -->
                                                     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
-    <!-- iziToast CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+                                                            <!-- iziToast CSS -->
+                                                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 
 
-                                                            </head>
+                                                                </head>
 
-                                                            <body class="body">
+                                                                <body class="body">
 
-                                                                <!-- #wrapper -->
-                                                                <div id="wrapper">
-                                                                    <!-- #page -->
-                                                                    <div id="page" class="">
-                                                                        <!-- layout-wrap -->
-                                                                        <div class="layout-wrap">
-                                                                            <!-- preload -->
-                                                                            <div id="preload" class="preload-container">
-                                                                                <div class="preloading">
-                                                                                    <span></span>
+                                                                    <!-- #wrapper -->
+                                                                    <div id="wrapper">
+                                                                        <!-- #page -->
+                                                                        <div id="page" class="">
+                                                                            <!-- layout-wrap -->
+                                                                            <div class="layout-wrap">
+                                                                                <!-- preload -->
+                                                                                <div id="preload" class="preload-container">
+                                                                                    <div class="preloading">
+                                                                                        <span></span>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <!-- /preload -->
-                                                                            <!-- section-menu-left -->
-                                                                            <jsp:include page="../common/menuDashBoard/section-menu-left.jsp"></jsp:include>
-                                                                                <!-- /section-menu-left -->
-                                                                                <!-- section-content-right -->
-                                                                                <div class="section-content-right">
-                                                                                    <!-- header-dashboard -->
-                                                                                <jsp:include page="../common/menuDashBoard/header-dashboard.jsp"></jsp:include>    
-                                                                                    <!-- /header-dashboard -->
-                                                                                    <!-- main-content -->
+                                                                                <!-- /preload -->
+                                                                                <!-- section-menu-left -->
+                                                                                <jsp:include page="../common/menuDashBoard/section-menu-left.jsp"></jsp:include>
+                                                                                    <!-- /section-menu-left -->
+                                                                                    <!-- section-content-right -->
+                                                                                    <div class="section-content-right">
+                                                                                        <!-- header-dashboard -->
+                                                                                    <jsp:include page="../common/menuDashBoard/header-dashboard.jsp"></jsp:include>    
+                                                                                        <!-- /header-dashboard -->
+                                                                                        <!-- main-content -->
 
-                                                                                    <div class="main-content">
-                                                                                        <!-- main-content-wrap -->
-                                                                                        <div class="main-content-inner">
+                                                                                        <div class="main-content">
                                                                                             <!-- main-content-wrap -->
-                                                                                            <div class="main-content-wrap">
+                                                                                            <div class="main-content-inner">
+                                                                                                <!-- main-content-wrap -->
+                                                                                                <div class="main-content-wrap">
 
-                                                                                                <!-- product-list -->
-                                                                                                <div class="wg-box" style="margin-bottom: 10px">
-                                                                                                    <div class="body-text">Request statistics</div>
-                                                                                                    <div  style="width: 500px ; height: 50px">
-                                                                                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get" style="display: flex">
-                                                                                                        <input type="hidden" name="action" value="option">
-                                                                                                            <select  name="select" style="background-color: #115ec2;color: white;">
-                                                                                                                <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
-                                                                                                                <c:forEach items="${type}" var="t">
-                                                                                                                    <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
-                                                                                                                    <i class="ti-arrow-down" style="color: white; font-size: 24px;"></i>
-                                                                                                                </c:forEach>
-                                                                                                            </select>
-                                                                                                           <button type="submit" style="background-color: #b2b9c2" >Submit Option</button>
+                                                                                                    <!-- product-list -->
+                                                                                                    <div class="wg-box" style="margin-bottom: 10px">
+                                                                                                        <div class="body-text">Request statistics</div>
+                                                                                                        <div  style="width: 500px ; height: 50px">
+                                                                                                            <form action="${pageContext.request.contextPath}/type-of-request" method="get" style="display: flex">
+                                                                                                            <input type="hidden" name="action" value="option">
+                                                                                                                <select  name="select" style="background-color: #115ec2;color: white;">
+                                                                                                                    <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
+                                                                                                                    <c:forEach items="${type}" var="t">
+                                                                                                                        <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
+                                                                                                                        <i class="ti-arrow-down" style="color: white; font-size: 24px;"></i>
+                                                                                                                    </c:forEach>
+                                                                                                                </select>
+                                                                                                                <button type="submit" style="background-color: #b2b9c2" >Submit Option</button>
 
-                                                                                                    </form>  
+                                                                                                        </form>  
+                                                                                                    </div>
+
+                                                                                                    <!--Message about Alert-->
+                                                                                                    <div id="mess" ><input type="hidden" name="name" value="1"></div> 
+
                                                                                                 </div>
+                                                                                                <!--start table-->
+                                                                                                <div class="manage-request">
+                                                                                                    <table>
+                                                                                                        <thead >
+                                                                                                            <tr style="background-color: #e4edeb;">
+                                                                                                                <th style="width: 100px">Image</th>
+                                                                                                                <th>Product name </th>
+                                                                                                                <th  style="width: 200px">Type</th>
+                                                                                                                <th>View Detail</th>
+                                                                                                                <th>Action</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <c:forEach items="${listFoodDraft}" var="foodD">
+                                                                                                                <tr>
+                                                                                                                    <td "><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
+                                                                                                                    <td>${foodD.name}</td>
+                                                                                                                    <td>${foodD.type}</td>
+                                                                                                                    <td>
+                                                                                                                        <form action="type-of-request" method="get">
+                                                                                                                            <input type="hidden" name="action" value="view">
+                                                                                                                                <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                    <button type="submit"  style="background-color: #ede1df;">View Detail</button>
+                                                                                                                                    </form>  
+                                                                                                                                    <!--view-->
 
-                                                                                                <!--Message about Alert-->
-                                                                                                <div id="mess" ><input type="hidden" name="name" value="1"></div> 
-                                                                                              
-                                                                                            </div>
-                                                                                            <!--start table-->
-                                                                                            <div class="manage-request">
-                                                                                                <table>
-                                                                                                    <thead >
-                                                                                                        <tr style="background-color: #e4edeb;">
-                                                                                                            <th style="width: 100px">Image</th>
-                                                                                                            <th>Product name </th>
-                                                                                                            <th  style="width: 200px">Type</th>
-                                                                                                            <th>View Detail</th>
-                                                                                                            <th>Action</th>
-                                                                                                        </tr>
-                                                                                                    </thead>
-                                                                                                    <tbody>
-                                                                                                        <c:forEach items="${listFoodDraft}" var="foodD">
-                                                                                                            <tr>
-                                                                                                                <td "><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
-                                                                                                                <td>${foodD.name}</td>
-                                                                                                                <td>${foodD.type}</td>
-                                                                                                                <td>
-                                                                                                                    <form action="type-of-request" method="get">
-                                                                                                                        <input type="hidden" name="action" value="view">
-                                                                                                                            <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                <button type="submit"  style="background-color: #ede1df;">View Detail</button>
-                                                                                                                                </form>  
-                                                                                                                                </td>
-                                                                                                                                <td>
-                                                                                                                                    <div style="display: flex;justify-content: center;gap: 12px">
-                                                                                                                                        <form action="type-of-request" method="get">
-                                                                                                                                            <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                <input type="hidden" name="action" value="accept">
-                                                                                                                                                    <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                        <button type="submit"  style="background-color: #02b80b;color: white"
-                                                                                                                                                                onclick="handleAccept(event)" >
-                                                                                                                                                            Accept
-                                                                                                                                                         </button>
-                                                                                                                                                        </form>
-                                                                                                                                                        <form action="type-of-request" method="get">
-                                                                                                                                                            <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                                <input type="hidden" name="action" value="reject">
-                                                                                                                                                                    <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                                         <button type="submit"  style="background-color: #e60004;color: white"
-                                                                                                                                                                                onclick="handleReject(event)"  >
-                                                                                                                                                                           Reject 
-                                                                                                                                                                        </button>
-                                                                                                                                                                        </form>     
-                                                                                                                                                                        </div>  
-                                                                                                                                                                        </td>
-                                                                                                                                                                        </tr>
-                                                                                                                                                                    </c:forEach>
-                                                                                                                                                                    </tbody>
-                                                                                                                                                                    </table>
+                                                                                                                                    <!--                                                                                                                                end view-->
+                                                                                                                                    </td>
+                                                                                                                                    <td>
+                                                                                                                                        <div style="display: flex;justify-content: center;gap: 12px">
+                                                                                                                                            <form action="type-of-request" method="get">
+                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
+                                                                                                                                                    <input type="hidden" name="action" value="accept">
+                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                                            <button type="submit"  style="background-color: #02b80b;color: white"
+                                                                                                                                                                    onclick="handleAccept(event)" >
+                                                                                                                                                                Accept
+                                                                                                                                                            </button>
+                                                                                                                                                            </form>
+                                                                                                                                                            <form action="type-of-request" method="get">
+                                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
+                                                                                                                                                                    <input type="hidden" name="action" value="reject">
+                                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                                                            <button type="submit"  style="background-color: #e60004;color: white"
+                                                                                                                                                                                    onclick="handleReject(event)"  >
+                                                                                                                                                                                Reject 
+                                                                                                                                                                            </button>
+                                                                                                                                                                            </form>   
+
+                                                                                                                                                                            <!--com-->
 
 
+                                                                                                                                                                            <!--                                                                                                                                                                         <div class="list-icon-function">
+                                                                                                                                                                            
+                                                                                                                                                                                                        <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}">
+                                                                                                                                                                                                        <div class="item eye">
+                                                                                                                                                                                                        <i class="icon-eye"></i>
+                                                                                                                                                                                                        </div> 
+                                                                                                                                                                                                        </a>
+                                                                                                                                                                            
+                                                                                                                                                                                                        <a href="reject?action=accept&select=${foodD.type}&id=${foodD.id}">
+                                                                                                                                                                                                        <div class="item edit">
+                                                                                                                                                                                                        <i class="icon-edit-3"></i>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        <a href="accept?action=reject&select=${foodD.type}&id=${foodD.id}">
+                                                                                                                                                                                                        <div class="item trash">
+                                                                                                                                                                                                        <i class="icon-trash-2"></i>
+                                                                                                                                                                                                        </div>    
+                                                                                                                                                                                                        </a>
+                                                                                                                                                                                                        </div>-->
+                                                                                                                                                                            </div>
+                                                                                                                                                                            </div>
 
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <!--end table-->
-                                                                                                                                                                 
-                                                                                                                                                                    </div>
-                                                                                                                                                                 
-                                                                                                                                                    <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                                                                                        <div class="text-tiny">Showing 10 entries</div>
-                                                                                                                                                                        <ul class="wg-pagination">
-                                                                                                                                                                            <li>
-                                                                                                                                                                                <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                                                                                            </li>
-                                                                                                                                                                              <c:forEach var="i" begin="1" end="${totalPages}">
-                                                                                                                                                                                <c:choose>
-                                                                                                                                                                                    <c:when test="${i == currentPage}">
-                                                                                                                                                                                        <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 40px;display: flex;justify-content: center;align-items: center">${i}</li>
-                                                                                                                                                                                    </c:when>
-                                                                                                                                                                                    <c:otherwise>
-                                                                                                                                                                                        <li>
-                                                                                                                                                                                           <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
-                                                                                                                                                                                        </li>
-                                                                                                                                                                                      
-                                                                                                                                                                                    </c:otherwise>
-                                                                                                                                                                                </c:choose>
-                                                                                                                                                                            </c:forEach> 
-                                                                                                                                                                            <li>
-                                                                                                                                                                                <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                                                                                            </li>
-                                                                                                                                                                         </ul>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <!-- /product-list -->
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                                                                    </div>
-                                                                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                                                                    <!-- bottom-page -->
-                                                                                                                                                                    <jsp:include page="../common/menuDashBoard/bottom-page.jsp"></jsp:include>
-                                                                                                                                                                        <!-- /bottom-page -->
+                                                                                                                                                                            <!--com-->
+                                                                                                                                                                            </div>  
+                                                                                                                                                                            </td>
+                                                                                                                                                                            </tr>
+                                                                                                                                                                        </c:forEach>
+                                                                                                                                                                        </tbody>
+                                                                                                                                                                        </table>
+
+
+
                                                                                                                                                                         </div>
-                                                                                                                                                                        <!-- /main-content -->
+                                                                                                                                                                        <!--end table-->
+
                                                                                                                                                                         </div>
-                                                                                                                                                                        <!-- /section-content-right -->
+
+                                                                                                                                                                        <div class="flex items-center justify-between flex-wrap gap10">
+                                                                                                                                                                            <div class="text-tiny">Showing 10 entries</div>
+                                                                                                                                                                            <ul class="wg-pagination">
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="#"><i class="icon-chevron-left"></i></a>
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                                                                                                                                    <c:choose>
+                                                                                                                                                                                        <c:when test="${i == currentPage}">
+                                                                                                                                                                                            <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 40px;display: flex;justify-content: center;align-items: center">${i}</li>
+                                                                                                                                                                                            </c:when>
+                                                                                                                                                                                            <c:otherwise>
+                                                                                                                                                                                            <li>
+                                                                                                                                                                                                <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
+                                                                                                                                                                                            </li>
+
+                                                                                                                                                                                        </c:otherwise>
+                                                                                                                                                                                    </c:choose>
+                                                                                                                                                                                </c:forEach> 
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <a href="#"><i class="icon-chevron-right"></i></a>
+                                                                                                                                                                                </li>
+                                                                                                                                                                            </ul>
                                                                                                                                                                         </div>
-                                                                                                                                                                        <!-- /layout-wrap -->
                                                                                                                                                                         </div>
-                                                                                                                                                                        <!-- /#page -->
-                                                                                                                                                                 
+                                                                                                                                                                        <!-- /product-list -->
                                                                                                                                                                         </div>
-                                                                                                                                                                        <!-- /#wrapper -->
+                                                                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                                                                        <!-- bottom-page -->
+                                                                                                                                                                        <jsp:include page="../common/menuDashBoard/bottom-page.jsp"></jsp:include>
+                                                                                                                                                                            <!-- /bottom-page -->
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <!-- /main-content -->
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <!-- /section-content-right -->
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <!-- /layout-wrap -->
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <!-- /#page -->
 
-                                                                                                                                                                        <!-- Javascript -->
-                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/apexcharts.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-1.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-2.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-3.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-4.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-5.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-6.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<!-- iziToast JS -->
-<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
-                                                                                                                                                                    <script>
-                                                                                                                                                                                                      
- function handleAccept(event) {
-    event.preventDefault(); // Ngăn form submit ngay
+                                                                                                                                                                            </div>
+                                                                                                                                                                            <!-- /#wrapper -->
 
-    Swal.fire({
-        title: 'Are you want to Accept?',
-        text: "This Item will be handle",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-       background:'#fff3cd'
-    }).then((result) => {
-        if (result.isConfirmed) {
-             // Lưu trạng thái
-            localStorage.setItem('showSuccessToast', 'true');
-            // Gửi form thủ công
-            event.target.form.submit();
-              
-        }
-    });
-}
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('showSuccessToast') === 'true') {
-        iziToast.success({
-            title: 'Successful',
-            message: 'Processing Successful!',
-            position: 'topRight'
-        });
-        localStorage.removeItem('showSuccessToast'); // Xóa để không hiện lại
-    }
-});
-function handleReject(event) {
-    event.preventDefault(); // Ngăn form submit ngay
+                                                                                                                                                                            <!-- Javascript -->
+                                                                                                                                                                            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/apexcharts.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-1.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-2.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-3.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-4.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-5.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/apexcharts/line-chart-6.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                                                                        <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                                                                        <!-- iziToast JS -->
+                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+                                                                                                                                                                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
+                                                                                                                                                                        <script>
 
-    Swal.fire({
-        title: 'Are you want to Reject?',
-        text: "This Item will be handle",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-       background:'#fff3cd'
-    }).then((result) => {
-        if (result.isConfirmed) {
-             // Lưu trạng thái
-            localStorage.setItem('showSuccessToast', 'true');
-            // Gửi form thủ công
-            event.target.form.submit();
-              
-        }
-    });
-}
-    
-              
-                                                                                                                                                                    </script>
-                                                                                                                                                                    </body>
+                                                                                                                                                                                        function handleAccept(event) {
+                                                                                                                                                                                            event.preventDefault(); // Ngăn form submit ngay
+
+                                                                                                                                                                                            Swal.fire({
+                                                                                                                                                                                                title: 'Are you want to Accept?',
+                                                                                                                                                                                                text: "This Item will be handle",
+                                                                                                                                                                                                icon: 'question',
+                                                                                                                                                                                                showCancelButton: true,
+                                                                                                                                                                                                confirmButtonText: 'Confirm',
+                                                                                                                                                                                                cancelButtonText: 'Cancel',
+                                                                                                                                                                                                background: '#fff3cd'
+                                                                                                                                                                                            }).then((result) => {
+                                                                                                                                                                                                if (result.isConfirmed) {
+                                                                                                                                                                                                    // Lưu trạng thái
+                                                                                                                                                                                                    localStorage.setItem('showSuccessToast', 'true');
+                                                                                                                                                                                                    // Gửi form thủ công
+                                                                                                                                                                                                    event.target.form.submit();
+
+                                                                                                                                                                                                }
+                                                                                                                                                                                            });
+                                                                                                                                                                                        }
+                                                                                                                                                                                        window.addEventListener('DOMContentLoaded', () => {
+                                                                                                                                                                                            if (localStorage.getItem('showSuccessToast') === 'true') {
+                                                                                                                                                                                                iziToast.success({
+                                                                                                                                                                                                    title: 'Successful',
+                                                                                                                                                                                                    message: 'Processing Successful!',
+                                                                                                                                                                                                    position: 'topRight'
+                                                                                                                                                                                                });
+                                                                                                                                                                                                localStorage.removeItem('showSuccessToast'); // Xóa để không hiện lại
+                                                                                                                                                                                            }
+                                                                                                                                                                                        });
+                                                                                                                                                                                        function handleReject(event) {
+                                                                                                                                                                                            event.preventDefault(); // Ngăn form submit ngay
+
+                                                                                                                                                                                            Swal.fire({
+                                                                                                                                                                                                title: 'Are you want to Reject?',
+                                                                                                                                                                                                text: "This Item will be handle",
+                                                                                                                                                                                                icon: 'question',
+                                                                                                                                                                                                showCancelButton: true,
+                                                                                                                                                                                                confirmButtonText: 'Confirm',
+                                                                                                                                                                                                cancelButtonText: 'Cancel',
+                                                                                                                                                                                                background: '#fff3cd'
+                                                                                                                                                                                            }).then((result) => {
+                                                                                                                                                                                                if (result.isConfirmed) {
+                                                                                                                                                                                                    // Lưu trạng thái
+                                                                                                                                                                                                    localStorage.setItem('showSuccessToast', 'true');
+                                                                                                                                                                                                    // Gửi form thủ công
+                                                                                                                                                                                                    event.target.form.submit();
+
+                                                                                                                                                                                                }
+                                                                                                                                                                                            });
+                                                                                                                                                                                        }
 
 
-                                                                                                                                                                    <!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:12 GMT -->
-                                                                                                                                                                    </html>
+                                                                                                                                                                        </script>
+                                                                                                                                                                        </body>
+
+
+                                                                                                                                                                        <!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:12 GMT -->
+                                                                                                                                                                        </html>

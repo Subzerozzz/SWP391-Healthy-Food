@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Admin
- */
+
 public class RequestDAO extends DBContext implements I_DAO<Request> {
 
     @Override
@@ -80,16 +77,6 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         return list;
     }
 
-    @Override
-    public Map<Integer, Request> findAllMap() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public boolean update(Request t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     public boolean updateResult(String result, int id) {
         String sql = "Update Request Set statusRequest = ? ,result = ? where foodDraftId = ? ";
         try {
@@ -125,11 +112,6 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     }
 
     @Override
-    public int insert(Request t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public Request getFromResultSet(ResultSet resultSet) throws SQLException {
         Request request = Request
                 .builder()
@@ -140,23 +122,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
                 .build();
         return request;
     }
-    // Update status DONE when Accept or Reject a Food_Draft
-
-    public boolean updateRequestFoodDraftById(int id) {
-        String sql = "UPDATE Request SET statusRequest = 'DONE' where foodDraftId = ?";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            return statement.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
+    
     @Override
     public Request findById(Integer id) {
         String sql = "Select * from Request where foodDraftId = ?";
@@ -176,9 +142,24 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         return null;
     }
 
+     @Override
+    public Map<Integer, Request> findAllMap() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean update(Request t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    @Override
+    public int insert(Request t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+   
     public static void main(String[] args) {
         RequestDAO dao = new RequestDAO();
-        dao.updateRequestFoodDraftById(3);
+     
         List<Request> lits = dao.findAll();
         for (Request lit : lits) {
             System.out.println(lit);
@@ -186,5 +167,4 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
         System.out.println(dao.findById(6));
         System.out.println(dao.checkReload(132));
     }
-
 }

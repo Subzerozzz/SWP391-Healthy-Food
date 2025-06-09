@@ -5,6 +5,7 @@
 package com.su25.swp391.dal.implement;
 
 import com.mysql.cj.xdevapi.PreparableStatement;
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Food_Draft;
@@ -20,11 +21,12 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
     @Override
     public List< Food_Draft> findAll() {
         String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
-                + "where r.statusRequest = 'Not done' ";
+                + "where r.statusRequest = ?' ";
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
@@ -36,16 +38,17 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
-    public List< Food_Draft> getFoodDraftByPage(int page,int pageSize) {
+    public List< Food_Draft> getFoodDraftByPage(int page, int pageSize) {
         String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
-                + "where r.statusRequest = 'Not done' LIMIT ? OFFSET ?";
+                + "where r.statusRequest = ? LIMIT ? OFFSET ?";
         int offset = (page - 1) * pageSize;
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, pageSize);
-            statement.setInt(2,offset );
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
+            statement.setInt(2, pageSize);
+            statement.setInt(3, offset);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
@@ -58,33 +61,35 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         return list;
     }
     
-     public int getTotalFoodDraftCount() {
-   String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
-                + "where r.statusRequest = 'Not done'";
-         try {
-             connection= getConnection();
-             statement = connection.prepareStatement(sql);
-             resultSet = statement.executeQuery();
-             if(resultSet.next()){
-                 return resultSet.getInt(1);
-             }
-         } catch (Exception e) {
-             e.printStackTrace();
-         } finally {
-             closeResources();
-         }
-     return 0;
-}
+    public int getTotalFoodDraftCount() {
+        String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = ? ";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
      
     
     public List< Food_Draft> findAllByResult(String option) {
         String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
-                + "where r.statusRequest = 'Not done' and f.type = ?";
+                + "where r.statusRequest = ? and f.type = ?";
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, option);
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
+            statement.setString(2, option);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
@@ -114,18 +119,19 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return list;
     }
-    public List<Food_Draft> findAllByType(String type,int page,int pageSize) {
-          String sql = "select * from  FoodDraft as f"
-                  + " inner join Request as r on f.id = r.foodDraftId "
-                  + "where r.statusRequest = 'Not done' and f.type = ? LIMIT ? OFFSET ?";
-           int offset = (page - 1) * pageSize;
+    public List<Food_Draft> findAllByType(String type, int page, int pageSize) {
+        String sql = "select * from  FoodDraft as f"
+                + " inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = ? and f.type = ? LIMIT ? OFFSET ?";
+        int offset = (page - 1) * pageSize;
         List< Food_Draft> list = new ArrayList<>();
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, type);
-            statement.setInt(2, pageSize);
-            statement.setInt(3,offset );
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
+            statement.setString(2, type);
+            statement.setInt(3, pageSize);
+            statement.setInt(4, offset);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
@@ -136,67 +142,28 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
             closeResources();
         }
         return list;
-       
+
     }
-       public int getTotalFoodDCountBySelect(String option) {
-   String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
-                + "where r.statusRequest = 'Not done' and f.type = ?";
-         try {
-             connection= getConnection();
-             statement = connection.prepareStatement(sql);
-             statement.setString(1, option);
-             resultSet = statement.executeQuery();
-             if(resultSet.next()){
-                 return resultSet.getInt(1);
-             }
-         } catch (Exception e) {
-             e.printStackTrace();
-         } finally {
-             closeResources();
-         }
-     return 0;
-}
-
-    public List<Food_Draft> findAllFoodDrartByRequest() {
-        String sql = "select f.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
-                + "on r.foodDraftId = f.id Where f.status = 'pending'";
-        List<Food_Draft> list = new ArrayList<>();
+    public int getTotalFoodDCountBySelect(String option) {
+        String sql = "select COUNT(*) from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
+                + "where r.statusRequest = ? and f.type = ?";
         try {
-
             connection = getConnection();
             statement = connection.prepareStatement(sql);
+            statement.setString(1, GlobalConfig.STATUS_REQUEST_NOT_DONE);
+            statement.setString(2, option);
             resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                list.add(getFromResultSet(resultSet));
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             closeResources();
         }
-        return list;
-        
+        return 0;
     }
-    // Find Type of Request is CREATE FOOD
-     public List<Food_Draft> findAllFoodByCreateRequest() {
-        String sql = "select f.* from swp391_healthy_food.Request as r inner join swp391_healthy_food.Food_Draft as f \n"
-                + "on r.foodDraftId = f.id Where f.status = 'pending' and r.typeOfRequest = 'CREATE'";
-        List<Food_Draft> list = new ArrayList<>();
-        try {
 
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                list.add(getFromResultSet(resultSet));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return list;
-    }
 
     @Override
     public Map<Integer, Food_Draft> findAllMap() {
@@ -207,37 +174,7 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
     public boolean update(Food_Draft t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-     // UPDATE STATUS APPROVED WHEN ACCEPT A FOOD_DRAFT
-    public boolean updateStatusAccept(int id){
-        String sql = " UPDATE Food_Draft SET status = 'Approved' where id = ? ";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            return statement.executeUpdate()>0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-   
-      public boolean updateStatusReject(int id){
-        String sql = " UPDATE Food_Draft SET status = 'Reject' where id = ? ";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, id);
-            return statement.executeUpdate()>0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
+    
     @Override
     public boolean delete(Food_Draft t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -273,55 +210,33 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
 
     @Override
     public Food_Draft findById(Integer id) {
-         String sql = "select * from swp391_healthy_food.FoodDraft where id = ? ";
-          try {
-      connection =getConnection();
-      statement = connection.prepareStatement(sql);
-      statement.setInt(1, id);
-      resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return getFromResultSet(resultSet);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
+        String sql = "select * from swp391_healthy_food.FoodDraft where id = ? ";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
     }
-    return null;
-    }
-    // Find Food_Draft By ID in CREATE FOOD
-    public Food_Draft findByIdCreateFood(Integer id) {
-         String sql = "select f.* from swp391_healthy_food.Request as r"
-                 + " inner join swp391_healthy_food.Food_Draft as f " 
-                       +"on r.foodDraftId = f.id  WHERE f.id = ? and  r.typeOfRequest = 'CREATE' ";
-           try {
-     
-      connection =getConnection();
-      statement = connection.prepareStatement(sql);
-      statement.setInt(1, id);
-      resultSet = statement.executeQuery();
-      if (resultSet.next()) {
-        return getFromResultSet(resultSet);
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-    } finally {
-      closeResources();
-    }
-    return null;
-    }
+ 
 
     public static void main(String[] args) {
         Food_DraftDAO dao = new Food_DraftDAO();
-      Food_Draft f = dao.findById(4);
+        Food_Draft f = dao.findById(4);
 //        dao.updateStatus(1);
         // System.out.println(f);
-       
-        System.out.println("--");
-        for (String string : dao.findAllType()) {
-            System.out.println(string);
-        }
         
-    
-   }
+        System.out.println("--");
+        
+        System.out.println(dao.findById(3));
+        
+    }
 }
