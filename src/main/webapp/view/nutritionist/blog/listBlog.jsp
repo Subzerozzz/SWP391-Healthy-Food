@@ -99,18 +99,18 @@
                                         <div class="body-text">Tip search by Blog ID: Each blog is provided with a unique ID, which you can rely on to find the exact product you need.</div>
                                     </div>
                                     <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
-                                            <div class="show">
-                                                <div class="text-tiny">Showing</div>
-                                                <div class="select">
-                                                    <select class="">
-                                                        <option>10</option>
-                                                        <option>20</option>
-                                                        <option>30</option>
-                                                    </select>
-                                                </div>
-                                                <div class="text-tiny">entries</div>
-                                            </div>
+                                        <!-- Filter -->
+                                       <div class="wrapper-flex">
+                                           <!-- Form lọc (nằm ngang) -->
+                                           <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
+                                           <input type="hidden" name="action" value="filter" />
+                                               <select name="status" class="form-control">
+                                                   <option value="">All Status</option>
+                                                   <option value="true" <c:if test="${param.status == 'true'}">selected</c:if>>Active</option>
+                                                   <option value="false" <c:if test="${param.status == 'false'}">selected</c:if>>Inactive</option>
+                                               </select>
+                                               <button type="submit" class="filter-button">Lọc</button>
+                                       </form>
                                             <!-- Search -->
                                             <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
                                             <div class="search-container">
@@ -120,6 +120,7 @@
                                                         </div>
                                             </form>
                            <style>
+                               
                                .blog-table-container {
                                    font-family: 'Segoe UI', sans-serif;
                                    width: 100%;
@@ -218,10 +219,12 @@
                                    align-items: center;
                                    border: 1px solid #e2e8f0; /* viền nhạt */
                                    border-radius: 12px; /* bo góc */
-                                   padding: 8px 12px;
+                                   padding: 10px 90px;;
                                    background-color: white;
                                    max-width: 600px;
                                    width: 100%;
+                                   margin-top: 40px
+                                   bor
                                }
 
                                .search-container input[type="text"] {
@@ -245,6 +248,7 @@
 
                                .search-container i.icon-search {
                                    font-size: 18px;
+                                   padding-left: 120px;
                                    color: #333;
                                }
                            </style>    

@@ -254,81 +254,54 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 //             System.out.println(blog1);
 //        }
 //    }
-    public List<Blog> findBlogsWithFilter(String title, String status, int page, int pageSize) {
+    public List<Blog> filterBlogsWithPagination(Boolean status, int page, int pageSize) {
         List<Blog> blogs = new ArrayList<>();
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-
-        // Add title filter if provided
-        if (title != null && !title.isEmpty()) {
-            sqlBuilder.append(" AND title LIKE ?");
-            params.add("%" + title + "%");
+        StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+        if (status != null) {
+            sql.append(" AND status = ?");
         }
-
-        // Add status filter if provided
-        if (status != null && !status.isEmpty()) {
-            sqlBuilder.append(" AND status = ?");
-            params.add(status);
-        }
-
-        // Add ordering and pagination
-        sqlBuilder.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-
+        sql.append(" ORDER BY id LIMIT ?, ?");
         try {
             connection = getConnection();
-            statement = connection.prepareStatement(sqlBuilder.toString());
-
-            // Set parameters
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
             }
-
+            statement.setInt(paramIndex++, (page - 1) * pageSize);
+            statement.setInt(paramIndex++, pageSize);
             resultSet = statement.executeQuery();
-
             while (resultSet.next()) {
                 blogs.add(getFromResultSet(resultSet));
             }
-        } catch (SQLException e) {
-            System.out.println("Error finding blogs with filter: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error filtering accounts with pagination: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             closeResources();
         }
+
         return blogs;
     }
-    public int countBlogsWithFilter(String title, String status) {
-        StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
-        List<Object> params = new ArrayList<>();
-        
-        // Add title filter if provided
-        if (title != null && !title.isEmpty()) {
-            sqlBuilder.append(" AND title LIKE ?");
-            params.add("%" + title + "%");
+    public int getTotalBlogCountWithFilter(Boolean status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
+        if (status != null) {
+            sql.append(" AND status = ?");
         }
-        
-        // Add status filter if provided
-        if (status != null && !status.isEmpty()) {
-            sqlBuilder.append(" AND status = ?");
-            params.add(status);
-        }
-        
+
         try {
             connection = getConnection();
-            statement = connection.prepareStatement(sqlBuilder.toString());
-            
-            // Set parameters
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
             }
-            
             resultSet = statement.executeQuery();
-            
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }
-        } catch (SQLException e) {
-            System.out.println("Error counting blogs with filter: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error counting filtered accounts: " + e.getMessage());
         } finally {
             closeResources();
         }
@@ -375,5 +348,6 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     }
     return 0;
 }
+   
 
 }
