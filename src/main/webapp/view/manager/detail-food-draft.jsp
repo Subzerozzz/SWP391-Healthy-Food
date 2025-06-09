@@ -87,7 +87,10 @@
                                                                                                 </div>
                                                                                                 <p>Type: ${foodD.type}</p>
                                                                                                 <p class="description">
-                                                                                                    ${foodD.description}
+                                                                                                   ${foodD.description}
+                                                                                                </p>
+                                                                                                <p class="description">
+                                                                                                 Number of Calo: ${foodD.calo}
                                                                                                 </p>
                                                                                                 <p>Black Fresh Berry is a delicious and nutritious fruit, rich in antioxidants and flavor. Perfect for a healthy snack or to add freshness to your desserts and smoothies.</p>
                                                                                                 <div style="display: flex;gap: 15px">
