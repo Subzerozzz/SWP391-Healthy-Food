@@ -341,36 +341,35 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
-    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
+ private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String searchKeyword = request.getParameter("search");
+        String indexStr = request.getParameter("index");
+        int currentPage = 1;
+        int pageSize = 10; // số bản ghi mỗi trang, bạn có thể chỉnh lại
+
+        if (indexStr != null) {
+            try {
+                currentPage = Integer.parseInt(indexStr);
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
         if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/manage-blog?action=list");
             return;
         }
         searchKeyword = searchKeyword.trim();
-
-        // Lấy chỉ số trang hiện tại
-        String indexPage = request.getParameter("index");
-        int currentPage = (indexPage == null) ? 1 : Integer.parseInt(indexPage);
-        int blogsPerPage = 10;
-        int offset = (currentPage - 1) * blogsPerPage;
-
-        // Tổng số blog sau khi tìm kiếm
-        int totalBlogs = blogDAO.getTotalBlogCountBySearch(searchKeyword);
-        int totalPage = (int) Math.ceil(totalBlogs / (double) blogsPerPage);
-
-        // Lấy danh sách blog theo trang
-        List<Blog> blogs = blogDAO.searchBlogsByTitleOrAuthor(searchKeyword, offset, blogsPerPage);
-
-        // Gửi dữ liệu sang JSP
-        request.setAttribute("blogs", blogs);
+        int offset = (currentPage - 1) * pageSize;
+        // Lấy danh sách blog theo từ khóa và phân trang
+        List<Blog> listBlog = blogDAO.searchBlogsByTitleorStatus(searchKeyword, offset, pageSize);
+        // Lấy tổng số blog phù hợp để tính tổng trang
+        int totalBlogs = blogDAO.countBlogsBySearch(searchKeyword);
+        int totalPage = (int) Math.ceil((double) totalBlogs / pageSize);
+        request.setAttribute("blogs", listBlog);
         request.setAttribute("search", searchKeyword);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPage", totalPage);
-        request.setAttribute("action", "search");
-
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
 

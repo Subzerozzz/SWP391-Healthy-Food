@@ -111,6 +111,7 @@
                                                 </div>
                                                 <div class="text-tiny">entries</div>
                                             </div>
+                                            <!-- Search -->
                                             <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
                                             <div class="search-container">
                                                 <input type="text" name="search" placeholder="Search here..." value="${param.search}">
@@ -289,7 +290,7 @@
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing ${blogs.size()} entries</div>
-                                        
+                                        <!-- # Phân Trang -->
                                         <ul class="wg-pagination">
                                             <c:set var="queryString" value="&search=${param.search}&action=${param.action}" />
                                             <!-- Nút Trang Trước -->
