@@ -170,7 +170,7 @@ public class ManageBlogController extends HttpServlet {
                 request.getSession().setAttribute("totalMess", "Add new Blog Success");
                 request.getSession().setAttribute("totalType", "Success");
                 session.setAttribute("isAdd", true);
-                listBlogDoGet(request, response);
+                response.sendRedirect("manage-blog?action=list");
                 return;
             } else {
                 request.getSession().setAttribute("totalMess", "Fail to add Blog");
@@ -245,6 +245,7 @@ public class ManageBlogController extends HttpServlet {
             indexPage = "1";
         }
         int currentPage = Integer.parseInt(indexPage);
+        BlogDAO blogDAO = new BlogDAO(); 
         int totalBlogs = blogDAO.getTotalBlog();
         int totalPage = totalBlogs / 10;
         if (totalBlogs % 10 != 0) {
@@ -303,7 +304,7 @@ public class ManageBlogController extends HttpServlet {
                 request.getSession().setAttribute("toastType", "error");
             }
         } else {
-            request.getSession().setAttribute("toatMessage", "Blog not found");
+            request.getSession().setAttribute("toastMessage", "Blog not found");
             request.getSession().setAttribute("toastType", "error");
         }
 
