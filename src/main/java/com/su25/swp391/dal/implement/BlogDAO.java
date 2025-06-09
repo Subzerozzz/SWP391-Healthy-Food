@@ -254,26 +254,6 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 //             System.out.println(blog1);
 //        }
 //    }
-
-    public List<Blog> getBlogByName(String blogName) {
-        List<Blog> listBlog = null;
-        String sql = "SELECT * FROM blogs WHERE title LIKE ?";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setString(1, "%" + blogName + "%");
-            resultSet = statement.executeQuery();
-            listBlog = new ArrayList<>();
-            while (resultSet.next()) {
-                listBlog.add(getFromResultSet(resultSet));
-            }
-        } catch (Exception e) {
-            System.out.println("Error searching blog: " + e.getMessage());
-        } finally {
-            closeResources();
-        }
-        return listBlog;
-    }
     public List<Blog> findBlogsWithFilter(String title, String status, int page, int pageSize) {
         List<Blog> blogs = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
@@ -354,5 +334,41 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return 0;
     }
-    
+    public List<Blog> searchBlogsByTitleorStatus(String keyword) {
+    List<Blog> blogs = new ArrayList<>();
+    String sql = "SELECT * FROM blogs WHERE title LIKE ? OR status LIKE ?";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        String likeKeyword = "%" + keyword + "%";
+        statement.setString(1, likeKeyword);
+        statement.setString(2, likeKeyword);
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            blogs.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        System.out.println("Error searching accounts: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+    return blogs;
+}
+     public int getTotalBlogCount() {
+        String sql = "SELECT COUNT(*) FROM blogs";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting blogs: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
 }
