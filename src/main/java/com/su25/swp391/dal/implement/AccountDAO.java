@@ -42,8 +42,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return account;
     }
 
-
-
     @Override
     public Map<Integer, Account> findAllMap() {
         Map<Integer, Account> accountMap = new HashMap<>();
@@ -105,12 +103,14 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getFull_name());
-           
-            statement.setBoolean(2, t.getStatus());
-            statement.setString(3, t.getMobile());
-            statement.setString(4, t.getGender());
-            statement.setString(5, t.getAddress());
-            statement.setInt(6, t.getId());
+            statement.setString(2, t.getEmail());
+            statement.setString(3, t.getUser_name());
+            statement.setString(4, t.getRole());
+            statement.setBoolean(5, t.getStatus());
+            statement.setString(6, t.getMobile());
+            statement.setString(7, t.getGender());
+            statement.setString(8, t.getAddress());
+            statement.setInt(9, t.getId());
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -160,6 +160,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return list;
     }
+
     //dem so luong account trong db
     public int getTotalAccount() {
         String sql = "select count(*) from Swp301_pr.account";
@@ -176,51 +177,50 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return 0;
     }
+
     public List<Account> filterAccountsPaging(String role, Boolean status, int pageIndex, int pageSize) {
-    List<Account> accounts = new ArrayList<>();
-    StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
+        List<Account> accounts = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
 
-    if (role != null && !role.isEmpty()) {
-        sql.append(" AND role = ?");
-    }
-    if (status != null) {
-        sql.append(" AND status = ?");
-    }
-
-    sql.append(" ORDER BY id");
-    sql.append(" LIMIT ? OFFSET ?");
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-        int paramIndex = 1;
-
-        // Thêm tham số lọc
         if (role != null && !role.isEmpty()) {
-            statement.setString(paramIndex++, role);
+            sql.append(" AND role = ?");
         }
         if (status != null) {
-            statement.setBoolean(paramIndex++, status);
+            sql.append(" AND status = ?");
         }
 
-        // Thêm tham số phân trang
-        statement.setInt(paramIndex++, pageSize); // LIMIT
-        statement.setInt(paramIndex++, (pageIndex - 1) * pageSize); // OFFSET
+        sql.append(" ORDER BY id");
+        sql.append(" LIMIT ? OFFSET ?");
 
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            accounts.add(getFromResultSet(resultSet));
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Thêm tham số lọc
+            if (role != null && !role.isEmpty()) {
+                statement.setString(paramIndex++, role);
+            }
+            if (status != null) {
+                statement.setBoolean(paramIndex++, status);
+            }
+
+            // Thêm tham số phân trang
+            statement.setInt(paramIndex++, pageSize); // LIMIT
+            statement.setInt(paramIndex++, (pageIndex - 1) * pageSize); // OFFSET
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                accounts.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering and paging accounts: " + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error filtering and paging accounts: " + e.getMessage());
-    } finally {
-        closeResources();
+
+        return accounts;
     }
-
-    return accounts;
-}
-    
-
 
     @Override
     public int insert(Account t) {
@@ -321,17 +321,18 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
-     // Phương thức phân trang cho tất cả tài khoản
+    // Phương thức phân trang cho tất cả tài khoản
+
     public List<Account> findAllWithPagination(int page, int pageSize) {
         List<Account> accounts = new ArrayList<>();
         String sql = "SELECT * FROM Swp301_pr.account ORDER BY id LIMIT ?, ?";
-        
+
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, (page - 1) * pageSize);
             statement.setInt(2, pageSize);
-            
+
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 accounts.add(getFromResultSet(resultSet));
@@ -342,10 +343,11 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         } finally {
             closeResources();
         }
-        
+
         return accounts;
     }
 // Đếm tổng số tài khoản
+
     public int getTotalAccountCount() {
         String sql = "SELECT COUNT(*) FROM Swp301_pr.account";
         try {
@@ -362,28 +364,29 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return 0;
     }
+
     //tim kiem theo ten nguoi dung nhap vao
     public List<Account> searchAccountsByNameOrEmail(String keyword) {
-    List<Account> accounts = new ArrayList<>();
-    String sql = "SELECT * FROM Swp301_pr.account WHERE full_name LIKE ? OR email LIKE ? OR address LIKE ?";
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        String likeKeyword = "%" + keyword + "%";
-        statement.setString(1, likeKeyword);
-        statement.setString(2, likeKeyword);
-        statement.setString(3, likeKeyword);
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            accounts.add(getFromResultSet(resultSet));
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT * FROM Swp301_pr.account WHERE full_name LIKE ? OR email LIKE ? OR address LIKE ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            statement.setString(2, likeKeyword);
+            statement.setString(3, likeKeyword);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                accounts.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching accounts: " + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error searching accounts: " + e.getMessage());
-    } finally {
-        closeResources();
+        return accounts;
     }
-    return accounts;
-}
 
     public boolean isEmailExists(String email, Integer id) {
         String sql = "SELECT COUNT (*) FROM Swp301_pr.account WHERE email = ?";
@@ -403,6 +406,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return false;
     }
 // Phương thức phân trang với bộ lọc
+
     public List<Account> filterAccountsWithPagination(String role, Boolean status, int page, int pageSize) {
         List<Account> accounts = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Swp301_pr.account WHERE 1=1");
@@ -413,7 +417,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         if (status != null) {
             sql.append(" AND status = ?");
         }
-        
+
         sql.append(" ORDER BY id LIMIT ?, ?");
 
         try {
@@ -427,7 +431,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             if (status != null) {
                 statement.setBoolean(paramIndex++, status);
             }
-            
+
             statement.setInt(paramIndex++, (page - 1) * pageSize);
             statement.setInt(paramIndex++, pageSize);
 
@@ -444,6 +448,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
         return accounts;
     }
+
     // Đếm tổng số tài khoản với bộ lọc
     public int getTotalAccountCountWithFilter(String role, Boolean status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Swp301_pr.account WHERE 1=1");

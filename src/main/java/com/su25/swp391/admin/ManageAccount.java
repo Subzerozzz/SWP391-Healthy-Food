@@ -18,6 +18,8 @@ import java.net.URLDecoder;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +89,6 @@ public class ManageAccount extends HttpServlet {
             case "edit":
                 updateAccount(request, response);
                 break;
-
             default:
                 listAccount(request, response);
                 break;
@@ -113,15 +114,12 @@ public class ManageAccount extends HttpServlet {
             throws ServletException, IOException {
 
         String searchKeyword = request.getParameter("search");
-
         // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
         if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/manage-account?action=list");
             return;
         }
-
         searchKeyword = searchKeyword.trim(); // Xóa khoảng trắng 2 đầu
-
         AccountDAO dao = new AccountDAO();
         List<Account> result = dao.searchAccountsByNameOrEmail(searchKeyword);
 
@@ -230,83 +228,101 @@ public class ManageAccount extends HttpServlet {
         request.getRequestDispatcher("view/admin/list_account.jsp").forward(request, response);
     }
 
-   private void addAccount(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    try {
-        // Lấy thông tin từ request
-        String full_name = request.getParameter("full_name");
-        String user_name = request.getParameter("user_name");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String address = request.getParameter("address");
-        String role = request.getParameter("role");
-        Boolean status = Boolean.parseBoolean(request.getParameter("status"));
-        String dateStr = request.getParameter("birth_date");
-        String mobile = request.getParameter("mobile");
-        String gender = request.getParameter("gender");
+    private void addAccount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Lấy thông tin từ request
+            String full_name = request.getParameter("full_name");
+            String user_name = request.getParameter("user_name");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String address = request.getParameter("address");
+            String role = request.getParameter("role");
+            Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+            String dateStr = request.getParameter("birth_date");
+            String mobile = request.getParameter("mobile");
+            String gender = request.getParameter("gender");
+            //khởi tạo map chung để chứa tất cả các lỗi
+            Map<String, String> errors = new HashMap<>();
+            errors.putAll(validateAccountData(full_name, email, password, mobile, 0));
+            if (user_name != null && email != null && user_name.equalsIgnoreCase(email)) {
+                errors.put("user_name", "Tên đăng nhập không được trùng với email");
+            }
+            // Xử lý ngày sinh
+            Date date = null;
+            if (dateStr != null && !dateStr.isEmpty()) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    java.util.Date utilDate = sdf.parse(dateStr);
+                    date = new java.sql.Date(utilDate.getTime());
 
-        // Xử lý ngày sinh
-        Date date = null;
-        if (dateStr != null && !dateStr.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date utilDate = sdf.parse(dateStr);
-                date = new java.sql.Date(utilDate.getTime());
-            } catch (ParseException e) {
-                request.setAttribute("error", "Định dạng ngày không đúng. Vui lòng dùng yyyy-MM-dd.");
+                    //tính tuổi
+                    LocalDate birtDate = date.toLocalDate();
+                    LocalDate now = LocalDate.now();
+                    int age = Period.between(birtDate, now).getYears();
+                    if (age < 18 || age > 80) {
+                        errors.put("birth_date", "Tuổi phải nằm trong khoảng từ 18 đến 80");
+                    }
+
+                } catch (ParseException e) {
+                    errors.put("birth_date", "Định dạng này không đúng .Vui lòng dùng đúng định dạng ");
+                }
+            }
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("hasValidateErr", true);
+                // Gán lại các giá trị đã nhập vào request để hiện lại trên form
+                request.setAttribute("full_name", full_name);
+                request.setAttribute("user_name", user_name);
+                request.setAttribute("email", email);
+                request.setAttribute("address", address);
+                request.setAttribute("role", role);
+                request.setAttribute("status", status);
+                request.setAttribute("birth_date", dateStr);
+                request.setAttribute("mobile", mobile);
+                request.setAttribute("gender", gender);
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
-        }
 
-        // Validate dữ liệu nhập
-        Map<String, String> errors = validateAccountData(full_name, email, password, mobile, 0);
-        if (!errors.isEmpty()) {
-            request.setAttribute("errors", errors);
-            request.setAttribute("formData", request.getParameterMap());
+            // Tạo đối tượng Account mới
+            Account newAccount = Account.builder()
+                    .full_name(full_name)
+                    .user_name(user_name)
+                    .email(email)
+                    .password(password)
+                    .address(address)
+                    .role(role)
+                    .status(status)
+                    .birth_date(date)
+                    .mobile(mobile)
+                    .gender(gender)
+                    .build();
+
+            AccountDAO accountDao = new AccountDAO();
+            boolean isSuccess = accountDao.insert(newAccount) > 0;
+
+            if (isSuccess) {
+                // Lưu message thành công vào session để hiển thị 1 lần
+                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công!");
+                request.getSession().setAttribute("toastType", "success");
+                // Redirect về trang quản lý tài khoản
+                response.sendRedirect(request.getContextPath() + "/manage-account");
+                return;
+            } else {
+                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
+                request.getSession().setAttribute("toastType", "Fail");
+                request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
+                return;
+            }
+        } catch (Exception e) {
+            request.getSession().setAttribute("totalMess", "Fail to add Account");
+            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            e.printStackTrace();
             request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
-            return;
         }
-
-        // Tạo đối tượng Account mới
-        Account newAccount = Account.builder()
-                .full_name(full_name)
-                .user_name(user_name)
-                .email(email)
-                .password(password)
-                .address(address)
-                .role(role)
-                .status(status)
-                .birth_date(date)
-                .mobile(mobile)
-                .gender(gender)
-                .build();
-
-        AccountDAO accountDao = new AccountDAO();
-        boolean isSuccess = accountDao.insert(newAccount) > 0;
-
-        if (isSuccess) {
-            // Lưu message thành công vào session để hiển thị 1 lần
-            request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công!");
-            request.getSession().setAttribute("toastType", "success");
-
-            // Redirect về trang quản lý tài khoản
-            response.sendRedirect(request.getContextPath() + "/manage-account");
-            return;
-        } else {
-            setToastMessage(request, "totalMess", "Fail to add Account");
-            setToastMessage(request, "totalType", "Err");
-            request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
-            return;
-        }
-    } catch (Exception e) {
-        request.getSession().setAttribute("totalMess", "Fail to add Account");
-        request.getSession().setAttribute("totalType", "Err" + e.getMessage());
-        e.printStackTrace();
-        request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
     }
-}
-
 
     private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -315,6 +331,7 @@ public class ManageAccount extends HttpServlet {
             String user_name = request.getParameter("user_name");
             String email = request.getParameter("email");
             String role = request.getParameter("role");
+            String address = request.getParameter("address");
             Boolean status = Boolean.parseBoolean(request.getParameter("status"));
             String mobile = request.getParameter("mobile");
             String gender = request.getParameter("gender");
@@ -322,32 +339,40 @@ public class ManageAccount extends HttpServlet {
             AccountDAO accountDao = new AccountDAO();
             Account account = accountDao.findById(accountId);
             //validate gia trị nhập vào
-//             Map<String, String> errors = new HashMap<>();
-//             if (mobile == null || !mobile.matches("^0\\d{9}$")) {
-//            errors.put("mobile", "Mobile must be 10 digits and start with 0.");
-//        }
-//            if (!errors.isEmpty()) {
-//                Map<String, String> formData = new HashMap<>();
-//                formData.put("full_name", full_name);
-//                formData.put("user_name", user_name);
-//                formData.put("email", email);
-//                formData.put("role", role);
-//                formData.put("mobile", mobile);
-//                formData.put("gender", gender);
-//                formData.put("status", String.valueOf(status));
-//
-//                request.setAttribute("errors", errors);
-//                request.setAttribute("formData", formData);
-//                request.setAttribute("account", account); // dùng nếu cần giá trị gốc
-//
-//                request.getRequestDispatcher("/view/admin/edit_account.jsp").forward(request, response);
-//                return;
-//            }
+             Map<String, String> errors = new HashMap<>();
+               if (mobile == null || mobile.trim().isEmpty()) {
+        errors.put("mobile", "Số điện thoại không được để trống");
+    } else {
+        // Regex số điện thoại Việt Nam: 10 hoặc 11 số, bắt đầu bằng 0 hoặc +84
+        String phoneRegex = "^(0|\\+84)(\\d{9,10})$";
+        if (!mobile.matches(phoneRegex)) {
+            errors.put("mobile", "Số điện thoại không hợp lệ (ví dụ: 0912345678 hoặc +84912345678)");
+        }
+    }
+            if (!errors.isEmpty()) {
+                Map<String, String> formData = new HashMap<>();
+                formData.put("full_name", full_name);
+                formData.put("user_name", user_name);
+                formData.put("email", email);
+                formData.put("role", role);
+                formData.put("address", address);
+                formData.put("mobile", mobile);
+                formData.put("gender", gender);
+                formData.put("status", String.valueOf(status));
+
+                request.setAttribute("errors", errors);
+                request.setAttribute("formData", formData);
+                request.setAttribute("account", account); // dùng nếu cần giá trị gốc
+
+                request.getRequestDispatcher("/view/admin/edit_account.jsp").forward(request, response);
+                return;
+            }
             //cap nhap nhung thong tin co the thay doi
             account.setFull_name(full_name);
             account.setEmail(email);
             account.setUser_name(user_name);
             account.setRole(role);
+            account.setAddress(address);
             account.setStatus(status);
             account.setMobile(mobile);
             account.setGender(gender);
@@ -356,7 +381,7 @@ public class ManageAccount extends HttpServlet {
             //xu ly ket qua 
             if (isSuccess) {
                 request.getSession().setAttribute("isUpdate", true); // ✅ thêm biến này để hiển thị toast
-                response.sendRedirect("manage-account");
+                 response.sendRedirect(request.getContextPath() + "/manage-account");
                 return;
             } else {
                 setToastMessage(request, "totalMess", "Fail to update Account");
@@ -371,6 +396,7 @@ public class ManageAccount extends HttpServlet {
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
             RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
             dispatcher.forward(request, response);
+            e.printStackTrace();
             return;
 
         }
@@ -386,14 +412,14 @@ public class ManageAccount extends HttpServlet {
         email = email != null ? email.trim() : null;
         mobile = mobile != null ? mobile.trim() : null;
         // Validate full_name
-        if (full_name == null || full_name.isEmpty()) {
+        if (full_name == null || full_name.trim().isEmpty()) {
             errors.put("full_name", "Username is required");
-        } else {
-            if (full_name.length() < 3 || full_name.length() > 50) {
-                errors.put("full_name", "Username must be between 3 and 50 characters");
-            } else if (!Pattern.matches("^[a-zA-Z0-9_]+$", full_name)) {
-                errors.put("full_name", "Username can only contain letters, numbers, and underscores");
-            }
+        } else if (!full_name.equals(full_name.trim())) {
+            errors.put("full_name", "Username must not start or end with a space");
+        } else if (full_name.length() < 3 || full_name.length() > 50) {
+            errors.put("full_name", "Username must be between 3 and 50 characters");
+        } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", full_name)) {
+            errors.put("full_name", "Username can only contain letters, numbers, underscores, and spaces");
         }
 
         // Validate email
