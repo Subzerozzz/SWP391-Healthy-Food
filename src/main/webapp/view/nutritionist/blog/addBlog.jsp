@@ -102,13 +102,13 @@
                                     <div class="wg-box">
                                         <fieldset class="title">
                                             <div class="body-title mb-10">Blog Title <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="title" tabindex="0" value="" aria-required="true" required="">
-                                            <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
+                                            <input class="mb-10" type="text" placeholder="Enter blog title" name="title" tabindex="0" value="" aria-required="true" required maxlength="255">
+                                                <div class="text-tiny">Do not exceed 255 characters when entering the blog title.</div>
                                         </fieldset>
                                         <fieldset class="briefinfo">
                                             <div class="body-title mb-10">Brief_info <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" placeholder="Enter briefinfo" name="briefinfo" tabindex="0" value="" aria-required="true" required="">
-                                                <div class="text-tiny">Do not exceed 100 characters when entering the author.</div>
+                                            <input class="mb-10" type="text" placeholder="Enter briefinfo" name="briefinfo" tabindex="0" value="" aria-required="true" required maxlength="255">
+                                                <div class="text-tiny">Do not exceed 255 characters when entering the author.</div>
                                         </fieldset>
 
                                         <div class="col-md-12">
