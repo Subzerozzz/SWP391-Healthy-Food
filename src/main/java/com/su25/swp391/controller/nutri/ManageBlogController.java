@@ -341,18 +341,36 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
-      private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
+    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String searchKeyword = request.getParameter("search");
-        // Kiểm tra nếu từ khóa null hoặc chỉ toàn khoảng trắng thì quay lại danh sách
         if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/manage-blog?action=list");
             return;
         }
-        searchKeyword = searchKeyword.trim(); // Xóa khoảng trắng 2 đầu
-        List<Blog> search = blogDAO.searchBlogsByTitleorStatus(searchKeyword);
-        request.setAttribute("blogs", search);
-        request.setAttribute("search", searchKeyword); // Hiển thị lại giá trị đã nhập trong ô input
+        searchKeyword = searchKeyword.trim();
+
+        // Lấy chỉ số trang hiện tại
+        String indexPage = request.getParameter("index");
+        int currentPage = (indexPage == null) ? 1 : Integer.parseInt(indexPage);
+        int blogsPerPage = 10;
+        int offset = (currentPage - 1) * blogsPerPage;
+
+        // Tổng số blog sau khi tìm kiếm
+        int totalBlogs = blogDAO.getTotalBlogCountBySearch(searchKeyword);
+        int totalPage = (int) Math.ceil(totalBlogs / (double) blogsPerPage);
+
+        // Lấy danh sách blog theo trang
+        List<Blog> blogs = blogDAO.searchBlogsByTitleOrAuthor(searchKeyword, offset, blogsPerPage);
+
+        // Gửi dữ liệu sang JSP
+        request.setAttribute("blogs", blogs);
+        request.setAttribute("search", searchKeyword);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPage", totalPage);
+        request.setAttribute("action", "search");
+
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
 

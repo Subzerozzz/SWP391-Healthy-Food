@@ -289,12 +289,14 @@
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing ${blogs.size()} entries</div>
+                                        
                                         <ul class="wg-pagination">
+                                            <c:set var="queryString" value="&search=${param.search}&action=${param.action}" />
                                             <!-- Nút Trang Trước -->
                                             <li class="${currentPage == 1 ? 'disabled' : ''}">
                                                 <c:choose>
                                                     <c:when test="${currentPage > 1}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}${queryString}">
                                                             <i class="icon-chevron-left"></i>
                                                         </a>
                                                     </c:when>
@@ -310,25 +312,21 @@
                                             <c:choose>
                                                 <c:when test="${currentPage < totalPage - 2}">
                                                     <li class="active">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}">${currentPage}</a>
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}${queryString}">${currentPage}</a>
                                                     </li>
-
                                                     <li>
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}">${currentPage + 1}</a>
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
                                                     </li>
-
                                                     <li><span>...</span></li>
-
                                                     <li>
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}">${totalPage}</a>
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}${queryString}">${totalPage}</a>
                                                     </li>
                                                 </c:when>
-
                                                 <c:otherwise>
                                                     <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
                                                     <c:forEach begin="${startPage}" end="${totalPage}" var="i">
                                                         <li class="${currentPage == i ? 'active' : ''}">
-                                                            <a href="${pageContext.request.contextPath}/manage-blog?index=${i}">${i}</a>
+                                                            <a href="${pageContext.request.contextPath}/manage-blog?index=${i}${queryString}">${i}</a>
                                                         </li>
                                                     </c:forEach>
                                                 </c:otherwise>
@@ -338,7 +336,7 @@
                                             <li class="${currentPage == totalPage ? 'disabled' : ''}">
                                                 <c:choose>
                                                     <c:when test="${currentPage < totalPage}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">
                                                             <i class="icon-chevron-right"></i>
                                                         </a>
                                                     </c:when>
@@ -350,7 +348,7 @@
                                                 </c:choose>
                                             </li>
                                         </ul>
-                                       </div>
+                                    </div>
                                 </div>
                                 <!-- /product-list -->
                             </div>
