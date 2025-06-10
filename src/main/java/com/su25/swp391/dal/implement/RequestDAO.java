@@ -24,8 +24,18 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
 
   @Override
   public List<Request> findAll() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-    // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    String sql = "SELECT * FROM Request";
+    List<Request> list = new ArrayList<>();
+    try {
+      statement = connection.prepareStatement(sql);
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        list.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return list;
   }
 
   @Override
@@ -102,8 +112,30 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
     return list;
   }
 
+  public List<Request> getRequestByStatusForPage(String status, Integer page) {
+    List<Request> list = new ArrayList<>();
+    String sql = "SELECT *\n"
+        + "FROM Request\n"
+        + "ORDER BY id DESC\n"
+        + "LIMIT 10 OFFSET ?;";
+    // Tính số bản ghi cần bỏ qua
+    Integer recordOffset = (page - 1) * 10;
+    try {
+      statement = connection.prepareStatement(sql);
+      statement.setInt(1, recordOffset);
+
+      resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        list.add(getFromResultSet(resultSet));
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return list;
+  }
+
   public static void main(String[] args) {
-    for (Request a : new RequestDAO().getRequestByStatus("Not done")) {
+    for (Request a : new RequestDAO().getRequestByStatusForPage("Not done", 2)) {
       System.out.println(a);
     }
   }

@@ -1,24 +1,28 @@
-<!DOCTYPE html>
-<!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
-<!--<![endif]-->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  <%@page contentType="text/html" pageEncoding="UTF-8" %>
+  <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+    <!DOCTYPE html>
+    <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+    <!--<![endif]-->
 
 
-<!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
+    <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
 
-<head>
-  <!-- Basic Page Needs -->
-  <meta charset="utf-8">
-  <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
-  <title>Remos eCommerce Admin Dashboard HTML Template</title>
+    <head>
+      <!-- Basic Page Needs -->
+      <meta charset="utf-8">
+      <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+      <title>Remos eCommerce Admin Dashboard HTML Template</title>
 
-  <meta name="author" content="themesflat.com">
+      <meta name="author" content="themesflat.com">
 
-  <!-- Mobile Specific Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <!-- Mobile Specific Metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <!-- Theme Style -->
+      <!-- Theme Style -->
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animate.min_1.css">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animation.css">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
@@ -28,210 +32,204 @@
 
 
 
-    <!--IzizToast-->
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-    <!-- Font -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
+      <!--IzizToast-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+      <!-- Font -->
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
 
-    <!-- Icon -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
+      <!-- Icon -->
+      <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
 
-    <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon"
-      href="${pageContext.request.contextPath}/images/favicon_1.png">
-    <link rel="apple-touch-icon-precomposed"
-      href="${pageContext.request.contextPath}/images/favicon_1.png">
+      <!-- Favicon and Touch Icons  -->
+      <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
+      <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
 
-</head>
+    </head>
 
-<body class="body">
+    <body class="body">
 
-  <!-- #wrapper -->
-  <div id="wrapper">
-    <!-- #page -->
-    <div id="page" class="">
-      <!-- layout-wrap -->
-      <div class="layout-wrap">
-        <!-- preload -->
-        <div id="preload" class="preload-container">
-          <div class="preloading">
-            <span></span>
-          </div>
-        </div>
-        <!-- /preload -->
-        <!-- section-menu-left -->
-        <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
-        <!-- /section-menu-left -->
-        <!-- section-content-right -->
-        <div class="section-content-right">
-          <!-- header-dashboard -->
-          <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
-          <!-- /header-dashboard -->
-          <!-- main-content -->
-          <div class="main-content">
-            <!-- main-content-wrap -->
-            <div class="main-content-inner">
-              <!-- main-content-wrap -->
-              <div class="main-content-wrap">
-                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                  <h3>Product List</h3>
-                  <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                    <li>
-                      <a href="index.html">
-                        <div class="text-tiny">Dashboard</div>
-                      </a>
-                    </li>
-                    <li>
-                      <i class="icon-chevron-right"></i>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <div class="text-tiny">Ecommerce</div>
-                      </a>
-                    </li>
-                    <li>
-                      <i class="icon-chevron-right"></i>
-                    </li>
-                    <li>
-                      <div class="text-tiny">Product List</div>
-                    </li>
-                  </ul>
-                </div>
-                <!-- product-list -->
-                <div class="wg-box">
-                  <div class="title-box">
-                    <i class="icon-coffee"></i>
-                    <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which
-                      you can rely on to find the exact product you need.</div>
-                  </div>
-                  <div class="flex items-center justify-between gap10 flex-wrap">
-                    <div class="wg-filter flex-grow">
-                      <div class="show">
-                        <div class="text-tiny">Showing</div>
-                        <div class="select">
-                          <select class="">
-                            <option>10</option>
-                            <option>20</option>
-                            <option>30</option>
-                          </select>
-                        </div>
-                        <div class="text-tiny">entries</div>
-                      </div>
-                      <form class="form-search">
-                        <fieldset class="name">
-                          <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value=""
-                            aria-required="true" required="">
-                        </fieldset>
-                        <div class="button-submit">
-                          <button class="" type="submit"><i class="icon-search"></i></button>
-                        </div>
-                      </form>
-                    </div>
-                    <a class="tf-button style-1 w208" href="add-product.html"><i class="icon-plus"></i>Add new</a>
-                  </div>
-                  <div class="wg-table table-product-list">
-                    <ul class="table-title flex gap20 mb-14">
-                      <li>
-                        <div class="body-title">Food</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Product ID</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Price</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Category</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Status</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Created date</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Updated date</div>
-                      </li>
-                      <li>
-                        <div class="body-title">Action</div>
-                      </li>
-                    </ul>
-                    <ul class="flex flex-column">
-                      <li class="product-item gap14">
-                        <div class="image no-bg">
-                          <img src="images/products/41.png" alt="">
-                        </div>
-                        <div class="flex items-center justify-between gap20 flex-grow">
-                          <div class="name">
-                            <a href="product-list.html" class="body-title-2">Dog Food, Chicken & Chicken Liver
-                              Recipe...</a>
-                          </div>
-                          <div class="body-text">#7712309</div>
-                          <div class="body-text">$1,452.500</div>
-                          <div class="body-text">1,638</div>
-                          <div class="body-text">20</div>
-                          <div>
-                            <div class="block-not-available">Out of stock</div>
-                          </div>
-                          <div class="body-text">$28,672.36</div>
-                          <div class="list-icon-function">
-                            <div class="item eye">
-                              <i class="icon-eye"></i>
-                            </div>
-                            <div class="item edit">
-                              <i class="icon-edit-3"></i>
-                            </div>
-                            <div class="item trash">
-                              <i class="icon-trash-2"></i>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="divider"></div>
-                  <div class="flex items-center justify-between flex-wrap gap10">
-                    <div class="text-tiny">Showing 10 entries</div>
-                    <ul class="wg-pagination">
-                      <li>
-                        <a href="#"><i class="icon-chevron-left"></i></a>
-                      </li>
-                      <li>
-                        <a href="#">1</a>
-                      </li>
-                      <li class="active">
-                        <a href="#">2</a>
-                      </li>
-                      <li>
-                        <a href="#">3</a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="icon-chevron-right"></i></a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- /product-list -->
+      <!-- #wrapper -->
+      <div id="wrapper">
+        <!-- #page -->
+        <div id="page" class="">
+          <!-- layout-wrap -->
+          <div class="layout-wrap">
+            <!-- preload -->
+            <div id="preload" class="preload-container">
+              <div class="preloading">
+                <span></span>
               </div>
-              <!-- /main-content-wrap -->
             </div>
-            <!-- /main-content-wrap -->
-            <!-- bottom-page -->
-            <jsp:include page="../../common/nutritionist/footer.jsp"></jsp:include>
-            <!-- /bottom-page -->
-          </div>
-          <!-- /main-content -->
-        </div>
-        <!-- /section-content-right -->
-      </div>
-      <!-- /layout-wrap -->
-    </div>
-    <!-- /#page -->
-  </div>
-  <!-- /#wrapper -->
+            <!-- /preload -->
+            <!-- section-menu-left -->
+            <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+            <!-- /section-menu-left -->
+            <!-- section-content-right -->
+            <div class="section-content-right">
+              <!-- header-dashboard -->
+              <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
+              <!-- /header-dashboard -->
+              <!-- main-content -->
+              <div class="main-content">
+                <!-- main-content-wrap -->
+                <div class="main-content-inner">
+                  <!-- main-content-wrap -->
+                  <div class="main-content-wrap">
+                    <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                      <h3>Các yêu cầu chờ duyệt</h3>
 
-  <!-- Javascript -->
+                    </div>
+                    <!-- product-list -->
+                    <div class="wg-box">
+                      <div class="wg-table table-product-list">
+                        <ul class="table-title flex gap20 mb-14">
+                          <li>
+                            <div class="body-title">Food Name</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Nutritionist</div>
+                          </li>
+                          <li>
+                            <div class="body-title">User_name</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Price</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Calo</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Category</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Type</div>
+                          </li>
+                          <li>
+                            <div class="body-title">Status</div>
+                          </li>
+                        </ul>
+                        <ul class="flex flex-column">
+                          <c:forEach items="${listFoodDraft}" var="item">
+                            <li class="product-item gap14">
+                              <div class="image no-bg">
+                                <img src="${item.getImage_url()}" alt="">
+                              </div>
+                              <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="name">
+                                  <a href="product-list.html" class="body-title-2">${item.getName()}</a>
+                                </div>
+                                  <c:forEach items="${listNutri}" var="nutri">
+                                    <c:if test="${nutri.getId() == item.getNutri_id()}">
+                                        <div class="body-text">${nutri.getFull_name()}</div>
+                                        <div class="body-text">${nutri.getUser_name()}</div>
+                                    </c:if>
+                                  </c:forEach>
+                                <div class="body-text">
+                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                </div>
+                                <div class="body-text">${item.getCalo()}</div>
+                                
+                                <div class="body-text">
+                                  <c:forEach items="${listCategory}" var="category">
+                                    <c:if test="${item.getCategory_id() == category.getId()}">
+                                      ${category.getName()}
+                                    </c:if>
+                                  </c:forEach>
+                                </div>
+                                <div>
+                                  <c:choose>
+                                    <c:when test="${item.getType()== 'CREATE'}">
+                                      <div class="body-text typeCreate">${item.getType()}</div>
+                                    </c:when>
+
+                                    <c:when test="${item.getType()== 'UPDATE'}">
+                                      <div class="body-text typeUpdate">${item.getType()}</div>
+                                    </c:when>
+
+                                    <c:otherwise>
+                                      <div class="body-text typeDelete">${item.getType()}</div>
+                                    </c:otherwise>
+                                  </c:choose>
+
+                                </div>
+                                <div class="body-text">
+                                  <c:forEach items="${listRequestNotDone}" var="request">
+                                    <c:if test="${request.getFoodDraftId() == item.getId()}">
+                                        <span class="statusNotDone">Chờ duyệt</span>
+                                    </c:if>
+                                  </c:forEach>
+                                </div>
+
+
+                              </div>
+                            </li>
+                          </c:forEach>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="divider"></div>
+                      <div class="flex items-center justify-between flex-wrap gap10">
+                        <div class="text-tiny">Showing 10 entries</div>
+                        <ul class="wg-pagination">
+
+                          <li>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=request&page=1"><i class="icon-chevron-left"></i></a>
+                          </li>
+                            <c:choose>
+                                <c:when test="${currentPage < totalPage - 2}">
+                                    <li class="active">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${currentPage}">${currentPage}</a>
+                                    </li>
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${currentPage + 1}">${currentPage + 1}</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <span>...</span>
+                                    </li>
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${totalPage}">${totalPage}</a>
+                                    </li>
+                                </c:when>
+                                
+                                <c:otherwise>
+                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                        <li class="${currentPage == i ? 'active' : ''}">
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                            
+                          <li>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${totalPage}"><i class="icon-chevron-right"></i></a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- /product-list -->
+                  </div>
+                  <!-- /main-content-wrap -->
+                </div>
+                <!-- /main-content-wrap -->
+                <!-- bottom-page -->
+                <jsp:include page="../../common/nutritionist/footer.jsp"></jsp:include>
+                <!-- /bottom-page -->
+              </div>
+              <!-- /main-content -->
+            </div>
+            <!-- /section-content-right -->
+          </div>
+          <!-- /layout-wrap -->
+        </div>
+        <!-- /#page -->
+      </div>
+      <!-- /#wrapper -->
+
+      <!-- Javascript -->
       <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
       <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
       <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
@@ -240,9 +238,45 @@
       <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
       <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
-</body>
+
+      <style>
+        .typeCreate {
+          background: #649F67;
+          color: white !important;
+          text-align: center;
+          border-radius: 10px;
+          display: inline;
+          padding: 5px 10px
+        }
+
+        .typeUpdate {
+          background: #89CFF0;
+          color: white !important;
+          text-align: center;
+          border-radius: 10px;
+          display: inline;
+          padding: 5px 10px
+        }
+
+        .typeDelete {
+          background: #DC143C;
+          color: white !important;
+          text-align: center;
+          border-radius: 10px;
+          display: inline;
+          padding: 5px 10px
+        }
+        
+        .statusNotDone{
+            background: #808080;
+            padding: 5px 10px;
+            border-radius: 10px
+            
+        }
+      </style>
+    </body>
 
 
-<!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:40 GMT -->
+    <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:40 GMT -->
 
-</html>
+    </html>

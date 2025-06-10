@@ -100,6 +100,7 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
     product.setFood_id(resultSet.getInt("food_id"));
     product.setType(resultSet.getString("type"));
     product.setNutri_id(resultSet.getInt("nutri_id"));
+    product.setCalo(resultSet.getDouble("calo"));
     return product;
   }
 
