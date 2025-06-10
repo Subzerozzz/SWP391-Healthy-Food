@@ -119,8 +119,12 @@ public class TypeOfRequestController extends HttpServlet {
             action = "list"; // Default action
         }
         switch (action) {
+            case "search":
+                showFoodDraftList(request,response);
+                break;
             default:
-             listTypeOfRequest(request,response);  
+            // listTypeOfRequest(request,response);  
+                listTypeOfUpdate(request, response);
                 break;
         }
     }
@@ -589,6 +593,37 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("listFoodDraft", listF);
         request.setAttribute("type", listType);
          // Come to page dashboard.jsp
+        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+    }
+
+    private void showFoodDraftList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get parameters for filtering 
+         String searchTitle = request.getParameter("name");
+        // Pagination parameters
+        int page = 1;
+        int pageSize = GlobalConfig.SIZE_PAGE; // Number of blogs per page
+        try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        // Get FoodDraft from database
+        List<Food_Draft> food_D = foodDraftDAO.findFoodDraftWithFilter(searchTitle, page, pageSize);
+        int totalFood_D = foodDraftDAO.countFoodDraftWithFilter(searchTitle);
+        // Calculate total pages
+        int totalPages = (int) Math.ceil((double) totalFood_D / pageSize);
+        // Set Attribut to page dashboard.jsp
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("listFoodDraft", food_D);
+        request.setAttribute("currentPage", page);
+        List<String> listType = foodDraftDAO.findAllType();
+        request.setAttribute("type", listType);
+        // come to dashboard.jsp
         request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
 

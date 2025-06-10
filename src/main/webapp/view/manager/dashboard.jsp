@@ -40,7 +40,7 @@
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                             <!-- iziToast CSS -->
                                                             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
+                                                                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
 
                                                   </head>
 
@@ -96,15 +96,18 @@
 
                                                                                                         </form>  
                                                                                                          </div>    
-                                                                                                                        <div ">
-                                                                                                                            <form class="form-search flex-grow" >
-                                                                                                                                <fieldset class="name" >
-                                                                                                                                    <input style="height: 47px;width: 500px;margin-top: 5px;background-color: #e0f7fa" type="text" placeholder="Search here..." class="show-search" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                                                                                                </fieldset>
-                                                                                                                                <div class="button-submit" ">
-                                                                                                                                    <button " class="" type="submit"><i class="icon-search"></i></button>
-                                                                                                    </div>
-                                                                                                                            </form>
+                                                                                                                    <div>
+                                                                                                                        <form class="form-search flex-grow" action="${pageContext.request.contextPath}/type-of-request" method="post">
+                                                                                                                            <input type="hidden" name="action" value="search">
+                                                                                                                            <fieldset class="name" >
+                                                                                                                                <input style="height: 47px;width: 500px;margin-top: 5px;background-color: #e0f7fa" type="text" 
+                                                                                                                                       placeholder="Search here..." class="show-search" name="name" tabindex="2" value=""
+                                                                                                                                       aria-required="true" required=""/>
+                                                                                                                            </fieldset>
+                                                                                                                            <div class="button-submit" ">
+                                                                                                                                <button type="submit"><i class="icon-search"></i></button>
+                                                                                                                            </div>
+                                                                                                                        </form>
                                                                                                                     </div> 
                                                                                                                     </div>
                                     

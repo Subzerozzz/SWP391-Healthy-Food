@@ -403,11 +403,7 @@ del,
 }
 
 /* Table */
-table,
-th,
-td {
-  border: 1px solid #343444;
-}
+
 
 table {
   border-collapse: separate;

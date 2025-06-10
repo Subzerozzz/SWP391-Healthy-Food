@@ -163,7 +163,68 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         }
         return 0;
     }
+    
+    // Find FoodDraft with filtering and pagination
+    public List<Food_Draft> findFoodDraftWithFilter(String title,int page,int pageSize){
+        List<Food_Draft> food_Ds = new ArrayList<>();
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM FoodDraft as f inner join Request as r on f.id = r.foodDraftId WHERE r.statusRequest = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(GlobalConfig.STATUS_REQUEST_NOT_DONE);
+        // Add title filter if provided
+        if (title != null && !title.trim().isEmpty()) {
+            sqlBuilder.append(" AND name LIKE ?");
+            params.add("%" + title + "%");
+        }
+        // Add ordering and pagination
+        sqlBuilder.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sqlBuilder.toString());
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                food_Ds.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return food_Ds;
+    }
 
+    public int countFoodDraftWithFilter(String title) {
+        StringBuilder sqlBuilder = new StringBuilder("SELECT COUNT(*) FROM FoodDraft as f inner join Request as r on f.id = r.foodDraftId WHERE r.statusRequest = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(GlobalConfig.STATUS_REQUEST_NOT_DONE);
+        // Add title filter if provided
+        if (title != null && !title.trim().isEmpty()) {
+            sqlBuilder.append(" AND name LIKE ?");
+            params.add("%" + title + "%");
+        }
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sqlBuilder.toString());
+            // Set parameters
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+     }
 
     @Override
     public Map<Integer, Food_Draft> findAllMap() {
@@ -237,6 +298,9 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         System.out.println("--");
         
         System.out.println(dao.findById(3));
-        
+        System.out.println("IN: "+dao.countFoodDraftWithFilter("củ"));
+        for (Food_Draft l : dao.findFoodDraftWithFilter("củ", 1, 5)) {
+            System.out.println("list: "+l);
+        }
     }
 }
