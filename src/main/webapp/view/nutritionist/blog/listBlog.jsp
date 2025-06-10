@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -40,7 +42,140 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
+        <style>
 
+                                 .blog-table-container {
+                                     font-family: 'Segoe UI', sans-serif;
+                                     width: 100%;
+                                     border-radius: 8px;
+                                     overflow: hidden;
+                                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                     background: #fff;
+                                 }
+
+                                 .table-header, .table-row {
+                                     display: flex;
+                                     padding: 14px 20px;
+                                     border-bottom: 1px solid #eee;
+                                     align-items: center;
+                                 }
+
+                                 .table-header {
+                                     font-weight: 600;
+                                     background-color: #f8f9fa;
+                                     color: #333;
+                                     text-transform: uppercase;
+                                 }
+
+                                 .col {
+                                     flex: 1;
+                                     min-width: 150px;
+                                     word-break: break-word;
+                                 }
+
+                                 .blog-title {
+                                     font-weight: 500;
+                                     color: #212529;
+                                     text-decoration: none;
+                                 }
+
+                                 .blog-title:hover {
+                                     text-decoration: underline;
+                                 }
+
+                                 .status {
+                                     padding: 6px 16px;
+                                     border-radius: 20px;
+                                     font-weight: bold;
+                                     display: inline-block;
+                                     font-size: 13px;
+                                 }
+
+                                 .status.inactive {
+                                     background-color: #e74c3c;
+                                     color: white;
+                                 }
+                                 .col.actions a {
+                                     display: inline-flex;
+                                     align-items: center;
+                                     justify-content: center;
+                                     width: 30px;         /* Tăng kích thước nút */
+                                     height: 20px;
+                                     border-radius: 50%;
+                                     background-color: #f1f1f1;
+                                     transition: background-color 0.3s, transform 0.2s;
+                                     text-decoration: none;
+                                 }
+                                 td.actions {
+                                     text-align: center;
+                                     vertical-align: middle; /* canh giữa theo chiều dọc nếu cần */
+                                 }
+
+                                 /* Flexbox canh giữa nội dung bên trong */
+                                 .col.actions {
+                                     display: inline-flex;
+                                     justify-content: center;
+                                     align-items: center;
+                                     gap: 30px;
+                                 }
+                                 .col.actions a:hover {
+                                     background-color: #e0e0e0;
+                                     transform: scale(1.1);
+                                 }
+
+                                 .col.actions i {
+                                     font-size: 25px; /* Tăng kích thước icon */
+                                 }
+
+                                 /* Icon màu sắc tương ứng */
+                                 .icon-eye {
+                                     color: #007bff; /* Xanh biển */
+                                 }
+                                 .icon-edit-3 {
+                                     color: #28a745; /* Xanh lá */
+                                 }
+                                 .icon-trash-2 {
+                                     color: #dc3545; /* Đỏ */
+                                 }
+                                 .search-container {
+                                     display: flex;
+                                     align-items: center;
+                                     border: 1px solid #e2e8f0; /* viền nhạt */
+                                     border-radius: 12px; /* bo góc */
+                                     padding: 10px 90px;
+  ;
+                                     background-color: white;
+                                     max-width: 600px;
+                                     width: 100%;
+                                     margin-top: 40px
+                                     bor
+                                 }
+
+                                 .search-container input[type="text"] {
+                                     border: none;
+                                     outline: none;
+                                     flex: 1;
+                                     font-size: 16px;
+                                     color: #333;
+                                 }
+
+                                 .search-container input[type="text"]::placeholder {
+                                     color: #a0aec0; /* xám nhạt */
+                                 }
+
+                                 .search-container button {
+                                     background: none;
+                                     border: none;
+                                     cursor: pointer;
+                                     padding: 0;
+                                 }
+
+                                 .search-container i.icon-search {
+                                     font-size: 18px;
+                                     padding-left: 120px;
+                                     color: #333;
+                                 }
+        </style>    
 </head>
 
 <body class="body">
@@ -102,161 +237,28 @@
                                         <!-- Filter -->
                                        <div class="wrapper-flex">
                                            <!-- Form lọc (nằm ngang) -->
-                                           <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
-                                           <input type="hidden" name="action" value="filter" />
-                                               <select name="status" class="form-control">
-                                                   <option value="">All Status</option>
-                                                   <option value="true" <c:if test="${param.status == 'true'}">selected</c:if>>Active</option>
-                                                   <option value="false" <c:if test="${param.status == 'false'}">selected</c:if>>Inactive</option>
-                                               </select>
-                                               <button type="submit" class="filter-button">Lọc</button>
-                                       </form>
-                                            <!-- Search -->
+                                       
+                                          <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
+                                              <input type="hidden" name="action" value="filter" />
+                                              <label for="status">Status:</label>
+                                              <select name="status"class ="form-control">
+                                                  <option value="" <c:if test="${empty status}">selected</c:if>>All Status</option>
+                                                  <option value="Active" <c:if test="${status == 'Active'}">selected</c:if>>Active</option>
+                                                  <option value="Inactive" <c:if test="${status == 'Inactive'}">selected</c:if>>Inactive</option>
+                                              </select>
+
+                                              <button type="submit" class="filter-button">Lọc</button>
+                                          </form>
+                                          <!-- Search -->
                                             <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
                                             <div class="search-container">
                                                 <input type="text" name="search" placeholder="Search here..." value="${param.search}">
                                                     <input type="hidden" name="action" value="search">
                                                         <button type="submit"><i class="icon-search"></i></button>
                                                         </div>
-                                            </form>
-                           <style>
-                               
-                               .blog-table-container {
-                                   font-family: 'Segoe UI', sans-serif;
-                                   width: 100%;
-                                   border-radius: 8px;
-                                   overflow: hidden;
-                                   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                   background: #fff;
-                               }
-
-                               .table-header, .table-row {
-                                   display: flex;
-                                   padding: 14px 20px;
-                                   border-bottom: 1px solid #eee;
-                                   align-items: center;
-                               }
-
-                               .table-header {
-                                   font-weight: 600;
-                                   background-color: #f8f9fa;
-                                   color: #333;
-                                   text-transform: uppercase;
-                               }
-
-                               .col {
-                                   flex: 1;
-                                   min-width: 150px;
-                                   word-break: break-word;
-                               }
-
-                               .blog-title {
-                                   font-weight: 500;
-                                   color: #212529;
-                                   text-decoration: none;
-                               }
-
-                               .blog-title:hover {
-                                   text-decoration: underline;
-                               }
-
-                               .status {
-                                   padding: 6px 16px;
-                                   border-radius: 20px;
-                                   font-weight: bold;
-                                   display: inline-block;
-                                   font-size: 13px;
-                               }
-
-                               .status.inactive {
-                                   background-color: #e74c3c;
-                                   color: white;
-                               }
-                               .col.actions a {
-                                   display: inline-flex;
-                                   align-items: center;
-                                   justify-content: center;
-                                   width: 30px;         /* Tăng kích thước nút */
-                                   height: 20px;
-                                   border-radius: 50%;
-                                   background-color: #f1f1f1;
-                                   transition: background-color 0.3s, transform 0.2s;
-                                   text-decoration: none;
-                               }
-                               td.actions {
-                                   text-align: center;
-                                   vertical-align: middle; /* canh giữa theo chiều dọc nếu cần */
-                               }
-
-                               /* Flexbox canh giữa nội dung bên trong */
-                               .col.actions {
-                                   display: inline-flex;
-                                   justify-content: center;
-                                   align-items: center;
-                                   gap: 30px;
-                               }
-                               .col.actions a:hover {
-                                   background-color: #e0e0e0;
-                                   transform: scale(1.1);
-                               }
-
-                               .col.actions i {
-                                   font-size: 25px; /* Tăng kích thước icon */
-                               }
-
-                               /* Icon màu sắc tương ứng */
-                               .icon-eye {
-                                   color: #007bff; /* Xanh biển */
-                               }
-                               .icon-edit-3 {
-                                   color: #28a745; /* Xanh lá */
-                               }
-                               .icon-trash-2 {
-                                   color: #dc3545; /* Đỏ */
-                               }
-                               .search-container {
-                                   display: flex;
-                                   align-items: center;
-                                   border: 1px solid #e2e8f0; /* viền nhạt */
-                                   border-radius: 12px; /* bo góc */
-                                   padding: 10px 90px;;
-                                   background-color: white;
-                                   max-width: 600px;
-                                   width: 100%;
-                                   margin-top: 40px
-                                   bor
-                               }
-
-                               .search-container input[type="text"] {
-                                   border: none;
-                                   outline: none;
-                                   flex: 1;
-                                   font-size: 16px;
-                                   color: #333;
-                               }
-
-                               .search-container input[type="text"]::placeholder {
-                                   color: #a0aec0; /* xám nhạt */
-                               }
-
-                               .search-container button {
-                                   background: none;
-                                   border: none;
-                                   cursor: pointer;
-                                   padding: 0;
-                               }
-
-                               .search-container i.icon-search {
-                                   font-size: 18px;
-                                   padding-left: 120px;
-                                   color: #333;
-                               }
-                           </style>    
+                                            </form>   
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
-                                    </div>
-                       
-
                          <div class="wg-table table-product-list">
                              <!-- Header -->
                              <div class="table-header">
@@ -296,7 +298,7 @@
                                         <div class="text-tiny">Showing ${blogs.size()} entries</div>
                                         <!-- # Phân Trang -->
                                         <ul class="wg-pagination">
-                                            <c:set var="queryString" value="&search=${param.search}&action=${param.action}" />
+                                            <c:set var="queryString" value="&search=${param.search}&action=${param.action}&status=${param.status}" />
                                             <!-- Nút Trang Trước -->
                                             <li class="${currentPage == 1 ? 'disabled' : ''}">
                                                 <c:choose>
