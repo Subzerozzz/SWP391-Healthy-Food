@@ -5,12 +5,13 @@
     padding: 6px;
     padding-right: 20px;
     padding-left:10px;
-    height: 100px;
+    height: 110px;
     width: 100%;
     border-radius: 10px;
-    background-color: #f0f0f0;
+    background-color:#0c0404 ;
     justify-content: space-between;
     align-items: start
+/*     màu xám   #f0f0f0*/
 }
 .selected{
   background: linear-gradient(135deg, #4facfe, #00f2fe);
