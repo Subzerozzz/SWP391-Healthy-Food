@@ -11,6 +11,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
     <!--link izitoatMess-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
@@ -318,89 +319,159 @@
                 border-color: #999;
             }
             .filter-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 20px;
+                padding: 20px;
+                flex-wrap: wrap; /* Để responsive khi thu nhỏ màn hình */
+            }
+            .wrapper-flex {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .filter-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .form-search select,
+            .filter-button {
+                height: 36px;
+            }
+
+            .search-box {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                width: 250px;
+            }
+
+            .search-box input[type="text"] {
+                flex: 1;
+                height: 36px;
+                padding: 0 10px;
+            }
+
+            .search-box button {
+                height: 36px;
+            }
+
+            /* Tăng chiều rộng ô tìm kiếm */
+            .search-box {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                width: 300px; /* ← tăng tùy ý: 300px, 350px,... */
+            }
+
+            /* Input trong ô tìm kiếm chiếm đủ không gian */
+            .search-box input[type="text"] {
+                flex: 1;
+                height: 36px;
+                padding: 0 10px;
+            }
+
+            /* Nút tìm kiếm giữ kích cỡ đều */
+            .search-box button {
+                height: 36px;
+            }
+
+            /* Container ngoài căn trái - phải */
+            .wg-box > .flex {
+                justify-content: space-between; /* đẩy Add new sang phải */
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            /* Nhóm lọc + tìm kiếm canh trái */
+            .wrapper-flex {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            /* Nhóm bộ lọc ngang hàng */
+            .form-search {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+/* Container chính chứa toàn bộ filter/search/add */
+.wg-box > .flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-    flex-wrap: wrap; /* Để responsive khi thu nhỏ màn hình */
-}
-    .wrapper-flex {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    flex-wrap: wrap;
 }
 
-.form-search select,
-.filter-button {
-  height: 36px;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  width: 250px;
-}
-
-.search-box input[type="text"] {
-  flex: 1;
-  height: 36px;
-  padding: 0 10px;
-}
-
-.search-box button {
-  height: 36px;
-}
-
-/* Tăng chiều rộng ô tìm kiếm */
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  width: 300px; /* ← tăng tùy ý: 300px, 350px,... */
-}
-
-/* Input trong ô tìm kiếm chiếm đủ không gian */
-.search-box input[type="text"] {
-  flex: 1;
-  height: 36px;
-  padding: 0 10px;
-}
-
-/* Nút tìm kiếm giữ kích cỡ đều */
-.search-box button {
-  height: 36px;
-}
-
-/* Container ngoài căn trái - phải */
-.wg-box > .flex {
-  justify-content: space-between; /* đẩy Add new sang phải */
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-/* Nhóm lọc + tìm kiếm canh trái */
+/* Nhóm filter và search nằm bên trái */
 .wrapper-flex {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-/* Nhóm bộ lọc ngang hàng */
-.form-search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Nhóm filter */
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Dropdown nhỏ lại */
+.filter-group select.form-control {
+    width: 120px;
+    height: 36px;
+    font-size: 14px;
+    padding: 4px 8px;
+}
+
+/* Nút lọc giữ gọn gàng */
+.filter-button {
+    height: 36px;
+    padding: 0 12px;
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto; /* căn giữa trong khối cha */
+}
+
+/* Nút "Add new" đẩy sát phải */
+.tf-button.style-1.w208 {
+    margin-left: auto;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.tf-button.style-1.w208:hover {
+    background-color: #2563eb;
+    color: white;
 }
 
         </style>
@@ -481,44 +552,45 @@
                                                                                                 </div>
                                                                                                 <!-- all-user -->
                                                                                                 <div class="wg-box">
-  <div class="flex items-center justify-between gap10 flex-wrap">
-    
-    <div class="wrapper-flex">
-      <!-- Form lọc (nằm ngang) -->
-      <form class="form-search" action="${pageContext.request.contextPath}/manage-account" method="GET">
-        <input type="hidden" name="action" value="filter" />
-        
-        <div class="filter-group">
-          <select name="role" class="form-control">
-            <option value="">All Roles</option>
-            <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
-            <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
-          </select>
+                                                                                                    <div class="flex items-center justify-between gap10 flex-wrap">
 
-          <select name="status" class="form-control">
-            <option value="">All Status</option>
-            <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
-            <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
-          </select>
+                                                                                                        <div class="wrapper-flex">
+                                                                                                            <!-- Form lọc (nằm ngang) -->
+                                                                                                            <form class="form-search" action="${pageContext.request.contextPath}/manage-account" method="GET">
+                                                                                                            <input type="hidden" name="action" value="filter" />
 
-          <button type="submit" class="filter-button">Lọc</button>
-       
-      </form>
+                                                                                                            <div class="filter-group">
+                                                                                                                <select name="role" class="form-control">
+                                                                                                                    <option value="">All Roles</option>
+                                                                                                                    <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
+                                                                                                                    <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
+                                                                                                                </select>
 
-      <!-- Tìm kiếm -->
-      <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-account">
-        <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-        <input type="hidden" name="action" value="search">
-        <button type="submit"><i class="fa fa-search"></i></button>
-      </form>
-    </div>
+                                                                                                                <select name="status" class="form-control">
+                                                                                                                    <option value="">All Status</option>
+                                                                                                                    <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
+                                                                                                                    <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
+                                                                                                                </select>
+                                                                                                                
+                                                                                                                <button type="submit" class="filter-button">Lọc</button>
 
-    <!-- Add new -->
-    <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add">
-      <i class="icon-plus"></i>Add new
-    </a>
-  </div>
-</div>
+                                                                                                        </form>
+
+                                                                                                        <!-- Tìm kiếm -->
+                                                                                                        <form class="search-box" method="get" action="${pageContext.request.contextPath}/manage-account">
+                                                                                                            <input type="text" name="search" placeholder="Search here..." value="${param.search}">
+                                                                                                                <input type="hidden" name="action" value="search">
+                                                                                                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                                                                                                    </form>
+                                                                                                                    </div>
+
+                                                                                                                    <!-- Add new -->
+                                                                                                                    
+                                                                                                                    <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-account?action=add">
+                                                                                                                        <i class="icon-plus"></i>Add new
+                                                                                                                    </a>
+                                                                                                                    </div>
+                                                                                                                    </div>
                                                                                                                     <div class="wg-table table-all-user">
                                                                                                                         <ul class="table-title flex gap20 mb-14">
                                                                                                                             <li>
@@ -553,9 +625,7 @@
                                                                                                                         <ul class="flex flex-column">
                                                                                                                             <c:forEach items="${listAccount}" var="account">
                                                                                                                                 <li class="user-item gap14">
-                                                                                                                                    <!--                                                                                                            <div class="image">
-                                                                                                                                                                                                    <img src="${pageContext.request.contextPath}/images/avatar/user-6.png" alt="">
-                                                                                                                                                                                                    </div>-->
+                                                                                                                                  
                                                                                                                                     <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                                         <div class="name">
                                                                                                                                             <a href="#" class="body-title-2">${account.user_name}</a>
@@ -592,11 +662,11 @@
                                                                                                                                                        ${account.status ? 'checked' : ''}>
                                                                                                                                                     <span class="slider"></span>
                                                                                                                                             </label>
-                                                                                                                                            <div class="item trash">
+<!--                                                                                                                                            <div class="item trash">
                                                                                                                                                 <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
                                                                                                                                                     <i class="icon-trash-2"></i>
                                                                                                                                                 </a>
-                                                                                                                                            </div>
+                                                                                                                                            </div>-->
                                                                                                                                         </div>
                                                                                                                                     </div>
                                                                                                                                 </li>
@@ -746,7 +816,8 @@
                                                                                                                                 });
                                                                                                                             });
                                                                                                                         </script>
-                                                                                                                        <% session.removeAttribute("toastMessage"); session.removeAttribute("toastType"); %>
+                                                                                                                        <% session.removeAttribute("toastMessage");
+                                                                                                                            session.removeAttribute("toastType"); %>
                                                                                                                     </c:if>
                                                                                                                     <c:if test="${not empty sessionScope.toastMessage}">
                                                                                                                         <script>
@@ -759,7 +830,8 @@
                                                                                                                                 });
                                                                                                                             });
                                                                                                                         </script>
-                                                                                                                        <% session.removeAttribute("toastMessage"); session.removeAttribute("toastType"); %>
+                                                                                                                        <% session.removeAttribute("toastMessage");
+                                                                                                                            session.removeAttribute("toastType");%>
                                                                                                                     </c:if>
 
                                                                                                                     <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
