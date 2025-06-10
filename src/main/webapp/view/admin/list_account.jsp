@@ -606,8 +606,7 @@
 
                                                                                                                             <li>
                                                                                                                                 <div class="body-title">Mobile</div>
-                                                                                                                            </li>
-
+                                                                  
                                                                                                                             <li>
                                                                                                                                 <div class="body-title">Gender</div>
                                                                                                                             </li>
@@ -833,6 +832,6 @@
                                                                                                                         <% session.removeAttribute("toastMessage");
                                                                                                                             session.removeAttribute("toastType");%>
                                                                                                                     </c:if>
-
+                                                                                                                    
                                                                                                                     <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
                                                                                                                     </html>

@@ -339,27 +339,49 @@ public class ManageAccount extends HttpServlet {
             AccountDAO accountDao = new AccountDAO();
             Account account = accountDao.findById(accountId);
             //validate gia trị nhập vào
-             Map<String, String> errors = new HashMap<>();
-               if (mobile == null || mobile.trim().isEmpty()) {
-        errors.put("mobile", "Số điện thoại không được để trống");
-    } else {
-        // Regex số điện thoại Việt Nam: 10 hoặc 11 số, bắt đầu bằng 0 hoặc +84
-        String phoneRegex = "^(0|\\+84)(\\d{9,10})$";
-        if (!mobile.matches(phoneRegex)) {
-            errors.put("mobile", "Số điện thoại không hợp lệ (ví dụ: 0912345678 hoặc +84912345678)");
-        }
-    }
+            Map<String, String> errors = new HashMap<>();
+            //validate full_name
+            if (full_name == null || full_name.trim().isEmpty()) {
+                errors.put("full_name", "Username is required");
+            } else if (!full_name.equals(full_name.trim())) {
+                errors.put("full_name", "Username must not start or end with a space");
+            } else if (full_name.length() < 3 || full_name.length() > 50) {
+                errors.put("full_name", "Username must be between 3 and 50 characters");
+            } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", full_name)) {
+                errors.put("full_name", "Username can only contain letters, numbers, underscores, and spaces");
+            }
+            //validate dia chi
+            if (address == null || address.trim().isEmpty()) {
+                errors.put("address", "Address is required");
+            } else if (!address.equals(address.trim())) {
+                errors.put("address", "Address must not start or end with a space");
+            } else if (address.length() < 3 || address.length() > 100) {
+                errors.put("address", "Address must be between 3 and 100 characters");
+            } else if (!Pattern.matches("^[\\p{L}\\p{N}_ ,.-]+$", address)) {
+                errors.put("address", "Address can only contain letters (with accents), numbers, commas, dots, hyphens, and spaces");
+            }
+            //validate mobile
+            if (mobile == null || mobile.trim().isEmpty()) {
+                errors.put("mobile", "Số điện thoại không được để trống");
+            } else {
+                // Regex số điện thoại Việt Nam: 10 hoặc 11 số, bắt đầu bằng 0 hoặc +84
+                String phoneRegex = "^(0|\\+84)(\\d{9,10})$";
+                if (!mobile.matches(phoneRegex)) {
+                    errors.put("mobile", "Số điện thoại không hợp lệ (ví dụ: 0912345678 hoặc +84912345678)");
+                }
+            }
+
             if (!errors.isEmpty()) {
                 Map<String, String> formData = new HashMap<>();
                 formData.put("full_name", full_name);
                 formData.put("user_name", user_name);
+                formData.put("address", address);
                 formData.put("email", email);
                 formData.put("role", role);
-                formData.put("address", address);
                 formData.put("mobile", mobile);
                 formData.put("gender", gender);
                 formData.put("status", String.valueOf(status));
-
+                System.out.println("Form data: " + formData);
                 request.setAttribute("errors", errors);
                 request.setAttribute("formData", formData);
                 request.setAttribute("account", account); // dùng nếu cần giá trị gốc
@@ -371,8 +393,8 @@ public class ManageAccount extends HttpServlet {
             account.setFull_name(full_name);
             account.setEmail(email);
             account.setUser_name(user_name);
-            account.setRole(role);
             account.setAddress(address);
+            account.setRole(role);
             account.setStatus(status);
             account.setMobile(mobile);
             account.setGender(gender);
@@ -381,7 +403,8 @@ public class ManageAccount extends HttpServlet {
             //xu ly ket qua 
             if (isSuccess) {
                 request.getSession().setAttribute("isUpdate", true); // ✅ thêm biến này để hiển thị toast
-                 response.sendRedirect(request.getContextPath() + "/manage-account");
+                response.sendRedirect(request.getContextPath() + "/manage-account?action=list");
+
                 return;
             } else {
                 setToastMessage(request, "totalMess", "Fail to update Account");
