@@ -256,6 +256,11 @@
                                                                                             <div class="bot">
                                                                                                 <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/manage-account'">Back</button>
                                                                                             </div>
+<!--                                                                                                <div class="item trash">
+                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
+                                                                                                        <button class="tf-button w180" type="submit">Delete</button>
+                                                                                                    </a>
+                                                                                                </div>-->
 
                                                                                         </form>
                                                                                         <!-- /add-new-user -->

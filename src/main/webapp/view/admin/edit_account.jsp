@@ -215,24 +215,26 @@
                                                                                             <div class="bot">
                                                                                                 <button class="tf-button w180" type="submit">Save</button>
                                                                                             </div>
-
-                                                                                        </form>
-                                                                                        <!-- /add-new-user -->
+                                                                                           
                                                                                     </div>
-                                                                                    <!-- /main-content-wrap -->
+
+                                                                                    </form>
+                                                                                    <!-- /add-new-user -->
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                ư
-                                                                                <!-- /bottom-page -->
                                                                             </div>
-                                                                            <!-- /main-content -->
+                                                                            <!-- /main-content-wrap -->
+                                                                            <!-- bottom-page -->
+                                                                            ư
+                                                                            <!-- /bottom-page -->
                                                                         </div>
-                                                                        <!-- /section-content-right -->
+                                                                        <!-- /main-content -->
                                                                     </div>
-                                                                    <!-- /layout-wrap -->
+                                                                    <!-- /section-content-right -->
                                                                 </div>
-                                                                <!-- /#page -->
+                                                                <!-- /layout-wrap -->
+                                                            </div>
+                                                            <!-- /#page -->
                                                             </div>
                                                             <!-- /#wrapper -->
 
