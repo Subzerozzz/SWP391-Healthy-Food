@@ -152,3 +152,33 @@
                                                                                                                                     </html>
 
 
+  <td>
+                                                                                                                        <form action="type-of-request" method="get">
+                                                                                                                            <input type="hidden" name="action" value="view">
+                                                                                                                                <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                    <button type="submit"  style="background-color: #ede1df;">View Detail</button>
+                                                                                                                                    </form>  
+                                                                                                                                    <!--view-->
+
+                                                                                                                                    <!--                                                                                                                                end view-->
+                                                                                                                                    </td>
+                                                                                                                                    <td>
+                                                                                                                                        <div style="display: flex;justify-content: center;gap: 12px">
+                                                                                                                                            <form action="type-of-request" method="get">
+                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
+                                                                                                                                                    <input type="hidden" name="action" value="accept">
+                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                                            <button type="submit"  style="background-color: #02b80b;color: white"
+                                                                                                                                                                    onclick="handleAccept(event)" >
+                                                                                                                                                                Accept
+                                                                                                                                                            </button>
+                                                                                                                                                            </form>
+                                                                                                                                                            <form action="type-of-request" method="get">
+                                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
+                                                                                                                                                                    <input type="hidden" name="action" value="reject">
+                                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
+                                                                                                                                                                            <button type="submit"  style="background-color: #e60004;color: white"
+                                                                                                                                                                                    onclick="handleReject(event)"  >
+                                                                                                                                                                                Reject 
+                                                                                                                                                                            </button>
+                                                                                                                                                                            </form>   

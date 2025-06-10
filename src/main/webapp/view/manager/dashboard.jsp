@@ -28,7 +28,7 @@
                                     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
                                         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage-request.css"/>
-
+                                            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search-request.css"/>
                                             <!-- Font -->
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
 
@@ -40,9 +40,9 @@
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                             <!-- iziToast CSS -->
                                                             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
 
-
-                                                                </head>
+                                                  </head>
 
                                                                 <body class="body">
 
@@ -81,38 +81,37 @@
                                                                                                     <div id="mess" ><input type="hidden" name="name" value="1"></div> 
 
                                                                                               
-                                                                                                                    <div style="display: flex;margin-bottom: 20px;border: 1px solid red;
-                                                                                                                         padding: 20px;height: 200px;width: 60%;border-radius: 10px;background-color: #FFFFE0;
-                                                                                                                         justify-content: space-between;align-items: start">
+                                                                                                    <div class="filter">
                                                                                                                         <div  style=" ; height: 40px;">
                                                                                                             <form action="${pageContext.request.contextPath}/type-of-request" method="get" ">
                                                                                                             <input type="hidden" name="action" value="option">
-                                                                                                                <select  name="select" style="background-color: #115ec2;color: white;height: 50px">
-                                                                                                                    <option value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
+                                                                                                                <select  name="select" class="selected">
+                                                                                                                    <option style="display: flex;align-items: center" value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
                                                                                                                     <c:forEach items="${type}" var="t">
                                                                                                                         <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
                                                                                                                         <i class="ti-arrow-down" style="color: white; font-size: 15px;"></i>
                                                                                                                     </c:forEach>
                                                                                                                 </select>
-                                                                                                                <button type="submit" style="background-color: #b2b9c2;height: 20px;display: flex;
-                                                                                                                        align-items: center;border-radius: 5px;width: 150px;margin-top: 5px" >Submit Option</button>
+                                                                                                                    <button type="submit" class="filter-btn" >Submit</button>
 
                                                                                                         </form>  
                                                                                                          </div>    
-                                                                                                                        <div style="">
-                                                                                                                     <form>
-                                                                                                                         <label for="search"><h4>Search:</h4></label>
-                                                                                                                         <input style="background-color: yellow" type="text" id="search" name="search" placeholder="...Search Name Food"/>
-                                                                                                                        <button style="background-color: graytext;height: 30px;display: flex;align-items: center
-                                                                                                                                ;margin-top: 5px" type="submit">Search</button>
-                                                                                                                    </form>  
-                                                                                                                            
+                                                                                                                        <div ">
+                                                                                                                            <form class="form-search flex-grow" >
+                                                                                                                                <fieldset class="name" >
+                                                                                                                                    <input style="height: 47px;width: 500px;margin-top: 5px;background-color: #e0f7fa" type="text" placeholder="Search here..." class="show-search" name="name" tabindex="2" value="" aria-required="true" required="">
+                                                                                                                                </fieldset>
+                                                                                                                                <div class="button-submit" ">
+                                                                                                                                    <button " class="" type="submit"><i class="icon-search"></i></button>
+                                                                                                    </div>
+                                                                                                                            </form>
                                                                                                                     </div> 
                                                                                                                     </div>
+                                    
                                                                                                 <!--start table-->
                                                                                                 <div class="manage-request">
                                                                                                     <table>
-                                                                                                        <thead >
+                                                                                                        <thead  >
                                                                                                             <tr style="background-color: #e4edeb;">
                                                                                                                 <th style="width: 100px">Image</th>
                                                                                                                 <th>Product name </th>
@@ -127,67 +126,27 @@
                                                                                                                     <td "><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
                                                                                                                     <td>${foodD.name}</td>
                                                                                                                     <td>${foodD.type}</td>
-                                                                                                                    <td>
-                                                                                                                        <form action="type-of-request" method="get">
-                                                                                                                            <input type="hidden" name="action" value="view">
-                                                                                                                                <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                    <button type="submit"  style="background-color: #ede1df;">View Detail</button>
-                                                                                                                                    </form>  
-                                                                                                                                    <!--view-->
+                                                                                                                    <td>   <div class="item eye">
+                                                                                                                            <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" >
+                                                                                                                            <i class="icon-eye"></i>
+                                                                                                                           </a></div> 
+                                                                                                                    </td>
+                                                                                                                    <td> <div class="item edit">
+                                                                                                                        <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)">
+                                                                                                                             <i class="icon-edit-3"></i>
+                                                                                                                         </a>
+                                                                                                                        </div>
 
-                                                                                                                                    <!--                                                                                                                                end view-->
-                                                                                                                                    </td>
-                                                                                                                                    <td>
-                                                                                                                                        <div style="display: flex;justify-content: center;gap: 12px">
-                                                                                                                                            <form action="type-of-request" method="get">
-                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                    <input type="hidden" name="action" value="accept">
-                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                            <button type="submit"  style="background-color: #02b80b;color: white"
-                                                                                                                                                                    onclick="handleAccept(event)" >
-                                                                                                                                                                Accept
-                                                                                                                                                            </button>
-                                                                                                                                                            </form>
-                                                                                                                                                            <form action="type-of-request" method="get">
-                                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                                    <input type="hidden" name="action" value="reject">
-                                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                                            <button type="submit"  style="background-color: #e60004;color: white"
-                                                                                                                                                                                    onclick="handleReject(event)"  >
-                                                                                                                                                                                Reject 
-                                                                                                                                                                            </button>
-                                                                                                                                                                            </form>   
-
-                                                                                                                                                                            <!--com-->
-
-
-                                                                                                                                                                            <!--                                                                                                                                                                         <div class="list-icon-function">
-                                                                                                                                                                            
-                                                                                                                                                                                                        <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}">
-                                                                                                                                                                                                        <div class="item eye">
-                                                                                                                                                                                                        <i class="icon-eye"></i>
-                                                                                                                                                                                                        </div> 
-                                                                                                                                                                                                        </a>
-                                                                                                                                                                            
-                                                                                                                                                                                                        <a href="reject?action=accept&select=${foodD.type}&id=${foodD.id}">
-                                                                                                                                                                                                        <div class="item edit">
-                                                                                                                                                                                                        <i class="icon-edit-3"></i>
-                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        <a href="accept?action=reject&select=${foodD.type}&id=${foodD.id}">
-                                                                                                                                                                                                        <div class="item trash">
-                                                                                                                                                                                                        <i class="icon-trash-2"></i>
-                                                                                                                                                                                                        </div>    
-                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                        </div>-->
-                                                                                                                                                                            </div>
-                                                                                                                                                                            </div>
+                                                                                                                        <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)">
+                                                                                                                            <div class="item trash">
+                                                                                                                                <i class="icon-trash-2"></i>
+                                                                                                                            </div>    
+                                                                                                                        </a></td>
+                                                                                                                            </div>
 
                                                                                                                                                                             <!--com-->
                                                                                                                                                                             </div>  
-                                                                                                                                                                            </td>
+                                                                                                                                                                           
                                                                                                                                                                             </tr>
                                                                                                                                                                         </c:forEach>
                                                                                                                                                                         </tbody>
@@ -261,64 +220,90 @@
                                                                                                                                                                         <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                                                                                                                         <script src="${pageContext.request.contextPath}/js/main.js"></script>
                                                                                                                                                                         <!-- iziToast JS -->
+                                                                                                                                                                        
                                                                                                                                                                         <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
                                                                                                                                                                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                                                                                                                                                                         <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
                                                                                                                                                                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
                                                                                                                                                                         <script>
 
-                                                                                                                                                                                        function handleAccept(event) {
-                                                                                                                                                                                            event.preventDefault(); // Ngăn form submit ngay
+    function handleAccept(event) {
+    event.preventDefault(); // Ngăn hành vi mặc định
 
-                                                                                                                                                                                            Swal.fire({
-                                                                                                                                                                                                title: 'Are you want to Accept?',
-                                                                                                                                                                                                text: "This Item will be handle",
-                                                                                                                                                                                                icon: 'question',
-                                                                                                                                                                                                showCancelButton: true,
-                                                                                                                                                                                                confirmButtonText: 'Confirm',
-                                                                                                                                                                                                cancelButtonText: 'Cancel',
-                                                                                                                                                                                                background: '#fff3cd'
-                                                                                                                                                                                            }).then((result) => {
-                                                                                                                                                                                                if (result.isConfirmed) {
-                                                                                                                                                                                                    // Lưu trạng thái
-                                                                                                                                                                                                    localStorage.setItem('showSuccessToast', 'true');
-                                                                                                                                                                                                    // Gửi form thủ công
-                                                                                                                                                                                                    event.target.form.submit();
+    const url = event.currentTarget.href; // Lấy URL từ <a>
 
-                                                                                                                                                                                                }
-                                                                                                                                                                                            });
-                                                                                                                                                                                        }
-                                                                                                                                                                                        window.addEventListener('DOMContentLoaded', () => {
-                                                                                                                                                                                            if (localStorage.getItem('showSuccessToast') === 'true') {
-                                                                                                                                                                                                iziToast.success({
-                                                                                                                                                                                                    title: 'Successful',
-                                                                                                                                                                                                    message: 'Processing Successful!',
-                                                                                                                                                                                                    position: 'topRight'
-                                                                                                                                                                                                });
-                                                                                                                                                                                                localStorage.removeItem('showSuccessToast'); // Xóa để không hiện lại
-                                                                                                                                                                                            }
-                                                                                                                                                                                        });
-                                                                                                                                                                                        function handleReject(event) {
-                                                                                                                                                                                            event.preventDefault(); // Ngăn form submit ngay
+    Swal.fire({
+      title: 'Are you sure?\nThis action cannot be undone.',
+    showCancelButton: true,
+    confirmButtonText: 'Accept',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true,
+    background: '#ffffff',
+    showCloseButton: true,
+    customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        confirmButton: 'custom-swal-confirm',
+        cancelButton: 'custom-swal-cancel'
+    },
+    buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showSuccessToast', 'true');
+            window.location.href = url + '&actionStatus=accept';
+        } else if (result.isDenied) {
+            localStorage.setItem('showRejectToast', 'true');
+            window.location.href = url + '&actionStatus=reject';
+        }
+    });
+}
+ window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('showSuccessToast') === 'true') {
+        iziToast.success({
+            title: 'Accepted',
+            message: 'Item has been successfully accepted!',
+            position: 'topRight'
+        });
+        localStorage.removeItem('showSuccessToast');
+    }
 
-                                                                                                                                                                                            Swal.fire({
-                                                                                                                                                                                                title: 'Are you want to Reject?',
-                                                                                                                                                                                                text: "This Item will be handle",
-                                                                                                                                                                                                icon: 'question',
-                                                                                                                                                                                                showCancelButton: true,
-                                                                                                                                                                                                confirmButtonText: 'Confirm',
-                                                                                                                                                                                                cancelButtonText: 'Cancel',
-                                                                                                                                                                                                background: '#fff3cd'
-                                                                                                                                                                                            }).then((result) => {
-                                                                                                                                                                                                if (result.isConfirmed) {
-                                                                                                                                                                                                    // Lưu trạng thái
-                                                                                                                                                                                                    localStorage.setItem('showSuccessToast', 'true');
-                                                                                                                                                                                                    // Gửi form thủ công
-                                                                                                                                                                                                    event.target.form.submit();
+    if (localStorage.getItem('showRejectToast') === 'true') {
+        iziToast.error({
+            title: 'Rejected',
+            message: 'Item has been rejected!',
+            position: 'topRight'
+        });
+        localStorage.removeItem('showRejectToast');
+    }
+});
+ function handleReject(event) {
+    event.preventDefault();
 
-                                                                                                                                                                                                }
-                                                                                                                                                                                            });
-                                                                                                                                                                                        }
+    const url = event.currentTarget.href;
+
+    Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Reject',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: true,
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showRejectToast', 'true');
+            window.location.href = url + '&actionStatus=reject';
+        }
+    });
+}
+
 
 
                                                                                                                                                                         </script>
