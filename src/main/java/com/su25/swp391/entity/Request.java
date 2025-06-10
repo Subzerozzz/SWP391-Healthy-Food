@@ -25,8 +25,8 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Request {
-    private int id;
-    private String result;
-    private int foodDraftId;
-    private String statusRequest;
+  private Integer id;
+  private String result;
+  private Integer foodDraftId;
+  private String statusRequest;
 }

@@ -581,8 +581,18 @@ public class ManageFoodController extends HttpServlet {
   }
 
   private void showRequestNotDone(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // Lấy ra các request not done
-    List<Request> listRequestNotDone = new RequestDAO().getRequestByStatus("Not done");
+    Integer currentPage = request.getParameter("page") == null ? 1 
+            : Integer.parseInt(request.getParameter("page"));
+    
+    //Tính toán tổng số Page
+    List<Request> listRequest1 = requestDao.findAll();
+    // lấy ra tổng số bản ghi
+    Integer totalOfRecord = listRequest1.size();
+    // tính ra tổng số page
+    Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
+        : totalOfRecord / RECORD_PER_PAGE + 1;
+    // Lấy ra 10 request not done cuối cùng để đảm bảo mới nhất
+    List<Request> listRequestNotDone = new RequestDAO().getRequestByStatusForPage("Not done", currentPage);
     // Dựa vào foodDraftId trong list not done để lấy ra list đó trong foodDraft
     List<FoodDraft> listFoodDraft = new ArrayList<>();
     for (Request a : listRequestNotDone) {
@@ -590,10 +600,16 @@ public class ManageFoodController extends HttpServlet {
     }
     // Lấy ra thông tin của các nutri
     List<Account> listNutri = accountDao.findAccountByRole("nutri");
+    //Lấy ra listCatgory
+    List<FoodCategory> listCategory = categoryDao.findAll();
     // Trả cái listFoodDraft về giao diện
     request.setAttribute("listFoodDraft", listFoodDraft);
     request.setAttribute("listRequestNotDone", listRequestNotDone);
     request.setAttribute("listNutri", listNutri);
+    request.setAttribute("listCategory", listCategory);
+    //set totalPage và currentPage
+    request.setAttribute("totalPage", totalPage);
+    request.setAttribute("currentPage", currentPage);
     request.getRequestDispatcher("view/nutritionist/menu/requestFood.jsp").forward(request, response);
     
   }
