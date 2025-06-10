@@ -20,6 +20,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -312,13 +313,12 @@ public class TypeOfRequestController extends HttpServlet {
             Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
             // If Update True have a massage
             if (checkUpdateResultDone) {
-                request.setAttribute("mess", "Accept Create successful");
                 Request req = requestDAO.findById(id);
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-            } else {
-                request.setAttribute("mess", "Accept Create not successful");
+                HttpSession session = request.getSession();
+                session.setAttribute("isSuccess", true);
             }
         }
         // Set Attribut to page dashboard.jsp
@@ -367,13 +367,12 @@ public class TypeOfRequestController extends HttpServlet {
             Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
             // If Update True have a massage
             if (checkUpdateFoodDone && checkUpdateResultDone) {
-                request.setAttribute("mess", "Accept Update successful");
                 Request req = requestDAO.findById(id);
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-            } else {
-                request.setAttribute("mess", "Accept Update not successful");
+                HttpSession session = request.getSession();
+                session.setAttribute("isSuccess", true);
             }
         }
         // Set Attribut to page dashboard.jsp
@@ -424,14 +423,9 @@ public class TypeOfRequestController extends HttpServlet {
             LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
             logReqDAO.insert(logR);
             requestDAO.delete(req);
-             // If Update True have a massage
-            if (checkDeleteFoodDone && checkUpdateResultDone) {
-                request.setAttribute("mess", "Accept Delete successful");
-                
-            } else {
-                request.setAttribute("mess", "Accept Delete not successful");
-            }
-
+            HttpSession session = request.getSession();
+            session.setAttribute("isSuccess", true);
+            
         }
         // Set Attribut to page dashboard.jsp
         request.setAttribute("totalPages", totalPages);
@@ -474,15 +468,14 @@ public class TypeOfRequestController extends HttpServlet {
             Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
             // if check update Request True
             if (checkUpdateResult) {
-                request.setAttribute("mess", "Reject Create successful");
                 Request req = requestDAO.findById(id);
                 Food_Draft food_D = foodDraftDAO.findById(id);
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-            } else {
-                request.setAttribute("mess", "Reject Create not successful");
-            }
+                HttpSession session = request.getSession();
+                session.setAttribute("isSuccess", true);
+            } 
         }
         // Set Attribut to page dashboard.jsp
         request.setAttribute("totalPages", totalPages);
@@ -524,15 +517,14 @@ public class TypeOfRequestController extends HttpServlet {
             Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
              // if check update Request True
             if (checkUpdateResult) {
-                request.setAttribute("mess", "Reject Update successful");
                 Request req = requestDAO.findById(id);
                 Food_Draft food_D = foodDraftDAO.findById(id);
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-            } else {
-                request.setAttribute("mess", "Reject Update not successful");
-            }
+                HttpSession session = request.getSession();
+                session.setAttribute("isSuccess", true);
+            } 
         }
         // Set Attribut to page dashboard.jsp
         request.setAttribute("totalPages", totalPages);
@@ -574,15 +566,14 @@ public class TypeOfRequestController extends HttpServlet {
             Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
             // if check update Request True
             if (checkUpdateResult) {
-                request.setAttribute("mess", "Reject Delete successful");
                 Request req = requestDAO.findById(id);
                 Food_Draft food_D = foodDraftDAO.findById(id);
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-            } else {
-                request.setAttribute("mess", "Reject Delete not successful");
-            }
+                HttpSession session = request.getSession();
+                session.setAttribute("isSuccess", true);
+            } 
         }
         // Set Attribut to page dashboard.jsp
         request.setAttribute("totalPages", totalPages);

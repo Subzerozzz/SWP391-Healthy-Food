@@ -41,6 +41,7 @@
                                                             <!-- iziToast CSS -->
                                                             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
                                                                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 
                                                   </head>
 
@@ -130,17 +131,17 @@
                                                                                                                     <td>${foodD.name}</td>
                                                                                                                     <td>${foodD.type}</td>
                                                                                                                     <td>   <div class="item eye">
-                                                                                                                            <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" >
+                                                                                                                            <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" title="View Detail" >
                                                                                                                             <i class="icon-eye"></i>
                                                                                                                            </a></div> 
                                                                                                                     </td>
                                                                                                                     <td> <div class="item edit">
-                                                                                                                        <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)">
+                                                                                                                        <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)" title="Accept">
                                                                                                                              <i class="icon-edit-3"></i>
                                                                                                                          </a>
                                                                                                                         </div>
 
-                                                                                                                        <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)">
+                                                                                                                        <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)" title="Reject">
                                                                                                                             <div class="item trash">
                                                                                                                                 <i class="icon-trash-2"></i>
                                                                                                                             </div>    
@@ -222,13 +223,32 @@
                                                                                                                                                                         <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                                                                                                                                         <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                                                                                                                         <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                                                                         <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+
                                                                                                                                                                         <!-- iziToast JS -->
                                                                                                                                                                         
-                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+                                                                                                                                                                        
                                                                                                                                                                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                                                                                                                                                                         <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
                                                                                                                                                                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
-                                                                                                                                                                        <script>
+         <c:if test="${isSuccess == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Notification",
+                    message: "Processed successfully",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isSuccess");
+            %>
+          </c:if>
+                         <script>
 
     function handleAccept(event) {
     event.preventDefault(); // Ngăn hành vi mặc định
@@ -260,25 +280,7 @@
         }
     });
 }
- window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('showSuccessToast') === 'true') {
-        iziToast.success({
-            title: 'Accepted',
-            message: 'Item has been successfully accepted!',
-            position: 'topRight'
-        });
-        localStorage.removeItem('showSuccessToast');
-    }
 
-    if (localStorage.getItem('showRejectToast') === 'true') {
-        iziToast.error({
-            title: 'Rejected',
-            message: 'Item has been rejected!',
-            position: 'topRight'
-        });
-        localStorage.removeItem('showRejectToast');
-    }
-});
  function handleReject(event) {
     event.preventDefault();
 
@@ -306,6 +308,8 @@
         }
     });
 }
+
+
 
 
 

@@ -41,7 +41,39 @@
                                                     <!-- Favicon and Touch Icons  -->
                                                     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
+ <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+                                                            <style>
+   .btn-accept {
+    background: linear-gradient(135deg, #00c853, #64dd17);
+     color: #fff;
+}
 
+.btn-accept:hover {
+    background: linear-gradient(135deg, #00b248, #558b2f);
+    transform: translateY(-2px);
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #d50000, #ff1744);
+     color: #fff;
+}
+
+.btn-reject:hover {
+    background: linear-gradient(135deg, #b71c1c, #d32f2f);
+    transform: translateY(-2px);
+}
+.btn-backHome {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    margin-left: 280px;
+    color: #fff;
+}
+
+.btn-backHome:hover {
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+    transform: translateY(-2px);
+}
+</style>
                                                             </head>
 
                                                             <body class="body">
@@ -82,7 +114,7 @@
                                                                                                     <h2>${foodD.name}</h2>
                                                                                                 <h3>Created at: ${foodD.created_at}</h3>
                                                                                                 <div class="price">
-                                                                                                    <span class="current">${foodD.price}</span>
+                                                                                                    <span class="current">Price: ${foodD.price} $</span>
                                                                                                     <!--                                            <span class="original">$330.00</span>-->
                                                                                                 </div>
                                                                                                 <p>Type: ${foodD.type}</p>
@@ -93,27 +125,32 @@
                                                                                                  Number of Calo: ${foodD.calo}
                                                                                                 </p>
                                                                                                 <p>Black Fresh Berry is a delicious and nutritious fruit, rich in antioxidants and flavor. Perfect for a healthy snack or to add freshness to your desserts and smoothies.</p>
-                                                                                                <div style="display: flex;gap: 15px">
-                                                                                                    <form action="type-of-request" method="get">
+                                                                                              
+                                                                                                <div style="display: flex; gap: 40px">
+                                                                                                    <form action="${pageContext.request.contextPath}/type-of-request" method="get">
                                                                                                         <input type="hidden" name="select" value="${foodD.type}">
                                                                                                             <input type="hidden" name="action" value="accept">
                                                                                                                 <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                    <button type="submit"  style="background-color: #02b80b;color: white"
-                                                                                                                            onclick="return confirm('Are you want to Accept ${foodD.type} this food')" >
+                                                                                                                    <button type="submit" class="btn-modern btn-accept"
+                                                                                                                            onclick="handleAccept(event)">
                                                                                                                         Accept
                                                                                                                     </button>
                                                                                                                     </form>
-                                                                                                                    <form action="type-of-request" method="get">
+
+                                                                                                                    <form action="${pageContext.request.contextPath}/type-of-request" method="get">
                                                                                                                         <input type="hidden" name="select" value="${foodD.type}">
                                                                                                                             <input type="hidden" name="action" value="reject">
                                                                                                                                 <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                    <button type="submit"  style="background-color: #e60004;color: white"
-                                                                                                                                            onclick="return confirm('Are you want to Reject ${foodD.type} this food')"        >
-                                                                                                                                        Reject 
+                                                                                                                                    <button type="submit" class="btn-modern btn-reject"
+                                                                                                                                            onclick="handleReject(event)">
+                                                                                                                                        Reject
                                                                                                                                     </button>
-                                                                                                                                    </form>     
-                                                                                                                                    </div> 
-
+                                                                                                                                    </form>
+                                                                                                                                            <form action="${pageContext.request.contextPath}/type-of-request" method="get">
+                                                                                                                                                         <button type="submit" class="btn-modern btn-backHome" > Back
+                                                                                                                                                         </button>
+                                                                                                                                    </form>
+                                                                                                                                    </div>
                                                                                                                                     </div>
                                                                                                                                     </div>
                                                                                                                                     </div>
@@ -144,41 +181,93 @@
                                                                                                                                     <script src="${pageContext.request.contextPath}/js/swiper-bundle.min.js"></script>
                                                                                                                                     <script src="${pageContext.request.contextPath}/js/carousel.js"></script>
                                                                                                                                     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                                                                                                    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+                                                                                                                                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />
+                                                                                                                                    <script>
+  function handleAccept(event) {
+    event.preventDefault(); // Ngăn hành vi mặc định để xử lý trước khi gửi
 
-                                                                                                                                    </body>
+    const form = event.currentTarget.closest("form"); // Lấy form chứa button
+
+    Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Accept',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: false, // Không hiển thị nút đóng
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showSuccessToast', 'true');
+            form.submit(); // Gửi form sau khi người dùng xác nhận Accept
+        } else if (result.isDismissed) {
+            localStorage.setItem('showRejectToast', 'true');
+        }
+    });
+}
+ function handleReject(event) {
+    event.preventDefault(); // Ngăn hành vi mặc định để xử lý trước khi gửi
+
+    const form = event.currentTarget.closest("form"); // Lấy form chứa button
+
+    Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Accept',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: false, // Không hiển thị nút đóng
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showSuccessToast', 'true');
+            form.submit(); // Gửi form sau khi người dùng xác nhận Accept
+        } else if (result.isDismissed) {
+            localStorage.setItem('showRejectToast', 'true');
+        }
+    });
+}
+
+   </script>
+             <c:if test="${isSuccess == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Notification",
+                    message: "Processed successfully",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isSuccess");
+            %>
+          </c:if>                         
+           
+                                                            </body>
 
 
                                                                                                                                     <!-- Mirrored from themesflat.co/html/remos/product-detail-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:47 GMT -->
                                                                                                                                     </html>
 
-
-  <td>
-                                                                                                                        <form action="type-of-request" method="get">
-                                                                                                                            <input type="hidden" name="action" value="view">
-                                                                                                                                <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                    <button type="submit"  style="background-color: #ede1df;">View Detail</button>
-                                                                                                                                    </form>  
-                                                                                                                                    <!--view-->
-
-                                                                                                                                    <!--                                                                                                                                end view-->
-                                                                                                                                    </td>
-                                                                                                                                    <td>
-                                                                                                                                        <div style="display: flex;justify-content: center;gap: 12px">
-                                                                                                                                            <form action="type-of-request" method="get">
-                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                    <input type="hidden" name="action" value="accept">
-                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                            <button type="submit"  style="background-color: #02b80b;color: white"
-                                                                                                                                                                    onclick="handleAccept(event)" >
-                                                                                                                                                                Accept
-                                                                                                                                                            </button>
-                                                                                                                                                            </form>
-                                                                                                                                                            <form action="type-of-request" method="get">
-                                                                                                                                                                <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                                                    <input type="hidden" name="action" value="reject">
-                                                                                                                                                                        <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                                                            <button type="submit"  style="background-color: #e60004;color: white"
-                                                                                                                                                                                    onclick="handleReject(event)"  >
-                                                                                                                                                                                Reject 
-                                                                                                                                                                            </button>
-                                                                                                                                                                            </form>   
+                                                                                                                    
+                                                                                                                                        
