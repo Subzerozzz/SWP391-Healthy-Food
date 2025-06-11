@@ -158,7 +158,7 @@
                                                                                                         <!-- Full Name -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Full Name</div>
-                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" >
+                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" required>
                                                                                                         </fieldset>
 
                                                                                                         <!-- User Name -->
@@ -169,7 +169,7 @@
                                                                                                         <!-- Address-->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Address</div>
-                                                                                                            <input type="text" class="form-control" name="address" value="${account.address}">
+                                                                                                            <input type="text" class="form-control" name="address" value="${account.address}" required>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Email -->
@@ -182,7 +182,7 @@
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Mobile</div>
     <!--                                                                                                        <input class="form-control" type="text" name="mobile" value="${account.mobile}">-->
-                                                                                                            <input class="form-control" type="text" name="mobile" value="${formData.mobile != null ? formData.mobile : account.mobile}" />
+                                                                                                            <input class="form-control" type="text" name="mobile" value="${formData.mobile != null ? formData.mobile : account.mobile}" required/>
                                                                                                             <c:if test="${not empty errors.mobile}">
                                                                                                                 <div class="text-danger">${errors.mobile}</div>
                                                                                                             </c:if>
