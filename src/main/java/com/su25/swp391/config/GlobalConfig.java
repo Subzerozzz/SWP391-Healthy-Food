@@ -14,6 +14,5 @@ public class GlobalConfig {
     public static final Integer SIZE_PAGE =10;
     public static final String STATUS_RESULT_REJECT = "Reject";
     public static final String STATUS_RESULT_ACCEPT = "Accept";
+    public static final String SESSION_ACCOUNT = "account";
 }
-
-  
