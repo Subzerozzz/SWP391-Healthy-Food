@@ -589,7 +589,7 @@ public class TypeOfRequestController extends HttpServlet {
 
     private void showFoodDraftList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get parameters for filtering 
-         String searchTitle = request.getParameter("name");
+        String searchTitle = request.getParameter("name");
         // Pagination parameters
         int page = 1;
         int pageSize = GlobalConfig.SIZE_PAGE; // Number of blogs per page
