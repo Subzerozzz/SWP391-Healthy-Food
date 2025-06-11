@@ -162,18 +162,10 @@
                                  .search-container input[type="text"]::placeholder {
                                      color: #a0aec0; /* xám nhạt */
                                  }
-
-                                 .search-container button {
-                                     background: none;
-                                     border: none;
-                                     cursor: pointer;
-                                     padding: 0;
-                                 }
-
                                  .search-container i.icon-search {
                                      font-size: 18px;
                                      padding-left: 120px;
-                                     color: #333;
+                                    
                                  }
                                  * {
                                      margin: 0;
@@ -288,65 +280,39 @@
                                      display: flex;
                                      align-items: center;
                                  }
-
                                  .search-container {
                                      display: flex;
                                      align-items: center;
                                      background: white;
                                      border: 1px solid #e2e8f0;
                                      border-radius: 12px;
-                                     padding: 12px 16px;
+                                     padding: 0;
                                      min-width: 300px;
-                                     transition: all 0.3s ease;
+                                     overflow: hidden;
                                      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-                                 }
-
-                                 .search-container:focus-within {
-                                     border-color: #6366f1;
-                                     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-                                 }
-
-                                 .search-container:hover {
-                                     border-color: #c7d2fe;
                                  }
 
                                  .search-container input[type="text"] {
                                      border: none;
                                      outline: none;
+                                     padding: 12px 16px;
                                      flex: 1;
-                                     font-size: 14px;
-                                     color: #374151;
-                                     background: transparent;
-                                     padding: 4px 8px;
-                                 }
-
-                                 .search-container input[type="text"]::placeholder {
-                                     color: #9ca3af;
-                                     font-style: italic;
+                                     font-size: 16px;
                                  }
 
                                  .search-container button {
-                                     background: none;
                                      border: none;
+                                     padding: 12px 16px;
                                      cursor: pointer;
-                                     padding: 6px;
-                                     color: #6b7280;
-                                     transition: all 0.2s ease;
-                                     border-radius: 6px;
+                                     transition: background 0.3s ease;
                                      display: flex;
                                      align-items: center;
                                      justify-content: center;
                                  }
 
                                  .search-container button:hover {
-                                     color: #6366f1;
-                                     background-color: #f3f4f6;
+                                     background: #2b6cb0; /* màu hover */
                                  }
-
-                                 .search-container i {
-                                     font-size: 16px;
-                                 }
-
                                  /* Icon font (basic implementation) */
                                  .icon-search::before {
                                      content: "🔍";
@@ -579,23 +545,6 @@
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <h3>Blog List</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Ecommerce</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Blog List</div>
-                                        </li>
-                                    </ul>
                                 </div>
                                 <!-- product-list -->
                                     <<div class="filter-search-wrapper">
@@ -614,13 +563,12 @@
                                             </form>
                                           <!-- Search -->
                                           <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                                      <div class="search-container">
-                                                          <input type="text" name="search" placeholder="Search here..." value="">
-                                                              <input type="hidden" name="action" value="search">
-                                                                  <button type="submit">
-                                                                      <i class="icon-search"></i>
-                                                                  </button>
-                                                       </div>
+                                              <div class="search-container">
+                                                  <input type="text" name="search" placeholder="Search here...">
+                                                      <button type="submit">
+                                                          <i class="icon-search"></i>
+                                                      </button>
+                                              </div>
                                           </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
@@ -727,13 +675,6 @@
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        <div class="bottom-page">
-                            <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                            <i class="icon-heart"></i>
-                            <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                        </div>
-                        <!-- /bottom-page -->
                     </div>
                     <!-- /main-content -->
                 </div>

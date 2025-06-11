@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="font/fonts.css">
     <link rel="stylesheet" href="icon/style.css">
     <link rel="shortcut icon" href="images/favicon.png">
+    <script src="assets/ckeditor/ckeditor.js"></script>
 </head>
 
 <body class="body">
@@ -136,6 +137,11 @@
 <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+ <script>
+            CKEDITOR.replace('content', {
+                        versionCheck: false
+                    });
+     </script>
 <script>
           document.addEventListener('DOMContentLoaded', function () {
             const fileInput = document.getElementById('myFile');
