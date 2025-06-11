@@ -158,7 +158,7 @@
                                                                                                         <!-- Full Name -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Full Name</div>
-                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" required>
+                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" >
                                                                                                         </fieldset>
 
                                                                                                         <!-- User Name -->
