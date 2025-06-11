@@ -375,7 +375,7 @@ public class ManageAccount extends HttpServlet {
                 errors.put("mobile", "Số điện thoại không được để trống");
             } else {
                 // Regex số điện thoại Việt Nam: 10 hoặc 11 số, bắt đầu bằng 0 hoặc +84
-                String phoneRegex = "^(0|\\+84)(\\d{9,10})$";
+                String phoneRegex = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-9]|9[0-9])\\d{7}$";
                 if (!mobile.matches(phoneRegex)) {
                     errors.put("mobile", "Số điện thoại không hợp lệ (ví dụ: 0912345678 hoặc +84912345678)");
                 }
@@ -480,7 +480,7 @@ public class ManageAccount extends HttpServlet {
             errors.put("mobile", "Mobile phone number is required");
         } else {
             // Ví dụ: mobile chỉ được gồm 10 đến 11 số, có thể bắt đầu bằng dấu + (cho mã quốc gia)
-            String mobileRegex = "^\\+?\\d{10,11}$";
+            String mobileRegex = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-9]|9[0-9])\\d{7}$";
             if (!Pattern.matches(mobileRegex, mobile)) {
                 errors.put("mobile", "Mobile phone number must be 10-11 digits and can start with +");
             }

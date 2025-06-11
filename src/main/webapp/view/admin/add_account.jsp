@@ -102,7 +102,7 @@
                                                                                                     </ul>
                                                                                                 </div>
                                                                                                 <!-- add-new-user -->
-                                                                                                <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=add" method="POST">
+                                                                                                <form class="add_account" id="userForm" action="${pageContext.request.contextPath}/manage-account?action=add" method="POST">
                                                                                                 <div class="wg-box">   
 
                                                                                                     <div class="right flex-grow">
@@ -256,6 +256,49 @@
                                                                         });
                                                                     </script>
                                                                 </c:if>
+                                                                <script>
+                                                                    document.getElementById("userForm").addEventListener("submit", function (event) {
+                                                                        const requiredFields = [
+                                                                            {name: "full_name", label: "Full Name"},
+                                                                            {name: "user_name", label: "User Name"},
+                                                                            {name: "email", label: "Email"},
+                                                                            {name: "password", label: "Password"},
+                                                                            {name: "address", label: "Address"},
+                                                                            {name: "mobile", label: "Mobile"},
+                                                                            {name: "birth_date", label: "Birth Date"},
+                                                                            {name: "role", label: "Role"},
+                                                                            {name: "gender", label: "Gender"},
+                                                                        ];
+
+                                                                        let isValid = true;
+                                                                        let message = "";
+
+                                                                        requiredFields.forEach(field => {
+                                                                            const input = document.querySelector(`[name="${field.name}"]`);
+                                                                            if (input && !input.value.trim()) {
+                                                                                isValid = false;
+                                                                                message += `- ${field.label} không được để trống\n`;
+                                                                            }
+                                                                        });
+
+                                                                        const statusChecked = document.querySelector('[name="status"]:checked');
+                                                                        if (!statusChecked) {
+                                                                            isValid = false;
+                                                                            message += `Vui lòng chọn Status (Active/Deactive)\n`;
+                                                                        }
+
+                                                                        if (!isValid) {
+                                                                            alert("Vui lòng điền đầy đủ thông tin:\n\n" + message);
+                                                                            event.preventDefault(); // Ngăn form gửi đi
+                                                                        }
+                                                                    });
+                                                                    const password = document.querySelector('[name="password"]').value;
+                                                                    const confirmPassword = document.querySelectorAll('[name="password"]')[1].value;
+                                                                    if (password !== confirmPassword) {
+                                                                        isValid = false;
+                                                                        message += `- Mật khẩu xác nhận không khớp\n`;
+                                                                    }
+                                                                </script>
                                                             </body>
 
 
