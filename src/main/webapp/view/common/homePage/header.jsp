@@ -27,23 +27,7 @@
                                         Home 
                                         <i class='bx bx-chevron-down'></i>
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="nav-item">
-                                            <a href="index.html" class="nav-link">
-                                                Home One  
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="index-2.html" class="nav-link">
-                                                Home Two
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="index-3.html" class="nav-link active">
-                                                Home Three
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    
                                 </li>
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
@@ -191,32 +175,9 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="${pageContext.request.contextPath}/shop" class="nav-link" style="margin-right: 30px">
                                         Shop
-                                        <i class='bx bx-chevron-down'></i>
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="nav-item">
-                                            <a href="shop-left-sidebar.html" class="nav-link">
-                                                Shop Left Sidebar 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="shop-right-sidebar.html" class="nav-link">
-                                                Shop Right Sidebar 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="shop-grid.html" class="nav-link">
-                                                Shop Grid 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="shop-full-width-sidebar.html" class="nav-link">
-                                                Shop Full Width Sidebar
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </li>
 
                                 <li class="nav-item">

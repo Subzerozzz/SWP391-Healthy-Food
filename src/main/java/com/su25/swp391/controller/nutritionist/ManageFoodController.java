@@ -271,7 +271,6 @@ public class ManageFoodController extends HttpServlet {
       // Gửi về 1 tín hiệu là yêu cầu thêm đã được gửi đi
       HttpSession session = request.getSession();
       session.setAttribute("isAdd", true);
-      // response.sendRedirect("manager-dashboard");
       response.sendRedirect("manage-food?action=request");
 
     } catch (Exception e) {
@@ -466,7 +465,7 @@ public class ManageFoodController extends HttpServlet {
       Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
           : totalOfRecord / RECORD_PER_PAGE + 1;
       // lấy ra 10 bản ghi đầu tiên
-      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, 1);
+      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, 1,RECORD_PER_PAGE);
       // lấy ra listCategory
       List<FoodCategory> listCategory = categoryDao.findAll();
       // set giá trị
@@ -517,7 +516,7 @@ public class ManageFoodController extends HttpServlet {
         currentPage = 1;
       }
 
-      List<Food> listFood = foodDao.findRecordByPage(currentPage);
+      List<Food> listFood = foodDao.findRecordByPage(RECORD_PER_PAGE,currentPage);
       List<FoodCategory> listCategory = categoryDao.findAll();
       request.setAttribute("totalPage", totalPage);
       request.setAttribute("listFood", listFood);
@@ -543,7 +542,7 @@ public class ManageFoodController extends HttpServlet {
         currentPage = 1;
       }
 
-      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, currentPage);
+      List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, currentPage,RECORD_PER_PAGE);
       List<FoodCategory> listCategory = categoryDao.findAll();
       request.setAttribute("totalPage", totalPage);
       request.setAttribute("listFood", listFood);
@@ -596,7 +595,7 @@ public class ManageFoodController extends HttpServlet {
     Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
         : totalOfRecord / RECORD_PER_PAGE + 1;
     // Lấy ra 10 request not done cuối cùng để đảm bảo mới nhất
-    List<Request> listRequestNotDone = new RequestDAO().getRequestByStatusForPage("Not done", currentPage);
+    List<Request> listRequestNotDone = requestDao.getRequestByStatusForPage("Not done", currentPage);
     // Dựa vào foodDraftId trong list not done để lấy ra list đó trong foodDraft
     List<FoodDraft> listFoodDraft = new ArrayList<>();
     for (Request a : listRequestNotDone) {

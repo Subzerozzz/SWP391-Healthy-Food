@@ -147,17 +147,18 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     return listFood;
   }
 
-  public List<Food> findRecordByPage(int i) {
+  public List<Food> findRecordByPage(int limit,int i) {
     List<Food> list = new ArrayList<>();
     String sql = "SELECT *\n"
         + "FROM Food\n"
         + "ORDER BY id\n"
-        + "LIMIT 10 OFFSET ?;";
+        + "LIMIT ? OFFSET ?;";
     // Tính số bản ghi cần bỏ qua
     Integer recordOffset = (i - 1) * 10;
     try {
       statement = connection.prepareStatement(sql);
-      statement.setInt(1, recordOffset);
+      statement.setInt(1, limit);
+      statement.setInt(2, recordOffset);
 
       resultSet = statement.executeQuery();
       while (resultSet.next()) {
@@ -169,19 +170,20 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     return list;
   }
 
-  public List<Food> findRecordByPageForCategory(Integer categoryID, int i) {
+  public List<Food> findRecordByPageForCategory(Integer categoryID, int i, Integer limit) {
     List<Food> list = new ArrayList<>();
     String sql = "SELECT *\n"
         + "FROM Food\n"
         + "WHERE category_id = ?\n"
         + "ORDER BY id\n"
-        + "LIMIT 10 OFFSET ?";
+        + "LIMIT ? OFFSET ?";
     // Tính số bản ghi cần bỏ qua
     Integer recordOffset = (i - 1) * 10;
     try {
       statement = connection.prepareStatement(sql);
       statement.setInt(1, categoryID);
-      statement.setInt(2, recordOffset);
+      statement.setInt(2, limit);
+      statement.setInt(3, recordOffset);
 
       resultSet = statement.executeQuery();
       while (resultSet.next()) {
