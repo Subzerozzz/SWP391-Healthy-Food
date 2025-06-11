@@ -49,8 +49,8 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 
   @Override
   public int insert(FoodDraft t) {
-    String sql = "INSERT INTO FoodDraft (name, description, price, image_url, category_id, created_at, updated_at,type,nutri_id,food_id)"
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO FoodDraft (name, description, price, image_url, category_id, created_at, updated_at,type,nutri_id,food_id,calo)"
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     try {
       // gan giá tri vao
       statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -70,7 +70,7 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
         System.out.println("hhhh");
         statement.setNull(10, java.sql.Types.INTEGER);
       }
-
+      statement.setDouble(11,t.getCalo());
       // thuc thi cau lenh
       statement.executeUpdate();
       resultSet = statement.getGeneratedKeys();

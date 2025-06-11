@@ -270,10 +270,69 @@
         .statusNotDone{
             background: #808080;
             padding: 5px 10px;
-            border-radius: 10px
+            border-radius: 10px;
+            color: white;
             
         }
       </style>
+      
+      <!--Thông báo xóa--> 
+        <c:if test="${isDelete == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Yêu cầu xóa món ăn của bạn đã được gửi đi",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isDelete");
+            %>
+          </c:if>
+        
+        <!--Thông báo add-->
+        <c:if test="${isAdd == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Yêu cầu tạo món ăn của bạn đã được gửi đi",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+            <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isAdd");
+            %>
+          </c:if>
+            
+        <!--Thông báo update--> 
+
+        <c:if test="${isUpdate == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Yêu cầu chỉnh sửa món ăn của bạn đã được gửi đi",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#d4edda"
+                 });
+           });
+         </script>
+         <!--Xóa đi biến isAdd sau khi đã thông báo--> 
+         <%
+             session.removeAttribute("isUpdate");
+         %>
+       </c:if>
     </body>
 
 

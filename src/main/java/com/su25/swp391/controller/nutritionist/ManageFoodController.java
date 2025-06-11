@@ -179,9 +179,10 @@ public class ManageFoodController extends HttpServlet {
         // Đường dẫn tương đối để lưu vào database
         fileName = "uploads/products/" + fileName;
       }
+
       // Fix tạm nutriId sau này dựa vào tài khoản lấy được trên session về để lấy ra
       // id
-      Integer nutriId = 1;
+      Integer nutriId = 24;
       // Validate dữ liệu
       Map<String, String> errors = new HashMap<>();
       // Validate name
@@ -270,7 +271,8 @@ public class ManageFoodController extends HttpServlet {
       // Gửi về 1 tín hiệu là yêu cầu thêm đã được gửi đi
       HttpSession session = request.getSession();
       session.setAttribute("isAdd", true);
-      response.sendRedirect("manager-dashboard");
+      // response.sendRedirect("manager-dashboard");
+      response.sendRedirect("manage-food?action=request");
 
     } catch (Exception e) {
       System.out.println(e);
@@ -294,6 +296,7 @@ public class ManageFoodController extends HttpServlet {
         .type("DELETE")
         .food_id(id)
         .nutri_id(foodDelete.getNutri_id())
+        .calo(foodDelete.getCalo())
         .build();
     // Lưu vào DB
     foodDraftDao.insert(foodDraft);
@@ -312,7 +315,7 @@ public class ManageFoodController extends HttpServlet {
     // chuyển hướng về trang dashboard
     HttpSession session = request.getSession();
     session.setAttribute("isDelete", true);
-    response.sendRedirect("manager-dashboard");
+    response.sendRedirect("manage-food?action=request");
   }
 
   private void updateFood(HttpServletRequest request, HttpServletResponse response)
@@ -445,7 +448,7 @@ public class ManageFoodController extends HttpServlet {
       // chuyển hướng về trang dashboard và thông báo gửi về update đã được gửi đi
       HttpSession session = request.getSession();
       session.setAttribute("isUpdate", true);
-      response.sendRedirect("manager-dashboard");
+      response.sendRedirect("manage-food?action=request");
 
     } catch (Exception e) {
       System.out.println(e);
@@ -580,11 +583,12 @@ public class ManageFoodController extends HttpServlet {
     }
   }
 
-  private void showRequestNotDone(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    Integer currentPage = request.getParameter("page") == null ? 1 
-            : Integer.parseInt(request.getParameter("page"));
-    
-    //Tính toán tổng số Page
+  private void showRequestNotDone(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    Integer currentPage = request.getParameter("page") == null ? 1
+        : Integer.parseInt(request.getParameter("page"));
+
+    // Tính toán tổng số Page
     List<Request> listRequest1 = requestDao.findAll();
     // lấy ra tổng số bản ghi
     Integer totalOfRecord = listRequest1.size();
@@ -600,18 +604,18 @@ public class ManageFoodController extends HttpServlet {
     }
     // Lấy ra thông tin của các nutri
     List<Account> listNutri = accountDao.findAccountByRole("nutri");
-    //Lấy ra listCatgory
+    // Lấy ra listCatgory
     List<FoodCategory> listCategory = categoryDao.findAll();
     // Trả cái listFoodDraft về giao diện
     request.setAttribute("listFoodDraft", listFoodDraft);
     request.setAttribute("listRequestNotDone", listRequestNotDone);
     request.setAttribute("listNutri", listNutri);
     request.setAttribute("listCategory", listCategory);
-    //set totalPage và currentPage
+    // set totalPage và currentPage
     request.setAttribute("totalPage", totalPage);
     request.setAttribute("currentPage", currentPage);
     request.getRequestDispatcher("view/nutritionist/menu/requestFood.jsp").forward(request, response);
-    
+
   }
 
 }
