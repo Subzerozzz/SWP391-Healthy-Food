@@ -175,6 +175,376 @@
                                      padding-left: 120px;
                                      color: #333;
                                  }
+                                 * {
+                                     margin: 0;
+                                     padding: 0;
+                                     box-sizing: border-box;
+                                 }
+
+                                 body {
+                                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                     background-color: #f8fafc;
+                                     padding: 40px 20px;
+                                 }
+
+                                 /* Container chính cho filter và search */
+                                 .filter-search-wrapper {
+                                     max-width: 1200px;
+                                     margin: 0 auto;
+                                     background: white;
+                                     padding: 24px;
+                                     border-radius: 16px;
+                                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                                     border: 1px solid #e2e8f0;
+                                 }
+
+                                 .filter-search-container {
+                                     display: flex;
+                                     align-items: center;
+                                     justify-content: space-between;
+                                     gap: 24px;
+                                     flex-wrap: wrap;
+                                 }
+
+                                 .left-controls {
+                                     display: flex;
+                                     align-items: center;
+                                     gap: 20px;
+                                     flex-wrap: wrap;
+                                 }
+
+                                 /* Form Filter Styling */
+                                 .form-search {
+                                     display: flex;
+                                     align-items: center;
+                                     gap: 12px;
+                                     background: #f8fafc;
+                                     padding: 16px 20px;
+                                     border-radius: 12px;
+                                     border: 1px solid #e2e8f0;
+                                     transition: all 0.3s ease;
+                                 }
+
+                                 .form-search:hover {
+                                     border-color: #c7d2fe;
+                                     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+                                 }
+
+                                 .form-search label {
+                                     font-weight: 600;
+                                     color: #374151;
+                                     font-size: 14px;
+                                     white-space: nowrap;
+                                     margin-right: 4px;
+                                 }
+
+                                 .form-search select {
+                                     padding: 10px 16px;
+                                     border: 1px solid #d1d5db;
+                                     border-radius: 8px;
+                                     background: white;
+                                     font-size: 14px;
+                                     color: #374151;
+                                     min-width: 140px;
+                                     cursor: pointer;
+                                     transition: all 0.2s ease;
+                                 }
+
+                                 .form-search select:focus {
+                                     outline: none;
+                                     border-color: #6366f1;
+                                     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                                 }
+
+                                 .form-search select:hover {
+                                     border-color: #9ca3af;
+                                 }
+
+                                 .filter-button {
+                                     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                                     color: white;
+                                     border: none;
+                                     padding: 10px 20px;
+                                     border-radius: 8px;
+                                     font-weight: 600;
+                                     font-size: 14px;
+                                     cursor: pointer;
+                                     transition: all 0.3s ease;
+                                     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+                                     min-width: 80px;
+                                 }
+
+                                 .filter-button:hover {
+                                     transform: translateY(-2px);
+                                     box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+                                 }
+
+                                 .filter-button:active {
+                                     transform: translateY(0);
+                                 }
+
+                                 /* Search Box Styling */
+                                 .search-box {
+                                     display: flex;
+                                     align-items: center;
+                                 }
+
+                                 .search-container {
+                                     display: flex;
+                                     align-items: center;
+                                     background: white;
+                                     border: 1px solid #e2e8f0;
+                                     border-radius: 12px;
+                                     padding: 12px 16px;
+                                     min-width: 300px;
+                                     transition: all 0.3s ease;
+                                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+                                 }
+
+                                 .search-container:focus-within {
+                                     border-color: #6366f1;
+                                     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                                 }
+
+                                 .search-container:hover {
+                                     border-color: #c7d2fe;
+                                 }
+
+                                 .search-container input[type="text"] {
+                                     border: none;
+                                     outline: none;
+                                     flex: 1;
+                                     font-size: 14px;
+                                     color: #374151;
+                                     background: transparent;
+                                     padding: 4px 8px;
+                                 }
+
+                                 .search-container input[type="text"]::placeholder {
+                                     color: #9ca3af;
+                                     font-style: italic;
+                                 }
+
+                                 .search-container button {
+                                     background: none;
+                                     border: none;
+                                     cursor: pointer;
+                                     padding: 6px;
+                                     color: #6b7280;
+                                     transition: all 0.2s ease;
+                                     border-radius: 6px;
+                                     display: flex;
+                                     align-items: center;
+                                     justify-content: center;
+                                 }
+
+                                 .search-container button:hover {
+                                     color: #6366f1;
+                                     background-color: #f3f4f6;
+                                 }
+
+                                 .search-container i {
+                                     font-size: 16px;
+                                 }
+
+                                 /* Icon font (basic implementation) */
+                                 .icon-search::before {
+                                     content: "🔍";
+                                     font-style: normal;
+                                 }
+
+                                 /* Responsive Design */
+                                 @media (max-width: 768px) {
+                                     .filter-search-container {
+                                         flex-direction: column;
+                                         align-items: stretch;
+                                         gap: 16px;
+                                     }
+
+                                     .left-controls {
+                                         flex-direction: column;
+                                         align-items: stretch;
+                                         gap: 16px;
+                                     }
+
+                                     .search-container {
+                                         min-width: auto;
+                                         width: 100%;
+                                     }
+
+                                     .form-search {
+                                         justify-content: space-between;
+                                     }
+                                 }
+
+                                 @media (max-width: 480px) {
+                                     .filter-search-wrapper {
+                                         padding: 16px;
+                                         margin: 0 10px;
+                                     }
+
+                                     .form-search {
+                                         flex-direction: column;
+                                         align-items: stretch;
+                                         gap: 12px;
+                                     }
+
+                                     .form-search select {
+                                         min-width: auto;
+                                     }
+                                 }
+
+                                 /* Animation cho loading state */
+                                 .loading {
+                                     opacity: 0.7;
+                                     pointer-events: none;
+                                 }
+
+                                 .loading .filter-button {
+                                     background: #9ca3af;
+                                 }
+
+                                 /* Focus states for accessibility */
+                                 .filter-button:focus,
+                                 .form-search select:focus,
+                                 .search-container button:focus {
+                                     outline: 2px solid #6366f1;
+                                     outline-offset: 2px;
+                                 }
+                                 .wg-table.table-product-list {
+                                     width: 100%;
+                                     background: #fff;
+                                     border-radius: 8px;
+                                     overflow: hidden;
+                                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                 }
+
+                                 .table-header {
+                                     display: flex;
+                                     align-items: center;
+                                     background: #f8f9fa;
+                                     padding: 16px 20px;
+                                     border-bottom: 2px solid #e9ecef;
+                                     font-weight: 600;
+                                     color: #495057;
+                                 }
+
+                                 .table-row {
+                                     display: flex;
+                                     align-items: center;
+                                     padding: 16px 20px;
+                                     border-bottom: 1px solid #e9ecef;
+                                     transition: background-color 0.2s ease;
+                                 }
+
+                                 .table-row:hover {
+                                     background-color: #f8f9fa;
+                                 }
+
+                                 .table-row:last-child {
+                                     border-bottom: none;
+                                 }
+
+                                 /* Định nghĩa độ rộng cố định cho từng cột */
+                                 .table-header .col:nth-child(1),
+                                 .table-row .col:nth-child(1) {
+                                     flex: 0 0 25%; /* Blog title */
+                                     padding-right: 15px;
+                                 }
+
+                                 .table-header .col:nth-child(2),
+                                 .table-row .col:nth-child(2) {
+                                     flex: 0 0 10%; /* Blog ID */
+                                     padding-right: 15px;
+                                     text-align: center;
+                                 }
+
+                                 .table-header .col:nth-child(3),
+                                 .table-row .col:nth-child(3) {
+                                     flex: 0 0 15%; /* Author */
+                                     padding-right: 15px;
+                                 }
+
+                                 .table-header .col:nth-child(4),
+                                 .table-row .col:nth-child(4) {
+                                     flex: 0 0 12%; /* Date */
+                                     padding-right: 15px;
+                                 }
+
+                                 .table-header .col:nth-child(5),
+                                 .table-row .col:nth-child(5) {
+                                     flex: 0 0 12%; /* Status */
+                                     padding-right: 15px;
+                                 }
+
+                                 .table-header .col:nth-child(6),
+                                 .table-row .col:nth-child(6) {
+                                     flex: 0 0 15%; /* Actions */
+                                     text-align: center;
+                                 }
+
+                                 /* Loại bỏ margin-left inline styles */
+                                 .table-header .col,
+                                 .table-row .col {
+                                     margin-left: 0 !important;
+                                 }
+
+                                 /* Style cho blog title link */
+                                .body-title-2 {
+                                    color: #000000; /* Màu đen */
+                                    text-decoration: none;
+                                    font-weight: 500;
+                                    transition: color 0.2s ease;
+                                }
+
+                                .body-title-2:hover {
+                                    color: #000000; /* Màu đen khi hover */
+                                    text-decoration: underline;
+                                }
+
+                                 /* Style cho status badge */
+                                 .table-row .col span {
+                                     background-color: #E74C3C !important;
+                                     color: white;
+                                     padding: 6px 16px;
+                                     border-radius: 20px;
+                                     display: inline-block;
+                                     font-weight: bold;
+                                     font-size: 12px;
+                                     text-transform: uppercase;
+                                 }
+                                 /* Responsive design */
+                                 @media (max-width: 768px) {
+                                     .table-header .col:nth-child(1),
+                                     .table-row .col:nth-child(1) {
+                                         flex: 0 0 30%;
+                                     }
+
+                                     .table-header .col:nth-child(2),
+                                     .table-row .col:nth-child(2) {
+                                         flex: 0 0 8%;
+                                     }
+
+                                     .table-header .col:nth-child(3),
+                                     .table-row .col:nth-child(3) {
+                                         flex: 0 0 15%;
+                                     }
+
+                                     .table-header .col:nth-child(4),
+                                     .table-row .col:nth-child(4) {
+                                         flex: 0 0 12%;
+                                     }
+
+                                     .table-header .col:nth-child(5),
+                                     .table-row .col:nth-child(5) {
+                                         flex: 0 0 12%;
+                                     }
+
+                                     .table-header .col:nth-child(6),
+                                     .table-row .col:nth-child(6) {
+                                         flex: 0 0 15%;
+                                     }
+                                 }
         </style>    
 </head>
 
@@ -228,35 +598,30 @@
                                     </ul>
                                 </div>
                                 <!-- product-list -->
-                                <div class="wg-box">
-                                    <div class="title-box">
-                                        <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Blog ID: Each blog is provided with a unique ID, which you can rely on to find the exact product you need.</div>
-                                    </div>
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <!-- Filter -->
-                                       <div class="wrapper-flex">
-                                           <!-- Form lọc (nằm ngang) -->
-                                       
-                                          <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
-                                              <input type="hidden" name="action" value="filter" />
-                                              <label for="status">Status:</label>
-                                              <select name="status"class ="form-control">
-                                                  <option value="" <c:if test="${empty status}">selected</c:if>>All Status</option>
-                                                  <option value="Active" <c:if test="${status == 'Active'}">selected</c:if>>Active</option>
-                                                  <option value="Inactive" <c:if test="${status == 'Inactive'}">selected</c:if>>Inactive</option>
-                                              </select>
-
-                                              <button type="submit" class="filter-button">Lọc</button>
-                                          </form>
+                                    <<div class="filter-search-wrapper">
+                                        <div class="filter-search-container">
+                                            <div class="left-controls">
+                                                <!-- Form Filter -->
+                                                <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
+                                                <input type="hidden" name="action" value="filter" />
+                                                <label for="status">Status:</label>
+                                                <select name="status" id="status" class="form-control">
+                                                    <option value="">All Status</option>
+                                                    <option value="Active">Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                </select>
+                                                <button type="submit" class="filter-button">Filter</button>
+                                            </form>
                                           <!-- Search -->
-                                            <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                            <div class="search-container">
-                                                <input type="text" name="search" placeholder="Search here..." value="${param.search}">
-                                                    <input type="hidden" name="action" value="search">
-                                                        <button type="submit"><i class="icon-search"></i></button>
-                                                        </div>
-                                            </form>   
+                                          <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
+                                                      <div class="search-container">
+                                                          <input type="text" name="search" placeholder="Search here..." value="">
+                                                              <input type="hidden" name="action" value="search">
+                                                                  <button type="submit">
+                                                                      <i class="icon-search"></i>
+                                                                  </button>
+                                                       </div>
+                                          </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
                          <div class="wg-table table-product-list">
@@ -276,9 +641,9 @@
                                      <div class="col">
                                          <a href="list.jsp" class="body-title-2">${blog.title}</a>
                                      </div>
-                                     <div class="col">${blog.id}</div>
-                                     <div class="col">${blog.author}</div>
-                                     <div class="col">${blog.birth_date}</div> 
+                                     <div class="col body-title-2">${blog.id}</div>
+                                     <div class="col body-title-2">${blog.author}</div>
+                                     <div class="col body-title-2">${blog.birth_date}</div> 
                                      <div class="col">
                                          <span style="background-color: #E74C3C;; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
                                              ${blog.status}
