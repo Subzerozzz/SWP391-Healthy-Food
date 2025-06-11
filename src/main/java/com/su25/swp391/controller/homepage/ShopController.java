@@ -56,6 +56,9 @@ public class ShopController extends HttpServlet {
             case "foodByCategory":
                 showFoodByCategory(request, response);
                 break;
+            case "search":
+                searchFood(request, response);
+                break;
             default:
                 throw new AssertionError();
         }
@@ -98,7 +101,7 @@ public class ShopController extends HttpServlet {
             //Lấy ra currentPage
             Integer currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
             //Lấy ra 12 bản ghi đầu tiên
-            List<Food> listFood = foodDao.findRecordByPageForCategory(category, currentPage,FOOD_PER_PAGE);
+            List<Food> listFood = foodDao.findRecordByPageForCategory(category, currentPage, FOOD_PER_PAGE);
             List<FoodCategory> listFoodCategory = foodCategoryDao.findAll();
             request.setAttribute("listFood", listFood);
             request.setAttribute("listFoodCategory", listFoodCategory);
@@ -109,5 +112,31 @@ public class ShopController extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    private void searchFood(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String foodName = request.getParameter("foodName");
+            //Lấy ra totalPage 
+            List<Food> list1 = foodDao.getFoodByName(foodName);
+            Integer totalRecord = list1.size();
+            Integer totalPage = totalRecord % FOOD_PER_PAGE == 0
+                    ? totalRecord / FOOD_PER_PAGE : totalRecord / FOOD_PER_PAGE + 1;
+            //Lấy ra currentPage
+            Integer currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
+            //Lấy ra 12 bản ghi đầu tiên theo tên
+            List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, currentPage, FOOD_PER_PAGE);
+            List<FoodCategory> listFoodCategory = foodCategoryDao.findAll();
+            request.setAttribute("listFood", listFood);
+            request.setAttribute("listFoodCategory", listFoodCategory);
+            request.setAttribute("currentPage", currentPage);
+            request.setAttribute("totalPage", totalPage);
+            request.setAttribute("foodName", foodName);
+            request.setAttribute("isSearch", true);
+            request.getRequestDispatcher("view/homePage/shop.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
 }

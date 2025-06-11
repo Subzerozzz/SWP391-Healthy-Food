@@ -490,7 +490,7 @@ public class ManageFoodController extends HttpServlet {
     Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
         : totalOfRecord / RECORD_PER_PAGE + 1;
     // Lấy ra 10 bản ghi đầu tiên
-    List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, 1);
+    List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, 1, RECORD_PER_PAGE);
     // lấy ra listCategory
     List<FoodCategory> listCategory = categoryDao.findAll();
     // set gia tri vao request
@@ -569,7 +569,7 @@ public class ManageFoodController extends HttpServlet {
         currentPage = 1;
       }
 
-      List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, currentPage);
+      List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, currentPage,RECORD_PER_PAGE);
       List<FoodCategory> listCategory = categoryDao.findAll();
       request.setAttribute("totalPage", totalPage);
       request.setAttribute("listFood", listFood);

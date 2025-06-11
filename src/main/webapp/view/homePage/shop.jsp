@@ -123,8 +123,9 @@
                 <div class="product-side-bar">
                   <!--Search Form-->
                   <div class="search-widget">
-                    <form class="search-form">
-                      <input type="search" class="form-control" placeholder="Search...">
+                    <form class="search-form" action="${pageContext.request.contextPath}/shop">
+                      <input name="foodName" type="search" class="form-control" placeholder="Search by food name...">
+                      <input type="hidden" name="action" value="search">
                       <button type="submit">
                         <i class="bx bx-search"></i>
                       </button>
@@ -257,81 +258,118 @@
                 
                 <!--Pagination--> 
                 <div class="col-lg-12 col-md-12 text-center">
-                    <!--pagination for all food--> 
-                    <c:if test="${category == 0}">
-                        <div class="pagination-area">
-                        
-                            <a href="${pageContext.request.contextPath}/shop?page=1" class="prev page-numbers">
-                                <i class="bx bx-chevrons-left"></i>
-                            </a>
+                    <c:if test="${not empty category}">
+                        <!--pagination for all food--> 
+                        <c:if test="${category == 0}">
+                            <div class="pagination-area">
 
-                            <c:choose>
-                                <c:when test="${currentPage <= totalPage - 2}">
-                                    <c:if test="${currentPage > 1}">
-                                        <a href="${pageContext.request.contextPath}/shop?page=${currentPage - 1}" class="page-numbers">${currentPage - 1}</a>
-                                    </c:if>
-                                    <a href="${pageContext.request.contextPath}/shop?page=${currentPage}" class="page-numbers current">${currentPage}</a>
+                                <a href="${pageContext.request.contextPath}/shop?page=1" class="prev page-numbers">
+                                    <i class="bx bx-chevrons-left"></i>
+                                </a>
 
-                                    <a href="${pageContext.request.contextPath}/shop?page=${currentPage + 1}" class="page-numbers">${currentPage + 1}</a>
+                                <c:choose>
+                                    <c:when test="${currentPage <= totalPage - 2}">
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="${pageContext.request.contextPath}/shop?page=${currentPage - 1}" class="page-numbers">${currentPage - 1}</a>
+                                        </c:if>
+                                        <a href="${pageContext.request.contextPath}/shop?page=${currentPage}" class="page-numbers current">${currentPage}</a>
 
-                                    <c:if test="${currentPage < totalPage - 2}">
-                                        <a href="#" class="page-numbers">...</a>
-                                    </c:if>
+                                        <a href="${pageContext.request.contextPath}/shop?page=${currentPage + 1}" class="page-numbers">${currentPage + 1}</a>
 
-                                    <a href="${pageContext.request.contextPath}/shop?page=${totalPage}" class="page-numbers">${totalPage}</a>
-                                </c:when>  
-                                <c:otherwise>
-                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                                             <a href="${pageContext.request.contextPath}/shop?page=${i}"
-                                                class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
+                                        <c:if test="${currentPage < totalPage - 2}">
+                                            <a href="#" class="page-numbers">...</a>
+                                        </c:if>
 
-                            <a href="${pageContext.request.contextPath}/shop?page=${totalPage}" class="next page-numbers">
-                                <i class="bx bx-chevrons-right"></i>
-                            </a>
+                                        <a href="${pageContext.request.contextPath}/shop?page=${totalPage}" class="page-numbers">${totalPage}</a>
+                                    </c:when>  
+                                    <c:otherwise>
+                                        <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                                 <a href="${pageContext.request.contextPath}/shop?page=${i}"
+                                                    class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
 
-                        </div>
+                                <a href="${pageContext.request.contextPath}/shop?page=${totalPage}" class="next page-numbers">
+                                    <i class="bx bx-chevrons-right"></i>
+                                </a>
+
+                            </div>
+                        </c:if>
+                        <!--pagination for food category--> 
+                        <c:if test="${category != 0 && not empty category}">
+                            <div class="pagination-area">
+
+                                <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=1" class="prev page-numbers">
+                                    <i class="bx bx-chevrons-left"></i>
+                                </a>
+
+                                <c:choose>
+                                    <c:when test="${currentPage <= totalPage - 2}">
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage - 1}" class="page-numbers">${currentPage - 1}</a>
+                                        </c:if>
+                                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage}" class="page-numbers current">${currentPage}</a>
+
+                                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage + 1}" class="page-numbers">${currentPage + 1}</a>
+
+                                        <c:if test="${currentPage < totalPage - 2}">
+                                            <a href="#" class="page-numbers">...</a>
+                                        </c:if>
+
+
+                                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}" class="page-numbers">${totalPage}</a>
+                                    </c:when>  
+                                    <c:otherwise>
+                                        <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                                 <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${i}"
+                                                    class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}" class="next page-numbers">
+                                    <i class="bx bx-chevrons-right"></i>
+                                </a>
+                            </div>
+                        </c:if>
                     </c:if>
-                    <!--pagination for food category--> 
-                    <c:if test="${category != 0}">
+                    <c:if test="${not empty isSearch}">
                         <div class="pagination-area">
-                        
-                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=1" class="prev page-numbers">
-                                <i class="bx bx-chevrons-left"></i>
-                            </a>
 
-                            <c:choose>
-                                <c:when test="${currentPage <= totalPage - 2}">
-                                    <c:if test="${currentPage > 1}">
-                                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage - 1}" class="page-numbers">${currentPage - 1}</a>
-                                    </c:if>
-                                    <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage}" class="page-numbers current">${currentPage}</a>
-                                    
-                                    <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage + 1}" class="page-numbers">${currentPage + 1}</a>
-                                    
-                                    <c:if test="${currentPage < totalPage - 2}">
-                                        <a href="#" class="page-numbers">...</a>
-                                    </c:if>
-                                    
+                                <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=1" class="prev page-numbers">
+                                    <i class="bx bx-chevrons-left"></i>
+                                </a>
 
-                                    <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}" class="page-numbers">${totalPage}</a>
-                                </c:when>  
-                                <c:otherwise>
-                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                                             <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${i}"
-                                                class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                    <c:when test="${currentPage <= totalPage - 2}">
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage - 1}" class="page-numbers">${currentPage - 1}</a>
+                                        </c:if>
+                                        <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage}" class="page-numbers current">${currentPage}</a>
 
-                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}" class="next page-numbers">
-                                <i class="bx bx-chevrons-right"></i>
-                            </a>
-                        </div>
+                                        <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage + 1}" class="page-numbers">${currentPage + 1}</a>
+
+                                        <c:if test="${currentPage < totalPage - 2}">
+                                            <a href="#" class="page-numbers">...</a>
+                                        </c:if>
+
+                                        <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${totalPage}" class="page-numbers">${totalPage}</a>
+                                    </c:when>  
+                                    <c:otherwise>
+                                        <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                                 <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${i}"
+                                                    class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${totalPage}" class="next page-numbers">
+                                    <i class="bx bx-chevrons-right"></i>
+                                </a>
+
+                            </div>
                     </c:if>
-                    
                 </div>
               </div>
             </div>
