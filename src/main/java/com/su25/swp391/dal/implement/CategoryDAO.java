@@ -79,24 +79,24 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
         return category;
     }
-      public static void main(String[] args) {
-        CategoryDAO dao = new CategoryDAO();
-        
-        int page = 1;
-        int pageSize = 10;
-
-        System.out.println("Testing findAllWithPagination with page = " + page + " and pageSize = " + pageSize);
-        
-        List<Category> categories = dao.findAllWithPagination(page, pageSize);
-        
-        if (categories == null || categories.isEmpty()) {
-            System.out.println("No categories found.");
-        } else {
-            for (Category c : categories) {
-                System.out.println("ID: " + c.getIdcategory() + ", Name: " + c.getName_category() + ",Description:" + c.getDescription() +",MinMBI:" + c.getMinBMI()+",MaxMBI:" + c.getMaxBMI());
-            }
-        }
-    }
+//      public static void main(String[] args) {
+//        CategoryDAO dao = new CategoryDAO();
+//        
+//        int page = 1;
+//        int pageSize = 10;
+//
+//        System.out.println("Testing findAllWithPagination with page = " + page + " and pageSize = " + pageSize);
+//        
+//        List<Category> categories = dao.findAllWithPagination(page, pageSize);
+//        
+//        if (categories == null || categories.isEmpty()) {
+//            System.out.println("No categories found.");
+//        } else {
+//            for (Category c : categories) {
+//                System.out.println("ID: " + c.getIdcategory() + ", Name: " + c.getName_category() + ",Description:" + c.getDescription() +",MinMBI:" + c.getMinBMI()+",MaxMBI:" + c.getMaxBMI());
+//            }
+//        }
+//    }
     @Override
     public Map<Integer, Category> findAllMap() {
         Map<Integer, Category> categoryMap = new HashMap<>();
@@ -153,30 +153,54 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     @Override
-    public int insert(Category t) {
-        List<Category> insertcategory = new ArrayList<>();
-        String sql = "INSERT INTO Swp301_pr.category (name_category) VALUES"
-                + "( ?)";
-        try {
-             connection = getConnection();
-            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // BẮT BUỘC PHẢI CÓ ĐOẠN NÀY
-            statement.setString(1, t.getName_category());
-            //Lấy khóa chính được tạo tự động sau khi insert
-            int affectedRow = statement.executeUpdate();
-            if (affectedRow > 0) {
-                resultSet = statement.getGeneratedKeys();
-                if (resultSet.next()) {
-                    return resultSet.getInt(1); // Trả về ID vừa insert
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Err inset" +e.getMessage());
-        } finally {
-            closeResources();
-        }
-        return -1;
-    }
+  public int insert(Category t) {
+    String sql = "INSERT INTO Swp301_pr.category (name_category, description, minBMI, maxBMI) VALUES (?, ?, ?, ?)";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
+        statement.setString(1, t.getName_category());
+        statement.setString(2, t.getDescription());
+        statement.setInt(3, t.getMinBMI());
+        statement.setInt(4, t.getMaxBMI());
+
+        int affectedRow = statement.executeUpdate();
+        if (affectedRow > 0) {
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1); // Trả về ID vừa insert
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Err insert: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+    return -1;
+}
+public class Main {
+    public static void main(String[] args) {
+        // Tạo DAO
+        CategoryDAO dao = new CategoryDAO();
+
+        // Tạo đối tượng Category để insert
+        Category newCategory = new Category();
+        newCategory.setName_category("Thể hình");
+        newCategory.setDescription("Dành cho người có chỉ số BMI trung bình");
+        newCategory.setMinBMI(18);
+        newCategory.setMaxBMI(25);
+
+        // Thực hiện insert
+        int insertedId = dao.insert(newCategory);
+
+        // Kiểm tra kết quả
+        if (insertedId != -1) {
+            System.out.println("Insert thành công! ID mới: " + insertedId);
+        } else {
+            System.out.println("Insert thất bại.");
+        }
+    }
+}
     @Override
     public Category getFromResultSet(ResultSet resultSet) throws SQLException {
 return Category.builder()
