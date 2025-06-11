@@ -288,19 +288,18 @@ public class Food_DraftDAO extends DBContext implements I_DAO< Food_Draft> {
         return null;
     }
  
-
     public static void main(String[] args) {
         Food_DraftDAO dao = new Food_DraftDAO();
         Food_Draft f = dao.findById(4);
 //        dao.updateStatus(1);
         // System.out.println(f);
-        
+
         System.out.println("--");
-        
+
         System.out.println(dao.findById(3));
-        System.out.println("IN: "+dao.countFoodDraftWithFilter("củ"));
+        System.out.println("IN: " + dao.countFoodDraftWithFilter("củ"));
         for (Food_Draft l : dao.findFoodDraftWithFilter("củ", 1, 5)) {
-            System.out.println("list: "+l);
+            System.out.println("list: " + l);
         }
     }
 }
