@@ -135,7 +135,7 @@ public class RequestDAO extends DBContext implements I_DAO<Request> {
   }
 
   public static void main(String[] args) {
-    for (Request a : new RequestDAO().getRequestByStatusForPage("Not done", 2)) {
+    for (Request a : new RequestDAO().getRequestByStatusForPage("Not done", 1)) {
       System.out.println(a);
     }
   }
