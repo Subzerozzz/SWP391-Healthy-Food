@@ -14,7 +14,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -58,7 +61,7 @@ public class ManageCategory extends HttpServlet {
             default:
                 listCategory(request, response);
                 break;
-            
+
         }
     }
 
@@ -87,7 +90,7 @@ public class ManageCategory extends HttpServlet {
             default:
                 listCategory(request, response);
                 break;
-            
+
         }
     }
 
@@ -102,18 +105,18 @@ public class ManageCategory extends HttpServlet {
     }// </editor-fold>
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("view/common/categoryPage/category_add.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp");
         dispatcher.forward(request, response);
     }
-    
+
     private void showEditForn(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
-    
+
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //lấy tham số phan trang
         String pageParam = request.getParameter("page");
@@ -135,7 +138,7 @@ public class ManageCategory extends HttpServlet {
                 if (pageSize > 50) {
                     pageSize = 50;
                 }
-                
+
             }
         } catch (NumberFormatException e) {
             currentPage = 1;
@@ -158,21 +161,78 @@ public class ManageCategory extends HttpServlet {
         int startRecord = (currentPage - 1) * pageSize + 1;
         int endRecord = Math.min(startRecord + pageSize - 1, totalCategory);
         request.setAttribute("startRecord", startRecord);
-        request.setAttribute("endStart", endRecord);
-        request.getRequestDispatcher("view/common/categoryPage/category_list.jsp").forward(request, response);
-        
+        request.setAttribute("endRecord", endRecord);
+        request.getRequestDispatcher("/view/common/categoryPage/category_list.jsp").forward(request, response);
+
     }
-    
+
     private void searchCate(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    private void addCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    private void addCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String name_category = request.getParameter("name_category");
+            String description = request.getParameter("description");
+            int minBMI = Integer.parseInt(request.getParameter("minBMI"));
+            int maxBMI = Integer.parseInt(request.getParameter("maxBMI"));
+            Map<String, String> errors = new HashMap();
+            if (name_category == null || name_category.trim().isEmpty()) {
+                errors.put("name_category", "Address is required");
+            } else if (!name_category.equals(name_category.trim())) {
+                errors.put("name_category", "Address must not start or end with a space");
+            } else if (name_category.length() < 3 || name_category.length() > 100) {
+                errors.put("address", "Address must be between 3 and 100 characters");
+            } else if (!Pattern.matches("^[\\p{L}\\p{N}_ ,.-]+$", name_category)) {
+                errors.put("address", "Address can only contain letters (with accents), numbers, commas, dots, hyphens, and spaces");
+            }
+            //validate chi số bmi
+            if (minBMI < 0 && maxBMI < minBMI) {
+                errors.put("Chỉ số BMI ", "chỉ số BMI không hợp lệ");
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("hasValidateErr", true);
+                //gan lai cac gia tri da nhap vao request de hien lai trong form
+                request.setAttribute("name_category", name_category);
+                request.setAttribute("minBMI", minBMI);
+                request.setAttribute("maxBMI", maxBMI);
+                request.setAttribute("description", description);
+                request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+                return;
+            }
+            // tao doi tuong category moi
+            Category category = Category.builder()
+                    .name_category(name_category)
+                    .minBMI(minBMI)
+                    .maxBMI(maxBMI)
+                    .description(description)
+                    .build();
+            CategoryDAO cateDao = new CategoryDAO();
+            boolean isSuccess = cateDao.insert(category) > 0;
+            if (isSuccess) {
+                // Lưu message thành công vào session để hiển thị 1 lần
+                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công!");
+                request.getSession().setAttribute("toastType", "success");
+                // Redirect về trang quản lý tài khoản
+                response.sendRedirect(request.getContextPath() + "/manageCategoryt");
+                return;
+            } else {
+                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
+                request.getSession().setAttribute("toastType", "Fail");
+                request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+                return;
+            }
+        } catch (Exception e) {
+            request.getSession().setAttribute("totalMess", "Fail to add Account");
+            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            e.printStackTrace();
+            request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+        }
     }
-    
+
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }
