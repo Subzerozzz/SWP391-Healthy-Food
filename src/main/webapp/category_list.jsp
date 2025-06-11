@@ -59,12 +59,12 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                        <jsp:include page = "section-menu-left.jsp"></jsp:include>
+                                                                        <jsp:include page = "common/category/section-menu-left.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
                                                                                 <!-- header-dashboard -->
-                                                                            <jsp:include page = "header.jsp"></jsp:include>
+                                                                            <jsp:include page = "common/category/header.jsp"></jsp:include>
                                                                                 <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
                                                                                 <div class="main-content">
