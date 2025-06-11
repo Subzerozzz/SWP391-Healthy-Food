@@ -60,21 +60,19 @@
     .blog-title {
         font-size: 2.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #2d3748, #4a5568);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: red; /* Dùng màu đỏ trực tiếp */
         margin-bottom: 1rem;
         line-height: 1.2;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .blog-meta {
+    .blog-meta-wrapper {
         display: flex;
-        justify-content: center;
-        gap: 2rem;
+        justify-content: space-between;
+        align-items: center;
         flex-wrap: wrap;
         margin-top: 1.5rem;
+        padding: 0 2rem;
     }
 
     .meta-item {
@@ -88,7 +86,10 @@
         color: #4a5568;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
+        font-size: 25px; /* 👈 Tăng cỡ chữ */
     }
+
+
 
     .meta-item:hover {
         transform: translateY(-2px);
@@ -97,15 +98,15 @@
     }
 
     .meta-icon {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         background: linear-gradient(135deg, #4299e1, #2b77cb);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .blog-content {
@@ -442,16 +443,16 @@
                                     <!-- Blog Header -->
                                     <div class="blog-header">
                                         <h1 class="blog-title">${blog.title}</h1>
-                                        <div class="blog-meta">
-                                            <div class="meta-item">
-                                                <div class="meta-icon">✍</div>
-                                                <span>Author: ${blog.author}</span>
-                                            </div>
-                                            <div class="meta-item">
-                                                <div class="meta-icon">📅</div>
-                                                <span>Date: ${blog.birth_date}</span>
-                                            </div>
+                                    <div class="blog-meta-wrapper">
+                                        <div class="meta-item author">
+                                            <div class="meta-icon">✍</div>
+                                            <span>Author: ${blog.author}</span>
                                         </div>
+                                        <div class="meta-item date">
+                                            <div class="meta-icon">📅</div>
+                                            <span>Date: ${blog.birth_date}</span>
+                                        </div>
+                                    </div>
                                     </div>
 
                                     <!-- Blog Content -->
@@ -467,7 +468,7 @@
                                                 </div>
 
                                                 <div class="content-section">
-                                                    <h3 class="section-title">Description</h3>
+                                                    <h3 class="section-title">Content</h3>
                                                     <div class="description-content">
                                                         ${blog.content}
                                                     </div>

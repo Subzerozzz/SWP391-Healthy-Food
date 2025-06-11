@@ -162,11 +162,6 @@
                                  .search-container input[type="text"]::placeholder {
                                      color: #a0aec0; /* xám nhạt */
                                  }
-                                 .search-container i.icon-search {
-                                     font-size: 18px;
-                                     padding-left: 120px;
-                                    
-                                 }
                                  * {
                                      margin: 0;
                                      padding: 0;
