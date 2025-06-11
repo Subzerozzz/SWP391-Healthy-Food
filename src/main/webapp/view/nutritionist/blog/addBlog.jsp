@@ -42,7 +42,7 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="apple-touch-icon-precomposied" href="images/favicon.png">
-    <script src="assets/ckeditor/ckeditor/ckeditor.js"></script>
+    <script src="assets/ckeditor/ckeditor.js"></script>
 </head>
 
 <body class="body">
@@ -75,24 +75,6 @@
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <h3>Add Blog</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Ecommerce</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Add Blog</div>
-                                        </li>
-                                    </ul>
-                                </div>
                                 <!-- form-add-product -->
                                 <form class="tf-section-2 form-add-product" 
                                     action="manage-blog?action=add"
@@ -171,7 +153,9 @@
      <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
      <script src="${pageContext.request.contextPath}/js/main.js"></script>
      <script>
-             CKEDITOR.replace('content')
+            CKEDITOR.replace('content', {
+                        versionCheck: false
+                    });
      </script>
      <script>
          function previewImage(event) {

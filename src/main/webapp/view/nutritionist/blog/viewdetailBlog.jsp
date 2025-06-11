@@ -12,123 +12,372 @@
 <!--<![endif]-->
 
 <style>
-                                            .image-frame {
-                                                position: relative;
-                                                width: 320px;
-                                                height: 240px;
-                                                border-radius: 24px;
-                                                overflow: hidden;
-                                                background: linear-gradient(145deg, #f0f4f8, #e2e8f0);
-                                                box-shadow:
-                                                    0 8px 32px rgba(0, 0, 0, 0.12),
-                                                    0 2px 8px rgba(0, 0, 0, 0.08),
-                                                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-                                                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                                                margin: 24px auto;
-                                                cursor: pointer;
-                                                backdrop-filter: blur(10px);
-                                            }
+    /* Enhanced Modern Blog Detail Styles */
+    .blog-detail-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
 
-                                            .image-frame::before {
-                                                content: '';
-                                                position: absolute;
-                                                top: 0;
-                                                left: 0;
-                                                right: 0;
-                                                bottom: 0;
-                                                background: linear-gradient(135deg,
-                                                    rgba(255, 255, 255, 0.1) 0%,
-                                                    rgba(255, 255, 255, 0.05) 50%,
-                                                    rgba(0, 0, 0, 0.02) 100%);
-                                                z-index: 2;
-                                                pointer-events: none;
-                                                transition: opacity 0.3s ease;
-                                            }
+    .blog-card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.08),
+            0 10px 25px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+    }
 
-                                            .image-frame img {
-                                                width: 100%;
-                                                height: 100%;
-                                                object-fit: cover;
-                                                display: block;
-                                                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                                                filter: brightness(1) contrast(1.05) saturate(1.1);
-                                            }
+    .blog-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4299e1, #3182ce, #2b77cb, #2c5282);
+        background-size: 400% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
 
-                                            .image-frame:hover {
-                                                transform: translateY(-8px) scale(1.02);
-                                                box-shadow:
-                                                    0 20px 60px rgba(0, 0, 0, 0.15),
-                                                    0 8px 32px rgba(0, 0, 0, 0.1),
-                                                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-                                            }
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
 
-                                            .image-frame:hover::before {
-                                                opacity: 0.7;
-                                            }
+    .blog-header {
+        background: linear-gradient(135deg, rgba(66, 153, 225, 0.05), rgba(43, 119, 203, 0.05));
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+    }
 
-                                            .image-frame:hover img {
-                                                transform: scale(1.08);
-                                                filter: brightness(1.1) contrast(1.1) saturate(1.2);
-                                            }
+    .blog-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #2d3748, #4a5568);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-                                            .image-frame:active {
-                                                transform: translateY(-4px) scale(1.01);
-                                                transition: all 0.15s ease;
-                                            }
+    .blog-meta {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
 
-                                            /* Responsive design */
-                                            @media (max-width: 768px) {
-                                                .image-frame {
-                                                    width: 90%;
-                                                    max-width: 300px;
-                                                    height: 200px;
-                                                    margin: 16px auto;
-                                                }
-                                            }
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.75rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #4a5568;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
 
-                                            /* Dark theme variant */
-                                            .image-frame.dark {
-                                                background: linear-gradient(145deg, #1a202c, #2d3748);
-                                                box-shadow:
-                                                    0 8px 32px rgba(0, 0, 0, 0.3),
-                                                    0 2px 8px rgba(0, 0, 0, 0.2),
-                                                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-                                            }
+    .meta-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.9);
+    }
 
-                                            .image-frame.dark::before {
-                                                background: linear-gradient(135deg,
-                                                    rgba(255, 255, 255, 0.05) 0%,
-                                                    rgba(255, 255, 255, 0.02) 50%,
-                                                    rgba(0, 0, 0, 0.1) 100%);
-                                            }
+    .meta-icon {
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(135deg, #4299e1, #2b77cb);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+    }
 
-                                            /* Glass morphism variant */
-                                            .image-frame.glass {
-                                                background: rgba(255, 255, 255, 0.1);
-                                                backdrop-filter: blur(20px);
-                                                border: 1px solid rgba(255, 255, 255, 0.2);
-                                                box-shadow:
-                                                    0 8px 32px rgba(0, 0, 0, 0.1),
-                                                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-                                            }
+    .blog-content {
+        padding: 2.5rem;
+    }
 
-                                            /* Neon glow variant */
-                                            .image-frame.neon {
-                                                box-shadow:
-                                                    0 0 20px rgba(59, 130, 246, 0.3),
-                                                    0 0 40px rgba(59, 130, 246, 0.1),
-                                                    0 8px 32px rgba(0, 0, 0, 0.12);
-                                                border: 2px solid rgba(59, 130, 246, 0.3);
-                                            }
+    .content-layout {
+        display: flex;
+        gap: 3rem;
+        align-items: flex-start;
+    }
 
-                                            .image-frame.neon:hover {
-                                                box-shadow:
-                                                    0 0 30px rgba(59, 130, 246, 0.5),
-                                                    0 0 60px rgba(59, 130, 246, 0.2),
-                                                    0 20px 60px rgba(0, 0, 0, 0.15);
-                                                border-color: rgba(59, 130, 246, 0.6);
-                                            }
+    .content-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .content-right {
+        flex: 0 0 45%;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .content-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #4299e1, #2b77cb);
+        border-radius: 2px;
+    }
+
+    .brief-info {
+        background: linear-gradient(135deg, rgba(66, 153, 225, 0.03), rgba(43, 119, 203, 0.03));
+        border: 1px solid rgba(66, 153, 225, 0.15);
+        border-radius: 16px;
+        padding: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #4a5568;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .brief-info::before {
+        content: '"';
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        font-size: 4rem;
+        color: rgba(66, 153, 225, 0.15);
+        font-family: serif;
+    }
+
+    .description-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2d3748;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .image-showcase {
+        text-align: center;
+        margin: 2.5rem 0;
+    }
+
+    /* Improved Image Frame Styles */
+    .image-frame {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.12),
+            0 4px 16px rgba(0, 0, 0, 0.08),
+            0 2px 8px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .image-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 100%);
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .image-frame img {
+        width: 100%;
+        height: auto;
+        min-height: 280px;
+        max-height: 400px;
+        object-fit: cover;
+        display: block;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: brightness(0.98) contrast(1.02) saturate(1.05);
+    }
+
+    .image-frame:hover {
+        transform: translateY(-4px);
+        box-shadow: 
+            0 16px 48px rgba(0, 0, 0, 0.15),
+            0 8px 24px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.06);
+        border-color: rgba(66, 153, 225, 0.3);
+    }
+
+    .image-frame:hover::before {
+        opacity: 1;
+    }
+
+    .image-frame:hover img {
+        filter: brightness(1.02) contrast(1.08) saturate(1.1);
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, #4299e1, #2b77cb);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 25px rgba(66, 153, 225, 0.25);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .back-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .back-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(66, 153, 225, 0.35);
+        color: white;
+        text-decoration: none;
+    }
+
+    .back-button:hover::before {
+        left: 100%;
+    }
+
+    .back-button:active {
+        transform: translateY(-1px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .content-layout {
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .content-right {
+            flex: none;
+            position: static;
+        }
+        
+        .image-frame img {
+            min-height: 250px;
+            max-height: 350px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .blog-detail-container {
+            padding: 1rem;
+        }
+        
+        .blog-title {
+            font-size: 2rem;
+        }
+        
+        .blog-header, .blog-content {
+            padding: 1.5rem;
+        }
+        
+        .blog-meta {
+            gap: 1rem;
+        }
+        
+        .meta-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .content-layout {
+            gap: 1.5rem;
+        }
+        
+        .image-frame {
+            border-radius: 12px;
+        }
+        
+        .image-frame img {
+            min-height: 200px;
+            max-height: 280px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .image-frame img {
+            min-height: 180px;
+            max-height: 240px;
+        }
+    }
+
+    /* Animation for content reveal */
+    .content-section {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: revealContent 0.6s ease forwards;
+    }
+
+    .content-section:nth-child(2) { animation-delay: 0.1s; }
+    .content-section:nth-child(3) { animation-delay: 0.2s; }
+    .content-section:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes revealContent {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
+
 <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:33 GMT -->
 <head>
     <!-- Basic Page Needs -->
@@ -147,8 +396,6 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
-
-
 
     <!-- Font -->
     <link rel="stylesheet" href="font/fonts.css">
@@ -186,70 +433,67 @@
                     <jsp:include page="../../common/nutritionist/headerdashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
-                    <div class="main-content">
+                    <div class="main-content blog-detail-container">
                         <!-- main-content-wrap -->
                         <div class="main-content-inner">
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Detail Blog</h3>
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Ecommerce</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- form-add-product -->
-                                <form class="tf-section-2 form-add-product" >
-                                    <div class="wg-box">
-                                        <fieldset class="title">
-                                            <div class="body-title mb-10">Blog Title: <span class="tf-color-1">*</span></div>
-                                            <div class="col" style="color: red; font-size: 24px; font-weight: bold;">${blog.title}</div>
-                                        </fieldset>
-                                        <div class="gap22 cols">
-                                            <fieldset class="author">
-                                                <div class="body-title mb-10">Author:<span class="tf-color-1">*</span></div>
-                                                <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.author}</div>
-                                            </fieldset>
-                                            <fieldset class="briefinfo">
-                                               <div class="body-title mb-10">Brief_info: <span class="tf-color-1">*</span></div>
-                                            <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.brief_info}</div>
-                                            </fieldset>
-                                        </div>
-                                            <div class="body-title mb-10">
-                                                Description: <span class="tf-color-1">*</span>
+                                <div class="blog-card">
+                                    <!-- Blog Header -->
+                                    <div class="blog-header">
+                                        <h1 class="blog-title">${blog.title}</h1>
+                                        <div class="blog-meta">
+                                            <div class="meta-item">
+                                                <div class="meta-icon">✍</div>
+                                                <span>Author: ${blog.author}</span>
                                             </div>
-                                            <div class="col" style="color: black; font-size: 20px; font-weight: bold; white-space: normal; overflow: visible; text-overflow: unset;">
-                                                ${blog.content}
+                                            <div class="meta-item">
+                                                <div class="meta-icon">📅</div>
+                                                <span>Date: ${blog.birth_date}</span>
                                             </div>
-                                            </fieldset>
-                                    </div>              
-                                    <div class="wg-box">
-                                        
-                                        <<div class="image-frame">
-                                            <img src="${blog.thumbnailblogs}" alt="Blog thumbnail">
                                         </div>
-                                            <fieldset class="name">
-                                                <div class="body-title mb-10">Blog date</div>
-                                                <div class="select">
-                                                    <div class="col" style="color: black; font-size: 20px; font-weight: bold;">${blog.birth_date}</div>
-                                                </div>
-                                            </fieldset>
                                     </div>
-                                                <a href="${pageContext.request.contextPath}/manage-blog">
-                                                    <button>Back</button>
-                                                </a> 
-                                </form>
-                                <!-- /form-add-product -->
+
+                                    <!-- Blog Content -->
+                                    <div class="blog-content">
+                                        <div class="content-layout">
+                                            <!-- Left Column -->
+                                            <div class="content-left">
+                                                <div class="content-section">
+                                                    <h3 class="section-title">Brief Information</h3>
+                                                    <div class="brief-info">
+                                                        ${blog.brief_info}
+                                                    </div>
+                                                </div>
+
+                                                <div class="content-section">
+                                                    <h3 class="section-title">Description</h3>
+                                                    <div class="description-content">
+                                                        ${blog.content}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Right Column -->
+                                            <div class="content-right">
+                                                <div class="content-section">
+                                                    <h3 class="section-title">Featured Image</h3>
+                                                    <div class="image-showcase">
+                                                        <div class="image-frame">
+                                                            <img src="${blog.thumbnailblogs}" alt="Blog thumbnail">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="content-section" style="text-align: center; margin-top: 3rem;">
+                                            <a href="${pageContext.request.contextPath}/manage-blog" class="back-button">
+                                                ← Back to Blog Management
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- /main-content-wrap -->
                         </div>
@@ -280,7 +524,6 @@
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 </body>
-
 
 <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
 </html>
