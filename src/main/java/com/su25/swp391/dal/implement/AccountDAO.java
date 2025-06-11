@@ -132,7 +132,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
-            System.out.println("Err update" + e.getMessage());
+            System.out.println("Err delete" + e.getMessage());
         } finally {
             closeResources();
         }

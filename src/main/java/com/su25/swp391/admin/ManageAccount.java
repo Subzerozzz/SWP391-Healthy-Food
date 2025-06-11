@@ -248,6 +248,16 @@ public class ManageAccount extends HttpServlet {
             if (user_name != null && email != null && user_name.equalsIgnoreCase(email)) {
                 errors.put("user_name", "Tên đăng nhập không được trùng với email");
             }
+            //validate address
+             if (address == null || address.trim().isEmpty()) {
+                errors.put("address", "Address is required");
+            } else if (!address.equals(address.trim())) {
+                errors.put("address", "Address must not start or end with a space");
+            } else if (address.length() < 3 || address.length() > 100) {
+                errors.put("address", "Address must be between 3 and 100 characters");
+            } else if (!Pattern.matches("^[\\p{L}\\p{N}_ ,.-]+$", address)) {
+                errors.put("address", "Address can only contain letters (with accents), numbers, commas, dots, hyphens, and spaces");
+            }
             // Xử lý ngày sinh
             Date date = null;
             if (dateStr != null && !dateStr.isEmpty()) {
@@ -290,7 +300,7 @@ public class ManageAccount extends HttpServlet {
             Account newAccount = Account.builder()
                     .full_name(full_name)
                     .user_name(user_name)
-                    .email(email)
+                    .email(email)   
                     .password(password)
                     .address(address)
                     .role(role)
