@@ -202,12 +202,7 @@
 
                                                                                                     </fieldset>
 
-                                                                                                    <!-- Mobile -->
-                                                                                                    <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">
-                                                                                                            <label>Mobile:</label> 
-                                                                                                            <span>${account.mobile}</span>
-                                                                                                           </div>
+                                                                                                    
 
                                                                                                     </fieldset>
                                                                                                     <!-- Address -->
