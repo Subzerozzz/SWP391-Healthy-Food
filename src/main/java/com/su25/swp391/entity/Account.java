@@ -9,5 +9,13 @@ package com.su25.swp391.entity;
  * @author Dell
  */
 public class Account {
-    
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }
