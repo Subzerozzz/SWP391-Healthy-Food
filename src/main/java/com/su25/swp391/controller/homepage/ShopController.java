@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +59,9 @@ public class ShopController extends HttpServlet {
                 break;
             case "search":
                 searchFood(request, response);
+                break;
+            case "shopDetail":
+                shopDetail(request, response);
                 break;
             default:
                 throw new AssertionError();
@@ -134,6 +138,40 @@ public class ShopController extends HttpServlet {
             request.setAttribute("foodName", foodName);
             request.setAttribute("isSearch", true);
             request.getRequestDispatcher("view/homePage/shop.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+
+    private void shopDetail(HttpServletRequest request, HttpServletResponse response) {
+
+        try {
+            //Lấy ra id
+            Integer id = Integer.parseInt(request.getParameter("id"));
+            //Lấy ra thông tin món ăn
+            Food food = foodDao.findById(id);
+            //Có thể kiểm tra food bằng null nếu cần
+
+            //Lấy ra categoryID
+            Integer categoryId = food.getCategory_id();
+            //Lấy ra các food trong category này
+            List<Food> listFoodCategory = foodDao.findAll();
+            //Lấy ra 4 món ăn đầu tiên liên quan
+            List<Food> listRelated = new ArrayList<>();
+            int count = 0;
+            for (Food a : listFoodCategory) {
+                if (count < 4) {
+                    listRelated.add(a);
+                } else {
+                    break;
+                }
+                count++;
+            }
+            //trả về foodDetail
+            request.setAttribute("foodDetail", food);
+            request.setAttribute("listRelated", listRelated);
+            request.getRequestDispatcher("view/homePage/shopDetail.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println(e);
         }
