@@ -3,7 +3,7 @@
     Created on : Jun 12, 2025, 12:04:52 AM
     Author     : Hang
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-
+  
 
     <!-- Mirrored from themesflat.co/html/remos/new-category.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
@@ -106,15 +106,15 @@
                                                                                                     </fieldset>
                                                                                                     <fieldset>
                                                                                                         <div class="description body-title">Description: <span class="tf-color-1">*</span></div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="Description" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="Description" name="text" tabindex="0" value="${description != null ? decription : ''}" aria-required="true" required="">
                                                                                                     </fieldset>
                                                                                                     <fieldset class="minBMI">
                                                                                                         <div class="body-title">MinBMI: </div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="minBMI" name="text" tabindex="0" value="${min != null ? address : ''}" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="minBMI" name="text" tabindex="0" value="${minBMI != null ? minBMI : ''}" aria-required="true" required="">
                                                                                                     </fieldset>
                                                                                                     <fieldset class="maxBMI">
                                                                                                         <div class="body-title">MaxBMI :</div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="maxBMI" name="text" tabindex="0" value="" aria-required="true" required="">
+                                                                                                        <input class="flex-grow" type="text" placeholder="maxBMI" name="text" tabindex="0" value="${maxBMI != null ? maxBMI : ''}" aria-required="true" required="">
                                                                                                     </fieldset>
                                                                                                     <div class="bot">
                                                                                                         <div></div>

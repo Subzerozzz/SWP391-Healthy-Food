@@ -26,7 +26,7 @@ public class Category {
    private int idcategory;
    private String name_category;
    private String description;
-   private int maxBMI;
-   private int minBMI;
+   private Double maxBMI;
+   private Double minBMI;
    
 }
