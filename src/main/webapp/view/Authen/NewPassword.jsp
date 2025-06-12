@@ -8,10 +8,10 @@
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+
         <!--IzizToast-->
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
         <!--=== Link of CSS Files ===--> 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
@@ -81,19 +81,20 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input type="password" class="form-control" name="new_password"  placeholder="New Password">
+                                            <input style="border-radius:30px" type="password" class="form-control" name="new_password"  placeholder="New Password">
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <input class="form-control" type="password" name="confirm_password"  placeholder="Confirm Password">
+                                            <input style="border-radius:30px" class="form-control" type="password" name="confirm_password"  placeholder="Confirm Password">
                                         </div>
                                     </div>
+                                    <p style="color:red">${toastMessage}</p>
 
 
                                     <div class="col-lg-12 ">
-                                        <button type="submit" class="default-btn btn-bg-three">
+                                        <button type="submit" class="default-btn btn-bg-three" style="border-radius:30px">
                                             Update New Password
                                         </button>
                                     </div>
@@ -278,20 +279,20 @@
         <script src="${pageContext.request.contextPath}/js/contact-form-script.js"></script>
         <script src="${pageContext.request.contextPath}/js/mixitup.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
-        
+
         <!--Thông báo lỗi đăng nhập--> 
-        
+
         <c:if test="${toastType == 'error'}">
-           <script>
-              document.addEventListener("DOMContentLoaded", function () {
-                iziToast.error({
-                    title: "Thông báo",
-                    message: '${sessionScope.toastMessage}',
-                    position: 'topRight',
-                    timeout: 5000,
-                    backgroundColor:"#E53E31"
-                    });
-              });
+            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    iziToast.error({
+                                        title: "Thông báo",
+                                        message: '${sessionScope.toastMessage}',
+                                        position: 'topRight',
+                                        timeout: 5000,
+                                        backgroundColor: "#E53E31"
+                                    });
+                                });
             </script>
             <!--Xóa đi biến isDelete sau khi đã thông báo--> 
             <%
