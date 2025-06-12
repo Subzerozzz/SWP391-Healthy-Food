@@ -16,9 +16,10 @@ import java.util.HashMap;
 
 public class OrderDAO extends DBContext implements I_DAO<Order> {
 
+    
     @Override
     public Map<Integer, Order> findAllMap() {
-        // Implement the logic to fetch all orders and store them in a map
+            // Implement the logic to fetch all orders and store them in a map
         // where the key is the order ID and the value is the Order object.
         Map<Integer, Order> orderMap = new HashMap<>();
         String sql = "SELECT o.*, a.username, a.email, a.phone FROM orders o JOIN account a ON o.user_id = a.user_id";
@@ -54,25 +55,25 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         order.setPaymentMethod(rs.getString("payment_method"));
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
-        order.setType(rs.getString("type"));
+      
 
         // Add coupon information
         order.setCouponCode(rs.getString("coupon_code"));
         order.setDiscountAmount(rs.getBigDecimal("discount_amount"));
 
         // Customer info from JOIN
-        order.setUsername(rs.getString("username"));
+        order.setUsername(rs.getString("user_name"));
         order.setEmail(rs.getString("email"));
-        order.setPhone(rs.getString("phone"));
+        order.setMobie(rs.getString("mobie"));
 
         return order;
     }
 
     public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
+        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
+                + "FROM swp391_healthy_food.orders o "
+                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -104,15 +105,15 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error finding filtered orders: " + ex.getMessage());
         } finally {
-            closeResources();
+         
         }
         return orders;
     }
 
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
+                + "FROM swp391_healthy_food.orders o "
+                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -146,9 +147,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     public Order findById(int orderId) {
-        String sql = "SELECT o.*, a.username, a.email, a.phone "
+        String sql = "SELECT o.*, a.user_name, a.email, a.phone "
                 + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
+                + "JOIN account a ON o.user_id = a.id "
                 + "WHERE o.order_id = ?";
         try {
             connection = getConnection();
@@ -245,36 +246,41 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
     }
 
-    public static void main(String[] args) {
-        OrderDAO orderDAO = new OrderDAO();
-
-        // Test updateOrderStatus
-        System.out.println("\n--- Testing updateOrderStatus ---");
-        try {
-            int orderId = 1; // Thay đổi ID này thành ID đơn hàng thực tế trong DB của bạn
-            String newStatus = "pending"; // Thay đổi trạng thái này nếu cần
-            int adminId = 81; // Admin ID cố định để test
-            String note = "Test update from main method";
-
-            System.out.println("Updating order #" + orderId + " to status: " + newStatus);
-            boolean result = orderDAO.updateOrderStatus(orderId, newStatus, adminId, note);
-
-            if (result) {
-                System.out.println("Update successful!");
-
-                // Verify the update
-                Order updatedOrder = orderDAO.findById(orderId);
-                if (updatedOrder != null) {
-                    System.out.println("Verified order #" + orderId + " now has status: " + updatedOrder.getStatus());
-                }
-            } else {
-                System.out.println("Update failed!");
-            }
-        } catch (Exception e) {
-            System.out.println("Error during updateOrderStatus test: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        OrderDAO orderDAO = new OrderDAO();
+//     
+//        // Test updateOrderStatus
+//        System.out.println("\n--- Testing updateOrderStatus ---");
+//        try {
+//            int orderId = 1; // Thay đổi ID này thành ID đơn hàng thực tế trong DB của bạn
+//            String newStatus = "pending"; // Thay đổi trạng thái này nếu cần
+//            int adminId = 81; // Admin ID cố định để test
+//            String note = "Test update from main method";
+//
+//            System.out.println("Updating order #" + orderId + " to status: " + newStatus);
+//            boolean result = orderDAO.updateOrderStatus(orderId, newStatus, adminId, note);
+//
+//            if (result) {
+//                System.out.println("Update successful!");
+//
+//                // Verify the update
+//                Order updatedOrder = orderDAO.findById(orderId);
+//                if (updatedOrder != null) {
+//                    System.out.println("Verified order #" + orderId + " now has status: " + updatedOrder.getStatus());
+//                }
+//            } else {
+//                System.out.println("Update failed!");
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error during updateOrderStatus test: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//       
+       
+        
+            
+//    }
+//    }
 
     /**
      * Find orders by user ID with optional status filter and pagination
@@ -362,10 +368,10 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobile "
+                + "FROM swp391_healthy_food.orders o "
+                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -408,8 +414,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
+                + "FROM swp391_healthy_food.orders o "
+                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
                 + "WHERE (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -618,7 +624,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(5, order.getPaymentMethod());
             statement.setString(6, order.getCouponCode());
             statement.setBigDecimal(7, order.getDiscountAmount());
-            statement.setString(8, order.getType());
+           
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -826,5 +832,16 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             closeResources();
         }
         return 0;
+    }
+    public static void main(String[] args) {
+        OrderDAO o = new OrderDAO();
+       List<Order> l = o.findOrdersWithFilters("accepted", null, 1, 10);
+        System.out.println(l);
+        for (Order order : l) {
+            System.out.println(order);
+        }
+        System.out.println(o.getTotalFilteredOrders("accepted", null));
+            
+        
     }
 }

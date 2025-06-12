@@ -9,20 +9,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-import java.util.List;
-
-import java.util.List;
-
-import java.util.List;
-
-import java.util.List;
-
-import java.sql.Timestamp;
-
-import java.math.BigDecimal;
-
-import java.math.BigDecimal;
-
 public class Order {
 
     private int orderId;
@@ -37,7 +23,7 @@ public class Order {
     // User info (join với bảng account)
     private String username;
     private String email;
-    private String phone;
+    private String mobie;
 
     // Danh sách các items trong order
     private List<OrderItem> orderItems;
@@ -45,7 +31,7 @@ public class Order {
     // Add these fields to your Order class
     private String couponCode;
     private BigDecimal discountAmount;
-    private String type; // enum: wholesale, retail
+   
 
     // Constructors, getters, setters
     public Order() {
@@ -132,12 +118,12 @@ public class Order {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getMobie() {
+        return mobie;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setMobie(String mobie) {
+        this.mobie = mobie;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -163,14 +149,22 @@ public class Order {
     public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
-
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
+   @Override
+public String toString() {
+    return "Order{" +
+            "orderId=" + orderId +
+            ", userId=" + userId +
+            ", status='" + status + '\'' +
+            ", total=" + total +
+            ", shippingAddress='" + shippingAddress + '\'' +
+            ", paymentMethod='" + paymentMethod + '\'' +
+            ", createdAt=" + createdAt +
+            ", updatedAt=" + updatedAt +
+            ", couponCode='" + couponCode + '\'' +
+            ", discountAmount=" + discountAmount +
+            ", username='" + username + '\'' +
+            ", email='" + email + '\'' +
+            ", mobie='" + mobie + '\'' +
+            '}';
+}
 }

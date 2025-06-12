@@ -24,4 +24,8 @@ public class Product {
     private String name;
     private Double stock;
     private Double price;
+
+    public Integer getProductId() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

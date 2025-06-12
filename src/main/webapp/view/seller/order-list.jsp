@@ -52,6 +52,75 @@
                                                                             height: 100%;
                                                                             display:block
                                                                         }
+                                                                        
+                                                                        
+                                                                        
+                                                                        .fixed-width-btn {
+                min-width: 120px;
+                text-align: center;
+            }
+            .view-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #4e73df 0%, #3a54c4 100%);
+                color: white;
+                border-radius: 50px;
+                font-size: 14px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 10px rgba(78, 115, 223, 0.2);
+            }
+            
+            .view-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+                color: white;
+            }
+            
+            .view-btn:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 5px rgba(78, 115, 223, 0.3);
+            }
+            
+            .view-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                transition: all 0.3s ease;
+            }
+            
+            .view-btn:hover .view-icon {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: rotate(15deg);
+            }
+            
+            .view-text {
+                transition: all 0.3s ease;
+            }
+            
+            .view-btn:hover .view-text {
+                transform: translateX(2px);
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .view-btn {
+                    padding: 6px 12px;
+                    font-size: 13px;
+                }
+                
+                .view-icon {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
                                                                     </style>
                                                                     </head>
 
@@ -91,61 +160,86 @@
                                                                   <!--Message about Alert-->
                                                                   <div id="mess" ><input type="hidden" name="name" value="1"></div> 
 
+<div class="card mb-24">
+                <div class="card-body p-24">
+                    <form action="${pageContext.request.contextPath}/seller/manage-order" method="GET">
+                                                    
+                                                      <div class="row g-3" style="height: 50px">
+                            <div class="col-md-3">
+                                <select class="form-select" name="status">
+                                    <option value="">All Status</option>
+                                    <option value="pending" ${status == 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="accepted" ${status == 'accepted' ? 'selected' : ''}>Accepted</option>
+                                    <option value="completed" ${status == 'completed' ? 'selected' : ''}>Completed</option>
+                                    <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="paymentMethod">
+                                    <option value="">All Payment Methods</option>
+                                    <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
+                                    <option value="Digital Wallet" ${paymentMethod == 'Digital Wallet' ? 'selected' : ''}>Digital Wallet</option>
+                                    <option value="Bank Transfer" ${paymentMethod == 'Bank Transfer' ? 'selected' : ''}>Bank Transfer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <input style="height:30px" type="text" class="form-control" name="search" placeholder="Search by order ID, customer name, email..."
+                                       value="${search}">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                                                                  <div class="filter">
-                                                                      <div  style=" ; height: 40px;">
-                                                                          <form action="${pageContext.request.contextPath}/type-of-request" method="get" ">
-                                                                          <input type="hidden" name="action" value="option">
-                                                                              <select  name="select" class="selected">
-                                                                                  <option style="display: flex;align-items: center" value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
-                                                                                  <c:forEach items="${type}" var="t">
-                                                                                      <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
-                                                                                      <i class="ti-arrow-down" style="color: white; font-size: 15px;"></i>
-                                                                                  </c:forEach>
-                                                                              </select>
-                                                                              <button type="submit" class="filter-btn" >Submit</button>
-
-                                                                      </form>  
-                                                                  </div>    
-                                                                  <div>
-                                                                      <form class="form-search flex-grow" action="${pageContext.request.contextPath}/type-of-request" method="post">
-                                                                          <input type="hidden" name="action" value="search">
-                                                                              <fieldset class="name" >
-                                                                                  <input style="height: 47px;width: 500px;margin-top: 5px;background-color: #e0f7fa" type="text" 
-                                                                                         placeholder="Search here..." class="show-search" name="name" tabindex="2" value=""
-                                                                                         aria-required="true" required=""/>
-                                                                              </fieldset>
-                                                                              <div class="button-submit" ">
-                                                                                  <button type="submit"><i class="icon-search"></i></button>
-                                                                              </div>
-                                                                      </form>
-                                                                  </div> 
-                                                              </div>
-
-                                                              <!--start table-->
-                                                              <div class="manage-request">
                                                                   <table>
                                                                       <thead  >
-                                                                          <tr style="background-color: #e4edeb;">
-                                                                              <th style="width: 100px">Image</th>
-                                                                              <th>Product name </th>
-                                                                              <th  style="width: 200px">Type</th>
-                                                                              <th>View Detail</th>
-                                                                              <th>Action</th>
+                                                                          <tr>
+                                                                           <th>ID</th>
+                                                                           <th>Customer</th>
+                                                                           <th>Address</th>
+                                                                           <th>Total</th>
+                                                                           <th>Payment Method</th>
+                                                                           <th>Status</th>
+                                                                           <th>Created Date</th>
+                                                                           <th>Actions</th>
                                                                           </tr>
                                                                       </thead>
                                                                       <tbody>
-                                                                          <c:forEach items="${listFoodDraft}" var="foodD">
+                                                                          <c:forEach items="${orders}" var="order">
                                                                               <tr>
-                                                                                  <td "><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
-                                                                                  <td>${foodD.name}</td>
-                                                                                  <td>${foodD.type}</td>
-                                                                                  <td>   <div class="item eye">
+                                                                                  <td>#${order.orderId}</td>
+                                        <td>
+                                            ${order.username}<br>
+                                            <small class="text-muted">${order.email}</small><br>
+                                            <small class="text-muted">${order.mobie}</small>
+                                        </td>
+                                        <td>${order.shippingAddress}</td>
+                                        <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td>
+                                            <span class="badge bg-info">
+                                                ${order.paymentMethod}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
+                                                                order.status == 'accepted' ? 'bg-info' : 
+                                                                order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
+                                                ${order.status}
+                                            </span>
+                                        </td>
+                                        <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                                                  
+                                                                                  
+                                                                                  
+<!--                                                                                  <td>   <div class="item eye">
                                                                                           <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" title="View Detail" >
                                                                                               <i class="icon-eye"></i>
                                                                                           </a></div> 
-                                                                                  </td>
-                                                                                  <td> <div class="item edit">
+                                                                                 
+                                                                                   <div class="item edit">
                                                                                           <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)" title="Accept">
                                                                                               <i class="icon-edit-3"></i>
                                                                                           </a>
@@ -155,24 +249,48 @@
                                                                                           <div class="item trash">
                                                                                               <i class="icon-trash-2"></i>
                                                                                           </div>    
-                                                                                      </a></td>
-                                                                                  </div>
-
-                                                                                  <!--com-->
-                                                                                  </div>  
-
-                                                                              </tr>
+                                                                                      </a></td>-->
+                                                                                               </tr>
                                                                           </c:forEach>
                                                                       </tbody>
                                                                   </table>
+                                                                                  </div>
+
+                                                                                  <!--com-->
+                                                                                 
 
 
 
                                                                                                                                                                         </div>
                                                                                                                                                                         <!--end table-->
 
-                                                                                                                                                                        </div>
+                                                                <!-- Pagination -->
+                    <nav class="mt-24">
+                        <ul class="pagination justify-content-center">
+                            <c:if test="${currentPage > 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            </c:if>
 
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                </li>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </nav>                                                                                                          </div>
+<!--
                                                                       <div class="flex items-center justify-between flex-wrap gap10">
                                                                           <div class="text-tiny">Showing 10 entries</div>
                                                                           <ul class="wg-pagination">
@@ -196,7 +314,7 @@
                                                                                   <a href="#"><i class="icon-chevron-right"></i></a>
                                                                               </li>
                                                                           </ul>
-                                                                      </div>
+                                                                      </div>-->
                                               </div>
                                               <!-- /product-list -->
                                           </div>
