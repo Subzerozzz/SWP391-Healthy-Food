@@ -17,7 +17,7 @@
             <div class="wrap">
                 <div class="header-left">
                     <a href="index.html">
-                        <img class="" id="logo_header_mobile" alt="" src="${pageContext.request.contextPath}/images/logo/logo.png" data-light="${pageContext.request.contextPath}/images/logo/logo.png" data-dark="${pageContext.request.contextPath}/images/logo/logo-dark.png" data-width="154px" data-height="52px" data-retina="${pageContext.request.contextPath}/images/logo/logo@2x.png">
+                        <img class="" id="logo_header_mobile" alt="" src="${pageContext.request.contextPath}/images/logos/logo.png" data-light="${pageContext.request.contextPath}/images/logo/logo.png" data-dark="${pageContext.request.contextPath}/images/logo/logo-dark.png" data-width="154px" data-height="52px" data-retina="${pageContext.request.contextPath}/images/logo/logo@2x.png">
                     </a>
                     <div class="button-show-hide">
                         <i class="icon-menu-left"></i>

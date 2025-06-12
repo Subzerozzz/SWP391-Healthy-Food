@@ -14,7 +14,7 @@
         <div class="section-menu-left">
             <div class="box-logo">
                 <a href="${pageContext.request.contextPath}/manage-account?action=list" id="site-logo-inner">
-                    <img class="logo" src="${pageContext.request.contextPath}/images/logo.jpg">          
+                    <img class="logo" src="${pageContext.request.contextPath}/images/logos/logo.jpg">          
                 </a>
                 <div class="button-show-hide">
                     <i class="icon-menu-left"></i>

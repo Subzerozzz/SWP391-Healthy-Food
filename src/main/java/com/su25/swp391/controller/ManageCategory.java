@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
@@ -55,6 +56,9 @@ public class ManageCategory extends HttpServlet {
             case "listCate":
                 listCategory(request, response);
                 break;
+            case "viewDetail":
+                viewDetail(request, response);
+                break;
             case "search":
                 searchCate(request, response);
                 break;
@@ -109,12 +113,37 @@ public class ManageCategory extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void showEditForn(HttpServletRequest request, HttpServletResponse response) {
-
+    private void showEditForn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int idCate = Integer.parseInt(request.getParameter("idcategory"));
+        CategoryDAO cateDao = new CategoryDAO();
+        Category category = cateDao.findById(idCate);
+        
+        request.setAttribute("cate", category);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+        dispatcher.forward(request, response);
     }
 
-    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int idStr = Integer.parseInt(request.getParameter("idcategory"));
+        CategoryDAO categoryDao = new CategoryDAO();
+        Category cate = categoryDao.findById(idStr);
+        if (cate != null) {
+            Boolean deletCate = categoryDao.delete(cate);
+            if (deletCate) {
+                request.getSession().setAttribute("isDelete", true);
+                response.sendRedirect(request.getContextPath() + "/manageCategory");
+                return;
+            } else {
+                request.getSession().setAttribute("ToastMess", "Not Delete");
+                request.getSession().setAttribute("toastType", "Err");
+                return;
+            }
+
+        } else {
+            request.getSession().setAttribute("ToastMess", "Not Delete");
+            request.getSession().setAttribute("toastType", "Err");
+        }
+        response.sendRedirect(request.getContextPath() + "/manageCategory");
     }
 
     private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -155,6 +184,7 @@ public class ManageCategory extends HttpServlet {
         request.setAttribute("listcategory", listcategory);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalPages", totalPages);
         request.setAttribute("totalCategory", totalCategory);
 
         //tinh toan pham vi the hien
@@ -174,8 +204,8 @@ public class ManageCategory extends HttpServlet {
         try {
             String name_category = request.getParameter("name_category");
             String description = request.getParameter("description");
-            int minBMI = Integer.parseInt(request.getParameter("minBMI"));
-            int maxBMI = Integer.parseInt(request.getParameter("maxBMI"));
+            Double minBMI = Double.parseDouble(request.getParameter("minBMI"));
+            Double maxBMI = Double.parseDouble(request.getParameter("maxBMI"));
             Map<String, String> errors = new HashMap();
             if (name_category == null || name_category.trim().isEmpty()) {
                 errors.put("name_category", "Address is required");
@@ -204,7 +234,7 @@ public class ManageCategory extends HttpServlet {
             // tao doi tuong category moi
             Category category = Category.builder()
                     .name_category(name_category)
-                    .minBMI(minBMI)
+                    .minBMI(Double.NaN)
                     .maxBMI(maxBMI)
                     .description(description)
                     .build();
@@ -231,8 +261,129 @@ public class ManageCategory extends HttpServlet {
         }
     }
 
-    private void updateCategory(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void updateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("idcategory"));
+            String name_category = request.getParameter("name_category");
+            String description = request.getParameter("description");
+            String maxBMIStr = request.getParameter("maxBMI");
+            String minBMIStr = request.getParameter("minBMI");
+            CategoryDAO cateDao = new CategoryDAO();
+            Category cate = cateDao.findById(id);
+            //validate
+            Map<String, String> errors = new HashMap<>();
+            Double minBMI = null;
+            Double maxBMI = null;
+            //validate name
+            if (name_category == null || name_category.trim().isEmpty()) {
+                errors.put("name_category", "Name category is required");
+            } else if (!name_category.equals(name_category.trim())) {
+                errors.put("name_category", "Name category must not start or end with a space");
+            } else if (name_category.length() < 3 || name_category.length() > 50) {
+                errors.put("name_category", "Name must between 3 and 50 characters");
+            } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", name_category)) {
+                errors.put("name_category", "Name can only contain letter,numbers,underscores,and space");
+            }
+            //validate description
+            if (description != null && description.length() > 500) {
+                errors.put("description", "Description must not exceed 500 characters.");
+            }
+            //validate max and min BMI
+            if (minBMIStr == null || minBMIStr.trim().isEmpty()) {
+                errors.put("minBMI", "minBMI is required.");
+            } else {
+                try {
+                    minBMI = Double.parseDouble(minBMIStr.trim());
+                    if (minBMI < 10 || minBMI > 50) {
+                        errors.put("minBMI", "minBMI must be between 10 and 50.");
+                    }
+                } catch (NumberFormatException e) {
+                    errors.put("minBMI", "minBMI must be a valid number.");
+                }
+            }
+
+            // Validate maxBMI
+            if (maxBMIStr == null || maxBMIStr.trim().isEmpty()) {
+                errors.put("maxBMI", "maxBMI is required.");
+            } else {
+                try {
+                    maxBMI = Double.parseDouble(maxBMIStr.trim());
+                    if (maxBMI < 10 || maxBMI > 50) {
+                        errors.put("maxBMI", "maxBMI must be between 10 and 50.");
+                    }
+                } catch (NumberFormatException e) {
+                    errors.put("maxBMI", "maxBMI must be a valid number.");
+                }
+            }
+
+            // Validate mối quan hệ giữa min và max
+            if (minBMI != null && maxBMI != null && minBMI > maxBMI) {
+                errors.put("BMI", "minBMI must be less than or equal to maxBMI.");
+            }
+            if (!errors.isEmpty()) {
+                Map<String, String> formData = new HashMap<>();
+                formData.put("name_category", name_category);
+                formData.put("description", description);
+                formData.put("minBMI", minBMIStr);
+                formData.put("maxBMI", maxBMIStr);
+                request.setAttribute("errors", errors);
+                request.setAttribute("formData", formData);
+                request.setAttribute("cate", cate);
+                request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp").forward(request, response);
+                return;
+            }
+
+            //cap nhap nhung truong có the thay doi
+            cate.setDescription(description);
+            cate.setName_category(name_category);
+            cate.setMaxBMI(maxBMI);
+            cate.setMinBMI(minBMI);
+
+            //thu hien update
+            Boolean isSuccess = cateDao.update(cate);
+            if(isSuccess){
+                request.getSession().setAttribute("isUpdate", true);
+                response.sendRedirect(request.getContextPath()+"/manageCategory?action=list");
+                return;
+            }else{
+                request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
+                request.getSession().setAttribute("toastType", "Fail");
+                request.setAttribute("error", "Update Fail");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+        } catch (Exception e) {
+             request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
+                request.getSession().setAttribute("toastType", "Fail");
+                request.setAttribute("error", "Update Fail");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+                dispatcher.forward(request, response);
+                return;
+        }
+    }
+
+    private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int idCategory = Integer.parseInt(request.getParameter("idcategory"));
+            CategoryDAO cateDao = new CategoryDAO();
+            Category cate = cateDao.findById(idCategory);
+            if (cate != null) {
+                request.setAttribute("category", cate);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/viewDetail.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+                request.getSession().setAttribute("totalType", "Err");
+                response.sendRedirect(request.getContextPath() + "/manageCategory");
+
+            }
+        } catch (Exception e) {
+            request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+            request.getSession().setAttribute("totalType", "Err");
+            response.sendRedirect(request.getContextPath() + "/manageCategory");
+
+        }
     }
 
 }

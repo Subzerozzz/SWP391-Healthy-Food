@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -119,12 +120,15 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public boolean update(Category t) {
         List<Category> updatecategory = new ArrayList<>();
-        String sql = "UPDATE Swp301_pr.category SET  name_category = ? WHERE idcategory = ?";
+       String sql = "UPDATE Swp301_pr.category SET name_category = ?, description = ?, minBMI = ?, maxBMI = ? WHERE idcategory = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getName_category());
-            statement.setInt(2, t.getIdcategory());
+            statement.setString(2, t.getDescription());
+            statement.setDouble(3, t.getMinBMI());
+            statement.setDouble(4, t.getMaxBMI());
+            statement.setInt(5, t.getIdcategory());
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -151,18 +155,18 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         }
         return false;
     }
-
-    @Override
+   
+  @Override
   public int insert(Category t) {
-    String sql = "INSERT INTO Swp301_pr.category (name_category, description, minBMI, maxBMI) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO Swp301_pr.category (name_category, description, maxBMI, minBMI) VALUES (?, ?, ?, ?)";
     try {
         connection = getConnection();
         statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
+        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, t.getName_category());
         statement.setString(2, t.getDescription());
-        statement.setInt(3, t.getMinBMI());
-        statement.setInt(4, t.getMaxBMI());
+        statement.setDouble(3, t.getMaxBMI());
+        statement.setDouble(4, t.getMinBMI());
 
         int affectedRow = statement.executeUpdate();
         if (affectedRow > 0) {
@@ -178,44 +182,38 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
     return -1;
 }
-public class Main {
-    public static void main(String[] args) {
-        // Tạo DAO
-        CategoryDAO dao = new CategoryDAO();
-
-        // Tạo đối tượng Category để insert
-        Category newCategory = new Category();
-        newCategory.setName_category("Thể hình");
-        newCategory.setDescription("Dành cho người có chỉ số BMI trung bình");
-        newCategory.setMinBMI(18);
-        newCategory.setMaxBMI(25);
-
-        // Thực hiện insert
-        int insertedId = dao.insert(newCategory);
-
-        // Kiểm tra kết quả
-        if (insertedId != -1) {
-            System.out.println("Insert thành công! ID mới: " + insertedId);
-        } else {
-            System.out.println("Insert thất bại.");
-        }
-    }
-}
+  
+//public static void main(String[] args) {
+//        CategoryDAO dao = new CategoryDAO();
+//
+//        Category c = new Category();
+//        c.setName_category("Test từ main()");
+//        c.setDescription("Thêm từ hàm main trong DAO");
+//        c.setMinBMI(21.0);
+//        c.setMaxBMI(23.5);
+//
+//        int result = dao.insert(c);
+//        if (result > 0) {
+//            System.out.println("✅ Insert thành công! ID mới: " + result);
+//        } else {
+//            System.out.println("❌ Insert thất bại.");
+//        }
+//    }
     @Override
     public Category getFromResultSet(ResultSet resultSet) throws SQLException {
 return Category.builder()
         .idcategory(resultSet.getInt("idcategory"))
         .name_category(resultSet.getString("name_category"))
         .description(resultSet.getString("description"))
-        .maxBMI(resultSet.getInt("maxBMI"))
-        .minBMI(resultSet.getInt("minBMI"))
+        .maxBMI(resultSet.getDouble("maxBMI"))
+        .minBMI(resultSet.getDouble("minBMI"))
         .build();
     }
 
     @Override
     public Category findById(Integer id) {
         List<Category> findCategorybyId = new ArrayList<>();
-        String sql = "SELECT * FROM Swp301_pr.account WHERE idcategory = ?";
+        String sql = "SELECT * FROM Swp301_pr.category WHERE idcategory = ?";
         try {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
@@ -234,7 +232,7 @@ return Category.builder()
     }
 public  List<Category> searchCategorybyName(String keyword){
     List<Category> category = new ArrayList<>();
-    String sql = "SELECT * FROM Swp301_pr.account WHERE name_category LIKE ? ";
+    String sql = "SELECT * FROM Swp301_pr.category WHERE name_category LIKE ? ";
     try {
         connection = getConnection();
         statement = connection.prepareStatement(sql);
