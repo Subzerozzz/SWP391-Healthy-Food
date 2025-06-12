@@ -24,7 +24,7 @@
                     <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav m-auto">
                             <li class="nav-item">
-                                <a href="#" class="nav-link active">
+                                <a href="${pageContext.request.contextPath}/home" class="nav-link active">
                                     Home 
                                     <i class='bx bx-chevron-down'></i>
                                 </a>
@@ -266,7 +266,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myaccount"><i class="fa fa-user me-2"></i>My Account</a></li>
-                                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myaccount"><i class="fa-solid fa-key me-2"></i>Change Password</a></li>
+                                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/changepassword"><i class="fa-solid fa-key me-2"></i>Change Password</a></li>
                                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out-alt me-2"></i>Log Out</a></li>
                                             </ul>
                                         </div>

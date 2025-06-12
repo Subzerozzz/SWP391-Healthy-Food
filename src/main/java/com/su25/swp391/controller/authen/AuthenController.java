@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author kieud
  */
-@WebServlet(name = "AuthenController", urlPatterns = {"/home", "/myaccount",
+@WebServlet(name = "AuthenController", urlPatterns = {"/home", "/changepassword",
     "/login", "/register", "/forgetpassword",
     "/OTP", "/newpassword", "/logout"})
 public class AuthenController extends HttpServlet {
@@ -40,20 +40,12 @@ public class AuthenController extends HttpServlet {
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String OTP_PAGE = "view/authen/otp.jsp";
     private static final String FORGETPASSWORD_PAGE = "view/authen/forgetPassword.jsp";
-    private static final String MYACCOUNT_PAGE = "view/authen/myAccount.jsp";
     private static final String NEWPASS_PAGE = "view/authen/newPassword.jsp";
+    private static final String CHANGEPASSWORD_PAGE = "view/authen/changePassword.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
 
-    /**
-     * Xử lý các yêu cầu GET từ client.
-     *
-     * @param request HttpServletRequest chứa thông tin yêu cầu từ client.
-     * @param response HttpServletResponse để gửi phản hồi về client.
-     * @throws ServletException Nếu có lỗi liên quan đến servlet.
-     * @throws IOException Nếu có lỗi liên quan đến I/O.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -78,8 +70,8 @@ public class AuthenController extends HttpServlet {
             case "/newpassword":
                 request.getRequestDispatcher("view/authen/newPassword.jsp").forward(request, response);
                 break;
-            case "/myaccount":
-                request.getRequestDispatcher("view/authen/myAccount.jsp").forward(request, response);
+            case "/changepassword":
+                request.getRequestDispatcher("view/authen/changePassword.jsp").forward(request, response);
                 break;
             case "/logout":
                 logoutDoGet(request, response);
@@ -91,17 +83,6 @@ public class AuthenController extends HttpServlet {
 
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response /** Xử lý các yêu cầu POST từ client.
-     *
-     * @param request HttpServletRequest chứa thông tin yêu cầu từ client.
-     * @param response HttpServletResponse để gửi phản hồi về client.
-     * @throws ServletException Nếu có lỗi liên quan đến servlet.
-     * @throws IOException Nếu có lỗi liên quan đến I/O.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -122,23 +103,19 @@ public class AuthenController extends HttpServlet {
             case "/newpassword":
                 newpasswordDoPost(request, response);
                 break;
-            case "/myaccount":
-                myaccountPost(request, response);
+            case "/changepassword":
+                changepasswordDoPost(request, response);
+                break;
+            case "/logout":
+                logoutDoGet(request, response);
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * Xử lý yêu cầu đăng ký tài khoản từ client.
-     *
-     * @param request HttpServletRequest chứa thông tin yêu cầu từ client.
-     * @param response HttpServletResponse để gửi phản hồi về client.
-     * @throws ServletException Nếu có lỗi liên quan đến servlet.
-     * @throws IOException Nếu có lỗi liên quan đến I/O.
-     */
-    private void registerDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void registerDoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
@@ -162,21 +139,21 @@ public class AuthenController extends HttpServlet {
         }
 
         if (!validEmail(email)) {
-            session.setAttribute("toastMessage", "Email incorrect format");
+            session.setAttribute("toastMessage", "Email incorrect format!");
             session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         if (!validPassword(password)) {
-            session.setAttribute("toastMessage", "Password incorrect format");
+            session.setAttribute("toastMessage", "Password incorrect format!");
             session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         if (!validUsername(user_name)) {
-            session.setAttribute("toastMessage", "Username incorrect format");
+            session.setAttribute("toastMessage", "Username incorrect format!");
             session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
@@ -211,8 +188,9 @@ public class AuthenController extends HttpServlet {
             String otp = EmailUtils.sendOTPMail(email);
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
+            session.setAttribute("email", email);
+            session.setAttribute("password", password);
             session.setAttribute("otpType", "register");
-            // session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accountFoundByEmail);
             url = OTP_PAGE;
 
         }
@@ -220,15 +198,8 @@ public class AuthenController extends HttpServlet {
 
     }
 
-    /**
-     * Xử lý yêu cầu đăng nhập từ client.
-     *
-     * @param request HttpServletRequest chứa thông tin yêu cầu từ client.
-     * @param response HttpServletResponse để gửi phản hồi về client.
-     * @throws ServletException Nếu có lỗi liên quan đến servlet.
-     * @throws IOException Nếu có lỗi liên quan đến I/O.
-     */
-    private void loginDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void loginDoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
@@ -274,15 +245,8 @@ public class AuthenController extends HttpServlet {
         request.getRequestDispatcher(url).forward(request, response);
     }
 
-    /**
-     * Xử lý yêu cầu OTP từ client.
-     *
-     * @param request HttpServletRequest chứa thông tin yêu cầu từ client.
-     * @param response HttpServletResponse để gửi phản hồi về client.
-     * @throws IOException
-     * @throws ServletException
-     */
-    private void otpDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void otpDoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String url = null;
         //get ve OTP
         HttpSession session = request.getSession();
@@ -317,7 +281,8 @@ public class AuthenController extends HttpServlet {
 
     }
 
-    private void forgetpasswordDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void forgetpasswordDoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
@@ -377,7 +342,8 @@ public class AuthenController extends HttpServlet {
         return;
     }
 
-    private void newpasswordDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void newpasswordDoPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
@@ -416,6 +382,7 @@ public class AuthenController extends HttpServlet {
 
         if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
+            session.setAttribute("password", new_password);
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
             url = HOME_PAGE;
         } else {
@@ -427,7 +394,7 @@ public class AuthenController extends HttpServlet {
 
     }
 
-    private void myaccountPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void changepasswordDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = null;
         HttpSession session = request.getSession();
 
@@ -441,7 +408,7 @@ public class AuthenController extends HttpServlet {
                 || confirm_password == null || confirm_password.trim().isEmpty()) {
             session.setAttribute("toastMessage", "All fields are required");
             session.setAttribute("toastType", "error");
-            url = NEWPASS_PAGE;
+            url = CHANGEPASSWORD_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
@@ -449,21 +416,21 @@ public class AuthenController extends HttpServlet {
         if (!current_password.equals(old_password)) {
             session.setAttribute("toastMessage", "Current Password incorect!");
             session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
+            url = CHANGEPASSWORD_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         if (!validPassword(new_password)) {
             session.setAttribute("toastMessage", "New Password incorect!");
             session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
+            url = CHANGEPASSWORD_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
         if (!new_password.equals(confirm_password)) {
             session.setAttribute("toastMessage", "Confirm Password incorect!");
             session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
+            url = CHANGEPASSWORD_PAGE;
             request.getRequestDispatcher(url).forward(request, response);
             return;
         }
@@ -481,7 +448,7 @@ public class AuthenController extends HttpServlet {
         } else {
             session.setAttribute("toastMessage", "Email incorect!");
             session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
+            url = CHANGEPASSWORD_PAGE;
         }
         request.getRequestDispatcher(url).forward(request, response);
     }

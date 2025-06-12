@@ -11,25 +11,15 @@
 
         <div class="navbar-area">
             <!-- Menu For Mobile Device -->
-            <div class="mobile-nav">
-                <a class="logo">
-                    <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" alt="Logo">
-                </a>
-            </div>
 
             <!-- Menu For Desktop Device -->
             <div class="main-nav nav-three">
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light ">
-                        <a class="navbar-brand" href="index.html">
-                            <img src="${pageContext.request.contextPath}/images/logos/logo-2.png" class="logo-one" alt="Logo">
-                            <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" class="logo-two" alt="Logo">
-                        </a>
-
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                             <ul class="navbar-nav m-auto">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="${pageContext.request.contextPath}/home" class="nav-link">
                                         Home 
                                         <i class='bx bx-chevron-down'></i>
                                     </a>
@@ -274,41 +264,6 @@
                             </div>
                         </div>
                     </nav>
-                </div>
-            </div>
-
-            <div class="side-nav-responsive">
-                <div class="container">
-                    <div class="dot-menu">
-                        <div class="circle-inner">
-                            <div class="circle circle-one"></div>
-                            <div class="circle circle-two"></div>
-                            <div class="circle circle-three"></div>
-                        </div>
-                    </div>
-
-                    <div class="container-3">
-                        <div class="side-nav-inner">
-                            <div class="side-nav justify-content-center align-items-center">
-                                <div class="side-nav-item">
-                                    <div class="language-on-list">
-                                        <select class="language-list-item">
-                                            <option>English</option>
-                                            <option>العربيّة</option>
-                                            <option>Deutsch</option>
-                                            <option>Português</option>
-                                            <option>简体中文</option>
-                                        </select>	
-                                    </div>
-
-                                    <div class="side-nav-cart">
-                                        <a href="#"><i class='bx bx-cart'></i></a>
-                                        <span>1</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

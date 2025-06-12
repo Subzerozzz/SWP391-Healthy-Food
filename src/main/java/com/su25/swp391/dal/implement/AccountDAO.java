@@ -20,7 +20,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public List<Account> findAll() {
         List<Account> account = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM account";
+            String sql = "SELECT * FROM ccount";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -38,7 +38,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public Map<Integer, Account> findAllMap() {
         Map<Integer, Account> accountMap = new HashMap<>();
         try {
-            String sql = "SELECT * FROM accounts";
+            String sql = "SELECT * FROM Accounts";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -57,7 +57,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public boolean updatePasswordByEmail(Account t) {
         try {
             connection = getConnection();
-            String sql = "UPDATE account SET password = ? WHERE email = ?";
+            String sql = "UPDATE Account SET password = ? WHERE email = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getPassword());
             statement.setString(2, t.getEmail());
@@ -99,7 +99,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public boolean delete(Account t) {
         try {
             connection = getConnection();
-            String sql = "DELETE FROM account WHERE id = ?";
+            String sql = "DELETE FROM Account WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, t.getId());
             return statement.executeUpdate() > 0;
@@ -115,7 +115,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public int insert(Account t) {
         try {
             connection = getConnection();
-            String sql = "INSERT INTO account (email, password, full_name, user_name, gender, birth_date, role, address, mobie, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Account (email, password, full_name, user_name, gender, birth_date, role, address, mobie, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             statement.setObject(1, t.getEmail());
@@ -159,7 +159,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     public Account findByEmail(Account t) {
-        String sql = "SELECT * FROM account WHERE email = ?";
+        String sql = "SELECT * FROM Account WHERE email = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -180,7 +180,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public Account findById(Integer id) {
         try {
             connection = getConnection();
-            String sql = "SELECT * FROM account WHERE id = ?";
+            String sql = "SELECT * FROM Account WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
@@ -196,7 +196,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     public Account findByEmailOrUsernameAndPass(Account t) {
-        String sql = "SELECT * FROM account WHERE (email = ? OR user_name = ?) AND password = ?";
+        String sql = "SELECT * FROM Account WHERE (email = ? OR user_name = ?) AND password = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
