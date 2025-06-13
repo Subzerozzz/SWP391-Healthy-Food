@@ -193,7 +193,7 @@ public class ManageBlogController extends HttpServlet {
             String title = request.getParameter("title");
             String author = request.getParameter("author");
             String briefinfo = request.getParameter("briefinfo");
-            String description = request.getParameter("content");
+            String description = request.getParameter("ccountCouponsBySearchontent");
             String dateStr = request.getParameter("date");
             //Xu ly thong tin ve nhap date
             Date date = null;
