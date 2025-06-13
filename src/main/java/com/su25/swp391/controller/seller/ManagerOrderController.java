@@ -5,13 +5,15 @@
 
 package com.su25.swp391.controller.seller;
 
-import com.su25.swp391.config.GlobalConfig;
+
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.Food_DraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
-import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
+import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
+
+
 import com.su25.swp391.dal.implement.RequestDAO;
 
 import com.su25.swp391.entity.Account;
@@ -21,14 +23,12 @@ import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.entity.Product;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -42,6 +42,8 @@ public class ManagerOrderController extends HttpServlet {
     private FoodDAO foodDAO;
     private LogRequestDAO logReqDAO;
     private OrderDAO orderDAO;
+    private OrderApprovalDAO approvalDAO;
+    private OrderItemDAO itemDAO;
     @Override
     public void init() throws ServletException{
         foodDraftDAO = new Food_DraftDAO();
@@ -49,6 +51,8 @@ public class ManagerOrderController extends HttpServlet {
         foodDAO = new FoodDAO();
         logReqDAO = new LogRequestDAO();
         orderDAO = new OrderDAO();
+        approvalDAO = new OrderApprovalDAO();
+        itemDAO = new OrderItemDAO();
     }
       
     @Override
@@ -68,6 +72,7 @@ public class ManagerOrderController extends HttpServlet {
                 case "view":
                     viewOrderDetail(request, response);
                     break;
+               
                 default:
                     listOrders(request, response);
                     break;
@@ -84,6 +89,9 @@ public class ManagerOrderController extends HttpServlet {
             throws ServletException, IOException {
         
         String action = request.getParameter("action");
+         if (action == null) {
+            action = "list";
+        }
         
         try {
             switch (action) {
@@ -91,6 +99,7 @@ public class ManagerOrderController extends HttpServlet {
                     updateOrderStatus(request, response);
                     break;
                 default:
+                     listOrders(request, response);
                     break;
             }
         }catch(Exception ex){
@@ -148,8 +157,32 @@ public class ManagerOrderController extends HttpServlet {
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
-    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+    // Xem chi tiết đơn hàng
+    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         int orderId = Integer.parseInt(request.getParameter("orderId"));
+        try {
+           
+            Order  order = orderDAO.findById(orderId);
+            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(orderId);
+            
+            if(order == null) {
+                request.setAttribute("errorMessage", "Order not found with ID:" + orderId);
+                request.getRequestDispatcher("WEB-INF/view/error/jsp").forward(request, response);
+            }
+            order.setOrderItems(orderItems);
+            request.setAttribute("order", order);
+            request.setAttribute("approvals", approvals);
+            
+            // forward to the order detail page
+            request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+            
+            
+        } catch (Exception e) {
+             request.setAttribute("errorMessage", "Order not found with ID:" + orderId);
+                request.getRequestDispatcher("WEB-INF/view/error/jsp").forward(request, response);
+           }
     }
+
     }

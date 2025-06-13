@@ -16,7 +16,7 @@ public class OrderApproval {
     private String note;
     
     // Thông tin admin (join với bảng account)
-    private String adminUsername;
+    private String sellerUsername;
 
     // Constructors, getters, setters
     public OrderApproval() {}
@@ -78,12 +78,14 @@ public class OrderApproval {
         this.note = note;
     }
 
-    public String getAdminUsername() {
-        return adminUsername;
+    public String getSellerUsername() {
+        return sellerUsername;
     }
 
-    public void setAdminUsername(String adminUsername) {
-        this.adminUsername = adminUsername;
+    public void setSellerUsername(String sellerUsername) {
+        this.sellerUsername = sellerUsername;
     }
+
+   
     
 }

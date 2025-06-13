@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -10,20 +10,19 @@ import java.sql.Timestamp;
 public class OrderItem {
     private int orderItemId;
     private int orderId;
-    private int productId;
+    private int foodId;
     private int quantity;
     private BigDecimal price;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     
     // Thông tin sản phẩm (join với bảng products)
-    private String productName;
-    private String productImage;
+    private String foodName;
+    private String foodImage;
 
-    // Constructors, getters, setters
-    public OrderItem() {}
-    
-    // Getters and Setters
+    public OrderItem() {
+    }
+
     public int getOrderItemId() {
         return orderItemId;
     }
@@ -40,12 +39,12 @@ public class OrderItem {
         this.orderId = orderId;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getFoodId() {
+        return foodId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 
     public int getQuantity() {
@@ -80,24 +79,27 @@ public class OrderItem {
         this.updatedAt = updatedAt;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getFoodName() {
+        return foodName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setFoodName(String foodName) {
+        this.foodName = foodName;
     }
 
-    public String getProductImage() {
-        return productImage;
+    public String getFoodImage() {
+        return foodImage;
     }
 
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
+    public void setFoodImage(String foodImage) {
+        this.foodImage = foodImage;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" + "orderItemId=" + orderItemId + ", orderId=" + orderId + ", foodId=" + foodId + ", quantity=" + quantity + ", price=" + price + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", foodName=" + foodName + ", foodImage=" + foodImage + '}';
+    }
+
     
-    // Tính tổng giá trị của item
-    public BigDecimal getSubtotal() {
-        return price.multiply(new BigDecimal(quantity));
-    }
+    
 }

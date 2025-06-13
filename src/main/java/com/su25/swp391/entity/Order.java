@@ -31,13 +31,27 @@ public class Order {
     // Add these fields to your Order class
     private String couponCode;
     private BigDecimal discountAmount;
-   
 
-    // Constructors, getters, setters
     public Order() {
     }
 
-    // Getters and Setters
+    public Order(int orderId, int userId, String status, BigDecimal total, String shippingAddress, String paymentMethod, Timestamp createdAt, Timestamp updatedAt, String username, String email, String mobie, List<OrderItem> orderItems, String couponCode, BigDecimal discountAmount) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.status = status;
+        this.total = total;
+        this.shippingAddress = shippingAddress;
+        this.paymentMethod = paymentMethod;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.username = username;
+        this.email = email;
+        this.mobie = mobie;
+        this.orderItems = orderItems;
+        this.couponCode = couponCode;
+        this.discountAmount = discountAmount;
+    }
+
     public int getOrderId() {
         return orderId;
     }
@@ -149,6 +163,9 @@ public class Order {
     public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
+   
+
+    
    @Override
 public String toString() {
     return "Order{" +

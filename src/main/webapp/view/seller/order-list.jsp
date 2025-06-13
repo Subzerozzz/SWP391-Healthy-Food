@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -120,12 +121,50 @@
                     width: 20px;
                     height: 20px;
                 }
+                
+  .icon-actions {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.icon-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10px;
+    height: 10px;
+    border-radius: 6px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background 0.2s ease-in-out;
+}
+
+/* Màu sắc chủ đạo */
+/*.view-btn {
+    color: #3498db;
+}*/
+
+
+
+/* Hover thêm nền cùng tông */
+.view-btn:hover {
+    background-color: rgba(52, 152, 219, 0.15);
+}
+
+.accept-btn:hover {
+    background-color: rgba(39, 174, 96, 0.15);
+}
+
+.reject-btn:hover {
+    background-color: rgba(231, 76, 60, 0.15);
+}
             }
                                                                     </style>
                                                                     </head>
 
                               <body class="body">
-
+                           
                                   <!-- #wrapper -->
                                   <div id="wrapper">
                                       <!-- #page -->
@@ -154,7 +193,10 @@
                                                           <div class="main-content-inner">
                                                               <!-- main-content-wrap -->
                                                               <div class="main-content-wrap">
-
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+                <h6 class="fw-semibold mb-0">Order Management</h6>
+                
+            </div>
                                                                   <!-- product-list -->
 
                                                                   <!--Message about Alert-->
@@ -162,7 +204,7 @@
 
 <div class="card mb-24">
                 <div class="card-body p-24">
-                    <form action="${pageContext.request.contextPath}/seller/manage-order" method="GET">
+                    <form action="${pageContext.request.contextPath}/seller/manage-order" method="post">
                                                     
                                                       <div class="row g-3" style="height: 50px">
                             <div class="col-md-3">
@@ -197,17 +239,41 @@
                                                                   <table>
                                                                       <thead  >
                                                                           <tr>
-                                                                           <th>ID</th>
-                                                                           <th>Customer</th>
+                                                                              <th style="width: 60px">ID</th>
+                                                                           <th style="width: 160px">Customer</th>
                                                                            <th>Address</th>
                                                                            <th>Total</th>
                                                                            <th>Payment Method</th>
                                                                            <th>Status</th>
                                                                            <th>Created Date</th>
-                                                                           <th>Actions</th>
+                                                                           <th >Actions</th>
                                                                           </tr>
                                                                       </thead>
                                                                       <tbody>
+                                                                             <c:if test="${empty orders}">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="py-4">
+                                                <i class="fas fa-search fs-1 text-muted mb-3"></i>
+                                                <h5>No orders found</h5>
+                                                <p class="text-muted">
+                                                    <c:choose>
+                                                        <c:when test="${not empty status || not empty search}">
+                                                            No orders match your search criteria. Try adjusting your filters.
+                                                            <br>
+                                                            <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-outline-primary mt-2">
+                                                                <i class="fas fa-times me-2"></i>Clear Filters
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            There are no orders in the system yet.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:if>
                                                                           <c:forEach items="${orders}" var="order">
                                                                               <tr>
                                                                                   <td>#${order.orderId}</td>
@@ -230,68 +296,31 @@
                                                 ${order.status}
                                             </span>
                                         </td>
+                                           
                                         <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                                   
                                                                                   
                                                                                   
-<!--                                                                                  <td>   <div class="item eye">
-                                                                                          <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" title="View Detail" >
-                                                                                              <i class="icon-eye"></i>
-                                                                                          </a></div> 
-                                                                                 
-                                                                                   <div class="item edit">
-                                                                                          <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)" title="Accept">
-                                                                                              <i class="icon-edit-3"></i>
-                                                                                          </a>
-                                                                                      </div>
+                                                                                  <td>  <div class="icon-actions">
+    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&orderId=${order.orderId}" title="View Detail" class="icon-btn view-btn">
+        <i class="icon-eye"></i>
+    </a>
 
-                                                                                      <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)" title="Reject">
-                                                                                          <div class="item trash">
-                                                                                              <i class="icon-trash-2"></i>
-                                                                                          </div>    
-                                                                                      </a></td>-->
+    <a href="type-of-request?action=accept&select=&id=" onclick="handleAccept(event)" title="Accept" class="icon-btn accept-btn">
+        <i style=" color: #27ae60;" class="icon-edit-3"></i>
+    </a>
+
+    <a href="type-of-request?action=reject&select=&id=" onclick="handleReject(event)" title="Reject" class="icon-btn reject-btn">
+        <i style="color: #e74c3c;" class="icon-trash-2"></i>
+    </a>
+</div>
+                                                                                      </td>
                                                                                                </tr>
                                                                           </c:forEach>
                                                                       </tbody>
                                                                   </table>
-                                                                                  </div>
-
-                                                                                  <!--com-->
-                                                                                 
-
-
-
-                                                                                                                                                                        </div>
-                                                                                                                                                                        <!--end table-->
-
-                                                                <!-- Pagination -->
-                    <nav class="mt-24">
-                        <ul class="pagination justify-content-center">
-                            <c:if test="${currentPage > 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
-
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
-                                </li>
-                            </c:forEach>
-
-                            <c:if test="${currentPage < totalPages}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </nav>                                                                                                          </div>
-<!--
-                                                                      <div class="flex items-center justify-between flex-wrap gap10">
+                            
+                              <div class="flex items-center justify-between flex-wrap gap10">
                                                                           <div class="text-tiny">Showing 10 entries</div>
                                                                           <ul class="wg-pagination">
                                                                               <li>
@@ -314,7 +343,45 @@
                                                                                   <a href="#"><i class="icon-chevron-right"></i></a>
                                                                               </li>
                                                                           </ul>
-                                                                      </div>-->
+                                                                      </div>
+                                                                                  </div>
+
+                                                                                  <!--com-->
+                                                                                 
+
+
+
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <!--end table-->
+
+                                                                <!-- Pagination -->
+<!--                    <nav class="mt-24">
+                        <ul class="pagination justify-content-center">
+                            <c:if test="${currentPage > 1}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            </c:if>
+
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                </li>
+                            </c:forEach>
+
+                            <c:if test="${currentPage < totalPages}">
+                                <li class="page-item">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </c:if>
+                        </ul>
+                    </nav>                                                                                                          </div>-->
+<!--
+-->                                                                    
                                               </div>
                                               <!-- /product-list -->
                                           </div>
