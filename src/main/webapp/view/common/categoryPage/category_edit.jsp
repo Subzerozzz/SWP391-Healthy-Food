@@ -248,7 +248,7 @@
                                                                         });
                                                                     </script>
                                                                 </c:if>
-                                                                  <c:if test="${not empty errors.minBMI}">
+                                                                <c:if test="${not empty errors.minBMI}">
                                                                     <script>
                                                                         iziToast.error({
                                                                             title: 'Lỗi',
@@ -258,7 +258,7 @@
                                                                         });
                                                                     </script>
                                                                 </c:if>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+                                                                <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
                                                                 <c:if test="${not empty errors.maxBMI}">
                                                                     <script>
                                                                         iziToast.error({
