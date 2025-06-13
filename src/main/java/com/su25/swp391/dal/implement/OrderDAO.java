@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class OrderDAO extends DBContext implements I_DAO<Order> {
-
+    
     
     @Override
     public Map<Integer, Order> findAllMap() {
@@ -43,7 +43,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public boolean delete(Order order) {
         throw new UnsupportedOperationException("Delete operation is not supported for orders");
     }
-
+    
+    
+    
     @Override
     public Order getFromResultSet(ResultSet rs) throws SQLException {
         Order order = new Order();
@@ -141,15 +143,15 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error counting filtered orders: " + ex.getMessage());
         } finally {
-            closeResources();
+          
         }
         return 0;
     }
 
     public Order findById(int orderId) {
-        String sql = "SELECT o.*, a.user_name, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.id "
+        String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
+                + "FROM swp391_healthy_food.orders o "
+                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
                 + "WHERE o.order_id = ?";
         try {
             connection = getConnection();
@@ -368,7 +370,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobile "
+        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
                 + "FROM swp391_healthy_food.orders o "
                 + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
@@ -407,7 +409,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error searching orders: " + ex.getMessage());
         } finally {
-            closeResources();
+           
         }
         return orders;
     }
@@ -416,7 +418,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM swp391_healthy_food.orders o "
                 + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
-                + "WHERE (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -835,13 +837,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
     public static void main(String[] args) {
         OrderDAO o = new OrderDAO();
-       List<Order> l = o.findOrdersWithFilters("accepted", null, 1, 10);
-        System.out.println(l);
-        for (Order order : l) {
-            System.out.println(order);
-        }
-        System.out.println(o.getTotalFilteredOrders("accepted", null));
-            
-        
+        System.out.println(o.searchOrders("60", "", "", 1, 10));
+        System.out.println(o.getTotalSearchResults("60", "", ""));
     }
+ 
 }

@@ -16,15 +16,16 @@ import java.util.List;
 public class OrderItemDAO extends DBContext {
 
     // Lấy danh sách items của một đơn hàng
-    public List<OrderItem> getOrderItemsByOrderId(int orderId) throws SQLException {
+    public List<OrderItem> getOrderItemsByOrderId(int orderId)  {
         List<OrderItem> items = new ArrayList<>();
 
-        String sql = "SELECT oi.*, p.name as product_name, p.image as product_image "
-                + "FROM order_items oi "
-                + "JOIN products p ON oi.product_id = p.product_id "
+        String sql = "SELECT oi.*, f.name as f_name, f.image_url as f_image "
+                + "FROM swp391_healthy_food.order_items oi "
+                + "JOIN swp391_healthy_food.Food f ON oi.food_id = f.id "
                 + "WHERE oi.order_id = ?";
 
         try {
+            
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, orderId);
@@ -34,19 +35,22 @@ public class OrderItemDAO extends DBContext {
                 OrderItem item = new OrderItem();
                 item.setOrderItemId(resultSet.getInt("order_item_id"));
                 item.setOrderId(resultSet.getInt("order_id"));
-                item.setProductId(resultSet.getInt("product_id"));
+                item.setFoodId(resultSet.getInt("food_id"));
                 item.setQuantity(resultSet.getInt("quantity"));
                 item.setPrice(resultSet.getBigDecimal("price"));
                 item.setCreatedAt(resultSet.getTimestamp("created_at"));
                 item.setUpdatedAt(resultSet.getTimestamp("updated_at"));
 
                 // Thông tin sản phẩm
-                item.setProductName(resultSet.getString("product_name"));
-                item.setProductImage(resultSet.getString("product_image"));
+                item.setFoodName(resultSet.getString("f_name"));
+                item.setFoodImage(resultSet.getString("f_image"));
 
                 items.add(item);
             }
-        } finally {
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        finally {
             closeResources();
         }
 
@@ -73,15 +77,15 @@ public class OrderItemDAO extends DBContext {
                 OrderItem item = new OrderItem();
                 item.setOrderItemId(resultSet.getInt("order_item_id"));
                 item.setOrderId(resultSet.getInt("order_id"));
-                item.setProductId(resultSet.getInt("product_id"));
+                item.setFoodId(resultSet.getInt("product_id"));
                 item.setQuantity(resultSet.getInt("quantity"));
                 item.setPrice(resultSet.getBigDecimal("price"));
                 item.setCreatedAt(resultSet.getTimestamp("created_at"));
                 item.setUpdatedAt(resultSet.getTimestamp("updated_at"));
 
                 // Thông tin sản phẩm
-                item.setProductName(resultSet.getString("product_name"));
-                item.setProductImage(resultSet.getString("product_image"));
+                item.setFoodName(resultSet.getString("product_name"));
+                item.setFoodImage(resultSet.getString("product_image"));
 
                 items.add(item);
             }
@@ -105,7 +109,7 @@ public class OrderItemDAO extends DBContext {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, item.getOrderId());
-            statement.setInt(2, item.getProductId());
+            statement.setInt(2, item.getFoodId());
             statement.setInt(3, item.getQuantity());
             statement.setBigDecimal(4, item.getPrice());
             
@@ -140,15 +144,15 @@ public class OrderItemDAO extends DBContext {
                 OrderItem item = new OrderItem();
                 item.setOrderItemId(resultSet.getInt("order_item_id"));
                 item.setOrderId(resultSet.getInt("order_id"));
-                item.setProductId(resultSet.getInt("product_id"));
+                item.setFoodId(resultSet.getInt("product_id"));
                 item.setQuantity(resultSet.getInt("quantity"));
                 item.setPrice(resultSet.getBigDecimal("price"));
                 item.setCreatedAt(resultSet.getTimestamp("created_at"));
                 item.setUpdatedAt(resultSet.getTimestamp("updated_at"));
                 
                 // Thông tin sản phẩm
-                item.setProductName(resultSet.getString("product_name"));
-                item.setProductImage(resultSet.getString("product_image"));
+                item.setFoodName(resultSet.getString("product_name"));
+                item.setFoodImage(resultSet.getString("product_image"));
                 
                 return item;
             }
@@ -159,6 +163,14 @@ public class OrderItemDAO extends DBContext {
         }
         
         return null;
+    }
+    public static void main(String[] args)  {
+        OrderItemDAO o = new OrderItemDAO();
+        List<OrderItem> l = o.getOrderItemsByOrderId(60);
+        for (OrderItem orderItem : l) {
+            System.out.println(orderItem);
+        }
+        
     }
 }
 

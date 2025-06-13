@@ -138,6 +138,30 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                   <c:if test="${empty orders}">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="py-4">
+                                                <i class="fas fa-search fs-1 text-muted mb-3"></i>
+                                                <h5>No orders found</h5>
+                                                <p class="text-muted">
+                                                    <c:choose>
+                                                        <c:when test="${not empty status || not empty search}">
+                                                            No orders match your search criteria. Try adjusting your filters.
+                                                            <br>
+                                                            <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-outline-primary mt-2">
+                                                                <i class="fas fa-times me-2"></i>Clear Filters
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            There are no orders in the system yet.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:if>
                                 <c:if test="${empty orders}">
                                     <tr>
                                         <td colspan="8" class="text-center">

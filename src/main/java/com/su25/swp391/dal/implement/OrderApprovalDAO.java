@@ -58,7 +58,7 @@ public class OrderApprovalDAO extends DBContext {
                 approval.setStatusBefore(resultSet.getString("status_before"));
                 approval.setStatusAfter(resultSet.getString("status_after"));
                 approval.setNote(resultSet.getString("note"));
-                approval.setAdminUsername(resultSet.getString("admin_username"));
+                approval.setSellerUsername(resultSet.getString("seller_username"));
 
                 approvals.add(approval);
             }

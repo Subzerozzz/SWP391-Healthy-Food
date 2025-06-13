@@ -12,7 +12,7 @@
       <body>
         <div class="section-menu-left">
           <div class="box-logo">
-            <a href="${pageContext.request.contextPath}/manage-food?action=view" id="site-logo-inner">
+            <a href="${pageContext.request.contextPath}/seller/manage-order" id="site-logo-inner">
                 <img class="logo" src="${pageContext.request.contextPath}/images/logo/logoHome.jpg">          
             </a>
             <div class="button-show-hide">
@@ -63,7 +63,7 @@
                     </a>
                   </li>
                   <li class="menu-item">
-                    <a href="${pageContext.request.contextPath}/manage-food?action=request" class="menu-item-button">
+                    <a href="${pageContext.request.contextPath}/seller/manage-order" class="menu-item-button">
                       <div class="icon"><i class="icon-layers"></i></div>
                       <div class="text">View Order List</div>
                     </a>
