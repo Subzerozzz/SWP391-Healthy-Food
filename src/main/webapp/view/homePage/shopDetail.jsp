@@ -212,12 +212,9 @@
                         <div class="col-lg-3 col-sm-6">
                             <div class="product-item">
                                 <div class="product-img">
-                                    <a href="shop-details.html">
-                                        <img src="${pageContext.request.contextPath}/images/products/products-img1.png" alt="Product Images">
+                                    <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
+                                        <img src="${item.getImage_url()}" alt="Product Images">
                                     </a>
-                                    <div class="product-item-tag">
-                                        <h3>New</h3>
-                                    </div>
                                     <ul class="product-item-action">
                                         <li><a href="#"><i class='bx bx-repost'></i></a></li>
                                         <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
@@ -226,15 +223,14 @@
                                 </div>
 
                                 <div class="content">
-                                    <h3><a href="shop-details.html">Organic Butter</a></h3>
-                                    <div class="rating">
-                                        <i class='bx bxs-star'></i>
-                                        <i class='bx bxs-star'></i>
-                                        <i class='bx bxs-star'></i>
-                                        <i class='bx bxs-star'></i>
-                                        <i class='bx bxs-star'></i>
+                                    <h3><a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">${item.getName()}</a></h3>
+                                    <div>
+                                        Calo: ${item.getCalo()}
                                     </div>
-                                    <span>$12.0/Kg </span>
+                                    <span>
+                                        <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true"
+                                            maxFractionDigits="0" /> VNĐ
+                                    </span>
                                 </div>
                             </div>   
                         </div>
@@ -279,6 +275,27 @@
                 width: 100%;
                 object-fit: cover;
             }
+            
+            .product-img {
+            height: 250px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px !important;
+          }
+
+          .product-img a {
+            height: 100%;
+            width: auto;
+          }
+
+          .product-img img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            padding: 0px !important;
+          }
         </style>
     </body>
 

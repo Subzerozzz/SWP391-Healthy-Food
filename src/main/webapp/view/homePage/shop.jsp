@@ -121,85 +121,85 @@
             <div class="row">
               <div class="col-lg-3">
                 <div class="product-side-bar">
-                  <!--Search Form-->
-                  <div class="search-widget">
-                    <form class="search-form" action="${pageContext.request.contextPath}/shop">
-                      <input name="foodName" type="search" class="form-control" placeholder="Search by food name...">
-                      <input type="hidden" name="action" value="search">
-                      <button type="submit">
-                        <i class="bx bx-search"></i>
-                      </button>
-                    </form>
-                  </div>
-
-                  <!--Price Range-->
-                  <div class="product-side-bar-widget">
-                    <h3 class="title">Prices Range</h3>
-                    <form class="price-range-content">
-                      <div class="price-range-bar" id="range-slider"></div>
-                      <div class="price-range-filter">
-                        <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
-                          <h4>Range:</h4>
-                          <input type="text" id="price-amount" readonly>
+                    <form action="${pageContext.request.contextPath}/shop" id='formSearch'>
+                        <!--Search By Name-->
+                        <div class="search-widget formSearchByName">
+                            <input name="foodName" type="search" class="formSearch" placeholder="Search by food name...">
+                            <button type="submit">
+                              <i class="bx bx-search"></i>
+                            </button>
                         </div>
 
-                        <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
-                          <button class="btn btn-red btn-icon">Filter</button>
+                        <!--Price Range-->
+                        <div class="product-side-bar-widget">
+                          <h3 class="title">Prices Range</h3>
+                            <div class="price-range-bar" id="range-slider"></div>
+                            <div class="price-range-filter">
+                              <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
+                                  <h4>Range:</h4>
+                                  <input type="text" id="price-amount" readonly>
+                                  <input type="hidden" name="selectedMin" id="selected-min">
+                                  <input type="hidden" name="selectedMax" id="selected-max">
+                              </div>
+
+                              <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
+                                  <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
+                              </div>
+                            </div>
                         </div>
-                      </div>
+
+                        <!--Food Categories-->
+                        <div class="product-side-bar-widget">
+                          <h3 class="title">Product Categories</h3>
+                          <div class="categoryList">
+                            <ul>
+                              <li class="${category == 0 ? 'active': ''}">
+                                  <input type="radio" value='0' name='category' id='cate_0' onclick="document.querySelector('#formSearch').submit()">
+                                <label for='cate_0'>Tất cả sản phẩm</label>
+                              </li>
+                              <c:forEach items="${listFoodCategory}" var="item">
+                                <li class="${category == item.getId()?'active' : ''}">
+                                    <input type="radio" value='${item.getId()}' name='category' id='cate_${item.getId()}' onclick="document.querySelector('#formSearch').submit()">
+                                    <label  for='cate_${item.getId()}'>${item.getName()}</label>
+                                </li>
+                              </c:forEach>
+                            </ul>
+                          </div>
+                        </div>
+                              
+                         <!--Calo-->
+                        <div class="product-side-bar-widget">
+                          <h3 class="title">Prices</h3>
+                          <div class="product-side-categories">
+                            <ul>
+                              <li class="active">
+                                <a href="#">$0-$50</a>
+                              </li>
+                              <li>
+                                <a href="#">$51-$100</a>
+                              </li>
+                              <li>
+                                <a href="#">$101-$150</a>
+                              </li>
+                              <li>
+                                <a href="#">$151-$200</a>
+                              </li>
+                              <li>
+                                <a href="#">$200-$250</a>
+                              </li>
+                              <li>
+                                <a href="#">$250-$300</a>
+                              </li>
+                              <li>
+                                <a href="#">$350-$400</a>
+                              </li>
+                              <li>
+                                <a href="#">$400-$450</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                     </form>
-                  </div>
-
-                  <!--Food Categories-->
-                  <div class="product-side-bar-widget">
-                    <h3 class="title">Product Categories</h3>
-                    <div class="product-side-categories">
-                      <ul>
-                        <li class="${category == 0 ? 'active': ''}">
-                          <a href="${pageContext.request.contextPath}/shop">Tất cả sản phẩm</a>
-                        </li>
-                        <c:forEach items="${listFoodCategory}" var="item">
-                          <li class="${category == item.getId()?'active' : ''}">
-                            <a
-                              href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${item.getId()}">${item.getName()}</a>
-                          </li>
-                        </c:forEach>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <!--Prices-->
-                  <div class="product-side-bar-widget">
-                    <h3 class="title">Prices</h3>
-                    <div class="product-side-categories">
-                      <ul>
-                        <li class="active">
-                          <a href="#">$0-$50</a>
-                        </li>
-                        <li>
-                          <a href="#">$51-$100</a>
-                        </li>
-                        <li>
-                          <a href="#">$101-$150</a>
-                        </li>
-                        <li>
-                          <a href="#">$151-$200</a>
-                        </li>
-                        <li>
-                          <a href="#">$200-$250</a>
-                        </li>
-                        <li>
-                          <a href="#">$250-$300</a>
-                        </li>
-                        <li>
-                          <a href="#">$350-$400</a>
-                        </li>
-                        <li>
-                          <a href="#">$400-$450</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -436,7 +436,136 @@
             object-fit: cover;
             padding: 0px !important;
           }
+          /*formSearch*/ 
+          .formSearchByName{
+              display:flex;
+              margin-bottom: 25px
+              
+          }
+          .formSearchByName .formSearch {
+              border:1px solid #EAEDF2;
+              flex: 1;
+              outline:none;
+              padding-left: 10px;
+              border-top-left-radius: 10px;
+              border-bottom-left-radius: 10px;
+          }
+          .formSearchByName button {
+              border: none;
+              color:white;
+              font-size: 25px;
+              text-align: center;
+              background-color: #F78600;
+              padding: 5px 16px;
+              border-bottom-right-radius: 10px;
+              border-top-right-radius: 10px;
+          }
+          /*End form search*/ 
+          
+          /*category*/ 
+          .product-side-bar-widget {
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+          }
+
+          .product-side-bar-widget .title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #111;
+            display: inline-block;
+            padding-bottom: 4px;
+          }
+
+          .categoryList ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+          }
+
+          .categoryList li {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 15px;
+            transition: background 0.3s, color 0.3s;
+          }
+
+          .categoryList li:last-child {
+            border-bottom: none;
+          }
+
+          .categoryList input[type="radio"] {
+            margin-right: 10px;
+            accent-color: black;
+            transform: scale(1.1);
+            cursor: pointer;
+          }
+
+          .categoryList label {
+            cursor: pointer;
+            flex: 1;
+            color:black;
+            user-select: none;
+            font-weight: 600;
+          }
+
+          .categoryList li:hover {
+            background-color: #fefce8;
+          }
+
+          .categoryList li.active label {
+            font-weight: 600;
+            color: black;
+          }
+
+          .categoryList li.active {
+            background-color: #F78600;
+          }
+
         </style>
+        
+        <script>
+            $(function () {
+                <% 
+                  Double min_price = (Double) request.getAttribute("minPrice");
+                  Double max_price = (Double) request.getAttribute("maxPrice");
+                %>
+
+                const min = <%= min_price %>;
+                const max = <%= max_price %>;
+
+                $("#range-slider").slider({
+                  range: true,
+                  min: min,
+                  max: max,
+                  values: [min, max],
+                  slide: function (event, ui) {
+                    const minForm = ui.values[0].toLocaleString('vi-VN', {style: 'currency' , currency: 'VND'});
+                    const maxForm = ui.values[1].toLocaleString('vi-VN', {style: 'currency' , currency: 'VND'});
+                    $("#price-amount").val(minForm + " - " + maxForm);
+
+                    $("#selected-min").val(ui.values[0]);
+                    $("#selected-max").val(ui.values[1]);
+                  }
+                });
+                
+                const initMin = $("#range-slider").slider("values", 0);
+                const initMax = $("#range-slider").slider("values", 1);
+                console.log(typeof initMin);
+                const initMinForm = initMin.toLocaleString('vi-Vn', {style: 'currency' , currency: 'VND'});
+                const initMaxForm = initMax.toLocaleString('vi-Vn', {style: 'currency' , currency: 'VND'});
+                $("#price-amount").val(initMinForm + " - " + initMaxForm);
+                $("#selected-min").val(initMin);
+                $("#selected-max").val(initMax);
+              });
+
+        </script>
       </body>
 
       <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
