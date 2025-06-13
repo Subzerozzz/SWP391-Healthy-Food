@@ -162,7 +162,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     try {
         connection = getConnection();
         statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+     
         statement.setString(1, t.getName_category());
         statement.setString(2, t.getDescription());
         statement.setDouble(3, t.getMaxBMI());
@@ -248,5 +248,24 @@ public  List<Category> searchCategorybyName(String keyword){
         closeResources();
     }
     return category;
+}
+public List<Category> filterCategoryByBMI(double min, double max) {
+    List<Category> list = new ArrayList<>();
+    String sql = "SELECT * FROM Swp301_pr.category WHERE NOT (maxBMI < ? OR minBMI > ?)";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setDouble(1, min);
+        statement.setDouble(2, max);
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            list.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        System.out.println("Error filtering category by BMI: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+    return list;
 }
 }
