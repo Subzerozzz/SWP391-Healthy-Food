@@ -9,7 +9,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
 <!--<![endif]-->
 
-
 <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
 <head>
     <!-- Basic Page Needs -->
@@ -42,475 +41,404 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
-        <style>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-                                 .blog-table-container {
-                                     font-family: 'Segoe UI', sans-serif;
-                                     width: 100%;
-                                     border-radius: 8px;
-                                     overflow: hidden;
-                                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                     background: #fff;
-                                 }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+        }
 
-                                 .table-header, .table-row {
-                                     display: flex;
-                                     padding: 14px 20px;
-                                     border-bottom: 1px solid #eee;
-                                     align-items: center;
-                                 }
+        /* Filter and Search Section */
+        .filter-search-wrapper {
+            max-width: 1400px;
+            margin: 0 auto 24px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
 
-                                 .table-header {
-                                     font-weight: 600;
-                                     background-color: #f8f9fa;
-                                     color: #333;
-                                     text-transform: uppercase;
-                                 }
+        .filter-search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
 
-                                 .col {
-                                     flex: 1;
-                                     min-width: 150px;
-                                     word-break: break-word;
-                                 }
+        .left-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
 
-                                 .blog-title {
-                                     font-weight: 500;
-                                     color: #212529;
-                                     text-decoration: none;
-                                 }
+        .form-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
 
-                                 .blog-title:hover {
-                                     text-decoration: underline;
-                                 }
+        .form-search:hover {
+            border-color: #c7d2fe;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+        }
 
-                                 .status {
-                                     padding: 6px 16px;
-                                     border-radius: 20px;
-                                     font-weight: bold;
-                                     display: inline-block;
-                                     font-size: 13px;
-                                 }
+        .form-search label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            white-space: nowrap;
+            margin-right: 4px;
+        }
 
-                                 .status.inactive {
-                                     background-color: #e74c3c;
-                                     color: white;
-                                 }
-                                 .col.actions a {
-                                     display: inline-flex;
-                                     align-items: center;
-                                     justify-content: center;
-                                     width: 30px;         /* Tăng kích thước nút */
-                                     height: 20px;
-                                     border-radius: 50%;
-                                     background-color: #f1f1f1;
-                                     transition: background-color 0.3s, transform 0.2s;
-                                     text-decoration: none;
-                                 }
-                                 td.actions {
-                                     text-align: center;
-                                     vertical-align: middle; /* canh giữa theo chiều dọc nếu cần */
-                                 }
+        .form-search select {
+            padding: 10px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            color: #374151;
+            min-width: 140px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-                                 /* Flexbox canh giữa nội dung bên trong */
-                                 .col.actions {
-                                     display: inline-flex;
-                                     justify-content: center;
-                                     align-items: center;
-                                     gap: 30px;
-                                 }
-                                 .col.actions a:hover {
-                                     background-color: #e0e0e0;
-                                     transform: scale(1.1);
-                                 }
+        .form-search select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
-                                 .col.actions i {
-                                     font-size: 25px; /* Tăng kích thước icon */
-                                 }
+        .filter-button {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
 
-                                 /* Icon màu sắc tương ứng */
-                                 .icon-eye {
-                                     color: #007bff; /* Xanh biển */
-                                 }
-                                 .icon-edit-3 {
-                                     color: #28a745; /* Xanh lá */
-                                 }
-                                 .icon-trash-2 {
-                                     color: #dc3545; /* Đỏ */
-                                 }
-                                 .search-container {
-                                     display: flex;
-                                     align-items: center;
-                                     border: 1px solid #e2e8f0; /* viền nhạt */
-                                     border-radius: 12px; /* bo góc */
-                                     padding: 10px 90px;
-  ;
-                                     background-color: white;
-                                     max-width: 600px;
-                                     width: 100%;
-                                     margin-top: 40px
-                                     bor
-                                 }
+        .filter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
 
-                                 .search-container input[type="text"] {
-                                     border: none;
-                                     outline: none;
-                                     flex: 1;
-                                     font-size: 16px;
-                                     color: #333;
-                                 }
+        .search-box {
+            display: flex;
+            align-items: center;
+        }
 
-                                 .search-container input[type="text"]::placeholder {
-                                     color: #a0aec0; /* xám nhạt */
-                                 }
-                                 * {
-                                     margin: 0;
-                                     padding: 0;
-                                     box-sizing: border-box;
-                                 }
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0;
+            min-width: 300px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
 
-                                 body {
-                                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                                     background-color: #f8fafc;
-                                     padding: 40px 20px;
-                                 }
+        .search-container input[type="text"] {
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            flex: 1;
+            font-size: 16px;
+        }
 
-                                 /* Container chính cho filter và search */
-                                 .filter-search-wrapper {
-                                     max-width: 1200px;
-                                     margin: 0 auto;
-                                     background: white;
-                                     padding: 24px;
-                                     border-radius: 16px;
-                                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                                     border: 1px solid #e2e8f0;
-                                 }
+        .search-container button {
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3b82f6;
+            color: white;
+        }
 
-                                 .filter-search-container {
-                                     display: flex;
-                                     align-items: center;
-                                     justify-content: space-between;
-                                     gap: 24px;
-                                     flex-wrap: wrap;
-                                 }
+        .search-container button:hover {
+            background: #2b6cb0;
+        }
 
-                                 .left-controls {
-                                     display: flex;
-                                     align-items: center;
-                                     gap: 20px;
-                                     flex-wrap: wrap;
-                                 }
+        .icon-search::before {
+            content: "🔍";
+            font-style: normal;
+        }
 
-                                 /* Form Filter Styling */
-                                 .form-search {
-                                     display: flex;
-                                     align-items: center;
-                                     gap: 12px;
-                                     background: #f8fafc;
-                                     padding: 16px 20px;
-                                     border-radius: 12px;
-                                     border: 1px solid #e2e8f0;
-                                     transition: all 0.3s ease;
-                                 }
+        /* Coupon Table Styles */
+        .wg-table.table-coupon-list {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
 
-                                 .form-search:hover {
-                                     border-color: #c7d2fe;
-                                     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
-                                 }
+        .table-header {
+            display: grid;
+            grid-template-columns: 120px 80px 180px 100px 120px 120px 100px 100px 120px 100px 100px 100px 120px;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-                                 .form-search label {
-                                     font-weight: 600;
-                                     color: #374151;
-                                     font-size: 14px;
-                                     white-space: nowrap;
-                                     margin-right: 4px;
-                                 }
+        .table-row {
+            display: grid;
+            grid-template-columns: 120px 80px 180px 100px 120px 120px 100px 100px 120px 100px 100px 100px 120px;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
 
-                                 .form-search select {
-                                     padding: 10px 16px;
-                                     border: 1px solid #d1d5db;
-                                     border-radius: 8px;
-                                     background: white;
-                                     font-size: 14px;
-                                     color: #374151;
-                                     min-width: 140px;
-                                     cursor: pointer;
-                                     transition: all 0.2s ease;
-                                 }
+        .table-row:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-                                 .form-search select:focus {
-                                     outline: none;
-                                     border-color: #6366f1;
-                                     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-                                 }
+        .table-row:last-child {
+            border-bottom: none;
+        }
 
-                                 .form-search select:hover {
-                                     border-color: #9ca3af;
-                                 }
+        .col {
+            padding: 0 8px;
+            word-break: break-word;
+        }
 
-                                 .filter-button {
-                                     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-                                     color: white;
-                                     border: none;
-                                     padding: 10px 20px;
-                                     border-radius: 8px;
-                                     font-weight: 600;
-                                     font-size: 14px;
-                                     cursor: pointer;
-                                     transition: all 0.3s ease;
-                                     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
-                                     min-width: 80px;
-                                 }
+        /* Coupon Code Styling */
+        .coupon-code {
+            font-weight: 700;
+            color: #1a365d;
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-                                 .filter-button:hover {
-                                     transform: translateY(-2px);
-                                     box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-                                 }
+        /* Status Badge */
+        .status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-                                 .filter-button:active {
-                                     transform: translateY(0);
-                                 }
+        .status.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
 
-                                 /* Search Box Styling */
-                                 .search-box {
-                                     display: flex;
-                                     align-items: center;
-                                 }
-                                 .search-container {
-                                     display: flex;
-                                     align-items: center;
-                                     background: white;
-                                     border: 1px solid #e2e8f0;
-                                     border-radius: 12px;
-                                     padding: 0;
-                                     min-width: 300px;
-                                     overflow: hidden;
-                                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-                                 }
+        .status.inactive {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
 
-                                 .search-container input[type="text"] {
-                                     border: none;
-                                     outline: none;
-                                     padding: 12px 16px;
-                                     flex: 1;
-                                     font-size: 16px;
-                                 }
+        /* Discount Value */
+        .discount-value {
+            font-weight: 700;
+            color: #dc2626;
+            font-size: 15px;
+        }
 
-                                 .search-container button {
-                                     border: none;
-                                     padding: 12px 16px;
-                                     cursor: pointer;
-                                     transition: background 0.3s ease;
-                                     display: flex;
-                                     align-items: center;
-                                     justify-content: center;
-                                 }
+        /* Currency Display */
+        .currency {
+            color: #059669;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-                                 .search-container button:hover {
-                                     background: #2b6cb0; /* màu hover */
-                                 }
-                                 /* Icon font (basic implementation) */
-                                 .icon-search::before {
-                                     content: "🔍";
-                                     font-style: normal;
-                                 }
+        /* Usage Progress */
+        .usage-info {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            text-align: center;
+        }
 
-                                 /* Responsive Design */
-                                 @media (max-width: 768px) {
-                                     .filter-search-container {
-                                         flex-direction: column;
-                                         align-items: stretch;
-                                         gap: 16px;
-                                     }
+        .usage-bar {
+            width: 60px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
 
-                                     .left-controls {
-                                         flex-direction: column;
-                                         align-items: stretch;
-                                         gap: 16px;
-                                     }
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
 
-                                     .search-container {
-                                         min-width: auto;
-                                         width: 100%;
-                                     }
+        /* Date Styling */
+        .date-text {
+            color: #4b5563;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
-                                     .form-search {
-                                         justify-content: space-between;
-                                     }
-                                 }
+        /* Actions */
+        .actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
 
-                                 @media (max-width: 480px) {
-                                     .filter-search-wrapper {
-                                         padding: 16px;
-                                         margin: 0 10px;
-                                     }
+        .actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
 
-                                     .form-search {
-                                         flex-direction: column;
-                                         align-items: stretch;
-                                         gap: 12px;
-                                     }
+        .actions a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
 
-                                     .form-search select {
-                                         min-width: auto;
-                                     }
-                                 }
+        .actions i {
+            font-size: 16px;
+        }
 
-                                 /* Animation cho loading state */
-                                 .loading {
-                                     opacity: 0.7;
-                                     pointer-events: none;
-                                 }
+        .icon-eye {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
 
-                                 .loading .filter-button {
-                                     background: #9ca3af;
-                                 }
+        .icon-eye:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
 
-                                 /* Focus states for accessibility */
-                                 .filter-button:focus,
-                                 .form-search select:focus,
-                                 .search-container button:focus {
-                                     outline: 2px solid #6366f1;
-                                     outline-offset: 2px;
-                                 }
-                                 .wg-table.table-product-list {
-                                     width: 100%;
-                                     background: #fff;
-                                     border-radius: 8px;
-                                     overflow: hidden;
-                                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                 }
+        .icon-edit-3 {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
 
-                                 .table-header {
-                                     display: flex;
-                                     align-items: center;
-                                     background: #f8f9fa;
-                                     padding: 16px 20px;
-                                     border-bottom: 2px solid #e9ecef;
-                                     font-weight: 600;
-                                     color: #495057;
-                                 }
+        .icon-edit-3:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
 
-                                 .table-row {
-                                     display: flex;
-                                     align-items: center;
-                                     padding: 16px 20px;
-                                     border-bottom: 1px solid #e9ecef;
-                                     transition: background-color 0.2s ease;
-                                 }
+        .icon-trash-2 {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
 
-                                 .table-row:hover {
-                                     background-color: #f8f9fa;
-                                 }
+        .icon-trash-2:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
 
-                                 .table-row:last-child {
-                                     border-bottom: none;
-                                 }
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .table-header,
+            .table-row {
+                grid-template-columns: 100px 60px 150px 80px 100px 100px 80px 80px 100px 90px 90px 90px 100px;
+                font-size: 12px;
+            }
+        }
 
-                                 /* Định nghĩa độ rộng cố định cho từng cột */
-                                 .table-header .col:nth-child(1),
-                                 .table-row .col:nth-child(1) {
-                                     flex: 0 0 25%; /* Blog title */
-                                     padding-right: 15px;
-                                 }
+        @media (max-width: 768px) {
+            .filter-search-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
 
-                                 .table-header .col:nth-child(2),
-                                 .table-row .col:nth-child(2) {
-                                     flex: 0 0 10%; /* Blog ID */
-                                     padding-right: 15px;
-                                     text-align: center;
-                                 }
+            .left-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
 
-                                 .table-header .col:nth-child(3),
-                                 .table-row .col:nth-child(3) {
-                                     flex: 0 0 15%; /* Author */
-                                     padding-right: 15px;
-                                 }
+            .search-container {
+                min-width: auto;
+                width: 100%;
+            }
 
-                                 .table-header .col:nth-child(4),
-                                 .table-row .col:nth-child(4) {
-                                     flex: 0 0 12%; /* Date */
-                                     padding-right: 15px;
-                                 }
+            .table-header,
+            .table-row {
+                grid-template-columns: 120px 80px 180px 100px 120px 120px 100px 100px 120px 100px 100px 100px 120px;
+            }
 
-                                 .table-header .col:nth-child(5),
-                                 .table-row .col:nth-child(5) {
-                                     flex: 0 0 12%; /* Status */
-                                     padding-right: 15px;
-                                 }
+@media (max-width: 768px) {
+    /* Hide some columns on mobile */
+    .table-header .col:nth-child(10),
+    .table-header .col:nth-child(11),
+    .table-header .col:nth-child(12),
+    .table-row .col:nth-child(10),
+    .table-row .col:nth-child(11),
+    .table-row .col:nth-child(12) {
+        display: none;
+    }
+}
 
-                                 .table-header .col:nth-child(6),
-                                 .table-row .col:nth-child(6) {
-                                     flex: 0 0 15%; /* Actions */
-                                     text-align: center;
-                                 }
+        /* Body title styling */
+        .body-title-2 {
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
 
-                                 /* Loại bỏ margin-left inline styles */
-                                 .table-header .col,
-                                 .table-row .col {
-                                     margin-left: 0 !important;
-                                 }
+        .body-title-2:hover {
+            color: #1f2937;
+        }
 
-                                 /* Style cho blog title link */
-                                .body-title-2 {
-                                    color: #000000; /* Màu đen */
-                                    text-decoration: none;
-                                    font-weight: 500;
-                                    transition: color 0.2s ease;
-                                }
-
-                                .body-title-2:hover {
-                                    color: #000000; /* Màu đen khi hover */
-                                    text-decoration: underline;
-                                }
-
-                                 /* Style cho status badge */
-                                 .table-row .col span {
-                                     background-color: #E74C3C !important;
-                                     color: white;
-                                     padding: 6px 16px;
-                                     border-radius: 20px;
-                                     display: inline-block;
-                                     font-weight: bold;
-                                     font-size: 12px;
-                                     text-transform: uppercase;
-                                 }
-                                 /* Responsive design */
-                                 @media (max-width: 768px) {
-                                     .table-header .col:nth-child(1),
-                                     .table-row .col:nth-child(1) {
-                                         flex: 0 0 30%;
-                                     }
-
-                                     .table-header .col:nth-child(2),
-                                     .table-row .col:nth-child(2) {
-                                         flex: 0 0 8%;
-                                     }
-
-                                     .table-header .col:nth-child(3),
-                                     .table-row .col:nth-child(3) {
-                                         flex: 0 0 15%;
-                                     }
-
-                                     .table-header .col:nth-child(4),
-                                     .table-row .col:nth-child(4) {
-                                         flex: 0 0 12%;
-                                     }
-
-                                     .table-header .col:nth-child(5),
-                                     .table-row .col:nth-child(5) {
-                                         flex: 0 0 12%;
-                                     }
-
-                                     .table-header .col:nth-child(6),
-                                     .table-row .col:nth-child(6) {
-                                         flex: 0 0 15%;
-                                     }
-                                 }
-        </style>    
+        /* Max discount styling */
+        .max-discount {
+            color: #7c3aed;
+            font-weight: 600;
+        }
+    </style>    
 </head>
 
 <body class="body">
-
     <!-- #wrapper -->
     <div id="wrapper">
         <!-- #page -->
@@ -525,12 +453,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../common/nutritionist/sidebar.jsp"></jsp:include>
+                <jsp:include page="../common/coupon/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                <jsp:include page="../common/nutritionist/headerdashboard.jsp"></jsp:include>    
+                <jsp:include page="../common/coupon/header.jsp"></jsp:include>    
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -539,14 +467,14 @@
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Blog List</h3>
+                                    <h3>Coupon Management</h3>
                                 </div>
-                                <!-- product-list -->
-                                    <<div class="filter-search-wrapper">
-                                        <div class="filter-search-container">
-                                            <div class="left-controls">
-                                                <!-- Form Filter -->
-                                                <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
+                                <!-- coupon-list -->
+                                <div class="filter-search-wrapper">
+                                    <div class="filter-search-container">
+                                        <div class="left-controls">
+                                            <!-- Form Filter -->
+                                            <form class="form-search" action="${pageContext.request.contextPath}/manage-blog" method="GET">
                                                 <input type="hidden" name="action" value="filter" />
                                                 <label for="status">Status:</label>
                                                 <select name="status" id="status" class="form-control">
@@ -556,116 +484,152 @@
                                                 </select>
                                                 <button type="submit" class="filter-button">Filter</button>
                                             </form>
-                                          <!-- Search -->
-                                          <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                              <div class="search-container">
-                                                  <input type="text" name="search" placeholder="Search here...">
-                                                      <button type="submit">
-                                                          <i class="icon-search"></i>
-                                                      </button>
-                                              </div>
-                                          </form>
+                                            <!-- Search -->
+                                            <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
+                                                <div class="search-container">
+                                                    <input type="text" name="search" placeholder="Search coupons...">
+                                                    <button type="submit">
+                                                        <i class="icon-search"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
-                         <div class="wg-table table-product-list">
-                             <!-- Header -->
-                             <div class="table-header">
-                                 <div class="col">Blog</div>
-                                 <div class="col" style="margin-left: 70px">Blog ID</div>
-                                 <div class="col" style="margin-left: 120px">Author</div>
-                                 <div class="col"style="margin-left: 100px">Date</div> 
-                                 <div class="col"style="margin-left: 100px">Status</div>
-                                 <div class="col" style="margin-left: 130px;">Action</div>
-                             </div>
-
-                             <!-- Data Rows -->
-                             <c:forEach items="${blogs}" var="blog">
-                                 <div class="table-row">
-                                     <div class="col">
-                                         <a href="list.jsp" class="body-title-2">${blog.title}</a>
-                                     </div>
-                                     <div class="col body-title-2">${blog.id}</div>
-                                     <div class="col body-title-2">${blog.author}</div>
-                                     <div class="col body-title-2">${blog.birth_date}</div> 
-                                     <div class="col">
-                                         <span style="background-color: #E74C3C;; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
-                                             ${blog.status}
-                                         </span>
-
-                                     </div>
-                                     <div class="col actions ">
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}"> <i class="icon-edit-3"></i></a>
-                                         <a href="${pageContext.request.contextPath}/manage-blog?action=delete&id=${blog.id}"><i class="icon-trash-2"></i></a>
-                                     </div>
-                                 </div>
-                             </c:forEach>
-                         </div>
-                                    <div class="divider"></div>
-                                    <div class="flex items-center justify-between flex-wrap gap10">
-                                        <div class="text-tiny">Showing ${blogs.size()} entries</div>
-                                        <!-- # Phân Trang -->
-                                        <ul class="wg-pagination">
-                                            <c:set var="queryString" value="&search=${param.search}&action=${param.action}&status=${param.status}" />
-                                            <!-- Nút Trang Trước -->
-                                            <li class="${currentPage == 1 ? 'disabled' : ''}">
-                                                <c:choose>
-                                                    <c:when test="${currentPage > 1}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}${queryString}">
-                                                            <i class="icon-chevron-left"></i>
-                                                        </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a href="javascript:void(0);">
-                                                            <i class="icon-chevron-left"></i>
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </li>
-
-                                            <!-- Số trang -->
-                                            <c:choose>
-                                                <c:when test="${currentPage < totalPage - 2}">
-                                                    <li class="active">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}${queryString}">${currentPage}</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
-                                                    </li>
-                                                    <li><span>...</span></li>
-                                                    <li>
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}${queryString}">${totalPage}</a>
-                                                    </li>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
-                                                    <c:forEach begin="${startPage}" end="${totalPage}" var="i">
-                                                        <li class="${currentPage == i ? 'active' : ''}">
-                                                            <a href="${pageContext.request.contextPath}/manage-blog?index=${i}${queryString}">${i}</a>
-                                                        </li>
-                                                    </c:forEach>
-                                                </c:otherwise>
-                                            </c:choose>
-
-                                            <!-- Nút Trang Sau -->
-                                            <li class="${currentPage == totalPage ? 'disabled' : ''}">
-                                                <c:choose>
-                                                    <c:when test="${currentPage < totalPage}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">
-                                                            <i class="icon-chevron-right"></i>
-                                                        </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a href="javascript:void(0);">
-                                                            <i class="icon-chevron-right"></i>
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </li>
-                                        </ul>
                                     </div>
                                 </div>
-                                <!-- /product-list -->
+
+                                <div class="wg-table table-coupon-list">
+                                    <!-- Header -->
+                                    <div class="table-header">
+                                        <div class="col">Code</div>
+                                        <div class="col">ID</div>
+                                        <div class="col">Description</div>
+                                        <div class="col">Discount</div> 
+                                        <div class="col">Min Purchase</div>
+                                        <div class="col">Max Discount</div>
+                                        <div class="col">Start Date</div>
+                                        <div class="col">End Date</div>
+                                        <div class="col">Usage</div>
+                                        <div class="col">Status</div>
+                                        <div class="col">Created</div>
+                                        <div class="col">Updated</div>
+                                        <div class="col">Actions</div>
+                                    </div>
+
+                                    <!-- Data Rows -->
+                                    <c:forEach items="${blogs}" var="blog">
+                                        <div class="table-row">
+                                            <div class="col">
+                                                <span class="coupon-code">${blog.code}</span>
+                                            </div>
+                                            <div class="col body-title-2">${blog.couponID}</div>
+                                            <div class="col body-title-2" title="${blog.description}">
+                                                ${blog.description.length() > 30 ? blog.description.substring(0, 30).concat('...') : blog.description}
+                                            </div>
+                                            <div class="col">
+                                                <span class="discount-value">${blog.discountValue}%</span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="currency">$${blog.minPurchase}</span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="max-discount">$${blog.maxDiscount}</span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="date-text">${blog.startDate}</span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="date-text">${blog.endDate}</span>
+                                            </div>
+                                            <div class="col">
+                                                <div class="usage-info">${blog.usageCount}/${blog.usageLimit}</div>
+                                                <div class="usage-bar">
+                                                    <div class="usage-fill" style="width: ${blog.usageLimit > 0 ? (blog.usageCount * 100 / blog.usageLimit) : 0}%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <span class="status ${blog.isActive ? 'active' : 'inactive'}">
+                                                    ${blog.isActive ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="date-text">${blog.createdAt}</span>
+                                            </div>
+                                            <div class="col">
+                                                <span class="date-text">${blog.updatedAt}</span>
+                                            </div>
+                                            <div class="col actions">
+                                                <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}" class="icon-eye"><i class="icon-eye"></i></a>
+                                                <a href="${pageContext.request.contextPath}/manage-blog?action=edit&id=${blog.id}" class="icon-edit-3"> <i class="icon-edit-3"></i></a>
+                                                <a href="${pageContext.request.contextPath}/manage-blog?action=delete&id=${blog.id}" class="icon-trash-2"><i class="icon-trash-2"></i></a>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                                
+                                <div class="divider"></div>
+                                <div class="flex items-center justify-between flex-wrap gap10">
+                                    <div class="text-tiny">Showing ${blogs.size()} entries</div>
+                                    <!-- # Phân Trang -->
+                                    <ul class="wg-pagination">
+                                        <c:set var="queryString" value="&search=${param.search}&action=${param.action}&status=${param.status}" />
+                                        <!-- Nút Trang Trước -->
+                                        <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                            <c:choose>
+                                                <c:when test="${currentPage > 1}">
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}${queryString}">
+                                                        <i class="icon-chevron-left"></i>
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="javascript:void(0);">
+                                                        <i class="icon-chevron-left"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </li>
+
+                                        <!-- Số trang -->
+                                        <c:choose>
+                                            <c:when test="${currentPage < totalPage - 2}">
+                                                <li class="active">
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}${queryString}">${currentPage}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
+                                                </li>
+                                                <li><span>...</span></li>
+                                                <li>
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}${queryString}">${totalPage}</a>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
+                                                <c:forEach begin="${startPage}" end="${totalPage}" var="i">
+                                                    <li class="${currentPage == i ? 'active' : ''}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${i}${queryString}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <!-- Nút Trang Sau -->
+                                        <li class="${currentPage == totalPage ? 'disabled' : ''}">
+                                            <c:choose>
+                                                <c:when test="${currentPage < totalPage}">
+                                                    <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">
+                                                        <i class="icon-chevron-right"></i>
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="javascript:void(0);">
+                                                        <i class="icon-chevron-right"></i>
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <!-- /main-content-wrap -->
                         </div>
@@ -689,6 +653,7 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    
     <!--Thông báo xóa--> 
      <c:if test="${isDelete == true}">
          <script>
@@ -728,7 +693,6 @@
      </c:if>
 
      <!--Thông báo update--> 
-
      <c:if test="${isUpdate == true}">
          <script>
            document.addEventListener("DOMContentLoaded", function () {

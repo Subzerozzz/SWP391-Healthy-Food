@@ -47,6 +47,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return coupons;
     }
+
     @Override
     public Map<Integer, Coupon> findAllMap() {
         Map<Integer, Coupon> couponMap = new HashMap<>();
@@ -66,6 +67,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             return couponMap;
         }
     }
+
     @Override
     public boolean update(Coupon coupon) {
         String sql = "UPDATE coupons SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_purchase=?, max_discount=?,start_date=?,end_date=?,usage_limit=?,usage_count=?";
@@ -91,6 +93,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
     }
+
     @Override
     public boolean delete(Coupon coupon) {
         String sql = "DELETE from coupons WHERE coupon_id=? ";
@@ -107,6 +110,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
     }
+
     @Override
     public int insert(Coupon coupon) {
         String sql = "INSERT INTO coupons (code,description,discount_type,discount_value,min_purchase,max_discount"
@@ -139,6 +143,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
     }
+
     @Override
     public Coupon getFromResultSet(ResultSet rs) throws SQLException {
         Coupon coupon = new Coupon();
@@ -158,6 +163,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         coupon.setUpdatedAt(rs.getDate("updated_at"));
         return coupon;
     }
+
     @Override
     public Coupon findById(Integer id) {
         try {
@@ -175,5 +181,177 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
         return null;
+    }
+
+    public int getTotalCoupon() {
+        String sql = "SELECT COUNT(*) FROM coupons";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking code: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+    public List<Coupon> pagingCoupon(int index) {
+        List<Coupon> coupon = new ArrayList<>();
+        String sql = "SELECT * FROM coupons\n"
+                + "ORDER BY coupon_id\n"
+                + "LIMIT 10 OFFSET ?;";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (index - 1) * 10);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupon.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // BẮT BUỘC CÓ
+        } finally {
+            closeResources();
+        }
+        return coupon;
+    }
+
+    public int countCouponsBySearch(String keyword) {
+        String sql = "SELECT COUNT(*) FROM blogs WHERE code LIKE ? OR description LIKE ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            statement.setString(2, likeKeyword);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting coupon by search: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+    public List<Coupon> searchCouponsByCodeorDescription(String keyword, int offset, int pageSize) {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM blogs WHERE code LIKE ? OR description LIKE ? LIMIT ? OFFSET ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            statement.setString(2, likeKeyword);
+            statement.setInt(3, pageSize);
+            statement.setInt(4, offset);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching coupon with pagination: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return coupons;
+    }
+
+    public int getTotalCouponCountWithFilter(String discounttype, String search) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM coupons WHERE 1=1");
+
+        // Thêm điều kiện search nếu có
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (title LIKE ? OR content LIKE ?)");
+        }
+
+        // Thêm điều kiện status nếu có
+        if (discounttype != null && !discounttype.trim().isEmpty()) {
+            sql.append(" AND status = ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Set search parameters
+            if (search != null && !search.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + search + "%");
+                statement.setString(paramIndex++, "%" + search + "%");
+            }
+
+            // Set status parameter
+            if (discounttype != null && !discounttype.trim().isEmpty()) {
+                statement.setString(paramIndex++, discounttype);
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting filtered coupons: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+    public List<Coupon> filterCouponWithPagination(String discounttype, String search, int page, int pageSize) {
+        List<Coupon> coupons = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+
+        // Thêm điều kiện search nếu có
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (title LIKE ? OR content LIKE ?)");
+        }
+
+        // Thêm điều kiện status nếu có
+        if (discounttype != null && !discounttype.trim().isEmpty()) {
+            sql.append(" AND status = ?");
+        }
+
+        sql.append(" ORDER BY id DESC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Set search parameters
+            if (search != null && !search.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + search + "%");
+                statement.setString(paramIndex++, "%" + search + "%");
+            }
+
+            // Set status parameter
+            if (discounttype != null && !discounttype.trim().isEmpty()) {
+                statement.setString(paramIndex++, discounttype);
+            }
+
+            // Set pagination parameters
+            statement.setInt(paramIndex++, (page - 1) * pageSize);
+            statement.setInt(paramIndex++, pageSize);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering coupons with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return coupons;
     }
 }
