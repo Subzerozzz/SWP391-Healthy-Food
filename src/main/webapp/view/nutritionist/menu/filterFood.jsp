@@ -228,13 +228,6 @@
                                     <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
                                 </div>
                                 <div class="list-icon-function">
-                                  <div class="item eye">
-                                    <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=viewDetail&id=${item.id}">
-                                      <i class="icon-eye" style="color: blue"></i>
-                                    </a>
-
-                                  </div>
                                   <div class="item edit">
                                     <a
                                       href="${pageContext.request.contextPath}/manage-food?action=update&id=${item.id}">
@@ -264,7 +257,14 @@
                                 class="icon-chevron-left"></i></a>
                           </li>
                           <c:choose>
-                            <c:when test="${currentPage < totalPage - 2}">
+                            <c:when test="${currentPage <= totalPage - 2}">
+                                <c:if test="${currentPage > 1}">
+                                     <li class="">
+                                        <a
+                                          href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${currentPage - 1}">${currentPage - 1}</a>
+                                      </li>
+
+                                </c:if>
                               <li class="active">
                                 <a
                                   href="${pageContext.request.contextPath}/manage-food?action=paginationFilter&category=${categoryID}&page=${currentPage}">${currentPage}</a>
@@ -276,9 +276,11 @@
                                   + 1}</a>
                               </li>
 
-                              <li>
-                                <span>...</span>
-                              </li>
+                              <c:if test="${currentPage < totalPage - 2}">
+                                <li>
+                                    <span>...</span>
+                                </li>
+                              </c:if>
 
                               <li class="">
                                 <a
