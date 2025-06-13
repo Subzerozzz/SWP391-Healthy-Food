@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderApprovalDAO extends DBContext {
 
     // Thêm approval mới (sử dụng connection được truyền vào để hỗ trợ transaction)
-    public boolean addOrderApproval(int orderId, int adminId, String statusBefore, String statusAfter, String note) throws SQLException {
+    public boolean addOrderApproval(int orderId, int adminId, String statusBefore, String statusAfter, String note)  {
         String sql = "INSERT INTO order_approvals (order_id, approved_by, approved_at, status_before, status_after, note) "
                 + "VALUES (?, ?, NOW(), ?, ?, ?)";
 
@@ -29,18 +29,22 @@ public class OrderApprovalDAO extends DBContext {
             statement.setString(5, note);
 
             return statement.executeUpdate() > 0;
-        } finally {
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+       finally {
             closeResources();
         }
+        return false;
     }
 
     // Lấy lịch sử approval của một đơn hàng
-    public List<OrderApproval> getOrderApprovalsByOrderId(int orderId) throws SQLException {
+    public List<OrderApproval> getOrderApprovalsByOrderId(int orderId)  {
         List<OrderApproval> approvals = new ArrayList<>();
 
-        String sql = "SELECT oa.*, a.username as admin_username "
-                + "FROM order_approvals oa "
-                + "JOIN account a ON oa.approved_by = a.user_id "
+        String sql = "SELECT oa.*, a.user_name "
+                + "FROM swp391_healthy_food.order_approvals oa "
+                + "JOIN swp391_healthy_food.account a ON oa.approved_by = a.id "
                 + "WHERE oa.order_id = ? "
                 + "ORDER BY oa.approved_at DESC";
 
@@ -58,14 +62,22 @@ public class OrderApprovalDAO extends DBContext {
                 approval.setStatusBefore(resultSet.getString("status_before"));
                 approval.setStatusAfter(resultSet.getString("status_after"));
                 approval.setNote(resultSet.getString("note"));
-                approval.setSellerUsername(resultSet.getString("seller_username"));
+                approval.setSellerUsername(resultSet.getString("user_name"));
 
                 approvals.add(approval);
             }
-        } finally {
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        finally {
             closeResources();
         }
 
         return approvals;
+    }
+    public static void main(String[] args) {
+        OrderApprovalDAO d = new OrderApprovalDAO();
+        List<OrderApproval> l = d.getOrderApprovalsByOrderId(60);
+        System.out.println(l);
     }
 }

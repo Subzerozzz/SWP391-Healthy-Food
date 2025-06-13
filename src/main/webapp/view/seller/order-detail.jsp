@@ -1,252 +1,265 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <div>
-       <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-                <h6 class="fw-semibold mb-0">Order Details #${order.orderId}</h6>
-                
-            </div>
+<!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
 
-            <div class="row g-24">
-                <!-- Order Information -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">Order Information</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Order ID:</strong> #${order.orderId}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Order Date:</strong> <fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Payment Method:</strong> ${order.paymentMethod}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Status:</strong>
-                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
-                                                    order.status == 'accepted' ? 'bg-info' : 
-                                                    order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                    ${order.status}
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Total Amount:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                            </div>
-                            <c:if test="${not empty order.couponCode}">
-                                <div class="mb-3">
-                                    <strong>Coupon Applied:</strong> ${order.couponCode}
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discountAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.total.add(order.discountAmount)}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                                </div>
-                            </c:if>
-                        </div>
+
+<!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
+    <title>Remos eCommerce Admin Dashboard HTML Template</title>
+
+    <meta name="author" content="themesflat.com">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animate.min_1.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
+
+
+
+    <!-- Font -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
+
+    <!-- Icon -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
+    <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
+        <style>
+                               .box-logo{
+                                   height: 100px;
+                                   overflow: hidden
+                               }
+                               .logo{
+                                   max-width:100%;
+                                   height: 100%;
+                                   display:block
+                               }
+        </style>
+</head>
+
+<body class="body">
+
+    <!-- #wrapper -->
+    <div id="wrapper">
+        <!-- #page -->
+        <div id="page" class="">
+            <!-- layout-wrap -->
+           <div class="layout-wrap">
+                <!-- preload -->
+                <div id="preload" class="preload-container">
+                    <div class="preloading">
+                        <span></span>
                     </div>
                 </div>
-
-                <!-- Customer Information -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">Customer Information</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Name:</strong> ${order.username}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong> ${order.email}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mobie:</strong> ${order.mobie}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong><br>
-                                ${order.shippingAddress}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Update Status -->
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">Status Information</h6>
-                        </div>
-                        <div class="card-body">
-                            <c:choose>
-                                <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'completed' || order.status == 'cancelled'}">
-                                    <div class="mb-3">
-                                        <label class="form-label">Current Status</label>
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge ${order.status == 'completed' ? 'bg-success' : 'bg-danger'} fs-6">
-                                                ${order.status}
-                                            </span>
+                <!-- /preload -->
+                <!-- section-menu-left -->
+                <jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+                <!-- /section-menu-left -->
+                <!-- section-content-right -->
+                <div class="section-content-right">
+                    <!-- header-dashboard -->
+                    <jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>    
+                    <!-- /header-dashboard -->
+                    <!-- main-content -->
+                    <div class="main-content">
+                        <!-- main-content-wrap -->
+                        <div class="main-content-inner">
+                            <!-- main-content-wrap -->
+                            <div class="main-content-wrap">
+                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                    <h3>Order ${order.orderId}</h3>
+                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                        <li>
+                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#"><div class="text-tiny">Order</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <a href="#"><div class="text-tiny">Order detail</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <div class="text-tiny">Order #123783</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- order-detail -->
+                                <div class="wg-order-detail">
+                                    <div class="left flex-grow">
+                                        <div class="wg-box mb-20">
+                                            <div class="wg-table table-order-detail">
+                                                <ul class="table-title flex items-center justify-between gap20 mb-24">
+                                                    <li>
+                                                        <div class="body-title">All item</div>
+                                                    </li>    
+                                                    <li>
+                                                        <div class="dropdown default">
+                                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="body-title-2 flex items-center gap8">Sort<i class="h6 icon-chevron-down"></i></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Name</a>
+                                                                </li>
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Quantity</a>
+                                                                </li>
+                                                                <li>  
+                                                                    <a href="javascript:void(0);">Price</a>
+                                                                </li>
+                                                              
+                                                                
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="flex flex-column">
+                                                    <c:forEach items="${order.orderItems}" var="item">
+                                                    <li class="product-item gap14">
+                                                        <div class="image no-bg">
+                                                            <img src="https://d1hjkbq40fs2x4.cloudfront.net/2017-08-21/files/landscape-photography_1645.jpg" alt="">
+                                                        </div>
+                                                        <div class="flex items-center justify-between gap40 flex-grow">
+                                                            <div class="name">
+                                                                <div class="text-tiny mb-1">Food name</div>
+                                                                <a href="product-list.html" class="body-title-2">${item.foodName}</a>
+                                                            </div>
+                                                            <div class="name">
+                                                                <div class="text-tiny mb-1">Quantity</div>
+                                                                <div class="body-title-2">${item.quantity}</div>
+                                                            </div>
+                                                            <div class="name">
+                                                                <div class="text-tiny mb-1">Price</div>
+                                                                <div class="body-title-2">$${item.price}</div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+                                                    </c:forEach>
+                                                  
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="wg-box">
+                                            <div class="wg-table table-cart-totals">
+                                                <ul class="table-title flex mb-24">
+                                                    <li>
+                                                        <div class="body-title">Cart Totals</div>
+                                                    </li>    
+                                                    <li>
+                                                        <div class="body-title">Price</div>
+                                                    </li>    
+                                                </ul>
+                                                <ul class="flex flex-column gap14">
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Subtotal:</span>
+                                                        <span class="body-title-2">$70.13</span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Shipping:</span>
+                                                        <span class="body-title-2">$10.00</span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-text">Tax (GST):</span>
+                                                        <span class="body-title-2">$5.00</span>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li class="cart-totals-item">
+                                                        <span class="body-title">Total price:</span>
+                                                        <span class="body-title tf-color-1">$90.58</span>
+                                                    </li>
+                                                  
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            This order has been ${order.status} and cannot be modified further.
-                                        </small>
+                                    <div class="right">
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Summary</div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Order ID</div>
+                                                <div class="body-title-2">${order.orderId}</div>
+                                            </div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Date</div>
+                                                <div class="body-title-2">${order.createdAt}</div>
+                                            </div>
+                                            <div class="summary-item">
+                                                <div class="body-text">Total</div>
+                                                <div class="body-title-2 tf-color-1">$${order.total}</div>
+                                            </div>
+                                        </div>
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Shipping Address</div>
+                                            <div class="body-text">${order.shippingAddress}</div>
+                                        </div>
+                                        <div class="wg-box mb-20 gap10">
+                                            <div class="body-title">Payment Method</div>
+                                            <div class="body-text">${order.paymentMethod}</div>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?action=list&status=${status}&search=${search}&page=${currentPage}">Back</a>
+                                        </div>
+                                        <div class="wg-box gap10">
+                                            <div class="body-title">Expected Date Of Delivery</div>
+                                            <div class="body-title-2 tf-color-2">20 Nov 2023</div>
+                                            <a class="tf-button style-1 w-full" href="oder-tracking.html"><i class="icon-truck"></i>Track order</a>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <a href="${pageContext.request.contextPath}/admin/manage-order" 
-                                           class="btn btn-secondary">
-                                            Back to Order List
-                                        </a>
-                                    </div>
-                                </c:when>
-                                
-                                <%-- For pending or accepted orders - Allow updates --%>
-                                <c:otherwise>
-                                    <form action="${pageContext.request.contextPath}/admin/manage-order" method="post">
-                                        <input type="hidden" name="action" value="updateStatus">
-                                        <input type="hidden" name="orderId" value="${order.orderId}">
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">New Status</label>
-                                            <select class="form-select" name="newStatus" required>
-                                                <option value="">-- Select Status --</option>
-                                                <c:if test="${order.status == 'pending'}">
-                                                    <option value="accepted">Accept Order</option>
-                                                    <option value="cancelled">Reject Order</option>
-                                                </c:if>
-                                                <c:if test="${order.status == 'accepted'}">
-                                                    <option value="completed">Complete Order</option>
-                                                    <option value="cancelled">Cancel Order</option>
-                                                </c:if>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">Note</label>
-                                            <textarea class="form-control" name="note" rows="3" 
-                                                      placeholder="Enter note..."></textarea>
-                                        </div>
-                                        
-                                        <div class="d-flex gap-2">
-                                            <button type="submit" class="btn btn-primary">Update</button>
-                                            <a href="${pageContext.request.contextPath}/admin/manage-order" 
-                                               class="btn btn-secondary">Back</a>
-                                        </div>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
+                                </div>
+                                <!-- /order-detail -->
+                            </div>
+                            <!-- /main-content-wrap -->
                         </div>
+                        <!-- /main-content-wrap -->
+                        <!-- bottom-page -->
+                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+                        <!-- /bottom-page -->
                     </div>
+                    <!-- /main-content -->
                 </div>
+                <!-- /section-content-right -->
             </div>
-
-            <!-- Order Items -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Order Items</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="item" items="${order.orderItems}">
-                                    <tr>
-                                        <td>
-                                            <img src="${item.productImage}" alt="${item.foodName}" class="product-image">
-                                        </td>
-                                        <td>${item.foodName}</td>
-                                        <td><fmt:formatNumber value="${item.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                        <td>${item.quantity}</td>
-<!--                                        <td><fmt:formatNumber value="${item.subtotal}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>-->
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${not empty order.discountAmount}">
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Discount Amount:</strong></td>
-                                        <td>-<fmt:formatNumber value="${order.discountAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                    </tr>
-                                </c:if>
-                                <tr>
-                                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                    <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Order History -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Order History</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Updated By</th>
-                                    <th>Date</th>
-                                    <th>Previous Status</th>
-                                    <th>New Status</th>
-                                    <th>Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="approval" items="${approvals}">
-                                    <tr>
-                                        <td>${approval.adminUsername}</td>
-                                        <td><fmt:formatDate value="${approval.approvedAt}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                        <td>
-                                            <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
-                                                                approval.statusBefore == 'accepted' ? 'bg-info' : 
-                                                                approval.statusBefore == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusBefore}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge ${approval.statusAfter == 'pending' ? 'bg-warning' : 
-                                                                approval.statusAfter == 'accepted' ? 'bg-info' : 
-                                                                approval.statusAfter == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusAfter}
-                                            </span>
-                                        </td>
-                                        <td>${approval.note}</td>
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${empty approvals}">
-                                    <tr>
-                                        <td colspan="5" class="text-center">No update history</td>
-                                    </tr>
-                                </c:if>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <!-- /layout-wrap -->
         </div>
-    </body>
+        <!-- /#page -->
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Javascript -->
+    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+    <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+    <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+</body>
+
+
+<!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
 </html>
