@@ -49,7 +49,7 @@ public class DBContext {
     }
 
     public Connection getConnection() {
-        return this.connection;
+        return new DBContext().connection;
     }
     
     public static void main(String[] args) {

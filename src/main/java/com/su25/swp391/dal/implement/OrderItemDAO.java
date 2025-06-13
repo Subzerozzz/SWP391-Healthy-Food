@@ -19,7 +19,7 @@ public class OrderItemDAO extends DBContext {
     public List<OrderItem> getOrderItemsByOrderId(int orderId)  {
         List<OrderItem> items = new ArrayList<>();
 
-        String sql = "SELECT oi.*, f.name as f_name, f.image_url as f_image "
+        String sql = "SELECT oi.*, f.name, f.image_url "
                 + "FROM swp391_healthy_food.order_items oi "
                 + "JOIN swp391_healthy_food.Food f ON oi.food_id = f.id "
                 + "WHERE oi.order_id = ?";
@@ -42,8 +42,8 @@ public class OrderItemDAO extends DBContext {
                 item.setUpdatedAt(resultSet.getTimestamp("updated_at"));
 
                 // Thông tin sản phẩm
-                item.setFoodName(resultSet.getString("f_name"));
-                item.setFoodImage(resultSet.getString("f_image"));
+                item.setFoodName(resultSet.getString("name"));
+                item.setFoodImage(resultSet.getString("image_url"));
 
                 items.add(item);
             }

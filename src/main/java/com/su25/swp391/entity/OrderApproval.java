@@ -15,6 +15,7 @@ public class OrderApproval {
     private String statusAfter;
     private String note;
     
+
     // Thông tin admin (join với bảng account)
     private String sellerUsername;
 

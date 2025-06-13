@@ -83,12 +83,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
+         if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
-
+         
         sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
         params.add((page - 1) * pageSize);
@@ -123,8 +122,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
+          if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
@@ -143,7 +141,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error counting filtered orders: " + ex.getMessage());
         } finally {
-          
+          closeResources();
         }
         return 0;
     }
@@ -385,7 +383,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
@@ -409,7 +406,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error searching orders: " + ex.getMessage());
         } finally {
-           
+            closeResources();
         }
         return orders;
     }
@@ -430,7 +427,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
@@ -837,8 +833,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
     public static void main(String[] args) {
         OrderDAO o = new OrderDAO();
-        System.out.println(o.searchOrders("60", "", "", 1, 10));
-        System.out.println(o.getTotalSearchResults("60", "", ""));
+        List<Order> l = o.findOrdersWithFilters(null,null, 1, 10);
+        System.out.println(l);
+        //System.out.println(o.searchOrders("60", "", "", 1, 10));
+        //System.out.println(o.getTotalSearchResults("60", "", ""));
     }
+        
+        
  
 }
