@@ -39,6 +39,20 @@
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
 
                                                             </head>
+                                                            <style>
+                                                                /* CSS cho biểu tượng mắt (view) màu vàng */
+                                                                .list-icon-function .item.eye i {
+                                                                    color: #f1c40f; /* Màu vàng tươi */
+                                                                }
+
+                                                                /* CSS cho biểu tượng edit (bút) màu đỏ */
+                                                                .list-icon-function .item.edit i {
+                                                                    color: #e74c3c; /* Màu đỏ */
+                                                                }
+                                                                .body-title, .body-title-2 {
+                                                                    font-weight: normal !important;
+                                                                }
+                                                            </style>
 
                                                             <body class="body">
 
@@ -104,7 +118,7 @@
                                                                                                                         </div>
                                                                                                                         </form>
                                                                                                                         </div>
-                                                                                                                    
+
                                                                                                                         <div class="wg-filter flex-grow">
 
                                                                                                                             <form class="form-search" action="${pageContext.request.contextPath}/manageCategory" method="get">
@@ -118,7 +132,7 @@
                                                                                                                                         </select>
                                                                                                                                 </fieldset>
                                                                                                                                 <div class="button-submit">
-                                                                                                                                   <button class="" type="submit"><i class="fa-solid fa-filter"></i></button>
+                                                                                                                                    <button class="" type="submit"><i class="fa-solid fa-filter"></i></button>
                                                                                                                                 </div>
                                                                                                                             </form>
                                                                                                                         </div>
@@ -126,13 +140,13 @@
 
 
 
-                                                                                                                       
+
                                                                                                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manageCategory?action=addCate"><i class="icon-plus"></i>Add new</a>
                                                                                                                         </div>
                                                                                                                         <form class ="action" method="get" action="${pageContext.request.contextPath}/manageCategory">
                                                                                                                             <div class="wg-table table-all-category">
                                                                                                                                 <ul class="table-title flex gap20 mb-14">
-                                                                                                                                    <li>
+                                                                                                                                    <li style = "width: 100px">
                                                                                                                                         <div class="body-title">ID</div>
                                                                                                                                     </li>
                                                                                                                                     <li>
@@ -173,20 +187,19 @@
                                                                                                                                                 </div>
                                                                                                                                                 <div class="list-icon-function">
                                                                                                                                                     <div class="item eye">
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=viewDetail&idcategory=${cate.idcategory}" ><i class="fa-regular fa-eye"></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=viewDetail&idcategory=${cate.idcategory}" ><i class="icon-eye"></i></a>
 
                                                                                                                                                     </div>
-                                                                                                                                                    <div class="item edit">
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&idcategory=${cate.idcategory}"><i class="fa-solid fa-user-pen"></i></a>
+                                                                                                                                                    <div class="item edit" >
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&idcategory=${cate.idcategory}"> <i class="icon-edit-3"></i></i></a>
 
 
                                                                                                                                                     </div>
                                                                                                                                                     <div class="item trash">
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=delete&idcategory=${cate.idcategory}"><i class="fa-solid fa-trash"></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=delete&idcategory=${cate.idcategory}"><i class="icon-trash-2"></i></a>
 
                                                                                                                                                     </div>
                                                                                                                                                 </div>
-                                                                                                                                            </div>
                                                                                                                                         </li>
                                                                                                                                     </c:forEach>
                                                                                                                                 </ul>
