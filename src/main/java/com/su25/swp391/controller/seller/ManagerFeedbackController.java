@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.dal.implement.FeedbacksDAO;
@@ -23,8 +22,9 @@ import java.util.List;
  *
  * @author Admin
  */
-@WebServlet(name="ManagerFeedbackController", urlPatterns={"/seller/manage-feedback"})
+@WebServlet(name = "ManagerFeedbackController", urlPatterns = {"/seller/manage-feedback"})
 public class ManagerFeedbackController extends HttpServlet {
+
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
@@ -37,38 +37,25 @@ public class ManagerFeedbackController extends HttpServlet {
         itemDAO = new OrderItemDAO();
         feedbackDAO = new FeedbacksDAO();
     }
-    
-  
 
-   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-         // Get action from submit
+            throws ServletException, IOException {
+        // Get action from submit
         String action = request.getParameter("action");
 
         if (action == null) {
             action = "list";
         }
-        
         try {
             switch (action) {
                 case "list":
                     listFeedbacks(request, response);
                     break;
-                            
+
                 case "view":
                     viewDetailFeedback(request, response);
                     break;
-//                case "write-review":
-//                    showReviewForm(request, response, loggedInUser);
-//                    break;
-//                case "edit":
-//                    showEditFeedbackForm(request, response, loggedInUser);
-//                    break;
-//                case "delete":
-//                    deleteFeedback(request, response, loggedInUser);
-//                    break;
                 default:
                     listFeedbacks(request, response);
             }
@@ -77,22 +64,19 @@ public class ManagerFeedbackController extends HttpServlet {
 //            session.setAttribute("errorMessage", "Đã xảy ra lỗi: " + ex.getMessage());
             response.sendRedirect(request.getContextPath() + "/feedbackControl");
         }
-    } 
+    }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-       // Get action from submit
+            throws ServletException, IOException {
+        // Get action from submit
         String action = request.getParameter("action");
         try {
             switch (action) {
-//                case "submit":
-//                    submitFeedback(request, response, loggedInUser);
-//                    break;
-//                case "update":
-//                    updateFeedback(request, response, loggedInUser);
-//                    break;
+
+                case "update":
+                    hiddenFeedback(request, response);
+                    break;
                 default:
                     listFeedbacks(request, response);
             }
@@ -102,8 +86,9 @@ public class ManagerFeedbackController extends HttpServlet {
         }
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
@@ -112,16 +97,23 @@ public class ManagerFeedbackController extends HttpServlet {
     }// </editor-fold>
 
     private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          List<Feedbacks> list = feedbackDAO.getAllFeedbacks();
-          request.setAttribute("feedbacks", list);
-          request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
+        List<Feedbacks> list = feedbackDAO.getAllFeedbacks();
+        request.setAttribute("feedbacks", list);
+        request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedbacks feedback = feedbackDAO.getFeedbackById(feedbackId);
+        Feedbacks feedback = feedbackDAO.findById(feedbackId);
         request.setAttribute("feedback", feedback);
         request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
+    }
+
+    private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
+        Feedbacks feedback = feedbackDAO.findById(feedbackId);
+        feedbackDAO.update(feedback);
+        request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
 }

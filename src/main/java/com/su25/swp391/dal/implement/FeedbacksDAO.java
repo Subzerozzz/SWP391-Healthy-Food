@@ -43,9 +43,10 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
         }
         return feedbacks;
     }
-     // Lấy feedback theo ID
-    public Feedbacks getFeedbackById(int feedbackId) {
-        String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
+    // Get Feedbacks by Id Feedback
+     @Override
+    public Feedbacks findById(Integer id) {
+    String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
                 + "FROM swp391_healthy_food.feedbacks f "
                 + "JOIN swp391_healthy_food.account a ON f.user_id = a.id "
                 + "JOIN swp391_healthy_food.order_items oi ON f.order_item_id = oi.order_item_id "
@@ -56,7 +57,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             
-            statement.setInt(1, feedbackId);
+            statement.setInt(1, id);
             
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -81,7 +82,22 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
 
     @Override
     public boolean update(Feedbacks t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "UPDATE swp391_healthy_food.feedbacks SET  is_visible = ? "
+                + "WHERE id = ?";
+        
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setBoolean(1, false);
+            statement.setInt(2, t.getFeedbackId());
+            
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating feedback: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return false;
     }
 
     @Override
@@ -99,10 +115,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    public Feedbacks findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
+    
     // Phương thức hỗ trợ để map ResultSet thành đối tượng Feedbacks
     private Feedbacks mapFeedback(ResultSet rs) throws SQLException {
         Feedbacks feedback = new Feedbacks();
@@ -133,8 +147,10 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
         FeedbacksDAO f  = new FeedbacksDAO();
         List<Feedbacks> l = f.getAllFeedbacks();
         System.out.println(l);
-        Feedbacks f2 = f.getFeedbackById(2);
+        Feedbacks f2 = f.findById(2);
         System.out.println(f2);
+        f.update(f2);
     }
+   
             
 }

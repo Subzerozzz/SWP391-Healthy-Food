@@ -313,7 +313,7 @@ main {
                                                    <i class="icon-eye"></i>
                                                </a></div> 
                                            <div class="item trash">
-                                               <a href="manage-feedback?action=reject&feedbackId=${feedback.feedbackId}" onclick="handleReject(event)" title="Delete">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.feedbackId}" title="Delete">
                                                    <i class="icon-trash-2"></i>
                                                </a>         
                                            </div>    
