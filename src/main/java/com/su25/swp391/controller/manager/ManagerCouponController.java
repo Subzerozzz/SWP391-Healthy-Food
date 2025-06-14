@@ -98,9 +98,9 @@ public class ManagerCouponController extends HttpServlet {
             indexPage = "1";
         }
         int currentPage = Integer.parseInt(indexPage);
-        int totalBlogs = couponDAO.getTotalCoupon();
-        int totalPage = totalBlogs / 10;
-        if (totalBlogs % 10 != 0) {
+        int totalCoupons = couponDAO.getTotalCoupon();
+        int totalPage = totalCoupons/ 10;
+        if (totalCoupons % 10 != 0) {
             totalPage++;
         }
         List<Coupon> coupon = couponDAO.pagingCoupon(currentPage);
@@ -129,7 +129,7 @@ public class ManagerCouponController extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Coupon coupon = couponDAO.findById(id);
         request.setAttribute("coupon", coupon);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/viewdetailCoupon.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/manager/viewdetailCoupon.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -287,8 +287,8 @@ public class ManagerCouponController extends HttpServlet {
             try {
                 if (dateStr2 != null && !dateStr2.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    java.util.Date utilDate = sdf.parse(dateStr1);
-                    date1 = new java.sql.Date(utilDate.getTime());
+                    java.util.Date utilDate = sdf.parse(dateStr2);
+                    date2 = new java.sql.Date(utilDate.getTime());
                 } else {
                     date2 = new java.sql.Date(System.currentTimeMillis());
                 }
@@ -359,7 +359,7 @@ public class ManagerCouponController extends HttpServlet {
                 }
             } catch (ParseException e) {
                 request.setAttribute("error", "Invalid date format");
-                request.getRequestDispatcher("/view/manager/Editcoupon.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/manager/editCoupon.jsp").forward(request, response);
                 return;
             }
             Date date2 = null;
@@ -367,13 +367,13 @@ public class ManagerCouponController extends HttpServlet {
                 if (dateStr2 != null && !dateStr2.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date utilDate = sdf.parse(dateStr1);
-                    date1 = new java.sql.Date(utilDate.getTime());
+                    date2 = new java.sql.Date(utilDate.getTime());
                 } else {
                     date2 = new java.sql.Date(System.currentTimeMillis());
                 }
             } catch (ParseException e) {
                 request.setAttribute("error", "Invalid date format");
-                request.getRequestDispatcher("/view/manager/Editcoupon.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/manager/editCoupon.jsp").forward(request, response);
                 return;
             }
             CouponDAO couponDao = new CouponDAO();

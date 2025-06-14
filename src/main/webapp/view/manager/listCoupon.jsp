@@ -635,12 +635,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../common/coupon/sidebar.jsp"></jsp:include>
+                <jsp:include page="../common/manager/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                <jsp:include page="../common/coupon/header.jsp"></jsp:include>    
+                <jsp:include page="../common/manager/header.jsp"></jsp:include>    
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -805,7 +805,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu xóa blog của bạn đã được gửi đi",
+                 message: "Yêu cầu xóa coupon của bạn đã được gửi đi",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -824,7 +824,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu tạo blog của bạn đã được gửi đi",
+                 message: "Yêu cầu tạo coupon của bạn đã được gửi đi",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -844,7 +844,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu chỉnh sửa blog của bạn đã được gửi đi",
+                 message: "Yêu cầu chỉnh sửa coupon của bạn đã được gửi đi",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
