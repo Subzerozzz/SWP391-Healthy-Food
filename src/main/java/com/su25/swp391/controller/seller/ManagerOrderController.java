@@ -37,20 +37,12 @@ import java.sql.SQLException;
 @WebServlet(name = "ManagerOrderController", urlPatterns = {"/seller/manage-order"})
 public class ManagerOrderController extends HttpServlet {
 
-    private Food_DraftDAO foodDraftDAO;
-    private RequestDAO requestDAO;
-    private FoodDAO foodDAO;
-    private LogRequestDAO logReqDAO;
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
 
     @Override
     public void init() throws ServletException {
-        foodDraftDAO = new Food_DraftDAO();
-        requestDAO = new RequestDAO();
-        foodDAO = new FoodDAO();
-        logReqDAO = new LogRequestDAO();
         orderDAO = new OrderDAO();
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
@@ -59,6 +51,7 @@ public class ManagerOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Get action from submit
         String action = request.getParameter("action");
 
         if (action == null) {
@@ -79,15 +72,16 @@ public class ManagerOrderController extends HttpServlet {
                     break;
             }
         } catch (Exception ex) {
-//            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
-//            request.getRequestDispatcher("/WEB-INF/views/error1.jsp").forward(request, response);
+            // Notification error
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        // Get action from submit
         String action = request.getParameter("action");
         if (action == null) {
             action = "list";
@@ -103,18 +97,22 @@ public class ManagerOrderController extends HttpServlet {
                     break;
             }
         } catch (Exception ex) {
-//            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
-//            request.getRequestDispatcher("/WEB-INF/views/error4.jsp").forward(request, response);
+            // Notification error
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
-
+    // View All Lists Orders
     private void listOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get filter parameters
+        // Get filter parameters by Status
         String status = request.getParameter("status");
+        // Filter by paymentMethod
         String paymentMethod = request.getParameter("paymentMethod");
+        // Get search by name, id, email
         String search = request.getParameter("search");
+        // Pagination
         int page = 1;
-        int pageSize = 10;
+        int pageSize = GlobalConfig.SIZE_PAGE;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -131,15 +129,16 @@ public class ManagerOrderController extends HttpServlet {
         int totalOrders;
 
         if (search != null && !search.trim().isEmpty()) {
-            // If there's a search term, use search with payment method
+            // If there's a search term, use search with payment method and status
             orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
-            // If no search, use regular filters
+            // If no search, use filters
             orders = orderDAO.findOrdersWithFilters(status, paymentMethod, page, pageSize);
+            // count order
             totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod);
         }
-
+        // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
 
         // Set attributes
@@ -151,35 +150,36 @@ public class ManagerOrderController extends HttpServlet {
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
     }
-
+    // Update status
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
         try {
+            // Get orderId by update
             int orderId = Integer.parseInt(request.getParameter("orderId"));
+            // Get new Status 
             String newStatus = request.getParameter("newStatus");
+            // Get note of seller for order
             String note = request.getParameter("note");
 
-            // Validate input 
+            // Validate input status
             if (newStatus == null || newStatus.trim().isEmpty()) {
-//                 request.getSession().setAttribute("errorMessage", "Status cannot be empty");
-//                response.sendRedirect(request.getContextPath() + "/admin/manage-order?action=view&id=" + orderId);
-//                return;
+                request.getSession().setAttribute("errorMessage", "Status cannot be empty");
+                response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
+                return;
             }
-
             // Get seller ID from Session
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
             if (acc == null) {
-//                response.sendRedirect(request.getContextPath() + "/authen");
-//                return;
+                // response.sendRedirect(request.getContextPath() + "/authen");
+                //   return;
             }
 
             Order order = orderDAO.findById(orderId);
-
             if (order == null) {
-//                session.setAttribute("errorMessage", "Order not found");
-//                response.sendRedirect(request.getContextPath() + "/admin/manage-order");
-//                return;
+                session.setAttribute("errorMessage", "Order not found");
+                response.sendRedirect(request.getContextPath() + "/seller/manage-order");
+                return;
             }
 
             // Get current status for message
@@ -220,35 +220,33 @@ public class ManagerOrderController extends HttpServlet {
         }
     }
 
-    // Xem chi tiết đơn hàng
+    // View Order Detail
     private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 
         try {
-
+            // Get orderId by order parameter
             int orderId = Integer.parseInt(request.getParameter("id"));
-
+            // get order findById of orderId
             Order order = orderDAO.findById(orderId);
-
+            // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-
+            // get list order item of order by id 
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(orderId);
-
+            // check existing order
             if (order == null) {
-//                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
-//               request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
-
+                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
+                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-
+            // set orderItem for Order
             order.setOrderItems(orderItems);
             request.setAttribute("order", order);
             request.setAttribute("approvals", approvals);
-
             // Forward to the order detail page
             request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-//            request.setAttribute("errorMessage", "Invalid order ID format");
-//            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+            request.setAttribute("errorMessage", "Invalid order ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
 
     }

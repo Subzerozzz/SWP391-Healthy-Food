@@ -443,7 +443,16 @@
         <!-- /#page -->
     </div>
     <!-- /#wrapper -->
-
+ <!-- Toast Container -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header" id="toast-header">
+                    <strong class="me-auto" id="toast-title">Thông báo</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toast-body"></div>
+            </div>
+        </div>
     <!-- Javascript -->
     <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
@@ -452,7 +461,51 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
+<script>
+            // Function to show toast
+            function showToast(message, type) {
+                const toastEl = document.getElementById('orderToast');
+                const toastTitle = document.getElementById('toast-title');
+                const toastBody = document.getElementById('toast-body');
+                const header = document.getElementById('toast-header');
+                
+                // Set content
+                toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
+                toastBody.textContent = message;
+                
+                // Set header color
+                header.className = 'toast-header';
+                if(type === 'success') {
+                    header.classList.add('bg-success', 'text-white');
+                } else if(type === 'error') {
+                    header.classList.add('bg-danger', 'text-white');
+                } else {
+                    header.classList.add('bg-info', 'text-white');
+                }
+                
+                // Show toast
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+            
+            // Check for messages in session
+            <c:if test="${not empty sessionScope.successMessage}">
+                document.addEventListener('DOMContentLoaded', function() {
+                    showToast("${sessionScope.successMessage}", "success");
+                    // Remove message from session
+                    <% session.removeAttribute("successMessage"); %>
+                });
+            </c:if>
+            
+            <c:if test="${not empty sessionScope.errorMessage}">
+                document.addEventListener('DOMContentLoaded', function() {
+                    showToast("${sessionScope.errorMessage}", "error");
+                    // Remove message from session
+                    <% session.removeAttribute("errorMessage"); %>
+                });
+            </c:if>
+        </script>
+   
 </body>
 
 

@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.dal.implement;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.entity.OrderItem;
 import java.sql.Connection;
@@ -20,8 +21,8 @@ public class OrderItemDAO extends DBContext {
         List<OrderItem> items = new ArrayList<>();
 
         String sql = "SELECT oi.*, f.name, f.image_url "
-                + "FROM swp391_healthy_food.order_items oi "
-                + "JOIN swp391_healthy_food.Food f ON oi.food_id = f.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".order_items oi "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".Food f ON oi.food_id = f.id "
                 + "WHERE oi.order_id = ?";
 
         try {

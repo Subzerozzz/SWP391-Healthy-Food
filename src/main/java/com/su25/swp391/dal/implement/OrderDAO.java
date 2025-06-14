@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.dal.implement;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
@@ -74,8 +75,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -113,8 +114,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN account a ON o.user_id = a.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -148,8 +149,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public Order findById(int orderId) {
         String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN account a ON o.user_id = a.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE o.order_id = ?";
         try {
             connection = getConnection();
@@ -175,7 +176,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             connection = getConnection();
             connection.setAutoCommit(false);
 
-            String getStatusSql = "SELECT status FROM swp391_healthy_food.orders WHERE order_id = ?";
+            String getStatusSql = "SELECT status FROM "+ GlobalConfig.DB_SCHEMA + ".orders WHERE order_id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -189,7 +190,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Update order status
-            String updateSql = "UPDATE swp391_healthy_food.orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
+            String updateSql = "UPDATE "+ GlobalConfig.DB_SCHEMA + ".orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -199,7 +200,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
             if (rowsAffected > 0) {
                 // Add approval record directly instead of using OrderApprovalDAO
-                String approvalSql = "INSERT INTO order_approvals (order_id, approved_by, status_before, status_after, note) "
+                String approvalSql = "INSERT INTO "+ GlobalConfig.DB_SCHEMA + ".order_approvals (order_id, approved_by, status_before, status_after, note) "
                         + "VALUES (?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(approvalSql);
                 statement.setInt(1, orderId);
@@ -369,8 +370,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN account a ON o.user_id = a.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -413,8 +414,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.user_id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 

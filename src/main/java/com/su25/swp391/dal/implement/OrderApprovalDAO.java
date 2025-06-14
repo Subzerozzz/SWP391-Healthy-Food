@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.dal.implement;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.entity.OrderApproval;
 import java.sql.Connection;
@@ -43,8 +44,8 @@ public class OrderApprovalDAO extends DBContext {
         List<OrderApproval> approvals = new ArrayList<>();
 
         String sql = "SELECT oa.*, a.user_name "
-                + "FROM swp391_healthy_food.order_approvals oa "
-                + "JOIN swp391_healthy_food.account a ON oa.approved_by = a.id "
+                + "FROM "+ GlobalConfig.DB_SCHEMA + ".order_approvals oa "
+                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON oa.approved_by = a.id "
                 + "WHERE oa.order_id = ? "
                 + "ORDER BY oa.approved_at DESC";
 
