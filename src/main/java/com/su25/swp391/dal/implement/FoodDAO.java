@@ -28,6 +28,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         String sqlString = "SELECT * FROM Food";
         List<Food> foodList = new ArrayList<>();
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sqlString);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -36,6 +37,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (SQLException ex) {
             Logger.getLogger(FoodDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
         }
         return foodList;
     }
@@ -86,6 +89,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         String sqlString = "SELECT * FROM Food WHERE id = ?";
         Food food = null;
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sqlString);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
@@ -94,6 +98,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (SQLException ex) {
             Logger.getLogger(FoodDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
         }
         return food;
     }
@@ -102,6 +108,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         Food food = null;
         String sql = "Select * From Food WHERE name = ?";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             // set giá trị vào name
             statement.setString(1, name);
@@ -111,6 +118,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return food;
     }
@@ -119,6 +128,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         List<Food> foodList = new ArrayList<>();
         String sql = "SELECT * FROM Food WHERE category_id = ?";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, categoryId);
             resultSet = statement.executeQuery();
@@ -127,6 +137,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return foodList;
     }
@@ -136,6 +148,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         String sql = "SELECT * FROM Food"
                 + " WHERE name LIKE ?";
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, "%" + foodName + "%");
             resultSet = statement.executeQuery();
@@ -145,6 +158,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return listFood;
     }
@@ -158,6 +173,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         // Tính số bản ghi cần bỏ qua
         Integer recordOffset = (i - 1) * limit;
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, limit);
             statement.setInt(2, recordOffset);
@@ -168,6 +184,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return list;
     }
@@ -222,10 +240,11 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         return list;
     }
 
-    public Double getMaxPrice() {
+    public Double findMaxPrice() {
         String sql = "SELECT MAX(price) AS max_price FROM Food";
         Double maxPrice = null;
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -233,11 +252,13 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return maxPrice;
     }
 
-    public Double getMinPrice() {
+    public Double findMinPrice() {
         String sql = "SELECT MIN(price) AS min_price FROM Food";
         Double maxPrice = null;
         try {
@@ -248,62 +269,108 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return maxPrice;
     }
 
-    //Lấy Food với nhiều điều kiện filter 
-    public List<Food> getFoodWithFitlers(String foodName, Double minPrice, 
-            Double maxPrice, Integer category, Integer currentPage, Integer limit) {
+    public Double findMaxCalo() {
+        String sql = "SELECT MAX(calo) AS max_calo FROM Food";
+        Double maxPrice = null;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                maxPrice = resultSet.getDouble("max_calo");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeResources();
+        }
+        return maxPrice;
+    }
+
+    // Lấy Food với nhiều điều kiện filter
+    public List<Food> getFoodWithFitlers(String foodName, Double minPrice,
+            Double maxPrice, Integer category, Integer currentPage, String sortParam, Double minCalo, Double maxCalo, Integer limit) {
         List<Food> list = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder();
 
-        //Base của sqlBuilder
+        // Base của sqlBuilder
         sqlBuilder.append("SELECT f.* FROM Food f");
 
-        //Kiểm tra category
+        // Kiểm tra category
         if (category != null) {
             sqlBuilder.append(" JOIN FoodCategory fc on f.category_id = fc.id");
         }
 
         sqlBuilder.append(" where (f.status = 'active' or f.status ='inactive')");
 
-        //Kiểm tra xem foodName khác null thì add vào sql
+        // Kiểm tra xem foodName khác null thì add vào sql
         if (foodName != null && !foodName.isEmpty()) {
             sqlBuilder.append(" and f.name LIKE ?");
         }
 
-        //Set giá
+        // Set giá
         sqlBuilder.append(" and f.price >= ?");
         sqlBuilder.append(" and f.price <= ?");
+        
+        //Set calo
+        sqlBuilder.append(" and f.calo >= ?");
+        sqlBuilder.append(" and f.calo <= ?");
 
-        //set category
-        if(category != 0){
+        // set category
+        if (category != 0) {
             sqlBuilder.append(" and f.category_id = ?");
         }
-        
 
-        //set currentPage
+        // set sort
+        switch (sortParam) {
+            case "price_asc":
+                sqlBuilder.append(" order by f.price ASC");
+                break;
+            case "price_desc":
+                sqlBuilder.append(" order by f.price DESC");
+                break;
+            case "calo_asc":
+                sqlBuilder.append(" order by f.calo ASC");
+                break;
+            case "calo_desc":
+                sqlBuilder.append(" order by f.calo DESC");
+                break;
+            default:
+                sqlBuilder.append(" order by f.id ASC");
+        }
+
+        // set limit dựa vào currentPage
         if (currentPage != null) {
             sqlBuilder.append(" LIMIT ? OFFSET ?");
         }
 
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sqlBuilder.toString());
 
             int paramIndex = 1;
-            //setName nếu có
+            // setName nếu có
             if (foodName != null && !foodName.isEmpty()) {
                 statement.setString(paramIndex++, "%" + foodName + "%");
             }
-            //set giá
+            // set giá
             statement.setDouble(paramIndex++, minPrice);
             statement.setDouble(paramIndex++, maxPrice);
-            //set category
-            if(category != 0){
+            
+            //set calo
+            statement.setDouble(paramIndex++, minCalo);
+            statement.setDouble(paramIndex++, maxCalo);
+            // set category
+            if (category != 0) {
                 statement.setInt(paramIndex++, category);
             }
-            //set limit và bản ghi cần bỏ qua
+            // set limit và bản ghi cần bỏ qua
             if (currentPage != null) {
                 statement.setInt(paramIndex++, limit);
                 statement.setInt(paramIndex++, (currentPage - 1) * limit);
@@ -317,15 +384,13 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
 
         } catch (Exception e) {
             System.out.println(e);
+        } finally {
+            closeResources();
         }
         return list;
     }
-
+    
     public static void main(String[] args) {
-//        for (Food a : new FoodDAO().getFoodWithFitlers(null, 30000.0, 346923.0, 3,1,12)) {
-//            System.out.println(a.toString());
-//        }
-        System.out.println(new FoodDAO().getMaxPrice());
+        System.out.println(new FoodDAO().findMaxCalo());
     }
-
 }
