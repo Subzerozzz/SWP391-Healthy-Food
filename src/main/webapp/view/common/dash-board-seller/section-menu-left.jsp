@@ -68,6 +68,12 @@
                       <div class="text">View Order List</div>
                     </a>
                   </li>
+                   <li class="menu-item">
+                    <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="menu-item-button">
+                      <div class="icon"><i class="icon-layers"></i></div>
+                      <div class="text">View FeedBack List</div>
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>

@@ -5,9 +5,11 @@
 
 package com.su25.swp391.controller.seller;
 
+import com.su25.swp391.dal.implement.FeedbacksDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
+import com.su25.swp391.entity.Feedbacks;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,22 +17,25 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name="ManagerFeedbackController", urlPatterns={"/manage-feedback"})
+@WebServlet(name="ManagerFeedbackController", urlPatterns={"/seller/manage-feedback"})
 public class ManagerFeedbackController extends HttpServlet {
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
+    private FeedbacksDAO feedbackDAO;
 
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
+        feedbackDAO = new FeedbacksDAO();
     }
     
   
@@ -48,11 +53,13 @@ public class ManagerFeedbackController extends HttpServlet {
         
         try {
             switch (action) {
-//                case "list":
-//                    listFeedbacks(request, response);
-//                case "select-product":
-//                    showProductSelectionList(request, response, loggedInUser);
-//                    break;
+                case "list":
+                    listFeedbacks(request, response);
+                    break;
+                            
+                case "view":
+                    viewDetailFeedback(request, response);
+                    break;
 //                case "write-review":
 //                    showReviewForm(request, response, loggedInUser);
 //                    break;
@@ -104,8 +111,17 @@ public class ManagerFeedbackController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+          List<Feedbacks> list = feedbackDAO.getAllFeedbacks();
+          request.setAttribute("feedbacks", list);
+          request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
+    }
+
+    private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
+        Feedbacks feedback = feedbackDAO.getFeedbackById(feedbackId);
+        request.setAttribute("feedback", feedback);
+        request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
     }
 
 }
