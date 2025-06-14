@@ -119,13 +119,15 @@
         <div class="product-area pt-100 pb-70">
             <div class="container">
                 <form action="${pageContext.request.contextPath}/shop" id='formSearch'>
+                    <!-- gán 1 ô input để luôn luôn có param sort trên request-->
+                    <input type="hidden" name="sort" value="${sort}">
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="product-side-bar">
 
                                 <!--Search By Name-->
                                 <div class="search-widget formSearchByName">
-                                    <input name="foodName" type="search" class="formSearch" placeholder="Search by food name..." value="${foodName != null ? foodName : ''}">
+                                    <input name="foodName" type="search" class="formSearch" placeholder="Search by food name..." value="${foodName != null ? foodName : ''}">               
                                     <button type="submit">
                                         <i class="bx bx-search"></i>
                                     </button>
@@ -141,6 +143,24 @@
                                             <input type="text" id="price-amount" readonly>
                                             <input type="hidden" name="selectedMin" id="selected-min">
                                             <input type="hidden" name="selectedMax" id="selected-max">
+                                        </div>
+
+                                        <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
+                                            <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!--Calo--> 
+                                <div class="product-side-bar-widget">
+                                    <h3 class="title">Calories range</h3>
+                                    <div class="price-range-bar" id="calo-slider"></div>
+                                    <div class="price-range-filter">
+                                        <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
+                                            <h4>Range:</h4>
+                                            <input type="text" id="calo-amount" readonly>
+                                            <input type="hidden" name="selectedMinCalo" id="selected-min-calo">
+                                            <input type="hidden" name="selectedMaxCalo" id="selected-max-calo">
                                         </div>
 
                                         <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
@@ -168,38 +188,6 @@
                                     </div>
                                 </div>
 
-                                <!--Calo-->
-                                <div class="product-side-bar-widget">
-                                    <h3 class="title">Prices</h3>
-                                    <div class="product-side-categories">
-                                        <ul>
-                                            <li class="active">
-                                                <a href="#">$0-$50</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$51-$100</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$101-$150</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$151-$200</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$200-$250</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$250-$300</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$350-$400</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">$400-$450</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
 
                             </div>
                         </div>
@@ -209,19 +197,20 @@
                                 <div class="row">
                                     <div class="col-lg-8 col-md-8">
                                         <div class="product-topper-title">
-                                            <h3>Food List <span>( Showing 1-15 of 120 result )</span> </h3>
+                                            <h3>Food List <span>( Showing 9 of ${totalOfRecord} result )</span> </h3>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-4">
                                         <div class="product-category">
                                             <div class="form-group">
-                                                <select class="form-control">
-                                                    <option>Categories</option>
-                                                    <option>Beef Meat</option>
-                                                    <option>Vegetable</option>
-                                                    <option>Natural Fruits</option>
-                                                    <option>Health & Beauty</option>
+                                                <select class="form-control" onchange="submitSort(this)">
+                                                    <option value="default" ${not empty sort and sort == 'default' ? 'selected' : ''}>Default sort</option>
+                                                    <option value="price_asc" ${not empty sort and sort == 'price_asc' ? 'selected' : ''}>Price: Low to high</option>
+                                                    <option value="price_desc" ${not empty sort and sort == 'price_desc' ? 'selected' : ''}>Price: High to low</option>
+                                                    <option value="calo_asc" ${not empty sort and sort == 'calo_asc' ? 'selected' : ''}>Calories: Low to high</option>
+                                                    <option value="calo_desc" ${not empty sort and sort == 'calo_desc' ? 'selected' : ''}>Calories: High to low</option>
                                                 </select>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -287,7 +276,8 @@
                                                class="page-numbers">${totalPage}</a>
                                         </c:when>
                                         <c:otherwise>
-                                            <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                            <!--Cái này không thể kiểm tra từ currentPage vì nếu không thì nếu currentPage bằng 2 3 chẳng hạn thì nó mất trang 1--> 
+                                            <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                                 <a href="javascript:void(0)" onclick="goToPage(${i})"
                                                    class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
                                             </c:forEach>
@@ -437,6 +427,10 @@
             .categoryList li.active {
                 background-color: #F78600;
             }
+            
+            
+
+
 
         </style>
 
@@ -488,7 +482,7 @@
                 // Lấy form
                 const formSearch = document.querySelector("#formSearch");
 
-                // Tạo URLSearchParams để build lại query string
+                // Tạo URLSearchParams
                 const params = new URLSearchParams();
 
                 // Lấy foodName nếu có
@@ -509,6 +503,19 @@
                 if (maxVal !== "") {
                     params.append("selectedMax", maxVal);
                 }
+                
+                //Lấy min/max calo
+                
+                const minInputCalo = formSearch.querySelector('input[name="selectedMinCalo"]');
+                const maxInputCalo = formSearch.querySelector('input[name="selectedMaxCalo"]');
+                const minValCalo = minInputCalo ? minInputCalo.value.trim() : "";
+                const maxValCalo = maxInputCalo ? maxInputCalo.value.trim() : "";
+                if (minValCalo !== "") {
+                    params.append("selectedMinCalo", minValCalo);
+                }
+                if (maxValCalo !== "") {
+                    params.append("selectedMaxCalo", maxValCalo);
+                }
 
                 // Lấy category nếu có radio được chọn
                 const categoryInput = formSearch.querySelector('input[name="category"]:checked');
@@ -521,11 +528,111 @@
                 params.append("page", page);
 
                 // Gửi form bằng cách chuyển trang với query string đã build
-                const baseUrl = formSearch.getAttribute("action"); // ví dụ: /shop
+                const baseUrl = formSearch.getAttribute("action");
                 const fullUrl = baseUrl + "?" + params.toString();
+                console.log(baseUrl);
                 window.location.href = fullUrl;
                 };
+            
+            //Xử lý submitSort
+            const submitSort = (e) => {
+                const sortType = e.value;
+                console.log(sortType);
+                
+                 // Lấy form
+                const formSearch = document.querySelector("#formSearch");
 
+                // Tạo URLSearchParams
+                const params = new URLSearchParams();
+
+                // Lấy foodName nếu có
+                const foodNameInput = formSearch.querySelector('input[name="foodName"]');
+                const foodName = foodNameInput ? foodNameInput.value.trim() : "";
+                if (foodName !== "") {
+                    params.append("foodName", foodName);
+                }
+
+                // Lấy min/max price nếu có
+                const minInput = formSearch.querySelector('input[name="selectedMin"]');
+                const maxInput = formSearch.querySelector('input[name="selectedMax"]');
+                const minVal = minInput ? minInput.value.trim() : "";
+                const maxVal = maxInput ? maxInput.value.trim() : "";
+                if (minVal !== "") {
+                    params.append("selectedMin", minVal);
+                }
+                if (maxVal !== "") {
+                    params.append("selectedMax", maxVal);
+                }
+                
+                //Lấy min/max calo
+                
+                const minInputCalo = formSearch.querySelector('input[name="selectedMinCalo"]');
+                const maxInputCalo = formSearch.querySelector('input[name="selectedMaxCalo"]');
+                const minValCalo = minInputCalo ? minInputCalo.value.trim() : "";
+                const maxValCalo = maxInputCalo ? maxInputCalo.value.trim() : "";
+                if (minValCalo !== "") {
+                    params.append("selectedMinCalo", minValCalo);
+                }
+                if (maxValCalo !== "") {
+                    params.append("selectedMaxCalo", maxValCalo);
+                }
+
+                // Lấy category nếu có radio được chọn
+                const categoryInput = formSearch.querySelector('input[name="category"]:checked');
+                const categoryVal = categoryInput ? categoryInput.value : "";
+                if (categoryVal !== "") {
+                    params.append("category", categoryVal);
+                }
+                //Add sort type
+                params.append("sort", sortType);
+                
+                //Lấy fullForm + gửi
+                const baseUrl = formSearch.getAttribute("action");
+                const fullUrl = baseUrl + "?" + params.toString();
+                console.log(baseUrl);
+                window.location.href = fullUrl;
+                
+            }
+            
+            //Xử lý calo range
+            $(function () {
+                <% 
+                    Double min_calo = (Double) request.getAttribute("minCalo"); // ví dụ 50000
+                    Double max_calo = (Double) request.getAttribute("maxCalo"); // ví dụ 200000
+
+                    Double min_calo_default = (Double) request.getAttribute("minCaloDefault"); // ví dụ 0
+                    Double max_calo_default = (Double) request.getAttribute("maxCaloDefault"); // ví dụ 500000
+                %>
+
+                // Đây là khoảng người dùng đã lọc
+                const min = <%= min_calo %>;
+                const max = <%= max_calo %>;
+
+                // Đây là giới hạn full cho thanh trượt
+                const minCalo = <%= min_calo_default %>;
+                const maxCalo = <%= max_calo_default %>;
+
+                $("#calo-slider").slider({
+                    range: true,
+                    min: minCalo,     
+                    max: maxCalo,     
+                    values: [min, max], 
+                    slide: function (event, ui) {
+                        const minForm = ui.values[0];
+                        const maxForm = ui.values[1];
+                        $("#calo-amount").val(minForm + " - " + maxForm);
+
+                        $("#selected-min-calo").val(ui.values[0]);
+                        $("#selected-max-calo").val(ui.values[1]);
+                    }
+                });
+
+                const initMin = $("#calo-slider").slider("values", 0);
+                const initMax = $("#calo-slider").slider("values", 1);
+                $("#calo-amount").val(initMin + " - " + initMax);
+                $("#selected-min-calo").val(initMin);
+                $("#selected-max-calo").val(initMax);
+            });
         </script>
     </body>
 
