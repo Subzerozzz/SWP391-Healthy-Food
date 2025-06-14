@@ -70,7 +70,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public boolean update(Coupon coupon) {
-        String sql = "UPDATE coupons SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_purchase=?, max_discount=?,start_date=?,end_date=?,usage_limit=?,usage_count=?";
+        String sql = "UPDATE coupons SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_purchase=?, max_discount=?,start_date=?,end_date=? WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -82,8 +82,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             statement.setBigDecimal(6, coupon.getMaxDiscount());
             statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
             statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-            statement.setInt(9, coupon.getUsageLimit());
-            statement.setInt(10, coupon.getUsageLimit());
+            statement.setInt(9, coupon.getId()); // thêm điều kiện WHERE id = ?
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -113,19 +112,21 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public int insert(Coupon coupon) {
-        String sql = "INSERT INTO coupons (code,description,discount_type,discount_value,min_purchase,max_discount"
-                + "start_date, end_date, usage_limit, is_active)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO coupons (code,description,discount_type,discount_value,min_purchase,max_discount,"
+                + "start_date, end_date,is_active)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, coupon.getCode());
             statement.setString(2, coupon.getDescription());
             statement.setString(3, coupon.getDiscountType());
-            statement.setBigDecimal(4, coupon.getMinPurchase());
-            statement.setBigDecimal(5, coupon.getMaxDiscount());
-            statement.setDate(6, new java.sql.Date(coupon.getStartDate().getTime()));
-            statement.setDate(7, new java.sql.Date(coupon.getEndDate().getTime()));
+            statement.setBigDecimal(4, coupon.getDiscountValue()); // BỊ THIẾU TRONG CODE GỐC
+            statement.setBigDecimal(5, coupon.getMinPurchase());
+            statement.setBigDecimal(6, coupon.getMaxDiscount());
+            statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
+            statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
+            statement.setBoolean(9, coupon.isActive()); // Thêm dòng này để insert giá trị is_active
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating coupon failed, no rows affected.");
@@ -182,6 +183,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return null;
     }
+     
 
     public int getTotalCoupon() {
         String sql = "SELECT COUNT(*) FROM coupons";
@@ -269,7 +271,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
         // Thêm điều kiện search nếu có
         if (search != null && !search.trim().isEmpty()) {
-            sql.append(" AND (title LIKE ? OR content LIKE ?)");
+            sql.append(" AND (code LIKE ? OR description LIKE ?)");
         }
 
         // Thêm điều kiện status nếu có
@@ -312,7 +314,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
         // Thêm điều kiện search nếu có
         if (search != null && !search.trim().isEmpty()) {
-            sql.append(" AND (title LIKE ? OR content LIKE ?)");
+            sql.append(" AND (code LIKE ? OR description LIKE ?)");
         }
 
         // Thêm điều kiện status nếu có
