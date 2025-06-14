@@ -25,26 +25,11 @@ import java.util.List;
 @WebServlet(name = "ShopController", urlPatterns = {"/shop"})
 public class ShopController extends HttpServlet {
 
-    public static final int FOOD_PER_PAGE = 12;
+    public static final int FOOD_PER_PAGE = 9;
     FoodDAO foodDao = new FoodDAO();
     FoodCategoryDAO foodCategoryDao = new FoodCategoryDAO();
+    
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ShopController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ShopController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -71,7 +56,6 @@ public class ShopController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     private void showFoodList(HttpServletRequest request, HttpServletResponse response)
@@ -195,37 +179,39 @@ public class ShopController extends HttpServlet {
             String minPriceStr = request.getParameter("selectedMin");
             String maxPriceStr = request.getParameter("selectedMax");
             Integer category = request.getParameter("category") == null ? 0 : Integer.parseInt(request.getParameter("category"));
-            
+
             //Lấy currentPage
             Integer currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
-             
+
             //Xử lý minPrice và maxPrice
             Double minPrice = null;
             Double maxPrice = null;
             
-            if(minPriceStr != null && !minPriceStr.isEmpty()){
+            //minPrice và maxPrice trong hệ thống
+            Double minPriceDefault = 0.0;
+            Double maxPriceDefault = foodDao.getMaxPrice() + 5;
+
+            if (minPriceStr != null && !minPriceStr.isEmpty()) {
                 try {
                     minPrice = Double.parseDouble(minPriceStr);
                 } catch (Exception e) {
                     System.out.println("Error parse min price: " + e.getMessage());
-                } 
+                }
+            } else {
+                minPrice = minPriceDefault;
             }
-            else{
-                minPrice = 0.0;
-            }
-            
-            if(maxPriceStr != null && !maxPriceStr.isEmpty()){
+
+            if (maxPriceStr != null && !maxPriceStr.isEmpty()) {
                 try {
                     maxPrice = Double.parseDouble(maxPriceStr);
                 } catch (Exception e) {
                     System.out.println("Error parse min price: " + e.getMessage());
-                } 
+                }
+            } else {
+                maxPrice = maxPriceDefault;
             }
-            else{
-                maxPrice = foodDao.getMaxPrice() + 5;
-            }
-            
-            //Lọc sản phẩm theo các tiêu chí + 12 ban ghi dau
+
+            //Lọc sản phẩm theo các tiêu chí + 9 ban ghi dau
             List<Food> listFood = foodDao.getFoodWithFitlers(foodName, minPrice, maxPrice, category, currentPage, FOOD_PER_PAGE);
             //Lay ra danh sach category
             List<FoodCategory> listFoodCategory = foodCategoryDao.findAll();
@@ -233,26 +219,27 @@ public class ShopController extends HttpServlet {
             //Tính toán totalPage
             List<Food> listFood1 = foodDao.getFoodWithFitlers(foodName, minPrice, maxPrice, category, null, FOOD_PER_PAGE);
             Integer totalOfRecord = listFood1.size();
-            Integer totalPage = totalOfRecord % FOOD_PER_PAGE == 0 ? totalOfRecord/FOOD_PER_PAGE : totalOfRecord/FOOD_PER_PAGE + 1;
-            
+            Integer totalPage = totalOfRecord % FOOD_PER_PAGE == 0 ? totalOfRecord / FOOD_PER_PAGE : totalOfRecord / FOOD_PER_PAGE + 1;
+
             //set cac gia tri moi
             request.setAttribute("listFood", listFood);
             request.setAttribute("listFoodCategory", listFoodCategory);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPage", totalPage);
-            
-            
+            request.setAttribute("minPriceDefault", minPriceDefault);
+            request.setAttribute("maxPriceDefault", maxPriceDefault);
+
             //set lai data cu
             request.setAttribute("foodName", foodName);
             request.setAttribute("minPrice", minPrice);
-            request.setAttribute("maxPrice", maxPrice - 1);
+            request.setAttribute("maxPrice", maxPrice);
             request.setAttribute("category", category);
             //Sau khi lọc các sản phẩm trả ra JSP dữ liệu + các dữ liệu cũ
             request.getRequestDispatcher("view/homePage/shop.jsp").forward(request, response);
-            
+
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }
 }

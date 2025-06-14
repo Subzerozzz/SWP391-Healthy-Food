@@ -110,6 +110,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
                 food = getFromResultSet(resultSet);
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
         return food;
     }
@@ -252,7 +253,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     }
 
     //Lấy Food với nhiều điều kiện filter 
-    public List<Food> getFoodWithFitlers(String foodName, Double minPrice, Double maxPrice, Integer category, Integer currentPage, Integer limit) {
+    public List<Food> getFoodWithFitlers(String foodName, Double minPrice, 
+            Double maxPrice, Integer category, Integer currentPage, Integer limit) {
         List<Food> list = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder();
 
