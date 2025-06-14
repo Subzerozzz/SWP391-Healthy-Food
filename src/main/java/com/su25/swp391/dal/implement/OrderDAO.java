@@ -114,7 +114,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM swp391_healthy_food.orders o "
-                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "JOIN account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -141,7 +141,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error counting filtered orders: " + ex.getMessage());
         } finally {
-          closeResources();
+            closeResources();
         }
         return 0;
     }
@@ -149,7 +149,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public Order findById(int orderId) {
         String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
                 + "FROM swp391_healthy_food.orders o "
-                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "JOIN account a ON o.user_id = a.id "
                 + "WHERE o.order_id = ?";
         try {
             connection = getConnection();
@@ -167,7 +167,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return null;
     }
 
-    public boolean updateOrderStatus(int orderId, String newStatus, int adminId, String note) {
+    public boolean updateOrderStatus(int orderId, String newStatus, int sellerId, String note) {
         String currentStatus = null;
 
         // Get current status
@@ -175,7 +175,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             connection = getConnection();
             connection.setAutoCommit(false);
 
-            String getStatusSql = "SELECT status FROM orders WHERE order_id = ?";
+            String getStatusSql = "SELECT status FROM swp391_healthy_food.orders WHERE order_id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -189,7 +189,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Update order status
-            String updateSql = "UPDATE orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
+            String updateSql = "UPDATE swp391_healthy_food.orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -203,7 +203,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                         + "VALUES (?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(approvalSql);
                 statement.setInt(1, orderId);
-                statement.setInt(2, adminId);
+                statement.setInt(2, sellerId);
                 statement.setString(3, currentStatus);
                 statement.setString(4, newStatus);
                 statement.setString(5, note);
@@ -370,7 +370,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
                 + "FROM swp391_healthy_food.orders o "
-                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "JOIN account a ON o.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -414,7 +414,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM swp391_healthy_food.orders o "
-                + "JOIN swp391_healthy_food.account a ON o.user_id = a.id "
+                + "JOIN account a ON o.user_id = a.user_id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -709,7 +709,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalFilteredOrdersBySeller(String status, String paymentMethod, int sellerId) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
+                + "FROM swp391_healthy_food.orders o "
                 + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) ");
         List<Object> params = new ArrayList<>();
         params.add(sellerId);
@@ -792,7 +792,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalSearchResultsBySeller(String search, String status, String paymentMethod, int sellerId) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
+                + "FROM swp391_healthy_food.orders o "
                 + "JOIN account a ON o.user_id = a.user_id "
                 + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) AND (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
@@ -833,10 +833,14 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
     public static void main(String[] args) {
         OrderDAO o = new OrderDAO();
+        System.out.println(o.findById(60));
         List<Order> l = o.findOrdersWithFilters(null,null, 1, 10);
         System.out.println(l);
         //System.out.println(o.searchOrders("60", "", "", 1, 10));
-        //System.out.println(o.getTotalSearchResults("60", "", ""));
+        //System.out.println(o.getTotalSearchResults("60", "", "");
+//        o.updateOrderStatus(60, "cancelled", 22, "He Hang");
+        List<Order> l2 = o.searchOrders("60", "", "", 1, 10);
+        System.out.println(l2);
     }
         
         

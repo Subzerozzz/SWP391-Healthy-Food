@@ -3,9 +3,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
-<!--<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!<![endif]-->
 
 
 <!-- Mirrored from themesflat.co/html/remos/oder-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
@@ -130,6 +129,7 @@
 .filter-row > *{
     flex:1 1 220px;           /*  grow   shrink   basis  */
     min-width:160px;          /* đừng nhỏ hơn 160 px */
+    font-size: 14px;
 }
 
 /* Riêng nút Filter hơi nhỏ hơn ở desktop để trông cân đối */
@@ -357,57 +357,39 @@
                                         </td>
                                     </tr>
                                 </c:if>
-                                <c:forEach var="order" items="${orders}">
-                                    <tr>
-                                        <td>#${order.orderId}</td>
-                                        <td>
-                                            ${order.username}<br>
-                                            <small class="text-muted">${order.email}</small><br>
-                                            <small class="text-muted">${order.mobie}</small>
-                                        </td>
-                                        <td>${order.shippingAddress}</td>
-                                        <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                        <td>
-                                            <span class="badge bg-info">
-                                                ${order.paymentMethod}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
+                                    <c:forEach var="order" items="${orders}">
+                                        <tr>
+                                            <td>#${order.orderId}</td>
+                                            <td>
+                                                ${order.username}<br>
+                                                <small class="text-muted">${order.email}</small><br>
+                                                <small class="text-muted">${order.mobie}</small>
+                                            </td>
+                                            <td>${order.shippingAddress}</td>
+                                            <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                            <td>
+                                                <span class="badge bg-info">
+                                                    ${order.paymentMethod}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
                                                                 order.status == 'accepted' ? 'bg-info' : 
                                                                 order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${order.status}
-                                            </span>
-                                        </td>
-                                        <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                        <td>
-<!--                                            <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.orderId}"
-                                               class="view-btn">
-                                                <span class="view-icon">
-                                                    <iconify-icon icon="heroicons:eye" width="20" height="20"></iconify-icon>
+                                                    ${order.status}
                                                 </span>
-                                                <span class="view-text">View Details</span>
-                                            </a>-->
-                                            <div style="display: flex">
-                                            <div class="item eye">
-                                                <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.orderId}" >
-                                                    <i class="icon-eye"></i>
-                                                </a></div>
-                                            <div class="item edit">
-                                                <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)" title="Accept">
-                                                    <i class="icon-edit-3"></i>
-                                                </a>
-                                            </div>
+                                            </td>
+                                            <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                            <td>
 
-                                            <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)" title="Reject">
-                                                <div class="item trash">
-                                                    <i class="icon-trash-2"></i>
-                                                </div>    
-                                            </a>
-                                                </div>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
+                                                <div class="item eye">
+                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.orderId}"  title="View Detial">
+                                                        <i class="icon-eye"></i>
+                                                    </a></div>
+
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                             </tbody>
                         </table>
                     </div>
