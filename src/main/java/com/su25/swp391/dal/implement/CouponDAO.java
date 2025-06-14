@@ -354,4 +354,41 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return coupons;
     }
+
+    public boolean isCouponCodeExists(String code) {
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code LIKE ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting coupon by search: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    public boolean isCouponCodeExists(String code, Integer id) {
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code = ? AND id != ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, code);
+            statement.setInt(2, id);
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Trả về true nếu code đã tồn tại ở bản ghi khác
+            }
+        } catch (Exception e) {
+            System.out.println("Error checking coupon code existence by id: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
 }
