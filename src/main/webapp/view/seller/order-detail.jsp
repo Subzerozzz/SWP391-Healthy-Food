@@ -261,12 +261,7 @@ textarea.form-control {
                                 <!--start fix-->
                                 
                                  <div class="dashboard-main-body">
-<!--            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-                <h6 class="fw-semibold mb-0">Order Details #${order.orderId}</h6>
-                
-            </div> -->
-                
-                                  <div class="row g-24" >
+                                     <div class="row g-24" >
                                  <!-- Order Information -->     
                 <div class="col-lg-4 col-md-12" style="height: 300px">
                     <div class="card">

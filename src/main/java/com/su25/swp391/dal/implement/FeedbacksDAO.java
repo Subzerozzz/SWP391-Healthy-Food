@@ -26,6 +26,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
                 + "JOIN swp391_healthy_food.account a ON f.user_id = a.id "
                 + "JOIN swp391_healthy_food.order_items oi ON f.order_item_id = oi.order_item_id "
                 + "JOIN swp391_healthy_food.Food fo ON oi.food_id = fo.id "
+                + "Where f.is_visible = 1 "
                 + "ORDER BY f.created_at DESC";
         
         try {
@@ -42,7 +43,32 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
         }
         return feedbacks;
     }
-
+     // Lấy feedback theo ID
+    public Feedbacks getFeedbackById(int feedbackId) {
+        String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
+                + "FROM swp391_healthy_food.feedbacks f "
+                + "JOIN swp391_healthy_food.account a ON f.user_id = a.id "
+                + "JOIN swp391_healthy_food.order_items oi ON f.order_item_id = oi.order_item_id "
+                + "JOIN swp391_healthy_food.Food fo ON oi.food_id = fo.id "
+                + "WHERE f.id = ?";
+        
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            
+            statement.setInt(1, feedbackId);
+            
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return mapFeedback(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting feedback by ID: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
     @Override
     public List<Feedbacks> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -107,6 +133,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks>{
         FeedbacksDAO f  = new FeedbacksDAO();
         List<Feedbacks> l = f.getAllFeedbacks();
         System.out.println(l);
+        Feedbacks f2 = f.getFeedbackById(2);
+        System.out.println(f2);
     }
             
 }
