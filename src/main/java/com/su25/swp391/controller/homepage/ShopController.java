@@ -36,15 +36,6 @@ public class ShopController extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "" : request.getParameter("action");
         switch (action) {
-//            case "viewAll":
-//                showFoodList(request, response);
-//                break;
-//            case "foodByCategory":
-//                showFoodByCategory(request, response);
-//                break;
-//            case "search":
-//                searchFood(request, response);
-//                break;
             case "shopDetail":
                 shopDetail(request, response);
                 break;
