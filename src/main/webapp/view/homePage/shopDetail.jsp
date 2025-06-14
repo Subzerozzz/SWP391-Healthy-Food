@@ -161,39 +161,39 @@
                                 <button type="submit" class="default-btn btn-bg-three">
                                     <i class="fas fa-cart-plus"></i> Buy Now!
                                 </button>
-                                <button type="submit" class="default-btn btn-bg-three">
+                                <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
                                     <i class="fas fa-cart-plus"></i> Add To Cart
                                 </button>
                             </div>
                             
                             <!--Socail media--> 
-                            <div class="product-share">
-                                <ul>
-                                    <li>
-                                        <span>Share:</span>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="_blank">
-                                            <i class='bx bxl-facebook' ></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="_blank">
-                                            <i class='bx bxl-linkedin'></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="_blank">
-                                            <i class='bx bxl-twitter'></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" target="_blank">
-                                            <i class='bx bxl-instagram'></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <!--                            <div class="product-share">
+                                                            <ul>
+                                                                <li>
+                                                                    <span>Share:</span>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+                                                                        <i class='bx bxl-facebook' ></i>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+                                                                        <i class='bx bxl-linkedin'></i>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+                                                                        <i class='bx bxl-twitter'></i>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" target="_blank">
+                                                                        <i class='bx bxl-instagram'></i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>-->
                         </div>
                     </div>
                 </div>
@@ -297,6 +297,24 @@
             padding: 0px !important;
           }
         </style>
+        
+        <script>
+            //addToCart 
+            const addToCart = (id) => {
+                //Tạo 1 form ẩn
+                fetch(`${pageContext.request.contextPath}/cart`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `action=add&id=${id}`
+                })
+                .then(response => data)
+                .then(data => {
+                    
+                })
+            }
+        </script>
     </body>
 
 <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:59 GMT -->

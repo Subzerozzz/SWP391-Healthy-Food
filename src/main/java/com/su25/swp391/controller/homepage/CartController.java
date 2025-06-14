@@ -4,11 +4,14 @@
  */
 package com.su25.swp391.controller.homepage;
 
+import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.entity.Account;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -48,7 +51,15 @@ public class CartController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
