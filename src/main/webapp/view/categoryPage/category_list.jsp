@@ -1,12 +1,8 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
-    <!--<![endif]-->
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-    <!-- Mirrored from themesflat.co/html/remos/category-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:47 GMT -->
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
         <!-- Basic Page Needs -->
@@ -37,7 +33,14 @@
                                                     <!-- Favicon and Touch Icons  -->
                                                     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
                                                         <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
-
+                                                            <!-- Javascript -->
+                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                            <script src="${pageContext.request.contextPath}/js/main.js"></script>
                                                             </head>
                                                             <style>
                                                                 /* CSS cho biểu tượng mắt (view) màu vàng */
@@ -110,8 +113,8 @@
 
                                                                                                             <form class="form-search" action="${pageContext.request.contextPath}/manageCategory" method = "get">
                                                                                                             <fieldset class="name">
-                                                                                                                <input type="text" placeholder="Search here..." class="" name="search" tabindex="2" value="${param.search}" >
-                                                                                                                    <input type="hidden" name="action" value = "search">
+                                                                                                                <input type="text" placeholder="Search here..." class="" name="find" tabindex="2" value="${param.find}" >
+                                                                                                                    <input type="hidden" name="action" value = "find">
                                                                                                                         </fieldset>
                                                                                                                         <div class="button-submit">
                                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -124,23 +127,19 @@
                                                                                                                             <form class="form-search" action="${pageContext.request.contextPath}/manageCategory" method="get">
                                                                                                                                 <fieldset class="name">
                                                                                                                                     <input type="hidden" name="action" value="filterBMI">
-                                                                                                                                        <select name="range">
-                                                                                                                                            <option value="1">Dưới 18.5 (Gầy)</option>
-                                                                                                                                            <option value="2">18.5 – 24.9 (Bình thường)</option>
-                                                                                                                                            <option value="3">25 – 29.9 (Thừa cân)</option>
-                                                                                                                                            <option value="4">Trên 30 (Béo phì)</option>
+                                                                                                                                        <select name="filterType">
+                                                                                                                                            <option value="underweight">Gầy</option>
+                                                                                                                                            <option value="normal">Bình thường</option>
+                                                                                                                                            <option value="overweight">Thừa cân</option>
+                                                                                                                                            <option value="obese">Béo phì</option>
                                                                                                                                         </select>
                                                                                                                                 </fieldset>
                                                                                                                                 <div class="button-submit">
                                                                                                                                     <button class="" type="submit"><i class="fa-solid fa-filter"></i></button>
                                                                                                                                 </div>
                                                                                                                             </form>
+
                                                                                                                         </div>
-
-
-
-
-
                                                                                                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manageCategory?action=addCate"><i class="icon-plus"></i>Add new</a>
                                                                                                                         </div>
                                                                                                                         <form class ="action" method="get" action="${pageContext.request.contextPath}/manageCategory">
@@ -173,30 +172,31 @@
 
                                                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                                                 <div class="body-title">
-                                                                                                                                                    <a href="product-list.html" class="body-title-2">${cate.idcategory}</a>
+                                                                                                                                                    <a href="product-list.html" class="body-title-2">${cate.id}</a>
+
                                                                                                                                                 </div>
+                                                                                                                                                <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px;"></div>
                                                                                                                                                 <div class="body-title-2">
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.name_category}</a>
                                                                                                                                                 </div>
+
                                                                                                                                                 <div class="body-title-2">${cate.minBMI}</div>
-                                                                                                                                                <div class="body-title-2">
-                                                                                                                                                    ${cate.maxBMI}
-                                                                                                                                                </div>
-                                                                                                                                                <div class ="body-title-2">
-                                                                                                                                                    ${cate.description}
-                                                                                                                                                </div>
+
+                                                                                                                                                <div class="body-title-2"> ${cate.maxBMI}  </div>
+
+                                                                                                                                                <div class ="body-title-2">  ${cate.description} </div>
                                                                                                                                                 <div class="list-icon-function">
                                                                                                                                                     <div class="item eye">
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=viewDetail&idcategory=${cate.idcategory}" ><i class="icon-eye"></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=viewDetail&id=${cate.id}" ><i class="icon-eye"></i></a>
 
                                                                                                                                                     </div>
                                                                                                                                                     <div class="item edit" >
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&idcategory=${cate.idcategory}"> <i class="icon-edit-3"></i></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&id=${cate.id}"> <i class="icon-edit-3"></i></i></a>
 
 
                                                                                                                                                     </div>
                                                                                                                                                     <div class="item trash">
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=delete&idcategory=${cate.idcategory}"><i class="icon-trash-2"></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=delete&id=${cate.id}"><i class="icon-trash-2"></i></a>
 
                                                                                                                                                     </div>
                                                                                                                                                 </div>
@@ -291,14 +291,6 @@
                                                                                                                         </div>
                                                                                                                         <!-- /#wrapper -->
 
-                                                                                                                        <!-- Javascript -->
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/main.js"></script>
                                                                                                                         <!--thong bao xoa-->
 
                                                                                                                         <c:if test="${sessionScope.isDelete == true}">

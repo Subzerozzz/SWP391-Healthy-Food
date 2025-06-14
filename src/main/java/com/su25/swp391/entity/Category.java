@@ -23,7 +23,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Category {
-   private int idcategory;
+   private int id;
    private String name_category;
    private String description;
    private Double maxBMI;

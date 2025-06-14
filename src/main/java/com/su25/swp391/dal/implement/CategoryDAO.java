@@ -26,7 +26,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public List<Category> findAll() {
         List<Category> category = new ArrayList<>();
-        String sql = "SELECT * FROM Swp301_pr.category";
+        String sql = "SELECT * FROM category";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -42,7 +42,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     public int getTotalCategoryCount() {
-        String sql = "SELECT COUNT(*) FROM Swp301_pr.category";
+        String sql = "SELECT COUNT(*) FROM category";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -57,9 +57,10 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         }
         return 0;
     }
-     public List<Category> findAllWithPagination(int page, int pageSize) {
+
+    public List<Category> findAllWithPagination(int page, int pageSize) {
         List<Category> category = new ArrayList<>();
-        String sql = "SELECT * FROM Swp301_pr.category ORDER BY idcategory LIMIT ?, ?";
+        String sql = "SELECT * FROM category ORDER BY id LIMIT ?, ?";
 
         try {
             connection = getConnection();
@@ -98,17 +99,18 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 //            }
 //        }
 //    }
+
     @Override
     public Map<Integer, Category> findAllMap() {
         Map<Integer, Category> categoryMap = new HashMap<>();
-        String sql = "SELECT * FROM Swp301_pr.category";
+        String sql = "SELECT * FROM category";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Category category = getFromResultSet(resultSet);
-                categoryMap.put(category.getIdcategory(), category);
+                categoryMap.put(category.getId(), category);
             }
         } catch (Exception e) {
         } finally {
@@ -120,7 +122,9 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public boolean update(Category t) {
         List<Category> updatecategory = new ArrayList<>();
-       String sql = "UPDATE Swp301_pr.category SET name_category = ?, description = ?, minBMI = ?, maxBMI = ? WHERE idcategory = ?";
+        String sql = "UPDATE category "
+                + "SET name_category = ?, description = ?, minBMI = ?, maxBMI = ?"
+                + " WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -128,7 +132,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
             statement.setString(2, t.getDescription());
             statement.setDouble(3, t.getMinBMI());
             statement.setDouble(4, t.getMaxBMI());
-            statement.setInt(5, t.getIdcategory());
+            statement.setInt(5, t.getId());
             return statement.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -142,11 +146,11 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public boolean delete(Category t) {
         List<Category> deletecategory = new ArrayList<>();
-        String sql = "DELETE FROM Swp301_pr.category WHERE idcategory = ?";
+        String sql = "DELETE FROM category WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getIdcategory());
+            statement.setInt(1, t.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Err delete" + e.getMessage());
@@ -155,34 +159,36 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         }
         return false;
     }
-   
-  @Override
-  public int insert(Category t) {
-    String sql = "INSERT INTO Swp301_pr.category (name_category, description, maxBMI, minBMI) VALUES (?, ?, ?, ?)";
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-     
-        statement.setString(1, t.getName_category());
-        statement.setString(2, t.getDescription());
-        statement.setDouble(3, t.getMaxBMI());
-        statement.setDouble(4, t.getMinBMI());
 
-        int affectedRow = statement.executeUpdate();
-        if (affectedRow > 0) {
-            resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-                return resultSet.getInt(1); // Trả về ID vừa insert
+    @Override
+    public int insert(Category t) {
+        String sql = "INSERT INTO category "
+                + " (name_category, description, maxBMI, minBMI) "
+                + "VALUES (?, ?, ?, ?)";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setString(1, t.getName_category());
+            statement.setString(2, t.getDescription());
+            statement.setDouble(3, t.getMaxBMI());
+            statement.setDouble(4, t.getMinBMI());
+
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow > 0) {
+                resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    return resultSet.getInt(1); // Trả về ID vừa insert
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Err insert: " + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Err insert: " + e.getMessage());
-    } finally {
-        closeResources();
+        return -1;
     }
-    return -1;
-}
-  
+
 //public static void main(String[] args) {
 //        CategoryDAO dao = new CategoryDAO();
 //
@@ -201,71 +207,78 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 //    }
     @Override
     public Category getFromResultSet(ResultSet resultSet) throws SQLException {
-return Category.builder()
-        .idcategory(resultSet.getInt("idcategory"))
-        .name_category(resultSet.getString("name_category"))
-        .description(resultSet.getString("description"))
-        .maxBMI(resultSet.getDouble("maxBMI"))
-        .minBMI(resultSet.getDouble("minBMI"))
-        .build();
+        return Category.builder()
+                .id(resultSet.getInt("id"))
+                .name_category(resultSet.getString("name_category"))
+                .description(resultSet.getString("description"))
+                .maxBMI(resultSet.getDouble("maxBMI"))
+                .minBMI(resultSet.getDouble("minBMI"))
+                .build();
     }
 
     @Override
     public Category findById(Integer id) {
-        List<Category> findCategorybyId = new ArrayList<>();
-        String sql = "SELECT * FROM Swp301_pr.category WHERE idcategory = ?";
+        String sql = "SELECT * FROM category WHERE id = ?";
         try {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 return getFromResultSet(resultSet);
-                
+
             }
-        } catch (Exception e) {
-            System.out.println("Err findCategoryById"+ e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Err findCategoryById" + e.getMessage());
         } finally {
             closeResources();
-                  
+
         }
         return null;
     }
-public  List<Category> searchCategorybyName(String keyword){
-    List<Category> category = new ArrayList<>();
-    String sql = "SELECT * FROM Swp301_pr.category WHERE name_category LIKE ? ";
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        String likeKeyword = "%" +keyword + "%";
-        statement.setString(1, likeKeyword);
-        resultSet = statement.executeQuery();
-        while (resultSet.next()){
-            category.add(getFromResultSet(resultSet));
+
+    public List<Category> findCategorybyName(String keyword) {
+        List<Category> category = new ArrayList<>();
+        String sql = "SELECT * FROM category WHERE name_category LIKE ? ";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                category.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error search category" + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error search category"+e.getMessage());
-    } finally {
-        closeResources();
+        return category;
     }
-    return category;
-}
-public List<Category> filterCategoryByBMI(double min, double max) {
-    List<Category> list = new ArrayList<>();
-    String sql = "SELECT * FROM Swp301_pr.category WHERE NOT (maxBMI < ? OR minBMI > ?)";
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setDouble(1, min);
-        statement.setDouble(2, max);
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            list.add(getFromResultSet(resultSet));
+
+    public List<Category> filterCategoryByBMI(double min, double max) {
+        List<Category> list = new ArrayList<>();
+        String sql = "SELECT * FROMcategory WHERE NOT (maxBMI < ? OR minBMI > ?)";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setDouble(1, min);
+            statement.setDouble(2, max);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error filtering category by BMI: " + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error filtering category by BMI: " + e.getMessage());
-    } finally {
-        closeResources();
+        return list;
     }
-    return list;
-}
+    
+    public static void main(String[] args) {
+        new CategoryDAO().findAll().forEach(item -> {
+            System.out.println(item);
+        });
+    }
 }
