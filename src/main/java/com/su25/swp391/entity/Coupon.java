@@ -26,7 +26,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Coupon {
-    private int couponId;
+    private int id;
     private String code;
     private String description;
     private String discountType; // percentage or fixed

@@ -58,7 +58,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Coupon coupon = getFromResultSet(resultSet);
-                couponMap.put(coupon.getCouponId(), coupon);
+                couponMap.put(coupon.getId(), coupon);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -96,11 +96,11 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public boolean delete(Coupon coupon) {
-        String sql = "DELETE from coupons WHERE coupon_id=? ";
+        String sql = "DELETE from coupons WHERE id=? ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, coupon.getCouponId());
+            statement.setInt(1, coupon.getId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -147,7 +147,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     @Override
     public Coupon getFromResultSet(ResultSet rs) throws SQLException {
         Coupon coupon = new Coupon();
-        coupon.setCouponId(rs.getInt("coupon_id"));
+        coupon.setId(rs.getInt("id"));
         coupon.setCode(rs.getString("code"));
         coupon.setDescription(rs.getString("description"));
         coupon.setDiscountType(rs.getString("discount_type"));
@@ -167,7 +167,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     @Override
     public Coupon findById(Integer id) {
         try {
-            String sql = "SELECT * FROM coupons WHERE coupon_id = ?";
+            String sql = "SELECT * FROM coupons WHERE id = ?";
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
@@ -203,7 +203,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     public List<Coupon> pagingCoupon(int index) {
         List<Coupon> coupon = new ArrayList<>();
         String sql = "SELECT * FROM coupons\n"
-                + "ORDER BY coupon_id\n"
+                + "ORDER BY id\n"
                 + "LIMIT 10 OFFSET ?;";
         try {
             connection = getConnection();
@@ -222,7 +222,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     }
 
     public int countCouponsBySearch(String keyword) {
-        String sql = "SELECT COUNT(*) FROM blogs WHERE code LIKE ? OR description LIKE ?";
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code LIKE ? OR description LIKE ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -243,7 +243,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     public List<Coupon> searchCouponsByCodeorDescription(String keyword, int offset, int pageSize) {
         List<Coupon> coupons = new ArrayList<>();
-        String sql = "SELECT * FROM blogs WHERE code LIKE ? OR description LIKE ? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM coupons WHERE code LIKE ? OR description LIKE ? LIMIT ? OFFSET ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -308,7 +308,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     public List<Coupon> filterCouponWithPagination(String discounttype, String search, int page, int pageSize) {
         List<Coupon> coupons = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM coupons WHERE 1=1");
 
         // Thêm điều kiện search nếu có
         if (search != null && !search.trim().isEmpty()) {

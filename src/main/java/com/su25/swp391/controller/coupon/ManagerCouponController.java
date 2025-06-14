@@ -23,13 +23,10 @@ import java.util.List;
  */
 @WebServlet(name = "ManagerCouponController", urlPatterns = {"/ManagerCoupon"})
 public class ManagerCouponController extends HttpServlet {
-
     private CouponDAO couponDAO;
-
     public void init() {
         couponDAO = new CouponDAO();
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -75,7 +72,7 @@ public class ManagerCouponController extends HttpServlet {
     }
 
     private void showAddDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/blog/addCoupon.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/addCoupon.jsp");
         dispatcher.forward(request, response);
     }
       private void listCouponDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -93,7 +90,7 @@ public class ManagerCouponController extends HttpServlet {
         request.setAttribute("coupons", coupon);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPage", totalPage);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/blog/listCoupon.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/listCoupon.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -102,12 +99,12 @@ public class ManagerCouponController extends HttpServlet {
         Coupon coupon = couponDAO.findById(id);
         if (coupon != null) {
             request.setAttribute("coupon", coupon);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/blog/editCoupon.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/coupon/editCoupon.jsp");
             dispatcher.forward(request, response);
         } else {
-            request.getSession().setAttribute("toastMessage", "Blog not found");
+            request.getSession().setAttribute("toastMessage", "Coupon not found");
             request.getSession().setAttribute("toastType", "error");
-            response.sendRedirect(request.getContextPath() + "/view/coupon/blog/editCoupon.jsp");
+            response.sendRedirect(request.getContextPath() + "/view/coupon/editCoupon.jsp");
         }
     }
     
@@ -129,7 +126,7 @@ public class ManagerCouponController extends HttpServlet {
                 request.getSession().setAttribute("toastType", "success");
                 session.setAttribute("isDelete", true);
             } else {
-                request.getSession().setAttribute("toastMessage", "Fail to Coupon blog");
+                request.getSession().setAttribute("toastMessage", "Fail to Coupon ");
                 request.getSession().setAttribute("toastType", "error");
             }
         } else {
@@ -159,11 +156,11 @@ public class ManagerCouponController extends HttpServlet {
         }
         searchKeyword = searchKeyword.trim();
         int offset = (currentPage - 1) * pageSize;
-        // Lấy danh sách blog theo từ khóa và phân trang
-        List<Coupon> listCoupon = couponDAO.searchCouponsByCode(searchKeyword, offset, pageSize);
-        // Lấy tổng số blog phù hợp để tính tổng trang
-        int totalBlogs = couponDAO.countCouponsBySearch(searchKeyword);
-        int totalPage = (int) Math.ceil((double) totalBlogs / pageSize);
+        // Lấy danh sách coupon theo từ khóa và phân trang
+        List<Coupon> listCoupon = couponDAO.searchCouponsByCodeorDescription(searchKeyword, offset, pageSize);
+        // Lấy tổng số coupon phù hợp để tính tổng trang
+        int totalCoupons = couponDAO.countCouponsBySearch(searchKeyword);
+        int totalPage = (int) Math.ceil((double) totalCoupons / pageSize);
         request.setAttribute("coupons", listCoupon);
         request.setAttribute("search", searchKeyword);
         request.setAttribute("currentPage", currentPage);
