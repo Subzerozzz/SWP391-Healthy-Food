@@ -156,7 +156,7 @@
                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="text-tiny">Category Detail:${param.idcategory} </div>
+                                                                                                        <div class="text-tiny">Category Detail:${param.id} </div>
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
@@ -171,7 +171,7 @@
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>Id</label>
-                                                                                                            <span>${param.idcategory}</span>
+                                                                                                            <span>${param.id}</span>
                                                                                                         </div>
 
                                                                                                     </fieldset>

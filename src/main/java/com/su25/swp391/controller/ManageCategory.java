@@ -5,11 +5,11 @@
  */
 package com.su25.swp391.controller;
 
+import com.su25.swp391.config.CategoryFilterService;
 import com.su25.swp391.dal.implement.CategoryDAO;
 import com.su25.swp391.entity.Category;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 @WebServlet(name = "ManageCategory", urlPatterns = {"/manageCategory"})
 public class ManageCategory extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -59,8 +58,8 @@ public class ManageCategory extends HttpServlet {
             case "viewDetail":
                 viewDetail(request, response);
                 break;
-            case "search":
-                searchCate(request, response);
+            case "find":
+                findCate(request, response);
                 break;
             case "filter":
                 filter(request, response);
@@ -112,22 +111,22 @@ public class ManageCategory extends HttpServlet {
     }// </editor-fold>
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_add.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditForn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int idCate = Integer.parseInt(request.getParameter("idcategory"));
+        int idCate = Integer.parseInt(request.getParameter("id"));
         CategoryDAO cateDao = new CategoryDAO();
         Category category = cateDao.findById(idCate);
-
+//set lai gia trị cũ 
         request.setAttribute("cate", category);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
         dispatcher.forward(request, response);
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int idStr = Integer.parseInt(request.getParameter("idcategory"));
+        int idStr = Integer.parseInt(request.getParameter("id"));
         CategoryDAO categoryDao = new CategoryDAO();
         Category cate = categoryDao.findById(idStr);
         if (cate != null) {
@@ -195,12 +194,12 @@ public class ManageCategory extends HttpServlet {
         int endRecord = Math.min(startRecord + pageSize - 1, totalCategory);
         request.setAttribute("startRecord", startRecord);
         request.setAttribute("endRecord", endRecord);
-        request.getRequestDispatcher("/view/common/categoryPage/category_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
 
     }
 
-    private void searchCate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String searchKey = request.getParameter("search");
+    private void findCate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String searchKey = request.getParameter("find");
         //kiem tra null tra ve danh sach list
         if (searchKey == null || searchKey.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/manageCategory");
@@ -208,10 +207,10 @@ public class ManageCategory extends HttpServlet {
         }
         searchKey = searchKey.trim();//xoa khoang trang 2 dau
         CategoryDAO cateDao = new CategoryDAO();
-        List<Category> listCateSearch = cateDao.searchCategorybyName(searchKey);
+        List<Category> listCateSearch = cateDao.findCategorybyName(searchKey);
         request.setAttribute("listcategory", listCateSearch);
-        request.setAttribute("search", searchKey);
-        request.getRequestDispatcher("/view/common/categoryPage/category_list.jsp").forward(request, response);
+        request.setAttribute("find", searchKey);
+        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
     }
 
     private void addCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -222,7 +221,7 @@ public class ManageCategory extends HttpServlet {
             String maxBMI_raw = request.getParameter("maxBMI");
             Map<String, String> errors = new HashMap();
             Double minBMI = null, maxBMI = null;
-
+//xư ly số khi ngươi dùng nhập vao
             try {
                 if (minBMI_raw != null && !minBMI_raw.trim().isEmpty()) {
                     minBMI = Double.parseDouble(minBMI_raw.trim());
@@ -250,6 +249,7 @@ public class ManageCategory extends HttpServlet {
             } catch (NumberFormatException e) {
                 errors.put("BMIFormat", "Chỉ số BMI phải là số hợp lệ");
             }
+            //validate name_category
             if (name_category == null || name_category.trim().isEmpty()) {
                 errors.put("name_category", "name_category is required");
             } else if (!name_category.equals(name_category.trim())) {
@@ -269,7 +269,7 @@ public class ManageCategory extends HttpServlet {
                 request.setAttribute("maxBMI", maxBMI);
                 request.setAttribute("description", description);
 
-                request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
                 return;
             }
             // tao doi tuong category moi
@@ -298,13 +298,13 @@ public class ManageCategory extends HttpServlet {
             request.getSession().setAttribute("totalMess", "Fail to add Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
             e.printStackTrace();
-            request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
         }
     }
 
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int id = Integer.parseInt(request.getParameter("idcategory"));
+            int id = Integer.parseInt(request.getParameter("id"));
             String name_category = request.getParameter("name_category");
             String description = request.getParameter("description");
             String maxBMIStr = request.getParameter("maxBMI");
@@ -370,7 +370,7 @@ public class ManageCategory extends HttpServlet {
                 request.setAttribute("errors", errors);
                 request.setAttribute("formData", formData);
                 request.setAttribute("cate", cate);
-                request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/categoryPage/category_edit.jsp").forward(request, response);
                 return;
             }
 
@@ -406,12 +406,12 @@ public class ManageCategory extends HttpServlet {
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int idCategory = Integer.parseInt(request.getParameter("idcategory"));
+            int idCategory = Integer.parseInt(request.getParameter("id"));
             CategoryDAO cateDao = new CategoryDAO();
             Category cate = cateDao.findById(idCategory);
             if (cate != null) {
                 request.setAttribute("category", cate);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/viewDetail.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/viewDetail.jsp");
                 dispatcher.forward(request, response);
             } else {
                 request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
@@ -428,35 +428,14 @@ public class ManageCategory extends HttpServlet {
     }
 
     private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String range = request.getParameter("range");
-        double min = 0, max = 60;
-        switch (range) {
-            case "1": //gầy
-                min = 0;
-                max = 18.4;
-                break;
-            case "2": // Bình thường
-                min = 18.5;
-                max = 24.9;
-                break;
-            case "3": // Thừa cân
-                min = 25;
-                max = 29.9;
-                break;
-            case "4": // Béo phì
-                min = 30;
-                max = 49.9;
-                break;
-            default:
-                request.setAttribute("errors", List.of("Khoảng BMI không hợp lệ"));
-                request.getRequestDispatcher("/view/common/categoryPage/category_list.jsp").forward(request, response);
-                return;
-        }
-        CategoryDAO dao = new CategoryDAO();
-        List<Category> filtered = dao.filterCategoryByBMI(min, max);
+        String filterType = request.getParameter("filterType");// giá trị: low, normal, overweight, obese
+        //gọi hàm service 
+        CategoryFilterService service = new CategoryFilterService();
+        //lay list lọc 
+        List<Category> filtered = service.filterByType(filterType);
+
         request.setAttribute("listcategory", filtered);
-        request.getRequestDispatcher("/view/common/categoryPage/category_list.jsp").forward(request, response);
+        request.setAttribute("selectedFilter", filterType);//giữ filter đã chọn
+        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
     }
 }
-
-

@@ -98,26 +98,27 @@
                                                                                                 </div>
                                                                                                 <!-- new-category -->
                                                                                                 <div class="wg-box">
-                                                                                                    <form class="form-new-product form-style-1" method="POST" action="${pageContext.request.contextPath}/manageCategory?action=add">
-                                                                                                    <!--                                                                                                    <fieldset class="idcategory">
-                                                                                                                                                                                                        <div class="body-title">ID: <span class="tf-color-1">*</span></div>
-                                                                                                                                                                                                        <input class="flex-grow" type="text" placeholder="Category name" name="text" tabindex="0" value="" aria-required="true" required="">
-                                                                                                                                                                                                        </fieldset>-->
+                                                                                                    <form class="form-new-category form-style-1" method="POST" action="${pageContext.request.contextPath}/manageCategory?action=add">
+                                                                                                                                                                                                    
                                                                                                     <fieldset class="name_category">
                                                                                                         <div class="body-title"> Name: <span class="tf-color-1">*</span></div>
                                                                                                         <input class="flex-grow" type="text" placeholder="Category name" name="name_category" tabindex="0" value="${name_category != null ? name_category : ''}" aria-required="true" >
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset>
                                                                                                         <div class="description body-title">Description: <span class="tf-color-1">*</span></div>
                                                                                                         <input class="flex-grow" type="text" placeholder="Description" name="description" tabindex="0" value="${description != null ? description : ''}" >
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="minBMI">
                                                                                                         <div class="body-title">MinBMI: </div>
                                                                                                         <input class="flex-grow" type="text" placeholder="minBMI" name="minBMI" tabindex="0" value="${minBMI != null ? minBMI : ''}" >
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="maxBMI">
                                                                                                         <div class="body-title">MaxBMI :</div>
                                                                                                         <input class="flex-grow" type="text" placeholder="maxBMI" name="maxBMI" tabindex="0" value="${maxBMI != null ? maxBMI : ''}" >
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <div class="bot">
                                                                                                         <div></div>
@@ -165,6 +166,148 @@
                                                                         </script>
                                                                     </c:forEach>
                                                                 </c:if>
+                                                                <!--Validate ơ dao diện nang chạn việc save-->
+                                                                <!-- Thêm CSS ngay trong file -->
+                                                                <style>
+                                                                    .invalid-feedback {
+                                                                        display: none;
+                                                                        width: 100%;
+                                                                        margin-top: 0.25rem;
+                                                                        font-size: 0.875em;
+                                                                        color: #dc3545;
+                                                                    }
+                                                                    .is-invalid {
+                                                                        border-color: #dc3545;
+                                                                    }
+                                                                    .is-invalid ~ .invalid-feedback {
+                                                                        display: block;
+                                                                    }
+                                                                </style>
+                                                                <script>
+                                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                                        const form = document.querySelector('.form-new-category');
+
+                                                                        // Hiển thị lỗi
+                                                                        function showError(input, message) {
+                                                                            input.classList.add('is-invalid');
+                                                                            const feedback = input.nextElementSibling;
+                                                                            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                                                                                feedback.textContent = message;
+                                                                            }
+                                                                        }
+
+                                                                        // Ẩn lỗi
+                                                                        function clearError(input) {
+                                                                            input.classList.remove('is-invalid');
+                                                                        }
+
+                                                                        // Hàm kiểm tra số trong khoảng và bắt buộc
+                                                                        function validateNumberInput(input, fieldName, minValue = 10, maxValue = 50) {
+                                                                            const value = input.value.trim();
+
+                                                                            if (value === "") {
+                                                                                showError(input, `${fieldName} là bắt buộc`);
+                                                                                return false;
+                                                                            }
+
+                                                                            if (isNaN(value)) {
+                                                                                showError(input, `${fieldName} phải là số`);
+                                                                                return false;
+                                                                            }
+
+                                                                            const number = parseFloat(value);
+
+                                                                            if (number < 0) {
+                                                                                showError(input, `${fieldName} phải ≥ 0`);
+                                                                                return false;
+                                                                            }
+
+                                                                            if (number < minValue || number > maxValue) {
+                                                                                showError(input, `${fieldName} phải nằm trong khoảng ${minValue} - ${maxValue}`);
+                                                                                                return false;
+                                                                                            }
+
+                                                                                            clearError(input);
+                                                                                            return true;
+                                                                                        }
+
+                                                                                        // Khi submit form
+                                                                                        form.addEventListener('submit', function (e) {
+                                                                                            e.preventDefault();
+                                                                                            let isValid = true;
+
+                                                                                            // Validate name_category
+                                                                                            const nameInput = form.querySelector('[name="name_category"]');
+                                                                                            if (nameInput.value.trim().length < 3) {
+                                                                                                showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                clearError(nameInput);
+                                                                                            }
+
+                                                                                            // Validate description
+                                                                                            const descInput = form.querySelector('[name="description"]');
+                                                                                            if (descInput.value.trim().length < 5) {
+                                                                                                showError(descInput, 'Mô tả phải có ít nhất 5 ký tự');
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                clearError(descInput);
+                                                                                            }
+
+                                                                                            // Validate minBMI và maxBMI
+                                                                                            const minBMIInput = form.querySelector('[name="minBMI"]');
+                                                                                            const maxBMIInput = form.querySelector('[name="maxBMI"]');
+
+                                                                                            const isMinValid = validateNumberInput(minBMIInput, 'MinBMI');
+                                                                                            const isMaxValid = validateNumberInput(maxBMIInput, 'MaxBMI');
+
+                                                                                            if (!isMinValid || !isMaxValid) {
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                const minVal = parseFloat(minBMIInput.value.trim());
+                                                                                                const maxVal = parseFloat(maxBMIInput.value.trim());
+
+                                                                                                if (minVal >= maxVal) {
+                                                                                                    showError(minBMIInput, 'MinBMI phải nhỏ hơn MaxBMI');
+                                                                                                    showError(maxBMIInput, 'MaxBMI phải lớn hơn MinBMI');
+                                                                                                    isValid = false;
+                                                                                                }
+                                                                                            }
+
+                                                                                            // Nếu hợp lệ, submit form
+                                                                                            if (isValid) {
+                                                                                                form.submit();
+                                                                                            } else {
+                                                                                                const firstError = form.querySelector('.is-invalid');
+                                                                                                if (firstError) {
+                                                                                                    firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
+                                                                                                    firstError.focus();
+                                                                                                }
+                                                                                            }
+                                                                                        });
+
+                                                                                        // Real-time validation + blur
+                                                                                        form.querySelectorAll('input').forEach(input => {
+                                                                                            input.addEventListener('input', function () {
+                                                                                                clearError(this);
+
+                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                                    validateNumberInput(this, fieldName);
+                                                                                                }
+                                                                                            });
+
+                                                                                            input.addEventListener('blur', function () {
+                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                                    validateNumberInput(this, fieldName);
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                    });
+                                                                </script>
+
+
                                                             </body>
 
 

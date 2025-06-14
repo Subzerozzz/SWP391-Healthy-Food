@@ -141,7 +141,7 @@
                                                                                                     </ul>
                                                                                                 </div>
                                                                                                 <!-- add-new-user -->
-                                                                                                <form class="add_account" action="${pageContext.request.contextPath}/manageCategory?action=edit" method="Post">
+                                                                                                <form class="edit_category" action="${pageContext.request.contextPath}/manageCategory?action=edit" method="Post">
                                                                                                 <div class="wg-box">
                                                                                                     <div class="left">
                                                                                                         <h5 class="mb-4">Category</h5>
@@ -151,17 +151,18 @@
                                                                                                     <div class="right flex-grow">
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Id</div>
-                                                                                                            <input class="readonly-input" type="text" name="idcategory" value="${param.idcategory}" readonly>
+                                                                                                            <input class="readonly-input" type="text" name="id" value="${param.id}" readonly>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Name -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Name</div>
                                                                                                             <input type="text" class="form-control" name="name_category" 
-                                                                                                                   value="${empty formData.name_category ? cate.name_category : formData.name_category}" required />
+                                                                                                                   value="${empty formData.name_category ? cate.name_category : formData.name_category}"  />
                                                                                                             <c:if test="${not empty errors.name_category}">
                                                                                                                 <div class="error" style="color:red;">${errors.name_category}</div>
                                                                                                             </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
 
                                                                                                         <!-- MinBMI -->
@@ -172,12 +173,14 @@
                                                                                                             <c:if test="${not empty errors.minBMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.minBMI}</div>
                                                                                                             </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
                                                                                                         <!-- BMI logic error -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <c:if test="${not empty errors.BMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.BMI}</div>
                                                                                                             </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
                                                                                                         <!-- MaxBMI -->
                                                                                                         <fieldset class="name mb-24">
@@ -187,6 +190,7 @@
                                                                                                             <c:if test="${not empty errors.maxBMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.maxBMI}</div>
                                                                                                             </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Description -->
@@ -197,6 +201,7 @@
                                                                                                             <c:if test="${not empty errors.description}">
                                                                                                                 <div class="error" style="color:red;">${errors.description}</div>
                                                                                                             </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
                                                                                                     </div>
 
@@ -227,9 +232,7 @@
                                                                 </div>
                                                                 <!-- /#page -->
                                                                 </div>
-                                                                <!-- /#wrapper -->
 
-                                                                <!-- Javascript -->
                                                                 <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
@@ -237,7 +240,7 @@
                                                                 <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
+                                                                <!--Start hiem thi izitoat-->
                                                                 <c:if test="${not empty errors.name_category}">
                                                                     <script>
                                                                         iziToast.error({
@@ -291,6 +294,146 @@
                                                                         });
                                                                     </script>
                                                                 </c:if>
+                                                                <!--End zitoat-->
+                                                                <!--validate ơ bên dao diện-->
+                                                                <style>
+                                                                    .invalid-feedback {
+                                                                        display: none;
+                                                                        width: 100%;
+                                                                        margin-top: 0.25rem;
+                                                                        font-size: 0.875em;
+                                                                        color: #dc3545;
+                                                                    }
+                                                                    .is-invalid {
+                                                                        border-color: #dc3545;
+                                                                    }
+                                                                    .is-invalid ~ .invalid-feedback {
+                                                                        display: block;
+                                                                    }
+                                                                </style>
+                                                                 <script>
+                                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                                        const form = document.querySelector('.edit_category');
 
-                                                                <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
-                                                                </html>
+                                                                        // Hiển thị lỗi
+                                                                        function showError(input, message) {
+                                                                            input.classList.add('is-invalid');
+                                                                            const feedback = input.nextElementSibling;
+                                                                            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                                                                                feedback.textContent = message;
+                                                                            }
+                                                                        }
+
+                                                                        // Ẩn lỗi
+                                                                        function clearError(input) {
+                                                                            input.classList.remove('is-invalid');
+                                                                        }
+
+                                                                        // Hàm kiểm tra số trong khoảng và bắt buộc
+                                                                        function validateNumberInput(input, fieldName, minValue = 10, maxValue = 50) {
+                                                                            const value = input.value.trim();
+
+                                                                            if (value === "") {
+                                                                                showError(input, `${fieldName} là bắt buộc`);
+                                                                                return false;
+                                                                            }
+
+                                                                            if (isNaN(value)) {
+                                                                                showError(input, `${fieldName} phải là số`);
+                                                                                return false;
+                                                                            }
+
+                                                                            const number = parseFloat(value);
+
+                                                                            if (number < 0) {
+                                                                                showError(input, `${fieldName} phải ≥ 0`);
+                                                                                return false;
+                                                                            }
+
+                                                                            if (number < minValue || number > maxValue) {
+                                                                                showError(input, `${fieldName} phải nằm trong khoảng ${minValue} - ${maxValue}`);
+                                                                                                return false;
+                                                                                            }
+
+                                                                                            clearError(input);
+                                                                                            return true;
+                                                                                        }
+
+                                                                                        // Khi submit form
+                                                                                        form.addEventListener('submit', function (e) {
+                                                                                            e.preventDefault();
+                                                                                            let isValid = true;
+
+                                                                                            // Validate name_category
+                                                                                            const nameInput = form.querySelector('[name="name_category"]');
+                                                                                            if (nameInput.value.trim().length < 3) {
+                                                                                                showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                clearError(nameInput);
+                                                                                            }
+
+                                                                                            // Validate description
+                                                                                            const descInput = form.querySelector('[name="description"]');
+                                                                                            if (descInput.value.trim().length < 5) {
+                                                                                                showError(descInput, 'Mô tả phải có ít nhất 5 ký tự');
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                clearError(descInput);
+                                                                                            }
+
+                                                                                            // Validate minBMI và maxBMI
+                                                                                            const minBMIInput = form.querySelector('[name="minBMI"]');
+                                                                                            const maxBMIInput = form.querySelector('[name="maxBMI"]');
+
+                                                                                            const isMinValid = validateNumberInput(minBMIInput, 'MinBMI');
+                                                                                            const isMaxValid = validateNumberInput(maxBMIInput, 'MaxBMI');
+
+                                                                                            if (!isMinValid || !isMaxValid) {
+                                                                                                isValid = false;
+                                                                                            } else {
+                                                                                                const minVal = parseFloat(minBMIInput.value.trim());
+                                                                                                const maxVal = parseFloat(maxBMIInput.value.trim());
+
+                                                                                                if (minVal >= maxVal) {
+                                                                                                    showError(minBMIInput, 'MinBMI phải nhỏ hơn MaxBMI');
+                                                                                                    showError(maxBMIInput, 'MaxBMI phải lớn hơn MinBMI');
+                                                                                                    isValid = false;
+                                                                                                }
+                                                                                            }
+
+                                                                                            // Nếu hợp lệ, submit form
+                                                                                            if (isValid) {
+                                                                                                form.submit();
+                                                                                            } else {
+                                                                                                const firstError = form.querySelector('.is-invalid');
+                                                                                                if (firstError) {
+                                                                                                    firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
+                                                                                                    firstError.focus();
+                                                                                                }
+                                                                                            }
+                                                                                        });
+
+                                                                                        // Real-time validation + blur
+                                                                                        form.querySelectorAll('input').forEach(input => {
+                                                                                            input.addEventListener('input', function () {
+                                                                                                clearError(this);
+
+                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                                    validateNumberInput(this, fieldName);
+                                                                                                }
+                                                                                            });
+
+                                                                                            input.addEventListener('blur', function () {
+                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                                    validateNumberInput(this, fieldName);
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                    });
+                                                                </script>
+                                                                <!--End validate ơ bên dao diện-->
+                                                            </body>
+                                                            </html>
