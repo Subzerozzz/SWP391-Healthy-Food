@@ -49,6 +49,7 @@ public class OrderApprovalDAO extends DBContext {
                 + "ORDER BY oa.approved_at DESC";
 
         try {
+            connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();

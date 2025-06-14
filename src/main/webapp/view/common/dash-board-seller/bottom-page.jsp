@@ -4,7 +4,7 @@
 
 <!DOCTYPE html>
  <div class="bottom-page">
-                            <div class="body-text">Copyright © 2024 Remos. Design with</div>
+                            <div class="body-text">Controller Order List of Customer</div>
                             <i class="icon-heart"></i>
-                            <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
+                            <div class="body-text">by <a href="${pageContext.request.contextPath}/seller/manage-order">Shope</a></div>
    </div>

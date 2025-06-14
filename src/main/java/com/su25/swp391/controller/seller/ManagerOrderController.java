@@ -4,6 +4,7 @@
  */
 package com.su25.swp391.controller.seller;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.Food_DraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
@@ -12,6 +13,7 @@ import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 
 import com.su25.swp391.dal.implement.RequestDAO;
+import com.su25.swp391.entity.Account;
 
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderApproval;
@@ -24,6 +26,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 
 /**
@@ -144,15 +148,76 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
-//       PrintWriter out = response.getWriter();
-//        out.println(orders);
-        // Forward to the order list page
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
     }
 
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
+            String newStatus = request.getParameter("newStatus");
+            String note = request.getParameter("note");
+
+            // Validate input 
+            if (newStatus == null || newStatus.trim().isEmpty()) {
+//                 request.getSession().setAttribute("errorMessage", "Status cannot be empty");
+//                response.sendRedirect(request.getContextPath() + "/admin/manage-order?action=view&id=" + orderId);
+//                return;
+            }
+
+            // Get seller ID from Session
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            if (acc == null) {
+//                response.sendRedirect(request.getContextPath() + "/authen");
+//                return;
+            }
+
+            Order order = orderDAO.findById(orderId);
+
+            if (order == null) {
+//                session.setAttribute("errorMessage", "Order not found");
+//                response.sendRedirect(request.getContextPath() + "/admin/manage-order");
+//                return;
+            }
+
+            // Get current status for message
+            String oldStatus = order.getStatus();
+
+            // Log gỡ rối
+            System.out.println("DEBUG: update order #" + orderId + " from '" + oldStatus + "' to '" + newStatus + "'");
+
+            boolean update = orderDAO.updateOrderStatus(orderId, newStatus, 21, note);
+
+            if (update) {
+                // If order is being accepted
+                if ("accepted".equals(newStatus) && !"accepted".equals(oldStatus)) {
+                    String statusText = "";
+                    switch (newStatus) {
+                        case "accepted":
+                            statusText = "accepted";
+                            break;
+                        case "completed":
+                            statusText = "completed";
+                            break;
+                        case "cancelled":
+                            statusText = "cancelled";
+                            break;
+                        default:
+                            statusText = newStatus;
+                    }
+                    session.setAttribute("successMessage", "Order #" + orderId + " has been " + statusText + " successfully.");
+                }
+
+            } else {
+                session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
+
+            }
+            // Redirect to the order detail page
+            response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
+        } catch (Exception e) {
+        }
     }
 
     // Xem chi tiết đơn hàng
@@ -185,6 +250,7 @@ public class ManagerOrderController extends HttpServlet {
 //            request.setAttribute("errorMessage", "Invalid order ID format");
 //            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
+
     }
+    
 }
