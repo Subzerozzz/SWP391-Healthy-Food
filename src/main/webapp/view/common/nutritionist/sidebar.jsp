@@ -13,7 +13,7 @@
         <div class="section-menu-left">
           <div class="box-logo">
             <a href="${pageContext.request.contextPath}/manage-food?action=view" id="site-logo-inner">
-                <img class="logo" src="${pageContext.request.contextPath}/images/logo.jpg">          
+                <img class="logo" src="${pageContext.request.contextPath}/images/logo.png">          
             </a>
             <div class="button-show-hide">
               <i class="icon-menu-left"></i>
@@ -71,8 +71,9 @@
                       
                       <style>
                           .box-logo{
-                              height: 100px;
-                              overflow: hidden
+                              height: 150px;
+                              overflow: hidden;
+                              margin-bottom: 50px
                           }
                           .logo{
                               max-width:100%;
