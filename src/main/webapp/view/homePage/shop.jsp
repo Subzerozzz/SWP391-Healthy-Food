@@ -1,13 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <%@page contentType="text/html" pageEncoding="UTF-8" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-      <!DOCTYPE html>
-      <html lang="zxx">
+<!DOCTYPE html>
+<html lang="zxx">
 
-      <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
+    <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
 
-      <head>
+    <head>
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,372 +28,282 @@
         <!--=== Title & Favicon ===-->
         <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
-      </head>
+    </head>
 
-      <body>
+    <body>
         <!-- Pre Loader -->
         <div class="preloader">
-          <div class="d-table">
-            <div class="d-table-cell">
-              <img src="${pageContext.request.contextPath}/images/preloder-img.png" alt="Images">
-              <h2>Hilo</h2>
+            <div class="d-table">
+                <div class="d-table-cell">
+                    <img src="${pageContext.request.contextPath}/images/preloder-img.png" alt="Images">
+                    <h2>Hilo</h2>
+                </div>
             </div>
-          </div>
         </div>
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
         <div class="navbar-area">
-          <!-- Menu For Mobile Device -->
-          <div class="mobile-nav">
-            <a href="index.html" class="logo">
-              <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" alt="Logo">
-            </a>
-          </div>
+            <!-- Menu For Mobile Device -->
+            <div class="mobile-nav">
+                <a href="index.html" class="logo">
+                    <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" alt="Logo">
+                </a>
+            </div>
 
-          <!-- Menu For Desktop Device -->
-          <jsp:include page="../common/homePage/header.jsp"></jsp:include>
+            <!-- Menu For Desktop Device -->
+            <jsp:include page="../common/homePage/header.jsp"></jsp:include>
 
-          <div class="side-nav-responsive">
-            <div class="container">
-              <div class="dot-menu">
-                <div class="circle-inner">
-                  <div class="circle circle-one"></div>
-                  <div class="circle circle-two"></div>
-                  <div class="circle circle-three"></div>
-                </div>
-              </div>
+                <div class="side-nav-responsive">
+                    <div class="container">
+                        <div class="dot-menu">
+                            <div class="circle-inner">
+                                <div class="circle circle-one"></div>
+                                <div class="circle circle-two"></div>
+                                <div class="circle circle-three"></div>
+                            </div>
+                        </div>
 
-              <div class="container-3">
-                <div class="side-nav-inner">
-                  <div class="side-nav justify-content-center align-items-center">
-                    <div class="side-nav-item">
-                      <div class="language-on-list">
-                        <select class="language-list-item">
-                          <option>English</option>
-                          <option>العربيّة</option>
-                          <option>Deutsch</option>
-                          <option>Português</option>
-                          <option>简体中文</option>
-                        </select>
-                      </div>
+                        <div class="container-3">
+                            <div class="side-nav-inner">
+                                <div class="side-nav justify-content-center align-items-center">
+                                    <div class="side-nav-item">
+                                        <div class="language-on-list">
+                                            <select class="language-list-item">
+                                                <option>English</option>
+                                                <option>العربيّة</option>
+                                                <option>Deutsch</option>
+                                                <option>Português</option>
+                                                <option>简体中文</option>
+                                            </select>
+                                        </div>
 
-                      <div class="side-nav-cart">
-                        <a href="#"><i class='bx bx-cart'></i></a>
-                        <span>1</span>
-                      </div>
+                                        <div class="side-nav-cart">
+                                            <a href="#"><i class='bx bx-cart'></i></a>
+                                            <span>1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <!-- End Navbar Area -->
+            <!-- End Navbar Area -->
 
-        <!-- Inner Banner Area -->
-        <div class="inner-banner-area">
-          <div class="container">
-            <div class="row align-items-center">
-              <div class="col-lg-5 col-md-5">
-                <div class="inner-content">
-                  <h2>Shop Left Sidebar</h2>
-                  <ul>
-                    <li><a href="index.html">Home</a></li>
+            <!-- Inner Banner Area -->
+            <div class="inner-banner-area">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-5 col-md-5">
+                            <div class="inner-content">
+                                <h2>Shop Left Sidebar</h2>
+                                <ul>
+                                    <li><a href="index.html">Home</a></li>
 
-                  </ul>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7 col-md-7">
+                            <div class="inner-img">
+                                <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner6.png" alt="Images">
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <div class="col-lg-7 col-md-7">
-                <div class="inner-img">
-                  <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner6.png" alt="Images">
-                </div>
-              </div>
             </div>
-          </div>
         </div>
         <!-- Inner Banner Area End -->
 
         <!-- Product Area -->
         <div class="product-area pt-100 pb-70">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-3">
-                <div class="product-side-bar">
-                    <form action="${pageContext.request.contextPath}/shop" id='formSearch'>
-                        <!--Search By Name-->
-                        <div class="search-widget formSearchByName">
-                            <input name="foodName" type="search" class="formSearch" placeholder="Search by food name...">
-                            <button type="submit">
-                              <i class="bx bx-search"></i>
-                            </button>
-                        </div>
+            <div class="container">
+                <form action="${pageContext.request.contextPath}/shop" id='formSearch'>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="product-side-bar">
 
-                        <!--Price Range-->
-                        <div class="product-side-bar-widget">
-                          <h3 class="title">Prices Range</h3>
-                            <div class="price-range-bar" id="range-slider"></div>
-                            <div class="price-range-filter">
-                              <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
-                                  <h4>Range:</h4>
-                                  <input type="text" id="price-amount" readonly>
-                                  <input type="hidden" name="selectedMin" id="selected-min">
-                                  <input type="hidden" name="selectedMax" id="selected-max">
-                              </div>
+                                <!--Search By Name-->
+                                <div class="search-widget formSearchByName">
+                                    <input name="foodName" type="search" class="formSearch" placeholder="Search by food name..." value="${foodName != null ? foodName : ''}">
+                                    <button type="submit">
+                                        <i class="bx bx-search"></i>
+                                    </button>
+                                </div>
 
-                              <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
-                                  <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
-                              </div>
+                                <!--Price Range-->
+                                <div class="product-side-bar-widget">
+                                    <h3 class="title">Prices Range</h3>
+                                    <div class="price-range-bar" id="range-slider"></div>
+                                    <div class="price-range-filter">
+                                        <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
+                                            <h4>Range:</h4>
+                                            <input type="text" id="price-amount" readonly>
+                                            <input type="hidden" name="selectedMin" id="selected-min">
+                                            <input type="hidden" name="selectedMax" id="selected-max">
+                                        </div>
+
+                                        <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
+                                            <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Food Categories-->
+                                <div class="product-side-bar-widget">
+                                    <h3 class="title">Product Categories</h3>
+                                    <div class="categoryList">
+                                        <ul>
+                                            <li class="${category == 0 ? 'active': ''}">
+                                                <input ${category == 0 ? 'checked': ''} type="radio" value='0' name='category' id='cate_0' onclick="document.querySelector('#formSearch').submit()">
+                                                <label for='cate_0'>Tất cả sản phẩm</label>
+                                            </li>
+                                            <c:forEach items="${listFoodCategory}" var="item">
+                                                <li class="${category == item.getId()?'active' : ''}">
+                                                    <input ${category == item.getId()? 'checked' : ''} type="radio" value='${item.getId()}' name='category' id='cate_${item.getId()}' onclick="document.querySelector('#formSearch').submit()">
+                                                    <label  for='cate_${item.getId()}'>${item.getName()}</label>
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!--Calo-->
+                                <div class="product-side-bar-widget">
+                                    <h3 class="title">Prices</h3>
+                                    <div class="product-side-categories">
+                                        <ul>
+                                            <li class="active">
+                                                <a href="#">$0-$50</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$51-$100</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$101-$150</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$151-$200</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$200-$250</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$250-$300</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$350-$400</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">$400-$450</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
+                        <div class="col-lg-9">
+                            <!--Sort-->
+                            <div class="product-topper">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8">
+                                        <div class="product-topper-title">
+                                            <h3>Food List <span>( Showing 1-15 of 120 result )</span> </h3>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="product-category">
+                                            <div class="form-group">
+                                                <select class="form-control">
+                                                    <option>Categories</option>
+                                                    <option>Beef Meat</option>
+                                                    <option>Vegetable</option>
+                                                    <option>Natural Fruits</option>
+                                                    <option>Health & Beauty</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!--Food Categories-->
-                        <div class="product-side-bar-widget">
-                          <h3 class="title">Product Categories</h3>
-                          <div class="categoryList">
-                            <ul>
-                              <li class="${category == 0 ? 'active': ''}">
-                                  <input type="radio" value='0' name='category' id='cate_0' onclick="document.querySelector('#formSearch').submit()">
-                                <label for='cate_0'>Tất cả sản phẩm</label>
-                              </li>
-                              <c:forEach items="${listFoodCategory}" var="item">
-                                <li class="${category == item.getId()?'active' : ''}">
-                                    <input type="radio" value='${item.getId()}' name='category' id='cate_${item.getId()}' onclick="document.querySelector('#formSearch').submit()">
-                                    <label  for='cate_${item.getId()}'>${item.getName()}</label>
-                                </li>
-                              </c:forEach>
-                            </ul>
-                          </div>
-                        </div>
-                              
-                         <!--Calo-->
-                        <div class="product-side-bar-widget">
-                          <h3 class="title">Prices</h3>
-                          <div class="product-side-categories">
-                            <ul>
-                              <li class="active">
-                                <a href="#">$0-$50</a>
-                              </li>
-                              <li>
-                                <a href="#">$51-$100</a>
-                              </li>
-                              <li>
-                                <a href="#">$101-$150</a>
-                              </li>
-                              <li>
-                                <a href="#">$151-$200</a>
-                              </li>
-                              <li>
-                                <a href="#">$200-$250</a>
-                              </li>
-                              <li>
-                                <a href="#">$250-$300</a>
-                              </li>
-                              <li>
-                                <a href="#">$350-$400</a>
-                              </li>
-                              <li>
-                                <a href="#">$400-$450</a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                    </form>
-                </div>
-              </div>
+                            <!--Food list-->
+                            <div class="row">
+                                <c:forEach items="${listFood}" var="item">
+                                    <div class="col-lg-4 col-sm-6">
+                                        <div class="product-item">
+                                            <div class="product-img">
+                                                <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
+                                                    <img src="${item.getImage_url()}" alt="Product Images">
+                                                </a>
+                                                <ul class="product-item-action">
+                                                    <li><a href="#"><i class='bx bx-repost'></i></a></li>
+                                                    <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
+                                                    <li><a href="cart.html"><i class='bx bx-cart'></i></a></li>
+                                                </ul>
+                                            </div>
 
-              <div class="col-lg-9">
-                <!--Category-->
-                <div class="product-topper">
-                  <div class="row">
-                    <div class="col-lg-8 col-md-8">
-                      <div class="product-topper-title">
-                        <h3>View All Products <span>( Showing 1-15 of 120 result )</span> </h3>
-                      </div>
+                                            <div class="content">
+                                                <h3><a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">${item.getName()}</a></h3>
+                                                <div>
+                                                    Calo: ${item.getCalo()}
+                                                </div>
+                                                <span>
+                                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true"
+                                                                      maxFractionDigits="0" /> VNĐ
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+
+                            </div>
+
+                            <!--Pagination-->
+                            <div class="col-lg-12 col-md-12 text-center">
+                                <div class="pagination-area">
+                                    <a href="javascript:void(0)" onclick="goToPage(1)" class="prev page-numbers">
+                                        <i class="bx bx-chevrons-left"></i>
+                                    </a>
+
+                                    <c:choose>
+                                        <c:when test="${currentPage <= totalPage - 2}">
+                                            <c:if test="${currentPage > 1}">
+                                                <a href="javascript:void(0)" onclick="goToPage(${currentPage - 1})"
+                                                   class="page-numbers">${currentPage - 1}</a>
+                                            </c:if>
+                                            <a href="javascript:void(0)" onclick="goToPage(${currentPage})"
+                                               class="page-numbers current">${currentPage}</a>
+
+                                            <a href="javascript:void(0)" onclick="goToPage(${currentPage + 1})"
+                                               class="page-numbers">${currentPage + 1}</a>
+
+                                            <c:if test="${currentPage < totalPage - 2}">
+                                                <a href="#" class="page-numbers">...</a>
+                                            </c:if>
+
+                                            <a href="javascript:void(0)" onclick="goToPage(${totalPage})"
+                                               class="page-numbers">${totalPage}</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                                <a href="javascript:void(0)" onclick="goToPage(${i})"
+                                                   class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
+                                            </c:forEach>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <a href="javascript:void(0)" onclick="goToPage(${totalPage})" class="next page-numbers">
+                                        <i class="bx bx-chevrons-right"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-4 col-md-4">
-                      <div class="product-category">
-                        <div class="form-group">
-                          <select class="form-control">
-                            <option>Categories</option>
-                            <option>Beef Meat</option>
-                            <option>Vegetable</option>
-                            <option>Natural Fruits</option>
-                            <option>Health & Beauty</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!--Food list-->
-                <div class="row">
-                  <c:forEach items="${listFood}" var="item">
-                    <div class="col-lg-4 col-sm-6">
-                      <div class="product-item">
-                        <div class="product-img">
-                            <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
-                            <img src="${item.getImage_url()}" alt="Product Images">
-                          </a>
-                          <ul class="product-item-action">
-                            <li><a href="#"><i class='bx bx-repost'></i></a></li>
-                            <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
-                            <li><a href="cart.html"><i class='bx bx-cart'></i></a></li>
-                          </ul>
-                        </div>
-
-                        <div class="content">
-                          <h3><a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">${item.getName()}</a></h3>
-                          <div>
-                            Calo: ${item.getCalo()}
-                          </div>
-                          <span>
-                            <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true"
-                              maxFractionDigits="0" /> VNĐ
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </c:forEach>
-
-                </div>
-
-                <!--Pagination-->
-                <div class="col-lg-12 col-md-12 text-center">
-                  <c:if test="${not empty category}">
-                    <!--pagination for all food-->
-                    <c:if test="${category == 0}">
-                      <div class="pagination-area">
-
-                        <a href="${pageContext.request.contextPath}/shop?page=1" class="prev page-numbers">
-                          <i class="bx bx-chevrons-left"></i>
-                        </a>
-
-                        <c:choose>
-                          <c:when test="${currentPage <= totalPage - 2}">
-                            <c:if test="${currentPage > 1}">
-                              <a href="${pageContext.request.contextPath}/shop?page=${currentPage - 1}"
-                                class="page-numbers">${currentPage - 1}</a>
-                            </c:if>
-                            <a href="${pageContext.request.contextPath}/shop?page=${currentPage}"
-                              class="page-numbers current">${currentPage}</a>
-
-                            <a href="${pageContext.request.contextPath}/shop?page=${currentPage + 1}"
-                              class="page-numbers">${currentPage + 1}</a>
-
-                            <c:if test="${currentPage < totalPage - 2}">
-                              <a href="#" class="page-numbers">...</a>
-                            </c:if>
-
-                            <a href="${pageContext.request.contextPath}/shop?page=${totalPage}"
-                              class="page-numbers">${totalPage}</a>
-                          </c:when>
-                          <c:otherwise>
-                            <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                              <a href="${pageContext.request.contextPath}/shop?page=${i}"
-                                class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                            </c:forEach>
-                          </c:otherwise>
-                        </c:choose>
-
-                        <a href="${pageContext.request.contextPath}/shop?page=${totalPage}" class="next page-numbers">
-                          <i class="bx bx-chevrons-right"></i>
-                        </a>
-
-                      </div>
-                    </c:if>
-                    <!--pagination for food category-->
-                    <c:if test="${category != 0 && not empty category}">
-                      <div class="pagination-area">
-
-                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=1"
-                          class="prev page-numbers">
-                          <i class="bx bx-chevrons-left"></i>
-                        </a>
-
-                        <c:choose>
-                          <c:when test="${currentPage <= totalPage - 2}">
-                            <c:if test="${currentPage > 1}">
-                              <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage - 1}"
-                                class="page-numbers">${currentPage - 1}</a>
-                            </c:if>
-                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage}"
-                              class="page-numbers current">${currentPage}</a>
-
-                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${currentPage + 1}"
-                              class="page-numbers">${currentPage + 1}</a>
-
-                            <c:if test="${currentPage < totalPage - 2}">
-                              <a href="#" class="page-numbers">...</a>
-                            </c:if>
-
-
-                            <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}"
-                              class="page-numbers">${totalPage}</a>
-                          </c:when>
-                          <c:otherwise>
-                            <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                              <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${i}"
-                                class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                            </c:forEach>
-                          </c:otherwise>
-                        </c:choose>
-
-                        <a href="${pageContext.request.contextPath}/shop?action=foodByCategory&category=${category}&page=${totalPage}"
-                          class="next page-numbers">
-                          <i class="bx bx-chevrons-right"></i>
-                        </a>
-                      </div>
-                    </c:if>
-                  </c:if>
-                  <c:if test="${not empty isSearch}">
-                    <div class="pagination-area">
-
-                      <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=1"
-                        class="prev page-numbers">
-                        <i class="bx bx-chevrons-left"></i>
-                      </a>
-
-                      <c:choose>
-                        <c:when test="${currentPage <= totalPage - 2}">
-                          <c:if test="${currentPage > 1}">
-                            <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage - 1}"
-                              class="page-numbers">${currentPage - 1}</a>
-                          </c:if>
-                          <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage}"
-                            class="page-numbers current">${currentPage}</a>
-
-                          <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${currentPage + 1}"
-                            class="page-numbers">${currentPage + 1}</a>
-
-                          <c:if test="${currentPage < totalPage - 2}">
-                            <a href="#" class="page-numbers">...</a>
-                          </c:if>
-
-                          <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${totalPage}"
-                            class="page-numbers">${totalPage}</a>
-                        </c:when>
-                        <c:otherwise>
-                          <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                            <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${i}"
-                              class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                          </c:forEach>
-                        </c:otherwise>
-                      </c:choose>
-
-                      <a href="${pageContext.request.contextPath}/shop?foodName=${foodName}&action=search&page=${totalPage}"
-                        class="next page-numbers">
-                        <i class="bx bx-chevrons-right"></i>
-                      </a>
-
-                    </div>
-                  </c:if>
-                </div>
-              </div>
+                </form>
             </div>
-          </div>
         </div>
         <!-- Product Area End -->
 
@@ -401,7 +311,7 @@
         <jsp:include page="../common/homePage/footer.jsp"></jsp:include>
         <!-- Footer Area End -->
 
-        <!--=== Link of JS Files ===-->
+            <!--=== Link of JS Files ===-->
         <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
@@ -416,158 +326,209 @@
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
 
         <style>
-          .product-img {
-            height: 250px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 15px !important;
-          }
+            .product-img {
+                height: 250px;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 15px !important;
+            }
 
-          .product-img a {
-            height: 100%;
-            width: auto;
-          }
+            .product-img a {
+                height: 100%;
+                width: auto;
+            }
 
-          .product-img img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-            padding: 0px !important;
-          }
-          /*formSearch*/ 
-          .formSearchByName{
-              display:flex;
-              margin-bottom: 25px
-              
-          }
-          .formSearchByName .formSearch {
-              border:1px solid #EAEDF2;
-              flex: 1;
-              outline:none;
-              padding-left: 10px;
-              border-top-left-radius: 10px;
-              border-bottom-left-radius: 10px;
-          }
-          .formSearchByName button {
-              border: none;
-              color:white;
-              font-size: 25px;
-              text-align: center;
-              background-color: #F78600;
-              padding: 5px 16px;
-              border-bottom-right-radius: 10px;
-              border-top-right-radius: 10px;
-          }
-          /*End form search*/ 
-          
-          /*category*/ 
-          .product-side-bar-widget {
-            font-family: 'Segoe UI', sans-serif;
-            color: #333;
-          }
+            .product-img img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                padding: 0px !important;
+            }
+            /*formSearch*/
+            .formSearchByName{
+                display:flex;
+                margin-bottom: 25px
 
-          .product-side-bar-widget .title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #111;
-            display: inline-block;
-            padding-bottom: 4px;
-          }
+            }
+            .formSearchByName .formSearch {
+                border:1px solid #EAEDF2;
+                flex: 1;
+                outline:none;
+                padding-left: 10px;
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+            .formSearchByName button {
+                border: none;
+                color:white;
+                font-size: 25px;
+                text-align: center;
+                background-color: #F78600;
+                padding: 5px 16px;
+                border-bottom-right-radius: 10px;
+                border-top-right-radius: 10px;
+            }
+            /*End form search*/
 
-          .categoryList ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-          }
+            /*category*/
+            .product-side-bar-widget {
+                font-family: 'Segoe UI', sans-serif;
+                color: #333;
+            }
 
-          .categoryList li {
-            display: flex;
-            align-items: center;
-            padding: 14px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 15px;
-            transition: background 0.3s, color 0.3s;
-          }
+            .product-side-bar-widget .title {
+                font-size: 20px;
+                font-weight: 600;
+                margin-bottom: 20px;
+                color: #111;
+                display: inline-block;
+                padding-bottom: 4px;
+            }
 
-          .categoryList li:last-child {
-            border-bottom: none;
-          }
+            .categoryList ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                border-radius: 10px;
+                background-color: #fff;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+                overflow: hidden;
+            }
 
-          .categoryList input[type="radio"] {
-            margin-right: 10px;
-            accent-color: black;
-            transform: scale(1.1);
-            cursor: pointer;
-          }
+            .categoryList li {
+                display: flex;
+                align-items: center;
+                padding: 14px 16px;
+                border-bottom: 1px solid #f0f0f0;
+                font-size: 15px;
+                transition: background 0.3s, color 0.3s;
+            }
 
-          .categoryList label {
-            cursor: pointer;
-            flex: 1;
-            color:black;
-            user-select: none;
-            font-weight: 600;
-          }
+            .categoryList li:last-child {
+                border-bottom: none;
+            }
 
-          .categoryList li:hover {
-            background-color: #fefce8;
-          }
+            .categoryList input[type="radio"] {
+                margin-right: 10px;
+                accent-color: black;
+                transform: scale(1.1);
+                cursor: pointer;
+            }
 
-          .categoryList li.active label {
-            font-weight: 600;
-            color: black;
-          }
+            .categoryList label {
+                cursor: pointer;
+                flex: 1;
+                color:black;
+                user-select: none;
+                font-weight: 600;
+            }
 
-          .categoryList li.active {
-            background-color: #F78600;
-          }
+            .categoryList li:hover {
+                background-color: #fefce8;
+            }
+
+            .categoryList li.active label {
+                font-weight: 600;
+                color: black;
+            }
+
+            .categoryList li.active {
+                background-color: #F78600;
+            }
 
         </style>
-        
+
         <script>
+            //Xử lý price range 
             $(function () {
                 <% 
-                  Double min_price = (Double) request.getAttribute("minPrice");
-                  Double max_price = (Double) request.getAttribute("maxPrice");
+                    Double min_price = (Double) request.getAttribute("minPrice"); // ví dụ 50000
+                    Double max_price = (Double) request.getAttribute("maxPrice"); // ví dụ 200000
+
+                    Double min_price_default = (Double) request.getAttribute("minPriceDefault"); // ví dụ 0
+                    Double max_price_default = (Double) request.getAttribute("maxPriceDefault"); // ví dụ 500000
                 %>
 
+                // Đây là khoảng người dùng đã lọc
                 const min = <%= min_price %>;
                 const max = <%= max_price %>;
 
-                $("#range-slider").slider({
-                  range: true,
-                  min: min,
-                  max: max,
-                  values: [min, max],
-                  slide: function (event, ui) {
-                    const minForm = ui.values[0].toLocaleString('vi-VN', {style: 'currency' , currency: 'VND'});
-                    const maxForm = ui.values[1].toLocaleString('vi-VN', {style: 'currency' , currency: 'VND'});
-                    $("#price-amount").val(minForm + " - " + maxForm);
+                // Đây là giới hạn full cho thanh trượt
+                const minPrice = <%= min_price_default %>;
+                const maxPrice = <%= max_price_default %>;
 
-                    $("#selected-min").val(ui.values[0]);
-                    $("#selected-max").val(ui.values[1]);
-                  }
+                $("#range-slider").slider({
+                    range: true,
+                    min: minPrice,     
+                    max: maxPrice,     
+                    values: [min, max], 
+                    slide: function (event, ui) {
+                        const minForm = ui.values[0].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+                        const maxForm = ui.values[1].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+                        $("#price-amount").val(minForm + " - " + maxForm);
+
+                        $("#selected-min").val(ui.values[0]);
+                        $("#selected-max").val(ui.values[1]);
+                    }
                 });
-                
+
                 const initMin = $("#range-slider").slider("values", 0);
                 const initMax = $("#range-slider").slider("values", 1);
-                console.log(typeof initMin);
-                const initMinForm = initMin.toLocaleString('vi-Vn', {style: 'currency' , currency: 'VND'});
-                const initMaxForm = initMax.toLocaleString('vi-Vn', {style: 'currency' , currency: 'VND'});
+                const initMinForm = initMin.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+                const initMaxForm = initMax.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
                 $("#price-amount").val(initMinForm + " - " + initMaxForm);
                 $("#selected-min").val(initMin);
                 $("#selected-max").val(initMax);
-              });
+            });
+
+            //Xử lý goToPage 
+            const goToPage = (page) => {
+                // Lấy form
+                const formSearch = document.querySelector("#formSearch");
+
+                // Tạo URLSearchParams để build lại query string
+                const params = new URLSearchParams();
+
+                // Lấy foodName nếu có
+                const foodNameInput = formSearch.querySelector('input[name="foodName"]');
+                const foodName = foodNameInput ? foodNameInput.value.trim() : "";
+                if (foodName !== "") {
+                    params.append("foodName", foodName);
+                }
+
+                // Lấy min/max price nếu có
+                const minInput = formSearch.querySelector('input[name="selectedMin"]');
+                const maxInput = formSearch.querySelector('input[name="selectedMax"]');
+                const minVal = minInput ? minInput.value.trim() : "";
+                const maxVal = maxInput ? maxInput.value.trim() : "";
+                if (minVal !== "") {
+                    params.append("selectedMin", minVal);
+                }
+                if (maxVal !== "") {
+                    params.append("selectedMax", maxVal);
+                }
+
+                // Lấy category nếu có radio được chọn
+                const categoryInput = formSearch.querySelector('input[name="category"]:checked');
+                const categoryVal = categoryInput ? categoryInput.value : "";
+                if (categoryVal !== "") {
+                    params.append("category", categoryVal);
+                }
+
+                // Thêm page
+                params.append("page", page);
+
+                // Gửi form bằng cách chuyển trang với query string đã build
+                const baseUrl = formSearch.getAttribute("action"); // ví dụ: /shop
+                const fullUrl = baseUrl + "?" + params.toString();
+                window.location.href = fullUrl;
+                };
 
         </script>
-      </body>
+    </body>
 
-      <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
+    <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
 
-      </html>
+</html>
