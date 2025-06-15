@@ -1,4 +1,3 @@
-
 <%-- 
     Document   : all-acc.jsp
     Created on : May 27, 2025, 10:00:36 AM
@@ -12,7 +11,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
         <!--link izitoatMess-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
@@ -22,7 +21,7 @@
                 /* Gợi ý: Bắt đầu CSS cải tiến */
 
                 .table-all-user ul.table-title li,
-                .table-all-user .user-item > .flex > div {
+                .table-all-user .user-item>.flex>div {
                     flex: 1;
                     min-width: 120px;
                     word-break: break-word;
@@ -79,6 +78,7 @@
                     border-radius: 4px;
                     font-size: 12px;
                 }
+
                 .wg-filter {
                     display: flex;
                     align-items: center;
@@ -124,6 +124,7 @@
                 .form-search .tf-button:hover {
                     background-color: #1066d3;
                 }
+
                 .pagination li a {
                     color: #333;
                     padding: 8px 12px;
@@ -151,19 +152,27 @@
                     color: white;
                     font-weight: bold;
                 }
+
                 .fa-circle-check {
-                    color: #28a745; /* xanh lá đẹp, như trong Bootstrap */
+                    color: #28a745;
+                    /* xanh lá đẹp, như trong Bootstrap */
                 }
+
                 .fa-circle-check:hover {
-                    color: #007BFF; /* Màu xanh biển khi hover */
+                    color: #007BFF;
+                    /* Màu xanh biển khi hover */
                 }
+
                 .list-icon-function .item.eye i {
-                    color: #FFC107; /* màu vàng */
+                    color: #FFC107;
+                    /* màu vàng */
                 }
 
                 .list-icon-function .item.edit i {
-                    color: #FF3B3B; /* đỏ tươi */
+                    color: #FF3B3B;
+                    /* đỏ tươi */
                 }
+
                 .wg-pagination {
                     display: flex;
                     justify-content: center;
@@ -200,6 +209,7 @@
                     background-color: #eee;
                     border-color: #aaa;
                 }
+
                 .switch {
                     position: relative;
                     display: inline-block;
@@ -246,13 +256,13 @@
                 }
 
                 /* Khi là ON */
-                input:checked + .slider {
+                input:checked+.slider {
                     background-color: #4CAF50;
                     justify-content: flex-end;
                 }
 
                 /* Nút tròn chạy qua phải */
-                input:checked + .slider:before {
+                input:checked+.slider:before {
                     transform: translateX(24px);
                 }
 
@@ -261,6 +271,7 @@
 
                     z-index: 1;
                 }
+
                 .search-box {
                     display: flex;
                     align-items: center;
@@ -300,6 +311,7 @@
                 .search-box button:hover {
                     color: #007bff;
                 }
+
                 .filter-button {
                     background-color: #2275fc;
                     border: 1px solid #ccc;
@@ -318,14 +330,17 @@
                     background-color: #f0f0f0;
                     border-color: #999;
                 }
+
                 .filter-container {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     gap: 20px;
                     padding: 20px;
-                    flex-wrap: wrap; /* Để responsive khi thu nhỏ màn hình */
+                    flex-wrap: wrap;
+                    /* Để responsive khi thu nhỏ màn hình */
                 }
+
                 .wrapper-flex {
                     display: flex;
                     align-items: center;
@@ -366,7 +381,8 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
-                    width: 300px; /* ← tăng tùy ý: 300px, 350px,... */
+                    width: 300px;
+                    /* ← tăng tùy ý: 300px, 350px,... */
                 }
 
                 /* Input trong ô tìm kiếm chiếm đủ không gian */
@@ -382,8 +398,9 @@
                 }
 
                 /* Container ngoài căn trái - phải */
-                .wg-box > .flex {
-                    justify-content: space-between; /* đẩy Add new sang phải */
+                .wg-box>.flex {
+                    justify-content: space-between;
+                    /* đẩy Add new sang phải */
                     align-items: center;
                     flex-wrap: wrap;
                     gap: 15px;
@@ -405,7 +422,7 @@
                 }
 
                 /* Container chính chứa toàn bộ filter/search/add */
-                .wg-box > .flex {
+                .wg-box>.flex {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -451,7 +468,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin: 0 auto; /* căn giữa trong khối cha */
+                    margin: 0 auto;
+                    /* căn giữa trong khối cha */
                 }
 
                 /* Nút "Add new" đẩy sát phải */
@@ -473,12 +491,12 @@
                     margin-left: auto;
                     display: block;
                 }
-
             </style>
 
 
 
             <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
+
             <head>
                 <!-- Basic Page Needs -->
                 <meta charset="utf-8">
@@ -517,12 +535,12 @@
                                                                             <!-- layout-wrap -->
                                                                             <div class="layout-wrap">
                                                                                 <!-- section-menu-left -->
-                                                                                <jsp:include page = "../common/admin/section-menu-left.jsp"></jsp:include>
+                                                                                <jsp:include page="../common/admin/section-menu-left.jsp"></jsp:include>
                                                                                     <!-- /section-menu-left -->
                                                                                     <!-- section-content-right -->
                                                                                     <div class="section-content-right">
                                                                                         <!-- header-dashboard -->
-                                                                                    <jsp:include page = "../common/admin/header-dashboard.jsp"></jsp:include>
+                                                                                    <jsp:include page="../common/admin/header-dashboard.jsp"></jsp:include>
                                                                                         <!-- /header-dashboard -->
                                                                                         <!-- main-content -->
                                                                                         <div class="main-content">
@@ -534,13 +552,17 @@
                                                                                                         <h3>All User</h3>
                                                                                                         <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                             <li>
-                                                                                                                <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                                                                                                <a href="index.html">
+                                                                                                                    <div class="text-tiny">Dashboard</div>
+                                                                                                                </a>
                                                                                                             </li>
                                                                                                             <li>
                                                                                                                 <i class="icon-chevron-right"></i>
                                                                                                             </li>
                                                                                                             <li>
-                                                                                                                <a href="#"><div class="text-tiny">User</div></a>
+                                                                                                                <a href="#">
+                                                                                                                    <div class="text-tiny">User</div>
+                                                                                                                </a>
                                                                                                             </li>
                                                                                                             <li>
                                                                                                                 <i class="icon-chevron-right"></i>
@@ -562,17 +584,20 @@
                                                                                                                 <div class="filter-group">
                                                                                                                     <select name="role" class="form-control">
                                                                                                                         <option value="">All Roles</option>
-                                                                                                                        <option value="admin" ${param.role == 'admin' ? 'selected' : ''}>Admin</option>
-                                                                                                                        <option value="user" ${param.role == 'user' ? 'selected' : ''}>User</option>
+                                                                                                                        <option value="admin" ${param.role=='manager' ? 'selected' : '' }>Manager</option>
+                                                                                                                        <option value="user" ${param.role=='user' ? 'selected' : '' }>User</option>
+                                                                                                                        <option value="user" ${param.role=='shipper' ? 'selected' : '' }>Shipper</option>
+                                                                                                                        <option value="user" ${param.role=='nutri' ? 'selected' : '' }>Nutritionist</option>
+                                                                                                                        <option value="user" ${param.role=='user' ? 'selected' : '' }>User</option>
                                                                                                                     </select>
 
                                                                                                                     <select name="status" class="form-control">
                                                                                                                         <option value="">All Status</option>
-                                                                                                                        <option value="true" ${param.status == 'true' ? 'selected' : ''}>Active</option>
-                                                                                                                        <option value="false" ${param.status == 'false' ? 'selected' : ''}>Deactive</option>
+                                                                                                                        <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
+                                                                                                                        <option value="banned" ${param.status == 'banned' ? 'selected' : ''}>Banned</option>
                                                                                                                     </select>
 
-                                                                                                                    <button type="submit" class="filter-button">Lọc</button>
+                                                                                                                    <button type="submit" class="filter-button">Filter</button>
 
                                                                                                             </form>
 
@@ -586,16 +611,17 @@
 
                                                                                                                         <!-- Add new -->
 
-                                                                                                                        <a style="margin-left: 250px" class="tf-button style-1 w208 add-btn" href="${pageContext.request.contextPath}/manage-account?action=add">
+                                                                                                                        <a style="margin-left: 250px" class="tf-button style-1 w208 add-btn"
+                                                                                                                           href="${pageContext.request.contextPath}/manage-account?action=add">
                                                                                                                             <i class="icon-plus"></i>Add new
-                                                                                                                        </a>                                                                                                        
-                                                                                                        </div>
+                                                                                                                        </a>
+                                                                                                                        </div>
                                                                                                                         </div>
                                                                                                                         <div class="wg-table table-all-user">
                                                                                                                             <ul class="table-title flex gap20 mb-14">
                                                                                                                                 <li>
                                                                                                                                     <div class="body-title">User</div>
-                                                                                                                                </li>   
+                                                                                                                                </li>
 
                                                                                                                                 <li>
                                                                                                                                     <div class="body-title">Address</div>
@@ -637,38 +663,38 @@
                                                                                                                                             <div class="body-text">${account.role}</div>
                                                                                                                                             <div class="body-text">
                                                                                                                                                 <c:choose>
-                                                                                                                                                    <c:when test="${account.status == false}">
-                                                                                                                                                        <span class="status-badge deactive">Deactive</span>
-                                                                                                                                                    </c:when>
-                                                                                                                                                    <c:when test="${account.status == true}">
+                                                                                                                                                    <c:when test="${account.status == 'active'}">
                                                                                                                                                         <span class="status-badge active">Active</span>
+                                                                                                                                                    </c:when>
+                                                                                                                                                    <c:when test="${account.status == 'banned'}">
+                                                                                                                                                        <span class="status-badge deactive">Banned</span>
                                                                                                                                                     </c:when>
                                                                                                                                                 </c:choose>
 
                                                                                                                                             </div>
                                                                                                                                             <div class="list-icon-function">
                                                                                                                                                 <div class="item eye">
-                                                                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">  <i class="icon-eye"></i>
+                                                                                                                                                    <a
+                                                                                                                                                        href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">
+                                                                                                                                                        <i class="icon-eye"></i>
                                                                                                                                                 </div>
 
                                                                                                                                                 <div class="item edit">
 
-                                                                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i class="icon-edit-3"></i></a>
+                                                                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i
+                                                                                                                                                            class="icon-edit-3"></i></a>
                                                                                                                                                 </div>
-                                                                                                                                                <label class="switch" title="${account.status ? 'Deactivate' : 'Activate'}">
+                                                                                                                                                <label class="switch"
+                                                                                                                                                       title="${account.status eq 'active' ? 'Deactivate' : 'Activate'}">
                                                                                                                                                     <input type="checkbox"
-                                                                                                                                                           onchange="location.href = '${pageContext.request.contextPath}/manage-account?action=${account.status ? 'deactive' : 'activate'}&id=${account.id}'"
-                                                                                                                                                           ${account.status ? 'checked' : ''}>
-                                                                                                                                                        <span class="slider"></span>
-                                                                                                                                                </label>
-                                                                                                                                                <!--                                                                                                                                            <div class="item trash">
-                                                                                                                                                                                                        <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
-                                                                                                                                                                                                        <i class="icon-trash-2"></i>
-                                                                                                                                                                                                        </a>
-                                                                                                                                                                                                        </div>-->
+                                                                                                                                                           onchange="location.href = '${pageContext.request.contextPath}/manage-account?action=${account.status eq 'active' ? 'deactive' : 'activate'}&id=${account.id}'"
+                                                                                                                                                           <c:if test='${account.status eq "active"}'>checked</c:if>>
+                                                                                                                                                               <span class="slider"></span>
+                                                                                                                                                    </label>
+
+                                                                                                                                                </div>
                                                                                                                                             </div>
-                                                                                                                                        </div>
-                                                                                                                                    </li>
+                                                                                                                                        </li>
                                                                                                                                 </c:forEach>
                                                                                                                             </ul>
                                                                                                                         </div>
@@ -677,69 +703,69 @@
                                                                                                                             <div class="text-tiny">
                                                                                                                                 Showing ${startRecord} to ${endRecord} of ${totalAccounts} entries
                                                                                                                             </div>
-
+                                                                                                                            <!--phân trang--> 
                                                                                                                             <c:if test="${totalPages > 1}">
                                                                                                                                 <ul class="wg-pagination">
                                                                                                                                     <!-- Nút Previous -->
-                                                                                                                                    <c:if test="${currentPage > 1}">
-                                                                                                                                        <li>
-                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage - 1}&pageSize=${pageSize}">
-                                                                                                                                                <i class="icon-chevron-left"></i>
-                                                                                                                                            </a>
-                                                                                                                                        </li>
-                                                                                                                                    </c:if>
+                                                                                                                                    <li>
+                                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=1&pageSize=${pageSize}">
+                                                                                                                                            <i class="icon-chevron-left"></i>
+                                                                                                                                        </a>
+                                                                                                                                    </li>
 
-                                                                                                                                    <!-- Hiển thị các trang -->
                                                                                                                                     <c:choose>
-                                                                                                                                        <c:when test="${totalPages <= 7}">
-                                                                                                                                            <!-- Hiển thị tất cả trang nếu <= 7 trang -->
-                                                                                                                                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                                                                                                                                <li <c:if test="${i == currentPage}">class="active"</c:if>>
-                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">${i}</a>
-                                                                                                                                                </li>
-                                                                                                                                            </c:forEach>
-                                                                                                                                        </c:when>
-                                                                                                                                        <c:otherwise>
-                                                                                                                                            <!-- Hiển thị phân trang thông minh -->
+                                                                                                                                        <c:when test="${currentPage <= totalPages - 2}">
                                                                                                                                             <c:if test="${currentPage > 1}">
                                                                                                                                                 <li>
-                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=1&pageSize=${pageSize}">1</a>
+                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage - 1}&pageSize=${pageSize}">
+                                                                                                                                                        ${currentPage - 1}
+                                                                                                                                                    </a>
                                                                                                                                                 </li>
                                                                                                                                             </c:if>
 
-                                                                                                                                            <c:if test="${currentPage > 3}">
-                                                                                                                                                <li><span>...</span></li>
-                                                                                                                                                </c:if>
+                                                                                                                                            <li class="active">
+                                                                                                                                                <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage}&pageSize=${pageSize}">
+                                                                                                                                                    ${currentPage}
+                                                                                                                                                </a>
+                                                                                                                                            </li>
 
-                                                                                                                                            <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 1 : 1}" 
-                                                                                                                                                       end="${currentPage < totalPages - 1 ? currentPage + 1 : totalPages}">
-                                                                                                                                                <li <c:if test="${i == currentPage}">class="active"</c:if>>
-                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">${i}</a>
-                                                                                                                                                </li>
-                                                                                                                                            </c:forEach>
+                                                                                                                                            <li>
+                                                                                                                                                <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
+                                                                                                                                                    ${currentPage + 1}
+                                                                                                                                                </a>
+                                                                                                                                            </li>
 
                                                                                                                                             <c:if test="${currentPage < totalPages - 2}">
                                                                                                                                                 <li><span>...</span></li>
                                                                                                                                                 </c:if>
 
-                                                                                                                                            <c:if test="${currentPage < totalPages}">
-                                                                                                                                                <li>
-                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">${totalPages}</a>
+                                                                                                                                            <li>
+                                                                                                                                                <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
+                                                                                                                                                    ${totalPages}
+                                                                                                                                                </a>
+                                                                                                                                            </li>
+                                                                                                                                        </c:when>
+
+                                                                                                                                        <c:otherwise>
+                                                                                                                                            <c:forEach begin="${totalPages - 2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                                                                                                                                <li class="${currentPage == i ? 'active' : ''}">
+                                                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">
+                                                                                                                                                        ${i}
+                                                                                                                                                    </a>
                                                                                                                                                 </li>
-                                                                                                                                            </c:if>
+                                                                                                                                            </c:forEach>
                                                                                                                                         </c:otherwise>
                                                                                                                                     </c:choose>
 
                                                                                                                                     <!-- Nút Next -->
-                                                                                                                                    <c:if test="${currentPage < totalPages}">
-                                                                                                                                        <li>
-                                                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
-                                                                                                                                                <i class="icon-chevron-right"></i>
-                                                                                                                                            </a>
-                                                                                                                                        </li>
-                                                                                                                                    </c:if>
+                                                                                                                                    <li>
+                                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
+                                                                                                                                            <i class="icon-chevron-right"></i>
+                                                                                                                                        </a>
+                                                                                                                                    </li>
                                                                                                                                 </ul>
                                                                                                                             </c:if>
+
                                                                                                                         </div>
 
                                                                                                                         </div>
@@ -777,13 +803,13 @@
                                                                                                                         <c:if test="${sessionScope.isDelete == true}">
                                                                                                                             <script>
                                                                                                                                                                document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                                                   iziToast.success({
-                                                                                                                                                                       title: "Thông báo",
+                                                                                                                                                               iziToast.success({
+                                                                                                                                                               title: "Thông báo",
                                                                                                                                                                        message: "Tài khoản đã được xóa thành công!",
                                                                                                                                                                        position: 'topRight',
                                                                                                                                                                        timeout: 5000,
                                                                                                                                                                        backgroundColor: "#d4edda"
-                                                                                                                                                                   });
+                                                                                                                                                               });
                                                                                                                                                                });
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("isDelete"); %>
@@ -792,46 +818,80 @@
                                                                                                                         <c:if test="${sessionScope.isUpdate == true}">
                                                                                                                             <script>
                                                                                                                                 document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                    iziToast.success({
-                                                                                                                                        title: "Thông báo",
+                                                                                                                                iziToast.success({
+                                                                                                                                title: "Thông báo",
                                                                                                                                         message: "Cập nhật tài khoản thành công!",
                                                                                                                                         position: 'topRight',
                                                                                                                                         timeout: 5000,
                                                                                                                                         backgroundColor: "#d4edda"
-                                                                                                                                    });
+                                                                                                                                });
                                                                                                                                 });
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("isUpdate"); %>
                                                                                                                         </c:if>
+                                                                                                                        <!--hiển thị ban hay active-->
+                                                                                                                        <c:if test="${not empty sessionScope.toastMessage}">
+                                                                                                                            <script>
+                                                                                                                                iziToast.${sessionScope.toastType}({
+                                                                                                                                title: '${sessionScope.toastType == "success" ? "Thành công" : "Thành Công"}',
+                                                                                                                                        message: '${sessionScope.toastMessage}',
+                                                                                                                                        position: 'topRight',
+                                                                                                                                        timeout: 3000,
+                                                                                                                                        color: '${sessionScope.toastType == "success" ? "green" : "red"}'
+                                                                                                                                });
+                                                                                                                            </script>
+                                                                                                                            <c:remove var="toastMessage" scope="session"/>
+                                                                                                                            <c:remove var="toastType" scope="session"/>
+                                                                                                                        </c:if>
+                                                                                                                        <!--hien thị add tahnfh công-->
+                                                                                                                        <c:if test="${not empty sessionScope.toastMessage}">
+                                                                                                                            <script>
+                                                                                                                                document.addEventListener("DOMContentLoaded", function () {
+                                                                                                                                iziToast.${sessionScope.toastType}({
+                                                                                                                                title: "Thông báo",
+                                                                                                                                        message: "${sessionScope.toastMessage}",
+                                                                                                                                        position: 'topRight',
+                                                                                                                                        timeout: 5000
+                                                                                                                                });
+                                                                                                                                });
+                                                                                                                            </script>
+                                                                                                                            <c:remove var="toastMessage" scope="session"/>
+                                                                                                                            <c:remove var="toastType" scope="session"/>
+                                                                                                                        </c:if>
 
                                                                                                                         <c:if test="${not empty sessionScope.toastMessage}">
                                                                                                                             <script>
                                                                                                                                 document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                    iziToast.${sessionScope.toastType}({
-                                                                                                                                        title: "Thông báo",
+                                                                                                                                iziToast.$ {
+                                                                                                                                sessionScope.toastType
+                                                                                                                                }({
+                                                                                                                                title: "Thông báo",
                                                                                                                                         message: "${sessionScope.toastMessage}",
                                                                                                                                         position: 'topRight',
                                                                                                                                         timeout: 5000
-                                                                                                                                    });
+                                                                                                                                });
                                                                                                                                 });
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("toastMessage");
-                                                                                                                            session.removeAttribute("toastType"); %>
+                                                                                                                                session.removeAttribute("toastType"); %>
                                                                                                                         </c:if>
                                                                                                                         <c:if test="${not empty sessionScope.toastMessage}">
                                                                                                                             <script>
                                                                                                                                 document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                    iziToast.${sessionScope.toastType}({
-                                                                                                                                        title: "Thông báo",
+                                                                                                                                iziToast.$ {
+                                                                                                                                sessionScope.toastType
+                                                                                                                                }({
+                                                                                                                                title: "Thông báo",
                                                                                                                                         message: "${sessionScope.toastMessage}",
                                                                                                                                         position: 'topRight',
                                                                                                                                         timeout: 5000
-                                                                                                                                    });
+                                                                                                                                });
                                                                                                                                 });
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("toastMessage");
-                                                                                                                            session.removeAttribute("toastType");%>
+                                                                                                                                session.removeAttribute("toastType");%>
                                                                                                                         </c:if>
 
                                                                                                                         <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+
                                                                                                                         </html>

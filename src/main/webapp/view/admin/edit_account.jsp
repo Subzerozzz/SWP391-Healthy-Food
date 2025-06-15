@@ -158,7 +158,7 @@
                                                                                                         <!-- Full Name -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Full Name</div>
-                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" >
+                                                                                                            <input type="text" class="form-control" name="full_name" value="${account.full_name}" required>
                                                                                                         </fieldset>
 
                                                                                                         <!-- User Name -->
@@ -201,91 +201,109 @@
                                                                                                         <!--Role-->                                                                                               
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Role</div>
-                                                                                                            <input type="text" class="form-control" name="role" value="${account.role == 'admin' ? 'Admin' : 'User'}" readonly>
-                                                                                                        </fieldset>
+                                                                                                            <c:choose>
+
+                                                                                                                <c:when test="${account.role == 'user'}">
+                                                                                                                    <input type="text" class="form-control" name="role" value="User" readonly>
+                                                                                                                    </c:when>
+                                                                                                                    <c:when test="${account.role == 'nutri'}">
+                                                                                                                        <input type="text" class="form-control" name="role" value="Nutritionist" readonly>
+                                                                                                                        </c:when>
+                                                                                                                        <c:when test="${account.role == 'saler'}">
+                                                                                                                            <input type="text" class="form-control" name="role" value="Sales" readonly>
+                                                                                                                            </c:when>
+                                                                                                                            <c:when test="${account.role == 'manager'}">
+                                                                                                                                <input type="text" class="form-control" name="role" value="Manager" readonly>
+                                                                                                                                </c:when>
+                                                                                                                                <c:when test="${account.role == 'shipper'}">
+                                                                                                                                    <input type="text" class="form-control" name="role" value="Shipper" readonly>
+                                                                                                                                    </c:when>
+
+                                                                                                                                </c:choose>
+                                                                                                                                </fieldset>
 
 
-                                                                                                        <!-- Status -->
-                                                                                                        <fieldset class="name mb-24">
-                                                                                                            <div class="body-title mb-10">Status</div>
-                                                                                                            <select name="status" class="form-control">
-                                                                                                                <option value="true" ${account.status ? 'selected' : ''}>Active</option>
-                                                                                                                <option value="false" ${!account.status ? 'selected' : ''}>Deactive</option>
-                                                                                                            </select>
-                                                                                                        </fieldset>
+                                                                                                                                <!-- Status -->
+                                                                                                                                <fieldset class="name mb-24">
+                                                                                                                                    <div class="body-title mb-10">Status</div>
+                                                                                                                                    <select name="status" class="form-control">
+                                                                                                                                        <option value="active" ${account.status == 'active' ? 'selected' : ''}>Active</option>
+                                                                                                                                        <option value="banned" ${account.status == 'banned' ? 'selected' : ''}>Banned</option>
+                                                                                                                                    </select>
+                                                                                                                                </fieldset>
 
 
-                                                                                                    </div>
+                                                                                                                                </div>
 
-                                                                                                </div>
+                                                                                                                                </div>
 
 
-                                                                                                <div class="bot">
-                                                                                                    <button class="tf-button w180" type="submit">Save</button>
-                                                                                                </div>
+                                                                                                                                <div class="bot">
+                                                                                                                                    <button class="tf-button w180" type="submit">Save</button>
+                                                                                                                                </div>
 
-                                                                                        </div>
+                                                                                                                                </div>
 
-                                                                                        </form>
-                                                                                        <!-- /add-new-user -->
-                                                                                    </div>
-                                                                                    <!-- /main-content-wrap -->
-                                                                                </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                ư
-                                                                                <!-- /bottom-page -->
-                                                                            </div>
-                                                                            <!-- /main-content -->
-                                                                        </div>
-                                                                        <!-- /section-content-right -->
-                                                                    </div>
-                                                                    <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                                </div>
-                                                                <!-- /#wrapper -->
+                                                                                                                                </form>
+                                                                                                                                <!-- /add-new-user -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /main-content-wrap -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /main-content-wrap -->
+                                                                                                                                <!-- bottom-page -->
+                                                                                                                                ư
+                                                                                                                                <!-- /bottom-page -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /main-content -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /section-content-right -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /layout-wrap -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /#page -->
+                                                                                                                                </div>
+                                                                                                                                <!-- /#wrapper -->
 
-                                                                <!-- Javascript -->
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                                <!-- Javascript -->
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
-                                                                <c:if test="${not empty errors.full_name}">
-                                                                    <script>
-                                                                        iziToast.error({
-                                                                            title: 'Lỗi',
-                                                                            message: '${errors.full_name}',
-                                                                            position: 'topRight',
-                                                                            timeout: 5000
-                                                                        });
-                                                                    </script>
-                                                                </c:if>
+                                                                                                                                <c:if test="${not empty errors.full_name}">
+                                                                                                                                    <script>
+                                                                                                                                        iziToast.error({
+                                                                                                                                            title: 'Lỗi',
+                                                                                                                                            message: '${errors.full_name}',
+                                                                                                                                            position: 'topRight',
+                                                                                                                                            timeout: 5000
+                                                                                                                                        });
+                                                                                                                                    </script>
+                                                                                                                                </c:if>
 
-                                                                <c:if test="${not empty errors.mobile}">
-                                                                    <script>
-                                                                        iziToast.error({
-                                                                            title: 'Lỗi',
-                                                                            message: '${errors.mobile}',
-                                                                            position: 'topRight',
-                                                                            timeout: 5000
-                                                                        });
-                                                                    </script>
-                                                                </c:if>
-                                                                <c:if test="${not empty errors.address}">
-                                                                    <script>
-                                                                        iziToast.error({
-                                                                            title: 'Lỗi',
-                                                                            message: '${errors.address}',
-                                                                            position: 'topRight',
-                                                                            timeout: 5000
-                                                                        });
-                                                                    </script>
-                                                                </c:if>
+                                                                                                                                <c:if test="${not empty errors.mobile}">
+                                                                                                                                    <script>
+                                                                                                                                        iziToast.error({
+                                                                                                                                            title: 'Lỗi',
+                                                                                                                                            message: '${errors.mobile}',
+                                                                                                                                            position: 'topRight',
+                                                                                                                                            timeout: 5000
+                                                                                                                                        });
+                                                                                                                                    </script>
+                                                                                                                                </c:if>
+                                                                                                                                <c:if test="${not empty errors.address}">
+                                                                                                                                    <script>
+                                                                                                                                        iziToast.error({
+                                                                                                                                            title: 'Lỗi',
+                                                                                                                                            message: '${errors.address}',
+                                                                                                                                            position: 'topRight',
+                                                                                                                                            timeout: 5000
+                                                                                                                                        });
+                                                                                                                                    </script>
+                                                                                                                                </c:if>
 
-                                                                <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
-                                                                </html>
+                                                                                                                                <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+                                                                                                                                </html>

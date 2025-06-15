@@ -24,7 +24,7 @@ public class Account {
     private String password;
     private String address;
     private String role;
-    private Boolean status;
+    private String status;
     private Date birth_date;
     private String mobile;
     private String gender;
