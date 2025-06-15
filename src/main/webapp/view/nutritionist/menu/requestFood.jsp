@@ -178,6 +178,12 @@
                           </li>
                             <c:choose>
                                 <c:when test="${currentPage < totalPage - 2}">
+                                    <c:if test="${currentPage > 1}">
+                                        <li class="">
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage - 1}">${currentPage - 1}</a>
+                                        </li>
+                                    </c:if>
+                                    
                                     <li class="active">
                                         <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${currentPage}">${currentPage}</a>
                                     </li>
@@ -186,9 +192,11 @@
                                         <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${currentPage + 1}">${currentPage + 1}</a>
                                     </li>
                                     
-                                    <li>
-                                        <span>...</span>
-                                    </li>
+                                    <c:if test="${currentPage < totalPage - 2}">
+                                        <li>
+                                            <span>...</span>
+                                        </li>
+                                    </c:if>
                                     
                                     <li class="">
                                         <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${totalPage}">${totalPage}</a>
@@ -196,7 +204,7 @@
                                 </c:when>
                                 
                                 <c:otherwise>
-                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                    <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
                                             <a href="${pageContext.request.contextPath}/manage-food?action=request&page=${i}">${i}</a>
                                         </li>

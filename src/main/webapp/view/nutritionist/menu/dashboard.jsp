@@ -284,7 +284,7 @@
                                 </c:when>
                                 
                                 <c:otherwise>
-                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                    <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
                                             <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
                                         </li>
