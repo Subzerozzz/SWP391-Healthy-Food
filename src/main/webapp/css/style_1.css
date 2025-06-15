@@ -406,11 +406,15 @@ del,
 }
 
 /* Table */
+<<<<<<< HEAD
 table,
 th,
 td {
   border: 1px solid #343444;
 }
+=======
+
+>>>>>>> origin/manager-request
 
 table {
   border-collapse: separate;
@@ -5538,7 +5542,11 @@ select.h40 {
   color: #94A3B8 !important;
 }
 .dark-theme .section-menu-left .menu-item a .icon svg path {
+<<<<<<< HEAD
   stroke: #A3D9A5;
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/manager-request
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;
@@ -6518,6 +6526,10 @@ select.h40 {
   .wg-chart-default,
   .wg-box {
     padding: 24px 15px;
+<<<<<<< HEAD
+=======
+    
+>>>>>>> origin/manager-request
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;

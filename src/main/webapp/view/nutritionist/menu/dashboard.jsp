@@ -77,6 +77,9 @@
                   <div class="main-content-wrap">
                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Food List</h3>
+                    <c:if test="${empty listFood}">
+                        <div>1</div>
+                    </c:if>
                     </div>
                     <!-- Thêm modal xác nhận xóa -->
                     <div id="customDeleteModal" class="custom-modal-overlay" style="display:none;">
@@ -474,6 +477,7 @@
           //lấy thông tin
           const target = event.target;
           const foodId = target.dataset.id;
+          console.log(foodId);
           const foodName = target.dataset.name
           //Tạo form ảo gửi lên controller
           const form = document.createElement('form');
