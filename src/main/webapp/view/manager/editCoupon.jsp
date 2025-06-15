@@ -5,6 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
@@ -71,11 +72,14 @@
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <h3>Edit Coupon</h3>
+                                <fmt:formatDate value="${coupon.startDate}" pattern="yyyy-MM-dd" var="startDateFormatted" />
+                                <fmt:formatDate value="${coupon.endDate}" pattern="yyyy-MM-dd" var="endDateFormatted" />
                                 </div>
                                 <!-- form-add-coupon -->
                                 <form  
                                     action="ManagerCoupon?action=edit"
                                      method="POST">
+                                    <input type="hidden" name="id" value="${coupon.id}">
                                     <div class="wg-box">
                                         <!-- Coupon Code -->
                                         <fieldset class="code">
@@ -86,7 +90,7 @@
                                         <!-- Description -->
                                         <fieldset class="description">
                                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                             <input class="mb-10" type="text" placeholder="Enter coupon code" name="description" tabindex="0" value="${coupon.description}" aria-required="true" required maxlength="500">
+                                             <input class="mb-10" type="text" placeholder="Enter description" name="description" tabindex="0" value="${coupon.description}" aria-required="true" required maxlength="500">
                                             <div class="text-tiny">Describe the coupon offer (max 500 characters).</div>
                                             
                                         </fieldset>
@@ -116,8 +120,28 @@
                                             <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter minimum purchase amount" name="minpurchase" tabindex="0" value="${coupon.minPurchase}">
                                             <div class="text-tiny">Minimum order amount required to use this coupon (optional).</div>
                                         </fieldset>
+                                            <fieldset class="maxDiscount">
+                                                <div class="body-title mb-10">Maximum Discount Amount</div>
+                                                <input class="mb-10" type="number" step="0.01" min="0" 
+                                                       placeholder="Enter maximum discount amount" name="maxdiscount"
+                                                       tabindex="0" value="${coupon.maxDiscount}">
+                                                    <div class="text-tiny">Maximum discount amount for percentage coupons (optional).</div>
+                                            </fieldset>
+                                                       <div class="cols gap10">
+                                                           <fieldset class="startDate">
+                                                               <div class="body-title mb-10">Start Date <span class="tf-color-1">*</span></div>
+                                                               <input type="date" name="date1" id="startDate" value="${startDateFormatted}" required>
+                                                                   <div class="text-tiny">When the coupon becomes active.</div>
+                                                           </fieldset>
+
+                                                           <fieldset class="endDate">
+                                                               <div class="body-title mb-10">End Date <span class="tf-color-1">*</span></div>
+                                                               <input type="date" name="date2" id="endDate" value="${endDateFormatted}" required>
+                                                                   <div class="text-tiny">When the coupon expires.</div>
+                                                           </fieldset>
+                                                       </div>                                    
+                                    </div>  
                                         <!-- Date Range -->
-                                  
                                          <div class="cols gap10">
                                              <button class="tf-button w-full" type="submit">Edit Coupon</button>
                                          </div>
@@ -195,18 +219,27 @@
          });
 
          // Set default start date to now
-         document.addEventListener('DOMContentLoaded', function() {
-             const now = new Date();
-             const startDateInput = document.querySelector('input[name="date1"]');
-             const endDateInput = document.querySelector('input[name="date2"]');
-             
-             // Set start date to current time
-             startDateInput.value = now.toISOString().slice(0, 16);
-             
-             // Set end date to 30 days from now
-             const endDate = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000));
-             endDateInput.value = endDate.toISOString().slice(0, 16);
-         });
+        document.addEventListener('DOMContentLoaded', function () {
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+
+        const pad = (num) => num.toString().padStart(2, '0');
+
+        const formatDate = (d) => 
+            d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
+        // Gán nếu chưa có giá trị từ server
+        if (!startDateInput.value) {
+            const today = new Date();
+            startDateInput.value = formatDate(today);
+        }
+
+        if (!endDateInput.value) {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 30); // 30 ngày sau
+            endDateInput.value = formatDate(endDate);
+        }
+    });
      </script>
  </body>
  <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->

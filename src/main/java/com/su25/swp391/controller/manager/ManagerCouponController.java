@@ -99,7 +99,7 @@ public class ManagerCouponController extends HttpServlet {
         }
         int currentPage = Integer.parseInt(indexPage);
         int totalCoupons = couponDAO.getTotalCoupon();
-        int totalPage = totalCoupons/ 10;
+        int totalPage = totalCoupons / 10;
         if (totalCoupons % 10 != 0) {
             totalPage++;
         }
@@ -187,60 +187,57 @@ public class ManagerCouponController extends HttpServlet {
     }
 
     private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String status = request.getParameter("status");
-        String search = request.getParameter("search"); // Thêm search parameter
+    String discountType = request.getParameter("discounttype"); // lấy đúng tham số discounttype (trùng với JSP)
+    
+    // Lấy tham số phân trang
+    String pageParam = request.getParameter("index");
+    String pageSizeParam = request.getParameter("pageSize");
 
-        // Lấy tham số phân trang - Sửa "page" thành "index" để phù hợp với phân trang
-        String pageParam = request.getParameter("index"); // Đổi từ "page" thành "index"
-        String pageSizeParam = request.getParameter("pageSize");
-
-        int currentPage = 1;
-        int pageSize = 10;
-        try {
-            if (pageParam != null && !pageParam.isEmpty()) {
-                currentPage = Integer.parseInt(pageParam);
-                if (currentPage < 1) {
-                    currentPage = 1;
-                }
+    int currentPage = 1;
+    int pageSize = 10;
+    try {
+        if (pageParam != null && !pageParam.isEmpty()) {
+            currentPage = Integer.parseInt(pageParam);
+            if (currentPage < 1) {
+                currentPage = 1;
             }
-            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
-                pageSize = Integer.parseInt(pageSizeParam);
-                if (pageSize < 5) {
-                    pageSize = 5;
-                }
-                if (pageSize > 50) {
-                    pageSize = 50;
-                }
-            }
-        } catch (NumberFormatException e) {
-            currentPage = 1;
-            pageSize = 10;
         }
-
-        // Lấy danh sách đã lọc với phân trang
-        List<Coupon> filteredCoupon = couponDAO.filterCouponWithPagination(status, search, currentPage, pageSize);
-
-        // Tính toán tổng số blog với bộ lọc
-        int totalBlogs = couponDAO.getTotalCouponCountWithFilter(status, search);
-        int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
-
-        // Thiết lập các thuộc tính cho JSP
-        request.setAttribute("blogs", filteredCoupon);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPage", totalPages); // Đổi từ "totalPages" thành "totalPage" để phù hợp với phân trang
-        request.setAttribute("pageSize", pageSize);
-        request.setAttribute("totalBlogs", totalBlogs);
-        request.setAttribute("status", status);
-        request.setAttribute("search", search); // Thêm search attribute
-
-        // Tính toán phạm vi hiển thị bản ghi
-        int startRecord = (currentPage - 1) * pageSize + 1;
-        int endRecord = Math.min(startRecord + pageSize - 1, totalBlogs);
-        request.setAttribute("startRecord", startRecord);
-        request.setAttribute("endRecord", endRecord);
-
-        request.getRequestDispatcher("/view/coupon/listCoupon.jsp").forward(request, response);
+        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+            pageSize = Integer.parseInt(pageSizeParam);
+            if (pageSize < 5) {
+                pageSize = 5;
+            }
+            if (pageSize > 50) {
+                pageSize = 50;
+            }
+        }
+    } catch (NumberFormatException e) {
+        currentPage = 1;
+        pageSize = 10;
     }
+
+    // Gọi DAO lọc và đếm tổng bản ghi
+    List<Coupon> filteredCoupon = couponDAO.filterCouponWithPagination(discountType, currentPage, pageSize);
+    int totalCoupons = couponDAO.getTotalCouponCountWithFilter(discountType);
+    int totalPages = (int) Math.ceil((double) totalCoupons / pageSize);
+
+    // Đưa dữ liệu vào request để JSP hiển thị
+    request.setAttribute("coupons", filteredCoupon);
+    request.setAttribute("currentPage", currentPage);
+    request.setAttribute("totalPage", totalPages);
+    request.setAttribute("pageSize", pageSize);
+    request.setAttribute("totalCoupons", totalCoupons);
+    request.setAttribute("discounttype", discountType); // giữ giá trị filter cho JSP
+
+    // Tính chỉ số bản ghi hiển thị (ví dụ: 11-20)
+    int startRecord = (currentPage - 1) * pageSize + 1;
+    int endRecord = Math.min(startRecord + pageSize - 1, totalCoupons);
+    request.setAttribute("startRecord", startRecord);
+    request.setAttribute("endRecord", endRecord);
+
+    // Forward tới trang JSP hiển thị danh sách coupons
+    request.getRequestDispatcher("/view/manager/listCoupon.jsp").forward(request, response);
+}
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -335,10 +332,10 @@ public class ManagerCouponController extends HttpServlet {
             e.printStackTrace();
             request.getRequestDispatcher("/view/manager/addCoupon.jsp").forward(request, response);
         }
-    }   
+    }
 
     private void couponUpdateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try{  
+        try {
             int id = Integer.parseInt(request.getParameter("id"));
             String code = request.getParameter("code");
             String description = request.getParameter("description");
