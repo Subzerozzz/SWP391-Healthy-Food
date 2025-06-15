@@ -15,14 +15,11 @@ import java.util.stream.Collectors;
  */
 public class GlobalConfig {
 
-   public static List<Category> filterCategoryByBMI(List<Category> allCategories, double minBMI, double maxBMI) {
-    List<Category> result = new ArrayList<>();
-    for (Category c : allCategories) {
-        // Nếu khoảng BMI của category giao nhau với khoảng lọc
-        if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
-            result.add(c);
-        }
-    }
-    return result;
+   public class BMIRange {
+    public static final double[] LOW = {10.0, 18.4};
+    public static final double[] NORMAL = {18.5, 24.9};
+    public static final double[] OVERWEIGHT = {25.0, 29.9};
+    public static final double[] OBESE = {30.0, 50.0};
+    public static final double[] ALL = {0.0, 51.0}; // Mặc định lọc toàn bộ
 }
 } 

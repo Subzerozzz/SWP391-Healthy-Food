@@ -7,6 +7,7 @@ package com.su25.swp391.controller;
 
 import com.su25.swp391.config.CategoryFilterService;
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.config.GlobalConfig.BMIRange;
 import com.su25.swp391.dal.implement.CategoryDAO;
 import com.su25.swp391.entity.Category;
 import jakarta.servlet.RequestDispatcher;
@@ -429,49 +430,48 @@ public class ManageCategory extends HttpServlet {
         }
     }
 
-private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+   private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
-
-    System.out.println("FilterType: " + filterType); // Log filter type người dùng chọn
-
+   
     // Lấy toàn bộ danh mục
     CategoryDAO dao = new CategoryDAO();
     List<Category> allCategories = dao.findAll();
-
-    System.out.println("Total Categories Before Filter: " + allCategories.size()); // Tổng số category ban đầu
+ 
 
     // Xác định khoảng BMI cần lọc
     double[] range = getBMIRange(filterType);
     double minBMI = range[0];
     double maxBMI = range[1];
+    
 
-    System.out.println("BMI Range: " + minBMI + " - " + maxBMI); // In khoảng BMI lọc
-
-    // Gọi hàm lọc trong GlobalConfig
-    List<Category> filtered = GlobalConfig.filterCategoryByBMI(allCategories, minBMI, maxBMI);
-
-    System.out.println("Filtered Categories Count: " + filtered.size()); // In số danh mục sau khi lọc
+    // Lọc trực tiếp trong vòng lặp (gộp hàm filterCategoryByBMI)
+    List<Category> filtered = new ArrayList<>();
+    for (Category c : allCategories) {
+        if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
+            filtered.add(c);
+        }
+    }
 
     // Truyền dữ liệu sang JSP
     request.setAttribute("listcategory", filtered);
     request.setAttribute("selectedFilter", filterType);
+    
     request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
 }
 
-
 // Hàm lấy khoảng BMI tương ứng với filterType
-private double[] getBMIRange(String filterType) {
+ private double[] getBMIRange(String filterType) {
     switch (filterType) {
         case "low":
-            return new double[]{10, 18.4};
+            return BMIRange.LOW;
         case "normal":
-            return new double[]{18.5, 24.9};
+            return BMIRange.NORMAL;
         case "overweight":
-            return new double[]{25, 29.9};
+            return BMIRange.OVERWEIGHT;
         case "obese":
-            return new double[]{30, 50};
+            return BMIRange.OBESE;
         default:
-            return new double[]{0, 51}; // Nếu không chọn filter nào, trả về tất cả
+            return BMIRange.ALL;
     }
 }
 }
