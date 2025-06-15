@@ -151,7 +151,7 @@
                                 <h3>Quantity</h3>
                                 <div class="input-counter">
                                     <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input type="text" value="1">
+                                    <input id="quantityOfFood"type="text" value="1">
                                     <span class="plus-btn"><i class='bx bx-plus'></i></span>
                                 </div>
                             </div>
@@ -166,34 +166,6 @@
                                 </button>
                             </div>
                             
-                            <!--Socail media--> 
-                            <!--                            <div class="product-share">
-                                                            <ul>
-                                                                <li>
-                                                                    <span>Share:</span>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-                                                                        <i class='bx bxl-facebook' ></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-                                                                        <i class='bx bxl-linkedin'></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-                                                                        <i class='bx bxl-twitter'></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" target="_blank">
-                                                                        <i class='bx bxl-instagram'></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>-->
                         </div>
                     </div>
                 </div>
@@ -301,18 +273,28 @@
         <script>
             //addToCart 
             const addToCart = (id) => {
+                const quantity = document.querySelector("#quantityOfFood").value;
                 //Tạo 1 form ẩn
-                fetch(`${pageContext.request.contextPath}/cart`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `action=add&id=${id}`
-                })
-                .then(response => data)
-                .then(data => {
-                    
-                })
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '${pageContext.request.contextPath}/cart?action=add';
+                
+                // Tạo input ẩn cho id
+                const inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = 'id';
+                inputId.value = id;
+                form.appendChild(inputId);
+                
+                //Tạo input ẩn cho quantity
+                const inputQuantity = document.createElement('input');
+                inputQuantity.type = 'hidden';
+                inputQuantity.name = 'quantity';
+                inputQuantity.value = quantity;
+                form.appendChild(inputQuantity)
+                //Gửi form 
+                document.body.appendChild(form);
+                form.submit();
             }
         </script>
     </body>

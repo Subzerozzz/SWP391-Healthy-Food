@@ -52,5 +52,8 @@ public class CartDAO extends DBContext implements I_DAO<Cart>{
     public Cart findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+//    public Cart findCartByAccountId(Integer acc_id) {
+//    }
     
 }
