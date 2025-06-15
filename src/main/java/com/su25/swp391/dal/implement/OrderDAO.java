@@ -16,11 +16,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class OrderDAO extends DBContext implements I_DAO<Order> {
-    
-    
+
     @Override
     public Map<Integer, Order> findAllMap() {
-            // Implement the logic to fetch all orders and store them in a map
+        // Implement the logic to fetch all orders and store them in a map
         // where the key is the order ID and the value is the Order object.
         Map<Integer, Order> orderMap = new HashMap<>();
         String sql = "SELECT o.*, a.username, a.email, a.phone FROM orders o JOIN account a ON o.user_id = a.user_id";
@@ -44,9 +43,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public boolean delete(Order order) {
         throw new UnsupportedOperationException("Delete operation is not supported for orders");
     }
-    
-    
-    
+
     @Override
     public Order getFromResultSet(ResultSet rs) throws SQLException {
         Order order = new Order();
@@ -58,7 +55,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         order.setPaymentMethod(rs.getString("payment_method"));
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
-      
 
         // Add coupon information
         order.setCouponCode(rs.getString("coupon_code"));
@@ -75,8 +71,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
+                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -84,11 +80,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-         if (paymentMethod != null && !paymentMethod.isEmpty()) {
+        if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
-         
+
         sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
         params.add((page - 1) * pageSize);
@@ -107,15 +103,15 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (SQLException ex) {
             System.out.println("Error finding filtered orders: " + ex.getMessage());
         } finally {
-         
+
         }
         return orders;
     }
 
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
+                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
@@ -123,7 +119,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
-          if (paymentMethod != null && !paymentMethod.isEmpty()) {
+        if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
@@ -149,8 +145,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public Order findById(int orderId) {
         String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
+                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE o.order_id = ?";
         try {
             connection = getConnection();
@@ -176,7 +172,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             connection = getConnection();
             connection.setAutoCommit(false);
 
-            String getStatusSql = "SELECT status FROM "+ GlobalConfig.DB_SCHEMA + ".orders WHERE order_id = ?";
+            String getStatusSql = "SELECT status FROM " + GlobalConfig.DB_SCHEMA + ".orders WHERE order_id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -190,7 +186,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Update order status
-            String updateSql = "UPDATE "+ GlobalConfig.DB_SCHEMA + ".orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
+            String updateSql = "UPDATE " + GlobalConfig.DB_SCHEMA + ".orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -200,7 +196,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
             if (rowsAffected > 0) {
                 // Add approval record directly instead of using OrderApprovalDAO
-                String approvalSql = "INSERT INTO "+ GlobalConfig.DB_SCHEMA + ".order_approvals (order_id, approved_by, status_before, status_after, note) "
+                String approvalSql = "INSERT INTO " + GlobalConfig.DB_SCHEMA + ".order_approvals (order_id, approved_by, status_before, status_after, note) "
                         + "VALUES (?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(approvalSql);
                 statement.setInt(1, orderId);
@@ -277,12 +273,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 //            e.printStackTrace();
 //        }
 //       
-       
-        
-            
 //    }
 //    }
-
     /**
      * Find orders by user ID with optional status filter and pagination
      */
@@ -370,8 +362,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
+                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -414,8 +406,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.user_id "
+                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
+                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.user_id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -507,11 +499,13 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     /**
-     * Kiểm tra xem một đơn hàng đã hoàn thành và thuộc về người dùng cụ thể hay không
+     * Kiểm tra xem một đơn hàng đã hoàn thành và thuộc về người dùng cụ thể hay
+     * không
      *
      * @param orderId ID của đơn hàng cần kiểm tra
      * @param userId ID của người dùng cần kiểm tra
-     * @return true nếu đơn hàng đã hoàn thành và thuộc về người dùng, ngược lại trả về false
+     * @return true nếu đơn hàng đã hoàn thành và thuộc về người dùng, ngược lại
+     * trả về false
      */
     public boolean isOrderCompletedAndBelongsToUser(int orderId, int userId) {
         String sql = "SELECT COUNT(*) FROM orders WHERE order_id = ? AND user_id = ? AND status = 'completed'";
@@ -535,7 +529,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     /**
-     * Kiểm tra xem người dùng đã mua sản phẩm này chưa và đơn hàng đã hoàn thành
+     * Kiểm tra xem người dùng đã mua sản phẩm này chưa và đơn hàng đã hoàn
+     * thành
      *
      * @param userId ID của người dùng
      * @param productId ID của sản phẩm
@@ -623,7 +618,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(5, order.getPaymentMethod());
             statement.setString(6, order.getCouponCode());
             statement.setBigDecimal(7, order.getDiscountAmount());
-           
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -832,10 +826,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
         return 0;
     }
+
     public static void main(String[] args) {
         OrderDAO o = new OrderDAO();
         System.out.println(o.findById(60));
-        List<Order> l = o.findOrdersWithFilters(null,null, 1, 10);
+        List<Order> l = o.findOrdersWithFilters(null, null, 1, 10);
         System.out.println(l);
         //System.out.println(o.searchOrders("60", "", "", 1, 10));
         //System.out.println(o.getTotalSearchResults("60", "", "");
@@ -843,7 +838,5 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         List<Order> l2 = o.searchOrders("60", "", "", 1, 10);
         System.out.println(l2);
     }
-        
-        
- 
+
 }
