@@ -34,26 +34,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return account;
     }
 
-    @Override
-    public Map<Integer, Account> findAllMap() {
-        Map<Integer, Account> accountMap = new HashMap<>();
-        try {
-            String sql = "SELECT * FROM Accounts";
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Account account = getFromResultSet(resultSet);
-                accountMap.put(account.getId(), account);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return accountMap;
-    }
 
-    @Override
     public boolean updatePasswordByEmail(Account t) {
         try {
             connection = getConnection();
@@ -176,7 +157,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return null;
     }
 
-    @Override
     public Account findById(Integer id) {
         try {
             connection = getConnection();

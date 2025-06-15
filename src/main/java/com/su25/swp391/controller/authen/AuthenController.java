@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
@@ -7,6 +8,7 @@ package com.su25.swp391.controller.authen;
 import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
 import com.su25.swp391.utils.MD5PasswordEncoderUtils;
@@ -45,6 +47,7 @@ public class AuthenController extends HttpServlet {
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
+    CartDAO cartDAO = new CartDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -234,6 +237,7 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("password", password);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
                 url = HOME_PAGE;
+
             }
 
             // Lưu thông tin người dùng vào session
@@ -267,6 +271,12 @@ public class AuthenController extends HttpServlet {
             if ("register".equals(otpType)) {
                 accountFoundByEmail.setPassword(MD5PasswordEncoderUtils.encodeMD5(accountFoundByEmail.getPassword()));
                 accountDAO.insert(accountFoundByEmail);
+                // Lấy lại ID từ DB
+                Account insertedAccount = accountDAO.findByEmail(accountFoundByEmail);
+                // Tạo giỏ hàng
+                cartDAO.createCart(insertedAccount.getId());
+                // Cập nhật lại account vào session nếu cần
+                session.setAttribute(GlobalConfig.SESSION_ACCOUNT, insertedAccount);
                 url = HOME_PAGE;
             } else if ("forgot".equals(otpType)) {
                 url = NEWPASS_PAGE;

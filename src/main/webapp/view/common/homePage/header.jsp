@@ -267,6 +267,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myaccount"><i class="fa fa-user me-2"></i>My Account</a></li>
                                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/changepassword"><i class="fa-solid fa-key me-2"></i>Change Password</a></li>
+                                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/orderlist"><i class="fa fa-sign-out-alt me-2"></i>Order List</a></li>
                                                 <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out-alt me-2"></i>Log Out</a></li>
                                             </ul>
                                         </div>
