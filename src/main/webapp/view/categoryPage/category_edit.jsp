@@ -334,24 +334,24 @@
                                                                             const value = input.value.trim();
 
                                                                             if (value === "") {
-                                                                                showError(input, `${fieldName} là bắt buộc`);
+                                                                                showError(input, `${fieldName} vui long nhap `);
                                                                                 return false;
                                                                             }
 
                                                                             if (isNaN(value)) {
-                                                                                showError(input, `${fieldName} phải là số`);
+                                                                                showError(input, `${fieldName} vui long nhap so`);
                                                                                 return false;
                                                                             }
 
                                                                             const number = parseFloat(value);
 
                                                                             if (number < 0) {
-                                                                                showError(input, `${fieldName} phải ≥ 0`);
+                                                                                showError(input, `${fieldName} số phải ≥ 0`);
                                                                                 return false;
                                                                             }
 
                                                                             if (number < minValue || number > maxValue) {
-                                                                                showError(input, `${fieldName} phải nằm trong khoảng ${minValue} - ${maxValue}`);
+                                                                                showError(input, `${fieldName} số phải nằm trong khoảng ${minValue} - ${maxValue}`);
                                                                                                 return false;
                                                                                             }
 

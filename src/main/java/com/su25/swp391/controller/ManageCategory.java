@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -428,26 +429,35 @@ public class ManageCategory extends HttpServlet {
         }
     }
 
-   private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
+
+    System.out.println("FilterType: " + filterType); // Log filter type người dùng chọn
 
     // Lấy toàn bộ danh mục
     CategoryDAO dao = new CategoryDAO();
     List<Category> allCategories = dao.findAll();
+
+    System.out.println("Total Categories Before Filter: " + allCategories.size()); // Tổng số category ban đầu
 
     // Xác định khoảng BMI cần lọc
     double[] range = getBMIRange(filterType);
     double minBMI = range[0];
     double maxBMI = range[1];
 
+    System.out.println("BMI Range: " + minBMI + " - " + maxBMI); // In khoảng BMI lọc
+
     // Gọi hàm lọc trong GlobalConfig
     List<Category> filtered = GlobalConfig.filterCategoryByBMI(allCategories, minBMI, maxBMI);
+
+    System.out.println("Filtered Categories Count: " + filtered.size()); // In số danh mục sau khi lọc
 
     // Truyền dữ liệu sang JSP
     request.setAttribute("listcategory", filtered);
     request.setAttribute("selectedFilter", filterType);
     request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
 }
+
 
 // Hàm lấy khoảng BMI tương ứng với filterType
 private double[] getBMIRange(String filterType) {

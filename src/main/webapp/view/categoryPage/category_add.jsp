@@ -111,12 +111,12 @@
                                                                                                             <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="minBMI">
-                                                                                                        <div class="body-title">MinBMI: </div>
+                                                                                                        <div class="body-title">MinBMI: <span class="tf-color-1">*</span></div>
                                                                                                         <input class="flex-grow" type="text" placeholder="minBMI" name="minBMI" tabindex="0" value="${minBMI != null ? minBMI : ''}" >
                                                                                                             <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset class="maxBMI">
-                                                                                                        <div class="body-title">MaxBMI :</div>
+                                                                                                        <div class="body-title">MaxBMI :<span class="tf-color-1">*</span></div>
                                                                                                         <input class="flex-grow" type="text" placeholder="maxBMI" name="maxBMI" tabindex="0" value="${maxBMI != null ? maxBMI : ''}" >
                                                                                                             <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
@@ -206,12 +206,12 @@
                                                                             const value = input.value.trim();
 
                                                                             if (value === "") {
-                                                                                showError(input, `${fieldName} là bắt buộc`);
+                                                                                showError(input, `${fieldName} Vui lòng nhập`);
                                                                                 return false;
                                                                             }
 
                                                                             if (isNaN(value)) {
-                                                                                showError(input, `${fieldName} phải là số`);
+                                                                                showError(input, `${fieldName} Vui lòng nhập`);
                                                                                 return false;
                                                                             }
 

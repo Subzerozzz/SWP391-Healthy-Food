@@ -125,18 +125,28 @@
                                                                                                                         <div class="wg-filter flex-grow">
 
                                                                                                                             <form class="form-search" action="${pageContext.request.contextPath}/manageCategory" method="get">
-                                                                                                                                <fieldset class="name">
-                                                                                                                                    <input type="hidden" name="action" value="filterBMI">
+                                                                                                                                <input type="hidden" name="action" value="filter">
+                                                                                                                                    <fieldset class="name">
                                                                                                                                         <select name="filterType">
-                                                                                                                                            <option value="low" ${"low".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>Dưới 18.5 (Gầy)</option>
-                                                                                                                                            <option value="normal" ${"normal".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>18.5 – 24.9 (Bình thường)</option>
-                                                                                                                                            <option value="overweight" ${"overweight".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>25 – 29.9 (Thừa cân)</option>
-                                                                                                                                            <option value="obese" ${"obese".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>Trên 30 (Béo phì)</option>
+                                                                                                                                            <option value="low" ${"low".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>
+                                                                                                                                                Dưới 18.5 (Gầy)
+                                                                                                                                            </option>
+                                                                                                                                            <option value="normal" ${"normal".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>
+                                                                                                                                                18.5 – 24.9 (Bình thường)
+                                                                                                                                            </option>
+                                                                                                                                            <option value="overweight" ${"overweight".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>
+                                                                                                                                                25 – 29.9 (Thừa cân)
+                                                                                                                                            </option>
+                                                                                                                                            <option value="obese" ${"obese".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>
+                                                                                                                                                Trên 30 (Béo phì)
+                                                                                                                                            </option>
                                                                                                                                         </select>
-                                                                                                                                </fieldset>
-                                                                                                                                <div class="button-submit">
-                                                                                                                                    <button type="submit"><i class="fa-solid fa-filter"></i></button>
-                                                                                                                                </div>
+                                                                                                                                    </fieldset>
+                                                                                                                                    <div class="button-submit">
+                                                                                                                                        <button type="submit" title="Lọc theo BMI">
+                                                                                                                                            <i class="fa-solid fa-filter"></i>
+                                                                                                                                        </button>
+                                                                                                                                    </div>
                                                                                                                             </form>
 
 
@@ -174,9 +184,9 @@
                                                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                                                 <div class="body-title">
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.id}</a>
-
+                                                                                                                                                    <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px;"></div>
                                                                                                                                                 </div>
-                                                                                                                                                <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px;"></div>
+                                                                                                                                                
                                                                                                                                                 <div class="body-title-2">
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.name_category}</a>
                                                                                                                                                 </div>
