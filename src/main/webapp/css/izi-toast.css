@@ -1,0 +1,60 @@
+/* Popup chính */
+.custom-swal-popup {
+    border-radius: 12px;
+    padding: 16px 22px;
+    max-width: 320px;
+    font-family: "Segoe UI", sans-serif;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.swal2-title.custom-swal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212121;
+    text-align: center;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+}
+
+/* Nút xác nhận */
+.custom-swal-confirm {
+    background-color: #e53935;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.custom-swal-confirm:hover {
+    background-color: #c62828;
+}
+
+/* Nút huỷ */
+.custom-swal-cancel {
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.custom-swal-cancel:hover {
+    background-color: #e0e0e0;
+}
+.swal2-title.custom-swal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212121;
+    text-align: center;
+    margin: 0 !important; /* Xoá margin mặc định */
+    line-height: 1.35 !important; /* Giảm khoảng cách giữa các dòng */
+    white-space: pre-line; /* Cho phép xuống dòng nếu có \n trong chuỗi */
+}
