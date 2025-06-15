@@ -6,6 +6,7 @@
 package com.su25.swp391.controller;
 
 import com.su25.swp391.config.CategoryFilterService;
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.CategoryDAO;
 import com.su25.swp391.entity.Category;
 import jakarta.servlet.RequestDispatcher;
@@ -390,7 +391,7 @@ public class ManageCategory extends HttpServlet {
                 request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
                 request.getSession().setAttribute("toastType", "Fail");
                 request.setAttribute("error", "Update Fail");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
                 dispatcher.forward(request, response);
                 return;
             }
@@ -398,7 +399,7 @@ public class ManageCategory extends HttpServlet {
             request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
             request.getSession().setAttribute("toastType", "Fail");
             request.setAttribute("error", "Update Fail");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/common/categoryPage/category_edit.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
             dispatcher.forward(request, response);
             return;
         }
@@ -427,15 +428,40 @@ public class ManageCategory extends HttpServlet {
         }
     }
 
-    private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String filterType = request.getParameter("filterType");// giá trị: low, normal, overweight, obese
-        //gọi hàm service 
-        CategoryFilterService service = new CategoryFilterService();
-        //lay list lọc 
-        List<Category> filtered = service.filterByType(filterType);
+   private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
 
-        request.setAttribute("listcategory", filtered);
-        request.setAttribute("selectedFilter", filterType);//giữ filter đã chọn
-        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+    // Lấy toàn bộ danh mục
+    CategoryDAO dao = new CategoryDAO();
+    List<Category> allCategories = dao.findAll();
+
+    // Xác định khoảng BMI cần lọc
+    double[] range = getBMIRange(filterType);
+    double minBMI = range[0];
+    double maxBMI = range[1];
+
+    // Gọi hàm lọc trong GlobalConfig
+    List<Category> filtered = GlobalConfig.filterCategoryByBMI(allCategories, minBMI, maxBMI);
+
+    // Truyền dữ liệu sang JSP
+    request.setAttribute("listcategory", filtered);
+    request.setAttribute("selectedFilter", filterType);
+    request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+}
+
+// Hàm lấy khoảng BMI tương ứng với filterType
+private double[] getBMIRange(String filterType) {
+    switch (filterType) {
+        case "low":
+            return new double[]{10, 18.4};
+        case "normal":
+            return new double[]{18.5, 24.9};
+        case "overweight":
+            return new double[]{25, 29.9};
+        case "obese":
+            return new double[]{30, 50};
+        default:
+            return new double[]{0, 51}; // Nếu không chọn filter nào, trả về tất cả
     }
+}
 }

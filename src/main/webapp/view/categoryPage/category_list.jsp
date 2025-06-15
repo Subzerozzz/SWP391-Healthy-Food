@@ -128,16 +128,17 @@
                                                                                                                                 <fieldset class="name">
                                                                                                                                     <input type="hidden" name="action" value="filterBMI">
                                                                                                                                         <select name="filterType">
-                                                                                                                                            <option value="underweight">Gầy</option>
-                                                                                                                                            <option value="normal">Bình thường</option>
-                                                                                                                                            <option value="overweight">Thừa cân</option>
-                                                                                                                                            <option value="obese">Béo phì</option>
+                                                                                                                                            <option value="low" ${"low".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>Dưới 18.5 (Gầy)</option>
+                                                                                                                                            <option value="normal" ${"normal".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>18.5 – 24.9 (Bình thường)</option>
+                                                                                                                                            <option value="overweight" ${"overweight".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>25 – 29.9 (Thừa cân)</option>
+                                                                                                                                            <option value="obese" ${"obese".equals(request.getAttribute("selectedFilter")) ? "selected" : ""}>Trên 30 (Béo phì)</option>
                                                                                                                                         </select>
                                                                                                                                 </fieldset>
                                                                                                                                 <div class="button-submit">
-                                                                                                                                    <button class="" type="submit"><i class="fa-solid fa-filter"></i></button>
+                                                                                                                                    <button type="submit"><i class="fa-solid fa-filter"></i></button>
                                                                                                                                 </div>
                                                                                                                             </form>
+
 
                                                                                                                         </div>
                                                                                                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manageCategory?action=addCate"><i class="icon-plus"></i>Add new</a>
@@ -298,10 +299,10 @@
                                                                                                                                 document.addEventListener("DOMContentLoaded", function () {
                                                                                                                                     iziToast.success({
                                                                                                                                         title: "Thông báo",
-                                                                                                                                        message: "Tài khoản đã được xóa thành công!",
+                                                                                                                                        message: "Tài khoản đã được xóa !",
                                                                                                                                         position: 'topRight',
                                                                                                                                         timeout: 5000,
-                                                                                                                                        backgroundColor: "#d4edda"
+                                                                                                                                        backgroundColor: "#f8d7da"
                                                                                                                                     });
                                                                                                                                 });
                                                                                                                             </script>
