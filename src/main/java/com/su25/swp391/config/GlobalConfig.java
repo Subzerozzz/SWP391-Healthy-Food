@@ -5,6 +5,7 @@
 package com.su25.swp391.config;
 
 import com.su25.swp391.entity.Category;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,11 +15,14 @@ import java.util.stream.Collectors;
  */
 public class GlobalConfig {
 
-    public static List<Category> filterCategoryByBMI(List<Category> categories, double minBMI, double maxBMI) {
-        if (categories == null || categories.isEmpty()) return List.of();
-
-        return categories.stream()
-             .filter(c -> c.getMinBMI() >= minBMI && c.getMaxBMI() <= maxBMI) 
-            .collect(Collectors.toList());
+   public static List<Category> filterCategoryByBMI(List<Category> allCategories, double minBMI, double maxBMI) {
+    List<Category> result = new ArrayList<>();
+    for (Category c : allCategories) {
+        // Nếu khoảng BMI của category giao nhau với khoảng lọc
+        if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
+            result.add(c);
+        }
     }
+    return result;
+}
 } 
