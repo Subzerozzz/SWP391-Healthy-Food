@@ -40,7 +40,7 @@
 
             <jsp:include page="../../common/nutritionist/sidebar.jsp" />
             <div class="section-content-right">
-                <jsp:include page="../../common/nutritionist/headerdashboard.jsp" />
+                <jsp:include page="../../common/nutritionist/headerDashboard.jsp" />
                 <div class="main-content">
                     <div class="main-content-inner">
                         <div class="main-content-wrap">
