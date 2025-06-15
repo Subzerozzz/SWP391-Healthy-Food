@@ -25,7 +25,7 @@ public class Account {
 
     private Integer id;
     private String email;
-    private String mobie;
+    private String mobile;
     private String password;
     private String user_name;
     private String full_name;
