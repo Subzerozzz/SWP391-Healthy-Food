@@ -1,97 +1,240 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Account;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.PreparedStatement;
 
-/**
- *
- * @author Dell
- */
 public class AccountDAO extends DBContext implements I_DAO<Account> {
 
-  @Override
-  public List<Account> findAll() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public Map<Integer, Account> findAllMap() {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean update(Account t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public boolean delete(Account t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public int insert(Account t) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  @Override
-  public Account getFromResultSet(ResultSet resultSet) throws SQLException {
-    Account account = new Account();
-    account.setId(resultSet.getInt("id"));
-    account.setEmail(resultSet.getString("email"));
-    account.setPassword(resultSet.getString("password"));
-    account.setFull_name(resultSet.getString("full_name"));
-    account.setUser_name(resultSet.getString("user_name"));
-    account.setBirth_date(resultSet.getDate("birth_date"));
-    account.setGender(resultSet.getString("gender"));
-    account.setAddress(resultSet.getString("address"));
-    account.setMobile(resultSet.getString("mobile"));
-    account.setRole(resultSet.getString("role"));
-    account.setStatus(resultSet.getString("status"));
-    return account;
-  }
-
-  @Override
-  public Account findById(Integer id) {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from
-                                                                   // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  }
-
-  public List<Account> findAccountByRole(String nutri) {
-    String sql = "SELECT * FROM Account WHERE role = ?";
-    List<Account> list = new java.util.ArrayList<>();
-    try {
-      statement = connection.prepareStatement(sql);
-      statement.setString(1, nutri);
-      ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
-        Account account = getFromResultSet(resultSet);
-        list.add(account);
-      }
-    } catch (Exception e) {
-      System.out.println(e);
+    @Override
+    public Account getFromResultSet(ResultSet resultSet) throws SQLException {
+        Account account = new Account();
+        account.setId(resultSet.getInt("id"));
+        account.setEmail(resultSet.getString("email"));
+        account.setPassword(resultSet.getString("password"));
+        account.setFull_name(resultSet.getString("full_name"));
+        account.setUser_name(resultSet.getString("user_name"));
+        account.setBirth_date(resultSet.getDate("birth_date"));
+        account.setGender(resultSet.getString("gender"));
+        account.setAddress(resultSet.getString("address"));
+        account.setMobile(resultSet.getString("mobile"));
+        account.setRole(resultSet.getString("role"));
+        account.setStatus(resultSet.getString("status"));
+        return account;
     }
-    return list;
-  }
 
-  public static void main(String[] args) {
-    for (Account a : new AccountDAO().findAccountByRole("nutri")) {
-      System.out.println(a);
+    public List<Account> findAccountByRole(String nutri) {
+        String sql = "SELECT * FROM Account WHERE role = ?";
+        List<Account> list = new java.util.ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, nutri);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Account account = getFromResultSet(resultSet);
+                list.add(account);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeResources();
+        }
+        return list;
     }
-  }
+
+    @Override
+    public List<Account> findAll() {
+        List<Account> account = new ArrayList<>();
+        try {
+            connection = getConnection();
+            String sql = "SELECT * FROM Account";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                account.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return account;
+    }
+
+    @Override
+    public Map<Integer, Account> findAllMap() {
+        Map<Integer, Account> accountMap = new HashMap<>();
+        try {
+            connection = getConnection();
+            String sql = "SELECT * FROM Account";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Account account = getFromResultSet(resultSet);
+                accountMap.put(account.getId(), account);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return accountMap;
+    }
+
+    public boolean updatePasswordByEmail(Account t) {
+        try {
+            connection = getConnection();
+            String sql = "UPDATE Account SET password = ? WHERE email = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getPassword());
+            statement.setString(2, t.getEmail());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean update(Account t) {
+        try {
+            connection = getConnection();
+            String sql = "UPDATE Account SET password = ?, full_name = ?, "
+                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE email = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setObject(1, t.getPassword());
+            statement.setObject(2, t.getFull_name());
+            statement.setObject(3, t.getUser_name());
+            statement.setObject(4, t.getBirth_date());
+            statement.setObject(5, t.getGender());
+            statement.setObject(6, t.getRole());
+            statement.setObject(7, t.getAddress());
+            statement.setObject(8, t.getMobile());
+            statement.setObject(9, t.getStatus());
+            statement.setObject(10, t.getEmail());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(Account t) {
+        try {
+            connection = getConnection();
+            String sql = "DELETE FROM Account WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, t.getId());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
+    public int insert(Account t) {
+        try {
+            connection = getConnection();
+            String sql = "INSERT INTO Account (email, password, full_name, user_name, gender, birth_date, role, address, mobile, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            statement.setObject(1, t.getEmail());
+            statement.setObject(2, t.getPassword());
+            statement.setObject(3, t.getFull_name());
+            statement.setObject(4, t.getUser_name());
+            statement.setObject(5, t.getGender());
+            statement.setObject(6, t.getBirth_date());
+            statement.setObject(7, t.getRole());
+            statement.setObject(8, t.getAddress());
+            statement.setObject(9, t.getMobile());
+            statement.setObject(10, t.getStatus());
+            statement.executeUpdate();
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return -1;
+    }
+
+    public Account findByEmail(Account t) {
+        String sql = "SELECT * FROM Account WHERE email = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getEmail());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+
+    @Override
+    public Account findById(Integer id) {
+        try {
+            connection = getConnection();
+            String sql = "SELECT * FROM Account WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+
+    public Account findByEmailOrUsernameAndPass(Account t) {
+        String sql = "SELECT * FROM Account WHERE (email = ? OR user_name = ?) AND password = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getEmail());
+            statement.setString(2, t.getUser_name());
+            statement.setString(3, t.getPassword());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
 
 }

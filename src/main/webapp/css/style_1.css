@@ -408,19 +408,25 @@ del,
 /* Table */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
 table,
 th,
 td {
   border: 1px solid #343444;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> origin/manager-request
 =======
 >>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
 
 table {
   border-collapse: separate;
@@ -5550,6 +5556,7 @@ select.h40 {
 .dark-theme .section-menu-left .menu-item a .icon svg path {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   stroke: #A3D9A5;
 =======
   stroke: #94A3B8;
@@ -5557,6 +5564,9 @@ select.h40 {
 =======
   stroke: #94A3B8;
 >>>>>>> origin/feature-manager-blog
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/feature-authen
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;
@@ -6538,11 +6548,14 @@ select.h40 {
     padding: 24px 15px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     
 >>>>>>> origin/manager-request
 =======
 >>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;

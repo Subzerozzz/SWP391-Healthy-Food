@@ -106,7 +106,7 @@
     </dependencies>
 
     <build>
-        <finalName>Test</finalName>
+        <finalName>SWP391-Healthy-Food</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
