@@ -13,7 +13,7 @@
         <div class="section-menu-left">
           <div class="box-logo">
             <a href="${pageContext.request.contextPath}/manage-food?action=view" id="site-logo-inner">
-                <img class="logo" src="${pageContext.request.contextPath}/images/logo.png">          
+                <img class="logo" src="${pageContext.request.contextPath}/images/logo3.png">          
             </a>
             <div class="button-show-hide">
               <i class="icon-menu-left"></i>
@@ -28,7 +28,7 @@
                         <div class="icon">
                             <i class="icon-settings"></i>
                         </div>
-                          <div class="text">My Account</div>
+                        <div class="text">My Account</div>
                     </a>
                   </li>
                   
@@ -69,18 +69,22 @@
           </div>
         </div>
                       
-                      <style>
-                          .box-logo{
-                              height: 150px;
-                              overflow: hidden;
-                              margin-bottom: 50px
-                          }
-                          .logo{
-                              max-width:100%;
-                              height: 100%;
-                              display:block
-                          }
-                      </style>
+        <style>
+            .box-logo{
+                height: 120px;
+                overflow: hidden;
+                margin-bottom: 50px
+            }
+            .logo{
+                width: 180px;
+                height: 100%;
+                display:block
+            }
+            
+            .section-menu-left-wrap{
+                margin-top: 50px;
+            }
+        </style>
 
       </body>
 
