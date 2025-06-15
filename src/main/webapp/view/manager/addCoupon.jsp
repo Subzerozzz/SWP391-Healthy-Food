@@ -176,15 +176,6 @@
      <script>
          // Validate form before submit
          document.querySelector('form').addEventListener('submit', function(e) {
-             const startDate = new Date(document.querySelector('input[name="date1"]').value);
-             const endDate = new Date(document.querySelector('input[name="date2"]').value);
-             
-             if (startDate >= endDate) {
-                 e.preventDefault();
-                 alert('End date must be after start date');
-                 return false;
-             }
-             
              const discountType = document.querySelector('select[name="discountype"]').value;
              const discountValue = parseFloat(document.querySelector('input[name="discountvalue"]').value);
              
