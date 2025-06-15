@@ -269,7 +269,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         sql.append(" AND status = ?");
     }
     
-    sql.append(" ORDER BY id DESC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
+    sql.append(" ORDER BY id ASC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
     
     try {
         connection = getConnection();
