@@ -102,6 +102,7 @@ public class ManagerOrderController extends HttpServlet {
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
+
     // View All Lists Orders
     private void listOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get filter parameters by Status
@@ -150,6 +151,7 @@ public class ManagerOrderController extends HttpServlet {
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
     }
+
     // Update status
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -250,5 +252,5 @@ public class ManagerOrderController extends HttpServlet {
         }
 
     }
-    
+
 }

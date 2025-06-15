@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  * @author Admin
  */
 public class Feedbacks {
+
     private int feedbackId;
     private int userId;
     private int orderItemId;
@@ -19,7 +20,7 @@ public class Feedbacks {
     private boolean isVisible;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
+
     // Thêm thuộc tính mở rộng để hiển thị thông tin sản phẩm trong đánh giá
     private String userName;
     private String productName;
@@ -27,7 +28,8 @@ public class Feedbacks {
 
     public Feedbacks() {
     }
-      public Feedbacks(int feedbackId, int userId, int orderItemId, String content, int rating, boolean isVisible, Timestamp createdAt, Timestamp updatedAt) {
+
+    public Feedbacks(int feedbackId, int userId, int orderItemId, String content, int rating, boolean isVisible, Timestamp createdAt, Timestamp updatedAt) {
         this.feedbackId = feedbackId;
         this.userId = userId;
         this.orderItemId = orderItemId;
