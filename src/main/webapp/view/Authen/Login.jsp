@@ -156,7 +156,7 @@
                 </div>
             </div>
         </div>
-        <!-- User Area End -->
+        <!-- User Area End   -->
 
         <!-- Footer Area -->
         <footer class="footer-area footer-bg">
