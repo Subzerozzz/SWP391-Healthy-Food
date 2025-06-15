@@ -64,7 +64,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement.setObject(5, t.getGender());
             statement.setObject(6, t.getRole());
             statement.setObject(7, t.getAddress());
-            statement.setObject(8, t.getMobie());
+            statement.setObject(8, t.getMobile());
             statement.setObject(9, t.getStatus());
             statement.setObject(10, t.getEmail());
             return statement.executeUpdate() > 0;
@@ -107,7 +107,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement.setObject(6, t.getBirth_date());
             statement.setObject(7, t.getRole());
             statement.setObject(8, t.getAddress());
-            statement.setObject(9, t.getMobie());
+            statement.setObject(9, t.getMobile());
             statement.setObject(10, t.getStatus());
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
@@ -134,7 +134,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
                 .birth_date(resultSet.getDate("birth_date"))
                 .role(resultSet.getString("role"))
                 .address(resultSet.getString("address"))
-                .mobie(resultSet.getString("mobie"))
+                .mobile(resultSet.getString("mobie"))
                 .status(resultSet.getString("status"))
                 .build();
     }
