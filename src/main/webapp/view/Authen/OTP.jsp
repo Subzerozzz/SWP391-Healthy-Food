@@ -147,7 +147,7 @@
                 <div class="error-message">${errorMessage}</div>
             </c:if>
 
-            <form action="OTP" method="post">
+            <form action="otp" method="post">
                 <div class="otp-container">
                     <input type="text" class="otp-input" name="otp1" maxlength="1" autofocus>
                     <input type="text" class="otp-input" name="otp2" maxlength="1">

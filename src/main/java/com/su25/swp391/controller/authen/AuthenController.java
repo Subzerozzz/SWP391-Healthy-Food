@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
  */
 @WebServlet(name = "AuthenController", urlPatterns = {"/home", "/changepassword",
     "/login", "/register", "/forgetpassword",
-    "/OTP", "/newpassword", "/logout"})
+    "/otp", "/newpassword", "/logout"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -61,7 +61,7 @@ public class AuthenController extends HttpServlet {
             case "/home":
                 request.getRequestDispatcher("view/homePage/home.jsp").forward(request, response);
                 break;
-            case "/OTP":
+            case "/otp":
                 request.getRequestDispatcher("view/authen/otp.jsp").forward(request, response);
                 break;
             case "/forgetpassword":
@@ -94,7 +94,7 @@ public class AuthenController extends HttpServlet {
             case "/register":
                 registerDoPost(request, response);
                 break;
-            case "/OTP":
+            case "/otp":
                 otpDoPost(request, response);
                 break;
             case "/forgetpassword":
