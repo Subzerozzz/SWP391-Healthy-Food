@@ -18,41 +18,18 @@ import java.util.Map;
  * @author Admin
  */
 public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
-    // Lấy tất cả feedback của một người dùng
-
-    public List<Feedbacks> getAllFeedbacks() {
-        List<Feedbacks> feedbacks = new ArrayList<>();
-        String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
-                + "FROM swp391_healthy_food.feedbacks f "
-                + "JOIN swp391_healthy_food.account a ON f.user_id = a.id "
-                + "JOIN swp391_healthy_food.order_items oi ON f.order_item_id = oi.order_item_id "
-                + "JOIN swp391_healthy_food.Food fo ON oi.food_id = fo.id "
-                + "Where f.is_visible = 1 "
-                + "ORDER BY f.created_at DESC";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                feedbacks.add(mapFeedback(resultSet));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error getting feedbacks by user ID: " + e.getMessage());
-        } finally {
-            closeResources();
-        }
-        return feedbacks;
-    }
-
-    // Get Feedbacks by Id Feedback
+   
+   // Get Feedbacks by Id Feedback
     @Override
     public Feedbacks findById(Integer id) {
         String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
-                + "FROM swp391_healthy_food.feedbacks f "
-                + "JOIN swp391_healthy_food.account a ON f.user_id = a.id "
-                + "JOIN swp391_healthy_food.order_items oi ON f.order_item_id = oi.order_item_id "
-                + "JOIN swp391_healthy_food.Food fo ON oi.food_id = fo.id "
+                + "FROM feedbacks f "
+                + "JOIN account a "
+                + "ON f.user_id = a.id "
+                + "JOIN order_items oi "
+                + "ON f.order_item_id = oi.order_item_id "
+                + "JOIN Food fo "
+                + "ON oi.food_id = fo.id "
                 + "WHERE f.id = ?";
 
         try {
@@ -63,7 +40,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return mapFeedback(resultSet);
+                return getFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             System.out.println("Error getting feedback by ID: " + e.getMessage());
@@ -72,10 +49,35 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         }
         return null;
     }
-
+    // Lấy tất cả feedback của một người dùng
     @Override
     public List<Feedbacks> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    List<Feedbacks> feedbacks = new ArrayList<>();
+        String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
+                + "FROM feedbacks f "
+                + "JOIN account a "
+                + "ON f.user_id = a.id "
+                + "JOIN order_items oi "
+                + "ON f.order_item_id = oi.order_item_id "
+                + "JOIN Food fo "
+                + "ON oi.food_id = fo.id "
+                + "Where f.is_visible = 1 "
+                + "ORDER BY f.created_at DESC";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                feedbacks.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting feedbacks by user ID: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return feedbacks;
+    
     }
 
     @Override
@@ -92,7 +94,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setBoolean(1, false);
-            statement.setInt(2, t.getFeedbackId());
+            statement.setInt(2, t.getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -115,39 +117,24 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 
     @Override
     public Feedbacks getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        return new Feedbacks()
+                .builder()
+                .id(resultSet.getInt(1))
+                .userId(resultSet.getInt(1))
+                .orderItemId(resultSet.getInt(1))
+                .content(resultSet.getString("content"))
+                .rating(this.resultSet.getInt("rating"))
+                .isVisible(resultSet.getBoolean("is_visible"))
+                .createdAt(resultSet.getTimestamp("created_at"))
+                .updatedAt(resultSet.getTimestamp("updated_at"))
+                .build();
+     }
 
-    // Phương thức hỗ trợ để map ResultSet thành đối tượng Feedbacks
-    private Feedbacks mapFeedback(ResultSet rs) throws SQLException {
-        Feedbacks feedback = new Feedbacks();
-        feedback.setFeedbackId(rs.getInt("id"));
-        feedback.setUserId(rs.getInt("user_id"));
-        feedback.setOrderItemId(rs.getInt("order_item_id"));
-        feedback.setContent(rs.getString("content"));
-        feedback.setRating(rs.getInt("rating"));
-        feedback.setIsVisible(rs.getBoolean("is_visible"));
-        feedback.setCreatedAt(rs.getTimestamp("created_at"));
-        feedback.setUpdatedAt(rs.getTimestamp("updated_at"));
-
-        // Thông tin mở rộng
-        String fullName = rs.getString("full_name");
-
-        if (fullName != null && fullName != null) {
-            feedback.setUserName(fullName);
-        } else {
-            feedback.setUserName(rs.getString("user_name"));
-        }
-
-        feedback.setProductName(rs.getString("name"));
-        feedback.setProductImage(rs.getString("image_url"));
-
-        return feedback;
-    }
+    
 
     public static void main(String[] args) {
         FeedbacksDAO f = new FeedbacksDAO();
-        List<Feedbacks> l = f.getAllFeedbacks();
+        List<Feedbacks> l = f.findAll();
         System.out.println(l);
         Feedbacks f2 = f.findById(2);
         System.out.println(f2);

@@ -97,7 +97,7 @@ public class ManagerFeedbackController extends HttpServlet {
     }// </editor-fold>
 
     private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Feedbacks> list = feedbackDAO.getAllFeedbacks();
+        List<Feedbacks> list = feedbackDAO.findAll();
         request.setAttribute("feedbacks", list);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
