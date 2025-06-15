@@ -20,7 +20,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public List<Account> findAll() {
         List<Account> account = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM ccount";
+            String sql = "SELECT * FROM Account";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -38,7 +38,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public Map<Integer, Account> findAllMap() {
         Map<Integer, Account> accountMap = new HashMap<>();
         try {
-            String sql = "SELECT * FROM Accounts";
+            String sql = "SELECT * FROM Account";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -53,7 +53,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return accountMap;
     }
 
-    @Override
     public boolean updatePasswordByEmail(Account t) {
         try {
             connection = getConnection();
@@ -73,7 +72,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     @Override
     public boolean update(Account t) {
         try {
-            String sql = "UPDATE account SET password = ?, full_name = ?, "
+            String sql = "UPDATE Account SET password = ?, full_name = ?, "
                     + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE email = ?";
             statement = connection.prepareStatement(sql);
             statement.setObject(1, t.getPassword());
