@@ -183,7 +183,6 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return null;
     }
-     
 
     public int getTotalCoupon() {
         String sql = "SELECT COUNT(*) FROM coupons";
@@ -266,35 +265,20 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         return coupons;
     }
 
-    public int getTotalCouponCountWithFilter(String discounttype, String search) {
+ // Đếm tổng số coupon theo filter discountType
+    public int getTotalCouponCountWithFilter(String discounttype) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM coupons WHERE 1=1");
 
-        // Thêm điều kiện search nếu có
-        if (search != null && !search.trim().isEmpty()) {
-            sql.append(" AND (code LIKE ? OR description LIKE ?)");
-        }
-
-        // Thêm điều kiện status nếu có
         if (discounttype != null && !discounttype.trim().isEmpty()) {
-            sql.append(" AND status = ?");
+            sql.append(" AND LOWER(discount_type) = LOWER(?)");
         }
-
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
-            int paramIndex = 1;
 
-            // Set search parameters
-            if (search != null && !search.trim().isEmpty()) {
-                statement.setString(paramIndex++, "%" + search + "%");
-                statement.setString(paramIndex++, "%" + search + "%");
-            }
-
-            // Set status parameter
             if (discounttype != null && !discounttype.trim().isEmpty()) {
-                statement.setString(paramIndex++, discounttype);
+                statement.setString(1, discounttype.toLowerCase());
             }
-
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1);
@@ -307,42 +291,27 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return 0;
     }
-
-    public List<Coupon> filterCouponWithPagination(String discounttype, String search, int page, int pageSize) {
+    // Lấy danh sách coupon theo filter discountType có phân trang
+    public List<Coupon> filterCouponWithPagination(String discounttype, int page, int pageSize) {
         List<Coupon> coupons = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM coupons WHERE 1=1");
 
-        // Thêm điều kiện search nếu có
-        if (search != null && !search.trim().isEmpty()) {
-            sql.append(" AND (code LIKE ? OR description LIKE ?)");
-        }
-
-        // Thêm điều kiện status nếu có
         if (discounttype != null && !discounttype.trim().isEmpty()) {
-            sql.append(" AND status = ?");
+            sql.append(" AND LOWER(discount_type) = LOWER(?)");
         }
 
-        sql.append(" ORDER BY id DESC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
+        // Nối trực tiếp LIMIT và OFFSET vào câu SQL (tránh lỗi không hỗ trợ ? với LIMIT)
+        sql.append(" ORDER BY id ASC LIMIT ").append((page - 1) * pageSize).append(", ").append(pageSize);
 
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
-            int paramIndex = 1;
 
-            // Set search parameters
-            if (search != null && !search.trim().isEmpty()) {
-                statement.setString(paramIndex++, "%" + search + "%");
-                statement.setString(paramIndex++, "%" + search + "%");
-            }
-
-            // Set status parameter
             if (discounttype != null && !discounttype.trim().isEmpty()) {
-                statement.setString(paramIndex++, discounttype);
+                statement.setString(1, discounttype.toLowerCase());
             }
 
-            // Set pagination parameters
-            statement.setInt(paramIndex++, (page - 1) * pageSize);
-            statement.setInt(paramIndex++, pageSize);
+            System.out.println("SQL Filter Query: " + statement.toString());
 
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -354,14 +323,16 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         } finally {
             closeResources();
         }
+
         return coupons;
     }
 
     public boolean isCouponCodeExists(String code) {
-        String sql = "SELECT COUNT(*) FROM coupons WHERE code LIKE ?";
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
+            statement.setString(1, code);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1) > 0;
@@ -393,4 +364,5 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return false;
     }
+  
 }

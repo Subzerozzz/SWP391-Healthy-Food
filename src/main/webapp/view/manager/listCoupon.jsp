@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -683,15 +685,16 @@
                                                 <!-- Form Filter -->
                                                 <form class="form-search" action="${pageContext.request.contextPath}/ManagerCoupon" method="GET">
                                                 <input type="hidden" name="action" value="filter" />
-                                                <label for="status">Status:</label>
-                                                <select name="status" id="status" class="form-control">
-                                                    <option value="">All Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
+                                                <label for="discounttype">Discount Type:</label>
+                                                <select name="discounttype" id="discounttype" class="form-control">
+                                                    <option value="" ${param.discounttype == null || param.discounttype == '' ? 'selected' : ''}>All Types</option>
+                                                    <option value="fixed" ${param.discounttype == 'fixed' ? 'selected' : ''}>Fixed</option>
+                                                    <option value="percentage" ${param.discounttype == 'percentage' ? 'selected' : ''}>Percentage</option>
                                                 </select>
+
                                                 <button type="submit" class="filter-button">Filter</button>
                                             </form>
-                                          <!-- Search -->
+                                            <!-- Search -->
                                           <form class="search-box" action="${pageContext.request.contextPath}/ManagerCoupon" method="get">
                                               <input type="hidden" name="action" value="search">
                                                   <div class="search-container">
@@ -758,63 +761,66 @@
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing ${coupons.size()} entries</div>
                                         <!-- # Phân Trang -->
-                                        <ul class="wg-pagination">
-                                            <c:set var="queryString" value="&search=${param.search}&action=${param.action}&status=${param.status}" />
-                                            <!-- Nút Trang Trước -->
-                                            <li class="${currentPage == 1 ? 'disabled' : ''}">
-                                                <c:choose>
-                                                    <c:when test="${currentPage > 1}">
-                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage - 1}${queryString}">
-                                                            <i class="icon-chevron-left"></i>
-                                                        </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a href="javascript:void(0);">
-                                                            <i class="icon-chevron-left"></i>
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </li>
-                                            <!-- Số trang -->
-                                            <c:choose>
-                                                <c:when test="${currentPage < totalPage - 2}">
-                                                    <li class="active">
-                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage}${queryString}">${currentPage}</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
-                                                    </li>
-                                                    <li><span>...</span></li>
-                                                    <li>
-                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${totalPage}${queryString}">${totalPage}</a>
-                                                    </li>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
-                                                    <c:forEach begin="${startPage}" end="${totalPage}" var="i">
-                                                        <li class="${currentPage == i ? 'active' : ''}">
-                                                            <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${i}${queryString}">${i}</a>
-                                                        </li>
-                                                    </c:forEach>
-                                                </c:otherwise>
-                                            </c:choose>
+                                       <ul class="wg-pagination">
+                                           <%-- Gộp lại chuỗi truy vấn với tham số lọc đúng --%>
+                                           <c:set var="queryString" value="&search=${search}&action=filter&discounttype=${discounttype}" />
 
-                                            <!-- Nút Trang Sau -->
-                                            <li class="${currentPage == totalPage ? 'disabled' : ''}">
-                                                <c:choose>
-                                                    <c:when test="${currentPage < totalPage}">
-                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">
-                                                            <i class="icon-chevron-right"></i>
-                                                        </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a href="javascript:void(0);">
-                                                            <i class="icon-chevron-right"></i>
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </li>
-                                        </ul>
+                                           <!-- Nút Trang Trước -->
+                                           <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                               <c:choose>
+                                                   <c:when test="${currentPage > 1}">
+                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage - 1}${queryString}">
+                                                           <i class="icon-chevron-left"></i>
+                                                       </a>
+                                                   </c:when>
+                                                   <c:otherwise>
+                                                       <a href="javascript:void(0);">
+                                                           <i class="icon-chevron-left"></i>
+                                                       </a>
+                                                   </c:otherwise>
+                                               </c:choose>
+                                           </li>
+
+                                           <!-- Số trang -->
+                                           <c:choose>
+                                               <c:when test="${currentPage < totalPage - 2}">
+                                                   <li class="active">
+                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage}${queryString}">${currentPage}</a>
+                                                   </li>
+                                                   <li>
+                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
+                                                   </li>
+                                                   <li><span>...</span></li>
+                                                   <li>
+                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${totalPage}${queryString}">${totalPage}</a>
+                                                   </li>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
+                                                   <c:forEach begin="${startPage}" end="${totalPage}" var="i">
+                                                       <li class="${currentPage == i ? 'active' : ''}">
+                                                           <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${i}${queryString}">${i}</a>
+                                                       </li>
+                                                   </c:forEach>
+                                               </c:otherwise>
+                                           </c:choose>
+
+                                           <!-- Nút Trang Sau -->
+                                           <li class="${currentPage == totalPage ? 'disabled' : ''}">
+                                               <c:choose>
+                                                   <c:when test="${currentPage < totalPage}">
+                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">
+                                                           <i class="icon-chevron-right"></i>
+                                                       </a>
+                                                   </c:when>
+                                                   <c:otherwise>
+                                                       <a href="javascript:void(0);">
+                                                           <i class="icon-chevron-right"></i>
+                                                       </a>
+                                                   </c:otherwise>
+                                               </c:choose>
+                                           </li>
+                                       </ul>
                                     </div>
                                 </div>
                                 <!-- /product-list -->
