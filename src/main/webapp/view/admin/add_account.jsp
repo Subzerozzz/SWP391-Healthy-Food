@@ -109,7 +109,7 @@
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Full_Name</div>
                                                                                                             <input class="flex-grow" type="text" placeholder="Full name" name="full_name"
-                                                                                                                   value="${full_name != null ? full_name : ''}" >
+                                                                                                                   value="${full_name != null ? full_name : ''}" required>
                                                                                                                 <c:if test="${errors != null && errors['full_name'] != null}">
                                                                                                                     <span style="color: red;">${errors['full_name']}</span>
                                                                                                                 </c:if>
@@ -117,13 +117,13 @@
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">User_Name</div>
                                                                                                             <input class="flex-grow" type="text" placeholder="User name" name="user_name"
-                                                                                                                   value="${user_name != null ? user_name : ''}" >
+                                                                                                                   value="${user_name != null ? user_name : ''}" required >
                                                                                                         </fieldset>
 
                                                                                                         <fieldset class="email mb-24">
                                                                                                             <div class="body-title mb-10">Email</div>
                                                                                                             <input class="flex-grow" type="email" placeholder="Email" name="email"
-                                                                                                                   value="${email != null ? email : ''}" >
+                                                                                                                   value="${email != null ? email : ''}" required>
                                                                                                                 <c:if test="${errors != null && errors['email'] != null}">
                                                                                                                     <span style="color: red;">${errors['email']}</span>
                                                                                                                 </c:if>
@@ -132,7 +132,7 @@
 
                                                                                                         <fieldset class="password mb-24">
                                                                                                             <div class="body-title mb-10">Password</div>
-                                                                                                            <input class="password-input" type="password" placeholder="Enter password" name="password" tabindex="0" value="" aria-required="true" >
+                                                                                                            <input class="password-input" type="password" placeholder="Enter password" name="password" tabindex="0" value="" aria-required="true" required>
                                                                                                                 <span class="show-pass">
                                                                                                                     <i class="icon-eye view"></i>
                                                                                                                     <i class="icon-eye-off hide"></i>
@@ -143,7 +143,7 @@
                                                                                                         </fieldset>
                                                                                                         <fieldset class="password">
                                                                                                             <div class="body-title mb-10">Confirm password</div>
-                                                                                                            <input class="password-input" type="password" placeholder="Confirm password" name="password" tabindex="0" value="" aria-required="true" >
+                                                                                                            <input class="password-input" type="password" placeholder="Confirm password" name="password" tabindex="0" value="" aria-required="true" required>
                                                                                                                 <span class="show-pass">
                                                                                                                     <i class="icon-eye view"></i>
                                                                                                                     <i class="icon-eye-off hide"></i>
@@ -153,7 +153,7 @@
                                                                                                         <fieldset class="address mb-24">
                                                                                                             <div class="body-title mb-10">Address</div>
                                                                                                             <input class="flex-grow" type="text" placeholder="Address" name="address"
-                                                                                                                   value="${address != null ? address : ''}">
+                                                                                                                   value="${address != null ? address : ''}" required>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Role -->
@@ -163,21 +163,23 @@
                                                                                                                 <option value="">-- Select Role --</option>
                                                                                                                 <option value="admin" ${role == 'admin' ? 'selected' : ''}>Manager</option>
                                                                                                                 <option value="user" ${role == 'user' ? 'selected' : ''}>Shipper</option>
+                                                                                                                <option value="user" ${role == 'user' ? 'selected' : ''}>Nutritionist</option>
+                                                                                                                <option value="user" ${role == 'user' ? 'selected' : ''}>Saler</option>
                                                                                                             </select>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Status -->
                                                                                                         <fieldset class="status mb-24">
                                                                                                             <div class="body-title mb-10">Status</div>
-                                                                                                            <label><input type="radio" name="status" value="true" ${status == true ? 'checked' : ''}> Active</label>
-                                                                                                            <label><input type="radio" name="status" value="false" ${status == false ? 'checked' : ''}> Deactive</label>
+                                                                                                            <label><input type="radio" name="status" value="active" ${status == 'active' ? 'checked' : ''}> Active</label>
+                                                                                                            <label><input type="radio" name="status" value="banned" ${status == 'banned' ? 'checked' : ''}> Banned</label>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Birth Date -->
                                                                                                         <fieldset class="birth-date mb-24">
                                                                                                             <div class="body-title mb-10">Birth Date</div>
                                                                                                             <input class="flex-grow" type="date" name="birth_date"
-                                                                                                                   value="${birth_date != null ? birth_date : ''}" >
+                                                                                                                   value="${birth_date != null ? birth_date : ''}" required>
                                                                                                                 <c:if test="${errors != null && errors['birth_date'] != null}">
                                                                                                                     <span style="color: red;">${errors['birth_date']}</span>
                                                                                                                 </c:if>
@@ -187,7 +189,7 @@
                                                                                                     <fieldset class="birth-date mb-24">
                                                                                                         <div class="body-title mb-10">Mobile</div>
                                                                                                         <input class="flex-grow" type="text" name="mobile"
-                                                                                                               value="${mobile != null ? mobile : ''}" >
+                                                                                                               value="${mobile != null ? mobile : ''}" required>
                                                                                                             <c:if test="${errors != null && errors['mobile'] != null}">
                                                                                                                 <span style="color: red;">${errors['mobile']}</span>
                                                                                                             </c:if>

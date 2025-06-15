@@ -137,7 +137,7 @@ public class ManageAccount extends HttpServlet {
             boolean deactivated = accountDao.deactivateAccount(accountId);
             if (deactivated) {
                 request.getSession().setAttribute("toastMessage", "Tài khoản đã bị vô hiệu hóa!");
-                request.getSession().setAttribute("toastType", "success");
+                request.getSession().setAttribute("toastType", "error"); // error => màu đỏ
             } else {
                 request.getSession().setAttribute("toastMessage", "Không thể vô hiệu hóa tài khoản!");
                 request.getSession().setAttribute("toastType", "error");
@@ -238,7 +238,7 @@ public class ManageAccount extends HttpServlet {
             String password = request.getParameter("password");
             String address = request.getParameter("address");
             String role = request.getParameter("role");
-            Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+            String status = request.getParameter("status");
             String dateStr = request.getParameter("birth_date");
             String mobile = request.getParameter("mobile");
             String gender = request.getParameter("gender");
@@ -249,7 +249,7 @@ public class ManageAccount extends HttpServlet {
                 errors.put("user_name", "Tên đăng nhập không được trùng với email");
             }
             //validate address
-             if (address == null || address.trim().isEmpty()) {
+            if (address == null || address.trim().isEmpty()) {
                 errors.put("address", "Address is required");
             } else if (!address.equals(address.trim())) {
                 errors.put("address", "Address must not start or end with a space");
@@ -300,7 +300,7 @@ public class ManageAccount extends HttpServlet {
             Account newAccount = Account.builder()
                     .full_name(full_name)
                     .user_name(user_name)
-                    .email(email)   
+                    .email(email)
                     .password(password)
                     .address(address)
                     .role(role)
@@ -342,7 +342,7 @@ public class ManageAccount extends HttpServlet {
             String email = request.getParameter("email");
             String role = request.getParameter("role");
             String address = request.getParameter("address");
-            Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+            String status = request.getParameter("status");
             String mobile = request.getParameter("mobile");
             String gender = request.getParameter("gender");
             //lay account tu database 
@@ -390,7 +390,7 @@ public class ManageAccount extends HttpServlet {
                 formData.put("role", role);
                 formData.put("mobile", mobile);
                 formData.put("gender", gender);
-                formData.put("status", String.valueOf(status));
+                formData.put("status", status);
                 System.out.println("Form data: " + formData);
                 request.setAttribute("errors", errors);
                 request.setAttribute("formData", formData);
@@ -508,9 +508,10 @@ public class ManageAccount extends HttpServlet {
 
     private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String role = request.getParameter("role");
-        String statusParam = request.getParameter("status");
-        Boolean status = (statusParam != null && !statusParam.isEmpty()) ? Boolean.parseBoolean(statusParam) : null;
-
+        String status = request.getParameter("status");
+        if (status != null && status.isEmpty()) {
+            status = null; // Gán null nếu là chuỗi rỗng
+        }
         // Lấy tham số phân trang
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
@@ -555,7 +556,7 @@ public class ManageAccount extends HttpServlet {
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalAccounts", totalAccounts);
         request.setAttribute("role", role);
-        request.setAttribute("status", statusParam);
+        request.setAttribute("status", status);
 
         // Tính toán phạm vi hiển thị
         int startRecord = (currentPage - 1) * pageSize + 1;

@@ -56,18 +56,7 @@
                                     <div class="text">All Account</div>
                                 </a>
                             </li>
-                               <li class="menu-item">
-                                <a href="${pageContext.request.contextPath}/managercategoryproduct?action=addCate" class="menu-item-button">
-                                    <div class="icon"><i class="icon-settings"></i></div>
-                                    <div class="text">Add new Category</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="${pageContext.request.contextPath}/managercategoryproduct?action=listCate" class="menu-item-button">
-                                    <div class="icon"><i class="icon-layers"></i></div>
-                                    <div class="text">All Category</div>
-                                </a>
-                            </li>
+                              
                                    
 
 
