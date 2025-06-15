@@ -488,14 +488,40 @@
                                 .body-title-2 {
                                     color: #000000;
                                     text-decoration: none;
-                                    font-weight: 500;
+                                    font-weight: 700;
                                     transition: color 0.2s ease;
                                     font-size: 14px;
                                 }
-
+                                .body-title_3{
+                                         font-size: 14px;          
+                                         font-weight: normal !important;     
+                                         font-family: Arial, sans-serif; 
+                                         margin-bottom: 10px;     
+                                         color: #000000;       
+                                     }
                                 .body-title-2:hover {
                                     color: #000000;
                                     text-decoration: underline;
+                                }
+                                .discount-type {
+                                    padding: 4px 10px;
+                                    border-radius: 12px;
+                                    font-size: 14px;
+                                    display: inline-block;
+                                    font-weight: normal;
+                                }
+
+                                /* Chỉ style riêng */
+                                .discount-fixed {
+                                    background-color: #ffe5e5 !important;
+                                    color: #cc0000 !important;
+                                    border: 1px solid #cc0000 !important;
+                                }
+
+                                .discount-percentage {
+                                    background-color: #e5f7e5 !important;
+                                    color: #007700 !important;
+                                    border: 1px solid #007700 !important;
                                 }
 
                                  /* Action buttons styling */
@@ -540,7 +566,7 @@
 
                                  /* Status badge styling */
                                  .table-row .col span {
-                                     background-color: #E74C3C !important;
+                                     background-color: #f8f9fa !important;
                                      color: white;
                                      padding: 4px 12px;
                                      border-radius: 12px;
@@ -610,13 +636,12 @@
                                          flex: 0 0 90px;
                                          max-width: 90px;
                                      }
-
                                      .table-header .col:nth-child(9),
                                      .table-row .col:nth-child(9) {
                                          flex: 0 0 120px;
                                          max-width: 120px;
                                      }
-                                 }
+                                     
         </style>    
 </head>
 
@@ -668,12 +693,13 @@
                                             </form>
                                           <!-- Search -->
                                           <form class="search-box" action="${pageContext.request.contextPath}/ManagerCoupon" method="get">
-                                              <div class="search-container">
-                                                  <input type="text" name="search" placeholder="Search here...">
-                                                      <button type="submit">
-                                                          <i class="icon-search"></i>
-                                                      </button>
-                                              </div>
+                                              <input type="hidden" name="action" value="search">
+                                                  <div class="search-container">
+                                                      <input type="text" name="search" placeholder="Search by code or description..." value="${search}">
+                                                          <button type="submit">
+                                                              <i class="icon-search"></i>
+                                                          </button>
+                                                  </div>
                                           </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/ManagerCoupon?action=add&id=${coupon.id}"><i class="icon-plus"></i>Add new</a>
@@ -685,8 +711,8 @@
                                  <div class="col">Coupon ID</div>
                                  <div class="col">Description</div>
                                  <div class="col">Discount_Type</div> 
-                                 <div class="col">Discount_Value</div>
-                                 <div class="col">Min_Purchase</div>
+                                 <div class="col">Discount_Value(%)</div>
+                                 <div class="col">Min_Purchase(VNĐ)</div>
                                  <div class="col">Start_date</div>
                                  <div class="col">End_date</div>
                                  <div class="col">Action</div>
@@ -695,15 +721,31 @@
                              <c:forEach items="${coupons}" var="coupon">
                                  <div class="table-row">
                                      <div class="col">
-                                         <a href="list.jsp" class="body-title-2">${coupon.code}</a>
+                                         <div class="body-title-2">${coupon.code} </div>
                                      </div>
-                                     <div class="col body-title-2">${coupon.id}</div>
-                                     <div class="col body-title-2">${coupon.description}</div>
-                                     <div class="col body-title-2">${coupon.discountType}</div> 
-                                     <div class="col body-title-2">${coupon.discountValue}</div>
-                                     <div class="col body-title-2">${coupon.minPurchase}</div>
-                                     <div class="col body-title-2">${coupon.startDate}</div>
-                                     <div class="col body-title-2">${coupon.endDate}</div>
+                                     <div class="col body-title_3">${coupon.id}</div>
+                                     <div class="col body-title_3">${coupon.description}</div>
+                                     <c:choose>
+                                         <c:when test="${coupon.discountType == 'fixed'}">
+                                             <div class="col">
+                                                 <span class="discount-type discount-fixed">${coupon.discountType}</span>
+                                             </div>
+                                         </c:when>
+                                         <c:when test="${coupon.discountType == 'percentage'}">
+                                             <div class="col">
+                                                 <span class="discount-type discount-percentage">${coupon.discountType}</span>
+                                             </div>
+                                         </c:when>
+                                         <c:otherwise>
+                                             <div class="col">
+                                                 <span class="discount-type">${coupon.discountType}</span>
+                                             </div>
+                                         </c:otherwise>
+                                     </c:choose>
+                                     <div class="col body-title_3">${coupon.discountValue}</div>
+                                     <div class="col body-title_3">${coupon.minPurchase}</div>
+                                     <div class="col body-title_3">${coupon.startDate}</div>
+                                     <div class="col body-title_3">${coupon.endDate}</div>
                                      <div class="col actions">
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=view&id=${coupon.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=edit&id=${coupon.id}"> <i class="icon-edit-3"></i></a>

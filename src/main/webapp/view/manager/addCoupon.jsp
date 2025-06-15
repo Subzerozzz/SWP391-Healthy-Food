@@ -76,7 +76,7 @@
                                     <h3>Add Coupon</h3>
                                 </div>
                                 <!-- form-add-coupon -->
-                                <form class="tf-section-2 form-add-product" 
+                                <form  
                                     action="ManagerCoupon?action=add"
                                      method="POST">
                                     <div class="wg-box">
@@ -118,8 +118,6 @@
                                             <div class="text-tiny">Minimum order amount required to use this coupon (optional).</div>
                                         </fieldset>
                                         <!-- Date Range -->
-                                    </div>
-                                    <div class="wg-box">
                                          <!-- Max Discount -->
                                         <fieldset class="maxDiscount">
                                             <div class="body-title mb-10">Maximum Discount Amount</div>

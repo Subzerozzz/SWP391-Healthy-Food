@@ -73,7 +73,7 @@
                                     <h3>Edit Coupon</h3>
                                 </div>
                                 <!-- form-add-coupon -->
-                                <form class="tf-section-2 form-add-product" 
+                                <form  
                                     action="ManagerCoupon?action=edit"
                                      method="POST">
                                     <div class="wg-box">
@@ -83,12 +83,12 @@
                                             <input class="mb-10" type="text" placeholder="Enter coupon code" name="code" tabindex="0" value="${coupon.code}" aria-required="true" required maxlength="50">
                                             <div class="text-tiny">Enter a unique coupon code (max 50 characters).</div>
                                         </fieldset>
-
                                         <!-- Description -->
                                         <fieldset class="description">
                                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                            <textarea class="mb-10" placeholder="Enter coupon description" name="description" tabindex="0" value="${coupon.description}" aria-required="true" required maxlength="500" rows="3"></textarea>
+                                             <input class="mb-10" type="text" placeholder="Enter coupon code" name="description" tabindex="0" value="${coupon.description}" aria-required="true" required maxlength="500">
                                             <div class="text-tiny">Describe the coupon offer (max 500 characters).</div>
+                                            
                                         </fieldset>
                                         <!-- Discount Type -->
                                         <fieldset class="discountType">
@@ -117,32 +117,14 @@
                                             <div class="text-tiny">Minimum order amount required to use this coupon (optional).</div>
                                         </fieldset>
                                         <!-- Date Range -->
-                                    </div>
-                                    <div class="wg-box">
-                                         <!-- Max Discount -->
-                                        <fieldset class="maxDiscount">
-                                            <div class="body-title mb-10">Maximum Discount Amount</div>
-                                            <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter maximum discount amount" name="maxdiscount" tabindex="0" value="${coupon.maxDiscount}">
-                                            <div class="text-tiny">Maximum discount amount for percentage coupons (optional).</div>
-                                        </fieldset>
-
-                                          <div class="cols gap10">
-                                            <fieldset class="startDate">
-                                                <div class="body-title mb-10">Start Date <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="date" name="date1" value="${coupon.startDate}"tabindex="0" aria-required="true" required>
-                                                <div class="text-tiny">When the coupon becomes active.</div>
-                                            </fieldset>
-
-                                            <fieldset class="endDate">
-                                                <div class="body-title mb-10">End Date <span class="tf-color-1">*</span></div>
-                                                <input class="mb-10" type="date" name="date2" value="${coupon.endDate}" tabindex="0" aria-required="true" required>
-                                                <div class="text-tiny">When the coupon expires.</div>
-                                            </fieldset>
-                                        </div>
+                                  
                                          <div class="cols gap10">
                                              <button class="tf-button w-full" type="submit">Edit Coupon</button>
                                          </div>
-                                     </div>
+                                </div>
+                                   
+                                         
+                                   
                                  </form>
                                  <!-- /form-edit-coupon -->
                              </div>
