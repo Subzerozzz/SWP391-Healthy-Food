@@ -5,7 +5,10 @@
 package com.su25.swp391.controller.homepage;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.dal.implement.CartDAO;
+import com.su25.swp391.dal.implement.CartItemDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Cart;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,6 +24,9 @@ import java.io.PrintWriter;
  */
 @WebServlet(name = "CartController", urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
+    
+    CartDAO cartDao = new CartDAO();
+    CartItemDAO cartItemDao = new CartItemDAO();
 
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -52,14 +58,51 @@ public class CartController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+            //Kiểm tra xem tài khoản đã đăng nhập chưa, nếu chưa cho về trang đăng nhập
+//            HttpSession session = request.getSession();
+//            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+//            
+//            if(account == null){
+//                session.setAttribute("loginRequirte", "Đăng nhập để thêm sản phẩm vào giỏ hàng !");
+//                response.sendRedirect("#");
+//                return;
+//            }
+            
+            //Nếu đã đăng nhập lấy về giá trị thuộc tính action
+            String action = request.getParameter("action");
+            switch (action) {
+                case "add":
+                    addItemToCart(request,response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
             
             
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void addItemToCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //Lấy cartId từ account trên session;
+        HttpSession session = request.getSession();
+        Account account = (Account)session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        
+//        Cart cart = cartDao.findCartByAccountId(account.getId());
+        
+        
+        
+        //Lấy ra foodId và quantity
+        String quantity = request.getParameter("quantity");
+        String foodId = request.getParameter("id");
+        PrintWriter out = response.getWriter();
+        
+        
+        //Tạo record cartItem để add vào DB
+        
+        //Chuyển hướng cho về trang cart
     }
 
 }
