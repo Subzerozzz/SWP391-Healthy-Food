@@ -15,8 +15,6 @@ public interface I_DAO<T> {
 
     public Map<Integer, T> findAllMap();
 
-    public boolean updatePasswordByEmail(T t);
-
     public boolean update(T t);
 
     public boolean delete(T t);
