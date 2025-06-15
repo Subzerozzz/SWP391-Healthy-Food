@@ -56,7 +56,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     account.setPassword(resultSet.getString("password"));
     account.setFull_name(resultSet.getString("full_name"));
     account.setUser_name(resultSet.getString("user_name"));
-    account.setBirth_date(resultSet.getTimestamp("birth_date"));
+    account.setBirth_date(resultSet.getDate("birth_date"));
     account.setGender(resultSet.getString("gender"));
     account.setAddress(resultSet.getString("address"));
     account.setMobile(resultSet.getString("mobile"));

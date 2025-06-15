@@ -407,14 +407,20 @@ del,
 
 /* Table */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/feature-manager-blog
 table,
 th,
 td {
   border: 1px solid #343444;
 }
+<<<<<<< HEAD
 =======
 
 >>>>>>> origin/manager-request
+=======
+>>>>>>> origin/feature-manager-blog
 
 table {
   border-collapse: separate;
@@ -5543,10 +5549,14 @@ select.h40 {
 }
 .dark-theme .section-menu-left .menu-item a .icon svg path {
 <<<<<<< HEAD
+<<<<<<< HEAD
   stroke: #A3D9A5;
 =======
   stroke: #94A3B8;
 >>>>>>> origin/manager-request
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/feature-manager-blog
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;
@@ -6527,9 +6537,12 @@ select.h40 {
   .wg-box {
     padding: 24px 15px;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     
 >>>>>>> origin/manager-request
+=======
+>>>>>>> origin/feature-manager-blog
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;
