@@ -117,106 +117,174 @@
                 
                 
             }
-            /* Áp dụng cho hàng filter */
-.filter-row{
-    /* Flexbox để căn hàng ngang, cho phép wrap xuống dòng khi hẹp */
-    display:flex;
-    flex-wrap:wrap;
-    gap:1rem;                 /* khoảng cách giữa các ô */
+.filter-row {
+  display: grid;
+  grid-template-columns: 130px 200px 400px 120px;
+  gap: 25px;
+  align-items: center;
+  width: 100%;
 }
 
-/* Mỗi phần tử con (select, input, button) chung 1 style */
-.filter-row > *{
-    flex:1 1 220px;           /*  grow   shrink   basis  */
-    min-width:160px;          /* đừng nhỏ hơn 160 px */
-    font-size: 14px;
+/* Style chung cho input & select */
+.filter-row select,
+.filter-row input[type="text"] {
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Riêng nút Filter hơi nhỏ hơn ở desktop để trông cân đối */
-@media (min-width: 768px){    /* ≥ md */
-    .filter-row .btn{
-        flex:0 0 150px;       /* nút cố định ~150px */
-    }
-}
-.table-responsive {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+/* Nút filter */
+.filter-row button {
+  height: 40px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
+.filter-row button:hover {
+  background-color: #0056b3;
+}
+
+/* Table styling */
 .table {
-    margin-bottom: 0;
-    font-size: 15px;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #333;
-    vertical-align: middle;
+.table thead {
+  background-color: #f8f9fa;
+  font-weight: bold;
 }
 
-.table td {
-    vertical-align: middle;
+.table thead th {
+  padding: 16px 12px;
+  text-align: left;
+  color: #333;
+  border-bottom: 1px solid #dee2e6;
+  white-space: nowrap;
 }
 
-/* Badge cho status */
+.table tbody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: middle;
+  color: #444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Zebra rows */
+.table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Hover row */
+.table-hover tbody tr:hover {
+  background-color: #f0f8ff;
+}
+
+/* Badge style for payment & status */
 .badge {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 500;
-    text-transform: capitalize;
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.bg-warning {
-    background-color: #ffc107 !important;
-    color: #212529;
+/* Status colors */
+.bg-warning { background-color: #ffc107; color: #000; }
+.bg-info    { background-color: #17a2b8; color: #fff; }
+.bg-success { background-color: #28a745; color: #fff; }
+.bg-danger  { background-color: #dc3545; color: #fff; }
+
+/* Pagination styling */
+.pagination {
+  margin-top: 24px;
 }
 
-.bg-info {
-    background-color: #17a2b8 !important;
-    color: white;
+.page-item {
+  margin: 0 4px;
 }
 
-.bg-success {
-    background-color: #28a745 !important;
-    color: white;
+.page-link {
+  border: 1px solid #dee2e6;
+  color: #007bff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
-.bg-danger {
-    background-color: #dc3545 !important;
-    color: white;
+.page-link:hover {
+  background-color: #e9f5ff;
+  text-decoration: none;
 }
 
-/* View button */
-.view-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    font-size: 14px;
-    background-color: #f1f3f5;
-    border-radius: 6px;
-    color: #333;
-    text-decoration: none;
-    transition: all 0.3s ease;
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.table td, .table th {
+  vertical-align: top; /* Cho nội dung nằm sát trên */
+  text-align: left;
+  white-space: nowrap; /* Không xuống dòng lung tung */
 }
 
-.view-btn:hover {
-    background-color: #dbeafe;
-    color: #1d4ed8;
+/* Nhưng riêng Customer nên cho xuống dòng mềm */
+.table td:nth-child(2) {
+  white-space: normal;
+  line-height: 1.4;
+}
+/* Cột ID - nhỏ gọn */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 60px;
+  white-space: nowrap;
+  text-align: center;
 }
 
-.view-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 220px;
+  white-space: normal;
+  line-height: 1.4;
+  font-size: 16px;
+  font-weight: 500;
+  vertical-align: middle; /* thêm dòng này để căn giữa theo chiều dọc */
 }
 
-.text-center {
-    text-align: center;
+/* Footer style (tuỳ chỉnh nếu cần) */
+footer {
+  background-color: #f8f9fa;
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  border-top: 1px solid #ddd;
 }
+.table td:nth-child(2) * {
+  margin: 0;
+  padding: 0;
+}
+.table td, .table th {
+  vertical-align: middle;
+}
+
                       </style>
 </head>
 
@@ -344,7 +412,7 @@
                                                         <c:when test="${not empty status || not empty search}">
                                                             No orders match your search criteria. Try adjusting your filters.
                                                             <br>
-                                                            <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-outline-primary mt-2">
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-order" class="btn btn-outline-primary mt-2">
                                                                 <i class="fas fa-times me-2"></i>Clear Filters
                                                             </a>
                                                         </c:when>
@@ -399,7 +467,7 @@
                         <ul class="pagination justify-content-center">
                             <c:if test="${currentPage > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
@@ -407,13 +475,13 @@
 
                             <c:forEach begin="1" end="${totalPages}" var="i">
                                 <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
                                 </li>
                             </c:forEach>
 
                             <c:if test="${currentPage < totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
+                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>
@@ -431,7 +499,10 @@
                         </div>
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
-                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+                        <footer>
+                            <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+                        </footer>
+                        
                         <!-- /bottom-page -->
                     </div>
                     <!-- /main-content -->

@@ -238,7 +238,7 @@ select,
 textarea {
   font-family: "Inter", sans-serif;
   font-weight: 400;
-  color: var(--Body-Text);
+  /*color: var(--Body-Text);*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

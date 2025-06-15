@@ -112,7 +112,7 @@ public class ManagerOrderController extends HttpServlet {
         String search = request.getParameter("search");
         // Pagination
         int page = 1;
-        int pageSize = GlobalConfig.SIZE_PAGE;
+        int pageSize = 2;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
