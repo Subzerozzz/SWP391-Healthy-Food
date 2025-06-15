@@ -65,7 +65,7 @@
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../../common/nutritionist/headerdashboard.jsp"></jsp:include> 
+                    <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
