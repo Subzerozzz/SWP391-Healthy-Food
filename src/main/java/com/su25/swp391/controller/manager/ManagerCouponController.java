@@ -183,7 +183,7 @@ public class ManagerCouponController extends HttpServlet {
         request.setAttribute("search", searchKeyword);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPage", totalPage);
-        request.getRequestDispatcher("/view/coupon/listCoupon.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/manager/listCoupon.jsp").forward(request, response);
     }
 
     private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -366,7 +366,7 @@ public class ManagerCouponController extends HttpServlet {
             try {
                 if (dateStr2 != null && !dateStr2.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    java.util.Date utilDate = sdf.parse(dateStr1);
+                    java.util.Date utilDate = sdf.parse(dateStr2);
                     date2 = new java.sql.Date(utilDate.getTime());
                 } else {
                     date2 = new java.sql.Date(System.currentTimeMillis());
