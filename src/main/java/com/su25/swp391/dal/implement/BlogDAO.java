@@ -247,14 +247,6 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return list;
     }
-//    public static void main(String[] args) {
-//        BlogDAO blog = new BlogDAO();
-//        List<Blog> list = blog.pagingBlog(1);
-//        for (Blog blog1 : list) {
-//             System.out.println(blog1);
-//        }
-//    }
-
     public List<Blog> filterBlogsWithPagination(String status, String search, int page, int pageSize) {
     List<Blog> blogs = new ArrayList<>();
     StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
