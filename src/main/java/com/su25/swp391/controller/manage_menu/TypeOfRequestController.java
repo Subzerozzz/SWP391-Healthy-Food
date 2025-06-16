@@ -138,18 +138,26 @@ public class TypeOfRequestController extends HttpServlet {
    
    // SHOW DETAIL ABOUT A FOOD_DRAFT YOU CHOICE
     private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       // Get Id Food_Draft by parameter
+        HttpSession session = request.getSession();
+        // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // Get list Food_Draft by Id
-        Food_Draft foodDraft = foodDraftDAO.findById(id);
+        Food_Draft food_D = foodDraftDAO.findById(id);
+        // If food_D not found
+            if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
         // Set Attribut to page detail-food-draft.jsp
-        request.setAttribute("foodD", foodDraft);
+        request.setAttribute("foodD", food_D);
         // Come to page detail-food-draft.jsp
         request.getRequestDispatcher("/view/manager/detail-food-draft.jsp").forward(request, response);
     }    
      
     // VIEW LIST ALL OF FOOD_DRAFT
     private void listTypeOfRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Default page 
         int page = 1;
         // Size in each page can have
@@ -165,6 +173,13 @@ public class TypeOfRequestController extends HttpServlet {
         }
         // Get list Food_Draft by filter page and page-size
         List<Food_Draft> listF = foodDraftDAO.getFoodDraftByPage(page, pageSize);
+            // If food_D list not found
+            if(listF == null){
+                session.setAttribute("errorMessage", "foodDraft list not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
+        
         // Get total pages can have conditional where r.statusRequest = 'Not done'
         int totalFoodDraft = foodDraftDAO.getTotalFoodDraftCount();
         // Split how many page can have in a brower
@@ -181,6 +196,7 @@ public class TypeOfRequestController extends HttpServlet {
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF CREATE
      private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         HttpSession session = request.getSession();
          // Default page
          int page = 1;
           // Size in each page can have
@@ -197,6 +213,12 @@ public class TypeOfRequestController extends HttpServlet {
          }
          // Get list Food_Draft by filter select and page and page-size
          List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
+         // If food_D list not found
+            if(listF == null){
+                session.setAttribute("errorMessage", "foodDraft list not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
            // Get total pages can have conditional where r.statusRequest = 'Not done'
          int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
            // Split how many page can have in a brower
@@ -214,7 +236,8 @@ public class TypeOfRequestController extends HttpServlet {
     
      // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF UPDATE
     private void listTypeOfUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         // Default page
+        HttpSession session = request.getSession();
+        // Default page
         int page = 1;
         // Size in each page can have
         int pageSize = GlobalConfig.SIZE_PAGE;
@@ -230,6 +253,12 @@ public class TypeOfRequestController extends HttpServlet {
         }
         // Get list Food_Draft by filter page and page-size
         List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
+        // If food_D list not found
+            if(listF == null){
+                session.setAttribute("errorMessage", "foodDraft list not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
         // Get total pages can have conditional where r.statusRequest = 'Not done'
         int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
          // Split how many page can have in a brower
@@ -247,7 +276,8 @@ public class TypeOfRequestController extends HttpServlet {
     
     // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF DELETE
     private void listTypeOfDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         // Default page
+        HttpSession session = request.getSession();
+        // Default page
         int page = 1;
         // Size in each page can have
         int pageSize = GlobalConfig.SIZE_PAGE;
@@ -263,6 +293,12 @@ public class TypeOfRequestController extends HttpServlet {
         }
         // Get list Food_Draft by filter page and page-size
         List<Food_Draft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
+        // If food_D list not found
+            if(listF == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
         // Get total pages can have conditional where r.statusRequest = 'Not done'
         int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
         // Split how many page can have in a brower
@@ -297,7 +333,7 @@ public class TypeOfRequestController extends HttpServlet {
         } catch (Exception e) {
             page = 1;
         }
-        
+        HttpSession session = request.getSession();
          // Get total pages can have conditional where r.statusRequest = 'Not done'
         int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
         // Split how many page can have in a brower
@@ -306,6 +342,12 @@ public class TypeOfRequestController extends HttpServlet {
         if (requestDAO.checkReload(id)) {
             // Get foodDraft By Id
             Food_Draft food_D = foodDraftDAO.findById(id);
+            // If food_D not found
+            if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
             // After get foodDraft insert it into Food
             Food food = foodDAO.getFromResultFood_Draft(food_D);
             foodDAO.insert(food);
@@ -317,7 +359,6 @@ public class TypeOfRequestController extends HttpServlet {
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-                HttpSession session = request.getSession();
                 session.setAttribute("isSuccess", true);
             }
         }
@@ -335,6 +376,7 @@ public class TypeOfRequestController extends HttpServlet {
     
     // UPDATE A FOOD_DRAFT TO TABLE FOOD FROM A FOOD_DRAFT GET BY ID_FOOD
     private void updateToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
@@ -360,6 +402,11 @@ public class TypeOfRequestController extends HttpServlet {
         if (requestDAO.checkReload(id)) {
             // Get foodDraft By Id
             Food_Draft food_D = foodDraftDAO.findById(id);
+            if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
              // After get foodDraft insert it into Food
             Food food = foodDAO.getFromResultFood_Draft(food_D);
             Boolean checkUpdateFoodDone = foodDAO.update(food);
@@ -371,7 +418,6 @@ public class TypeOfRequestController extends HttpServlet {
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-                HttpSession session = request.getSession();
                 session.setAttribute("isSuccess", true);
             }
         }
@@ -389,6 +435,7 @@ public class TypeOfRequestController extends HttpServlet {
     
     // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
     private void deleteToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
@@ -414,6 +461,11 @@ public class TypeOfRequestController extends HttpServlet {
         if (requestDAO.checkReload(id)) {
             // Get foodDraft By Id
             Food_Draft food_D = foodDraftDAO.findById(id);
+            if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
             // After get foodDraft insert it into Food
             Food food = foodDAO.getFromResultFood_Draft(food_D);
             Boolean checkDeleteFoodDone = foodDAO.delete(food);
@@ -423,7 +475,6 @@ public class TypeOfRequestController extends HttpServlet {
             LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
             logReqDAO.insert(logR);
             requestDAO.delete(req);
-            HttpSession session = request.getSession();
             session.setAttribute("isSuccess", true);
             
         }
@@ -441,6 +492,7 @@ public class TypeOfRequestController extends HttpServlet {
 
     // REJECT A FOOD_DRAFT BY TYPE CREATE OF FOOD
     private void rejectByCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
@@ -469,11 +521,16 @@ public class TypeOfRequestController extends HttpServlet {
             // if check update Request True
             if (checkUpdateResult) {
                 Request req = requestDAO.findById(id);
+                if(req == null){
+                session.setAttribute("errorMessage", "Request not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
                 Food_Draft food_D = foodDraftDAO.findById(id);
+                
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-                HttpSession session = request.getSession();
                 session.setAttribute("isSuccess", true);
             } 
         }
@@ -490,6 +547,7 @@ public class TypeOfRequestController extends HttpServlet {
     }
     // REJECT A FOOD_DRAFT BY TYPE UPDATE OF FOOD
     private void rejectByUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
@@ -518,11 +576,16 @@ public class TypeOfRequestController extends HttpServlet {
              // if check update Request True
             if (checkUpdateResult) {
                 Request req = requestDAO.findById(id);
+               
                 Food_Draft food_D = foodDraftDAO.findById(id);
+                 if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-                HttpSession session = request.getSession();
                 session.setAttribute("isSuccess", true);
             } 
         }
@@ -539,7 +602,8 @@ public class TypeOfRequestController extends HttpServlet {
     }
    // REJECT A FOOD_DRAFT BY TYPE OF DELETE FOOD
     private void rejectByDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         // Get Id Food_Draft by parameter
+         HttpSession session = request.getSession();
+        // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
         String select = request.getParameter("select");
@@ -568,10 +632,14 @@ public class TypeOfRequestController extends HttpServlet {
             if (checkUpdateResult) {
                 Request req = requestDAO.findById(id);
                 Food_Draft food_D = foodDraftDAO.findById(id);
+                if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
                 LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
                 logReqDAO.insert(logR);
                 requestDAO.delete(req);
-                HttpSession session = request.getSession();
                 session.setAttribute("isSuccess", true);
             } 
         }
@@ -588,6 +656,7 @@ public class TypeOfRequestController extends HttpServlet {
     }
 
     private void showFoodDraftList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         HttpSession session = request.getSession();
         // Get parameters for filtering 
         String searchTitle = request.getParameter("name");
         // Pagination parameters
@@ -605,6 +674,11 @@ public class TypeOfRequestController extends HttpServlet {
         }
         // Get FoodDraft from database
         List<Food_Draft> food_D = foodDraftDAO.findFoodDraftWithFilter(searchTitle, page, pageSize);
+        if(food_D == null){
+                session.setAttribute("errorMessage", "foodDraft list not found");
+                response.sendRedirect(request.getContextPath() + "/view/manager/dashboard.jsp");
+                return;
+            }
         int totalFood_D = foodDraftDAO.countFoodDraftWithFilter(searchTitle);
         // Calculate total pages
         int totalPages = (int) Math.ceil((double) totalFood_D / pageSize);

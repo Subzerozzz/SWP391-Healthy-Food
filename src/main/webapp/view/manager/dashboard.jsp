@@ -31,6 +31,8 @@
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search-request.css"/>
                                             <!-- Font -->
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
+                                             <!--Fontawsoem-->
+                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
                                                 <!-- Icon -->
                                                 <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
@@ -134,17 +136,20 @@
                                                                                                                         <td>   <div class="item eye">
                                                                                                                                 <a href="type-of-request?action=view&select=${foodD.type}&id=${foodD.id}" title="View Detail" >
                                                                                                                                     <i class="icon-eye"></i>
+                                                                                                                             
                                                                                                                                 </a></div> 
                                                                                                                         </td>
                                                                                                                         <td> <div class="item edit">
                                                                                                                                 <a href="type-of-request?action=accept&select=${foodD.type}&id=${foodD.id}" onclick="handleAccept(event)" title="Accept">
-                                                                                                                                    <i class="icon-edit-3"></i>
+
+                                                                                                                                    <i class="fa-solid fa-check"></i>
                                                                                                                                 </a>
                                                                                                                             </div>
 
                                                                                                                             <a href="type-of-request?action=reject&select=${foodD.type}&id=${foodD.id}" onclick="handleReject(event)" title="Reject">
                                                                                                                                 <div class="item trash">
-                                                                                                                                    <i class="icon-trash-2"></i>
+
+                                                                                                                                    <i class="fa-solid fa-xmark"></i>
                                                                                                                                 </div>    
                                                                                                                             </a></td>
                                                                                                                         </div>
@@ -166,27 +171,54 @@
 
                                                                                                 <div class="flex items-center justify-between flex-wrap gap10">
                                                                                                     <div class="text-tiny">Showing 10 entries</div>
-                                                                                                    <ul class="wg-pagination">
-                                                                                                        <li>
-                                                                                                            <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                        </li>
-                                                                                                        <c:forEach var="i" begin="1" end="${totalPages}">
-                                                                                                            <c:choose>
-                                                                                                                <c:when test="${i == currentPage}">
-                                                                                                                    <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 40px;display: flex;justify-content: center;align-items: center">${i}</li>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                    <li>
-                                                                                                                        <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
-                                                                                                                    </li>
 
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        </c:forEach> 
+                                                                                                    <!--   Start Pagination-->
+                                                                                                    <ul class="wg-pagination">
+
                                                                                                         <li>
-                                                                                                            <a href="#"><i class="icon-chevron-right"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=1"><i class="icon-chevron-left"></i></a>
+                                                                                                        </li>
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${currentPage <= totalPages - 2}">
+                                                                                                                <c:if test="${currentPage > 1}">
+                                                                                                                    <li class="">
+                                                                                                                        <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=${currentPage - 1}">${currentPage - 1}</a>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+                                                                                                                <li class="active">
+                                                                                                                    <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=${currentPage}">${currentPage}</a>
+                                                                                                                </li>
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=${currentPage + 1}">${currentPage + 1}</a>
+                                                                                                                </li>
+
+                                                                                                                <c:if test="${currentPage < totalPages - 2}">
+                                                                                                                    <li>
+                                                                                                                        <span>...</span>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=${totalPages}">${totalPages}</a>
+                                                                                                                </li>
+                                                                                                            </c:when>
+
+                                                                                                            <c:otherwise>
+                                                                                                                <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                                                                                                    <li class="${currentPage == i ? 'active' : ''}">
+                                                                                                                        <a href="${pageContext.request.contextPath}/type-of-request?action=pagination&page=${i}">${i}</a>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
+                                                                                                        <li>
+                                                                                                            <a href="${pageContext.request.contextPath}/?action=pagination&page=${totalPages}"><i class="icon-chevron-right"></i></a>
                                                                                                         </li>
                                                                                                     </ul>
+                                                                                                <!--End Pagination-->
                                                                                                 </div>
                                                                                             </div>
                                                                                             <!-- /product-list -->
@@ -249,6 +281,24 @@
                                                                                 session.removeAttribute("isSuccess");
                                                                             %>
                                                                         </c:if>
+                                                                              <!--Message Error-->
+                                                                            <c:if test="${not empty sessionScope.errorMessage}">
+                                                                                <script>
+                                                                                    document.addEventListener("DOMContentLoaded", function () {
+                                                                                        iziToast.error({
+                                                                                            title: "Error",
+                                                                                            message: "${sessionScope.errorMessage}",
+                                                                                            position: 'topRight',
+                                                                                            timeout: 5000
+                                                                                        });
+                                                                                    });
+                                                                                </script>
+                                                                                <%
+                                                                                    session.removeAttribute("errorMessage");
+                                                                                %>
+                                                                            </c:if>
+                                                                            
+                                                                        
                                                                         <script>
 
                                                                             function handleAccept(event) {
