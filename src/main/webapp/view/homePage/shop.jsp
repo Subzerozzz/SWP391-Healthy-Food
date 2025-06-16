@@ -251,44 +251,53 @@
 
                             <!--Pagination-->
                             <div class="col-lg-12 col-md-12 text-center">
-                                <div class="pagination-area">
-                                    <a href="javascript:void(0)" onclick="goToPage(1)" class="prev page-numbers">
-                                        <i class="bx bx-chevrons-left"></i>
-                                    </a>
+                                <c:choose>
+                                    <c:when test= "${totalPage > 0}">
+                                        <div class="pagination-area">
+                                            <a href="javascript:void(0)" onclick="goToPage(1)" class="prev page-numbers">
+                                                <i class="bx bx-chevrons-left"></i>
+                                            </a>
 
-                                    <c:choose>
-                                        <c:when test="${currentPage <= totalPage - 2}">
-                                            <c:if test="${currentPage > 1}">
-                                                <a href="javascript:void(0)" onclick="goToPage(${currentPage - 1})"
-                                                   class="page-numbers">${currentPage - 1}</a>
-                                            </c:if>
-                                            <a href="javascript:void(0)" onclick="goToPage(${currentPage})"
-                                               class="page-numbers current">${currentPage}</a>
+                                            <c:choose>
+                                                <c:when test="${currentPage <= totalPage - 2}">
+                                                    <c:if test="${currentPage > 1}">
+                                                        <a href="javascript:void(0)" onclick="goToPage(${currentPage - 1})"
+                                                           class="page-numbers">${currentPage - 1}</a>
+                                                    </c:if>
+                                                    <a href="javascript:void(0)" onclick="goToPage(${currentPage})"
+                                                       class="page-numbers current">${currentPage}</a>
 
-                                            <a href="javascript:void(0)" onclick="goToPage(${currentPage + 1})"
-                                               class="page-numbers">${currentPage + 1}</a>
+                                                    <a href="javascript:void(0)" onclick="goToPage(${currentPage + 1})"
+                                                       class="page-numbers">${currentPage + 1}</a>
 
-                                            <c:if test="${currentPage < totalPage - 2}">
-                                                <a href="#" class="page-numbers">...</a>
-                                            </c:if>
+                                                    <c:if test="${currentPage < totalPage - 2}">
+                                                        <a href="#" class="page-numbers">...</a>
+                                                    </c:if>
 
-                                            <a href="javascript:void(0)" onclick="goToPage(${totalPage})"
-                                               class="page-numbers">${totalPage}</a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <!--Cái này không thể kiểm tra từ currentPage vì nếu không thì nếu currentPage bằng 2 3 chẳng hạn thì nó mất trang 1--> 
-                                            <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                                                <a href="javascript:void(0)" onclick="goToPage(${i})"
-                                                   class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                                            </c:forEach>
-                                        </c:otherwise>
-                                    </c:choose>
+                                                    <a href="javascript:void(0)" onclick="goToPage(${totalPage})"
+                                                       class="page-numbers">${totalPage}</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <!--Cái này không thể kiểm tra từ currentPage vì nếu không thì nếu currentPage bằng 2 3 chẳng hạn thì nó mất trang 1--> 
+                                                    <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                                        <a href="javascript:void(0)" onclick="goToPage(${i})"
+                                                           class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
+                                                    </c:forEach>
+                                                </c:otherwise>
+                                            </c:choose>
 
-                                    <a href="javascript:void(0)" onclick="goToPage(${totalPage})" class="next page-numbers">
-                                        <i class="bx bx-chevrons-right"></i>
-                                    </a>
+                                            <a href="javascript:void(0)" onclick="goToPage(${totalPage})" class="next page-numbers">
+                                                <i class="bx bx-chevrons-right"></i>
+                                            </a>
 
-                                </div>
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="font-size: 24px">Product not found</div>
+                                    </c:otherwise>
+                                </c:choose>
+                                
+
                             </div>
                         </div>
                     </div>
