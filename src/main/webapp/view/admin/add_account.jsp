@@ -210,12 +210,12 @@
                                                                                         </div>
 
                                                                                     </div>
-
-
-                                                                                    <div class="bot">
+                                                                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/SWP391-Healthy-Food/LoginGoogleHandler&response_type=code&client_id=603741791751-77ab6u1qf89i36uqfudjqc08agjs9obm.apps.googleusercontent.com&approval_prompt=force" class="btn-google">
+<!--                                                                                        <i class="fa-brands fa-google"></i>-->
+                                                                                       <div class="bot">
                                                                                         <button class="tf-button w180" type="submit">Save</button>
                                                                                     </div>
-
+                                                                                    </a>
                                                                                     </form>
                                                                                     <!-- /add-new-user -->
                                                                                 </div>

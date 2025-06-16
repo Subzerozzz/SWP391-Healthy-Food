@@ -459,4 +459,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return 0;
     }
+
+    public Account findByEmail(Account build) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
