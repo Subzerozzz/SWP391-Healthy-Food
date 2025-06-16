@@ -90,7 +90,7 @@ public class CartController extends HttpServlet {
         HttpSession session = request.getSession();
         Account account = (Account)session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         
-//        Cart cart = cartDao.findCartByAccountId(account.getId());
+        //Cart cart = cartDao.findCartByAccountId(account.getId());
         
         
         
