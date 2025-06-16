@@ -1,17 +1,16 @@
-.filter{
+.filter {
     display: flex;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: none;
     padding: 6px;
     padding-right: 20px;
-    padding-left:10px;
-    height: 110px;
+    padding-left: 10px;
+    height: 70px;
     width: 100%;
     border-radius: 10px;
-    
     justify-content: space-between;
-    align-items: start
-/*     màu xám   #f0f0f0*/
+    align-items: start /* màu xám #f0f0f0*/;
+    background-color: #F8F9FB;
 }
 .selected{
   background: #fff;

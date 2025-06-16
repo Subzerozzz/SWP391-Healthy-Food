@@ -1,11 +1,10 @@
 <%-- 
-    Document   : footer
-    Created on : May 24, 2025, 10:30:22 PM
+    Document   : footerUser
+    Created on : Jun 16, 2025, 11:31:31 PM
     Author     : Dell
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,8 +20,8 @@
                             <div class="footer-widget footer-widget-color-2">
                                 <div class="footer-logo">
                                     <a href="index.html">
-                                        <img src="${pageContext.request.contextPath}/images/logos/footer-logo.png" class="footer-logo1" alt="Images">
-                                        <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" class="footer-logo2" alt="Images">
+                                        <img src="assets/images/logos/footer-logo.png" class="footer-logo1" alt="Images">
+                                        <img src="assets/images/logos/logo-1.png" class="footer-logo2" alt="Images">
                                     </a>
                                 </div>
                                 <p>
@@ -39,7 +38,7 @@
                                     </li>
                                     <li>
                                         <i class='bx bx-envelope'></i>
-                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#bbd3ded7d7d4fbd3d2d7d495d8d4d6"><span class="__cf_email__" data-cfemail="93fbf6fffffcd3fbfafffcbdf0fcfe">[email&#160;protected]</span></a>
+                                        <a href="https://templates.hibootstrap.com/cdn-cgi/l/email-protection#a5cdc0c9c9cae5cdccc9ca8bc6cac8"><span class="__cf_email__" data-cfemail="cda5a8a1a1a28da5a4a1a2e3aea2a0">[email&#160;protected]</span></a>
                                     </li>
                                 </ul>
                             </div>
