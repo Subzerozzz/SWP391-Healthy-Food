@@ -116,8 +116,25 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!--Thu vien add acc tu excel--> 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>5.2.5</version>
+        </dependency>
     
-        <!-- Các dependency khác -->
+        <!-- Cï¿½c dependency khï¿½c -->
     </dependencies>
     <build>
         <finalName>SWP391-Healthy-Food</finalName>
