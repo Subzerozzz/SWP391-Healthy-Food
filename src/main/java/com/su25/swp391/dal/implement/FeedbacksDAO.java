@@ -4,9 +4,11 @@
  */
 package com.su25.swp391.dal.implement;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Feedbacks;
+import com.su25.swp391.entity.Order;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -119,9 +121,9 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     public Feedbacks getFromResultSet(ResultSet resultSet) throws SQLException {
         return new Feedbacks()
                 .builder()
-                .id(resultSet.getInt(1))
-                .userId(resultSet.getInt(1))
-                .orderItemId(resultSet.getInt(1))
+                .id(resultSet.getInt("id"))
+                .userId(resultSet.getInt("user_id"))
+                .orderItemId(resultSet.getInt("order_item_id"))
                 .content(resultSet.getString("content"))
                 .rating(this.resultSet.getInt("rating"))
                 .isVisible(resultSet.getBoolean("is_visible"))
@@ -129,16 +131,158 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
                 .updatedAt(resultSet.getTimestamp("updated_at"))
                 .build();
      }
+     public List<Feedbacks> searchFeedback(String search, String status, int page, int pageSize) {
+        List<Feedbacks> feedbacks = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
+                + "FROM feedbacks f "
+                + "JOIN account a ON f.user_id = a.id "
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+        List<Object> params = new ArrayList<>();
 
+        String searchPattern = "%" + search.trim() + "%";
+        params.add(searchPattern);
+        params.add(searchPattern);
+        params.add(search);
+
+        if (status != null && !status.isEmpty()) {
+            sql.append("AND f.is_visible = ? ");
+            params.add(status);
+        }
+        
+
+        sql.append("ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                feedbacks.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error searching orders: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return feedbacks;
+    }
+
+    public int getTotalFeedbackResults(String search, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
+                + "FROM feedbacks f "
+                + "JOIN account a ON f.user_id = a.id "
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+        List<Object> params = new ArrayList<>();
+
+        String searchPattern = "%" + search.trim() + "%";
+        params.add(searchPattern);
+        params.add(searchPattern);
+        params.add(search);
+
+        if (status != null && !status.isEmpty()) {
+            sql.append("AND f.is_visible = ? ");
+            params.add(status);
+        }
+       try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error counting search results: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
     
+     public List<Feedbacks> findFeedbackWithFilters(String status,  int page, int pageSize) {
+        List<Feedbacks> feedbacks = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
+                + "FROM feedbacks f "
+                + "JOIN account a ON f.user_id = a.id "
+                + "WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
+        if (status != null && !status.isEmpty()) {
+            sql.append("AND f.is_visible = ? ");
+            params.add(status);
+        }
+        
+        sql.append("ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                feedbacks.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error finding filtered orders: " + ex.getMessage());
+        } finally {
+
+        }
+        return feedbacks;
+    }
+     public int getTotalFilteredFeedback(String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
+                + "FROM feedbacks f "
+                + "JOIN account a ON f.user_id = a.id "
+                + "WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
+        if (status != null && !status.isEmpty()) {
+            sql.append("AND f.is_visible = ? ");
+            params.add(status);
+        }
+       
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error counting filtered orders: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
 
     public static void main(String[] args) {
         FeedbacksDAO f = new FeedbacksDAO();
-        List<Feedbacks> l = f.findAll();
+//        List<Feedbacks> l = f.findAll();
+//        System.out.println(l);
+//        Feedbacks f2 = f.findById(2);
+//        System.out.println(f2);
+//        f.update(f2);
+       List<Feedbacks> l = f.findFeedbackWithFilters("", 1, 10);
         System.out.println(l);
-        Feedbacks f2 = f.findById(2);
-        System.out.println(f2);
-        f.update(f2);
     }
 
 }
