@@ -99,8 +99,8 @@
                                      display: inline-flex;
                                      align-items: center;
                                      justify-content: center;
-                                     width: 30px;         /* Tăng kích thước nút */
-                                     height: 20px;
+                                     width: 3px;         /* Tăng kích thước nút */
+                                     height: 2px;
                                      border-radius: 50%;
                                      background-color: #f1f1f1;
                                      transition: background-color 0.3s, transform 0.2s;
@@ -116,7 +116,7 @@
                                      display: inline-flex;
                                      justify-content: center;
                                      align-items: center;
-                                     gap: 30px;
+                                     gap: 20px;
                                  }
                                  .col.actions a:hover {
                                      background-color: #e0e0e0;
@@ -124,7 +124,7 @@
                                  }
 
                                  .col.actions i {
-                                     font-size: 25px; /* Tăng kích thước icon */
+                                     font-size: 15px; /* Tăng kích thước icon */
                                  }
 
                                  /* Icon màu sắc tương ứng */
@@ -176,8 +176,6 @@
 
                                  /* Container chính cho filter và search */
                                  .filter-search-wrapper {
-                                     max-width: 1200px;
-                                     margin: 0 auto;
                                      background: white;
                                      padding: 24px;
                                      border-radius: 16px;
@@ -206,7 +204,7 @@
                                      align-items: center;
                                      gap: 12px;
                                      background: #f8fafc;
-                                     padding: 16px 20px;
+                                     padding: 10px;
                                      border-radius: 12px;
                                      border: 1px solid #e2e8f0;
                                      transition: all 0.3s ease;
@@ -248,7 +246,7 @@
                                  }
 
                                  .filter-button {
-                                     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                                     background: #2275FC;
                                      color: white;
                                      border: none;
                                      padding: 10px 20px;
@@ -525,12 +523,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+                <jsp:include page="../../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>    
+                <jsp:include page="../../common/headerDashboard.jsp"></jsp:include>    
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -538,11 +536,11 @@
                         <div class="main-content-inner">
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                <div class="flex items-center flex-wrap justify-between gap20 mb-10">
                                     <h3>Blog List</h3>
                                 </div>
                                 <!-- product-list -->
-                                    <<div class="filter-search-wrapper">
+                                    <div class="filter-search-wrapper">
                                         <div class="filter-search-container">
                                             <div class="left-controls">
                                                 <!-- Form Filter -->
@@ -607,11 +605,12 @@
                                         <!-- # Phân Trang -->
                                         <ul class="wg-pagination">
                                             <c:set var="queryString" value="&search=${param.search}&action=${param.action}&status=${param.status}" />
-                                            <!-- Nút Trang Trước -->
+
+                                            <!-- Nút Trang Trước (về trang 1) -->
                                             <li class="${currentPage == 1 ? 'disabled' : ''}">
                                                 <c:choose>
                                                     <c:when test="${currentPage > 1}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}${queryString}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=1${queryString}">
                                                             <i class="icon-chevron-left"></i>
                                                         </a>
                                                     </c:when>
@@ -623,9 +622,15 @@
                                                 </c:choose>
                                             </li>
 
-                                            <!-- Số trang -->
+                                            <!-- Hiển thị số trang (giữ nguyên phần này nếu bạn muốn hiển thị số) -->
                                             <c:choose>
-                                                <c:when test="${currentPage < totalPage - 2}">
+                                                <%-- Nếu còn nhiều hơn 3 trang phía sau --%>
+                                                <c:when test="${currentPage <= totalPage - 2}">
+                                                    <c:if test="${currentPage > 1}">
+                                                        <li>
+                                                            <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage - 1}${queryString}">${currentPage - 1}</a>
+                                                        </li>
+                                                    </c:if>
                                                     <li class="active">
                                                         <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage}${queryString}">${currentPage}</a>
                                                     </li>
@@ -637,8 +642,9 @@
                                                         <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}${queryString}">${totalPage}</a>
                                                     </li>
                                                 </c:when>
+                                                <%-- Nếu đang ở gần cuối thì chỉ hiển thị 3 trang cuối --%>
                                                 <c:otherwise>
-                                                    <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
+                                                    <c:set var="startPage" value="${totalPage - 2 <= 0 ? 1 : totalPage - 2}" />
                                                     <c:forEach begin="${startPage}" end="${totalPage}" var="i">
                                                         <li class="${currentPage == i ? 'active' : ''}">
                                                             <a href="${pageContext.request.contextPath}/manage-blog?index=${i}${queryString}">${i}</a>
@@ -646,12 +652,11 @@
                                                     </c:forEach>
                                                 </c:otherwise>
                                             </c:choose>
-
-                                            <!-- Nút Trang Sau -->
+                                            <!-- Nút Trang Sau (về trang cuối cùng) -->
                                             <li class="${currentPage == totalPage ? 'disabled' : ''}">
                                                 <c:choose>
                                                     <c:when test="${currentPage < totalPage}">
-                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${currentPage + 1}${queryString}">
+                                                        <a href="${pageContext.request.contextPath}/manage-blog?index=${totalPage}${queryString}">
                                                             <i class="icon-chevron-right"></i>
                                                         </a>
                                                     </c:when>
@@ -663,13 +668,15 @@
                                                 </c:choose>
                                             </li>
                                         </ul>
-                                    </div>
-                                </div>
                                 <!-- /product-list -->
                             </div>
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
+                        
+                         <!-- bottom-page -->
+                                <jsp:include page="../../common/footer.jsp"></jsp:include>
+                            <!-- /bottom-page -->
                     </div>
                     <!-- /main-content -->
                 </div>

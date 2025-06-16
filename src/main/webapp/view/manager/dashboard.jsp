@@ -29,6 +29,7 @@
                                         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage-request.css"/>
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search-request.css"/>
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
                                             <!-- Font -->
                                             <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
 
@@ -61,12 +62,12 @@
                                                                                     </div>
                                                                                     <!-- /preload -->
                                                                                     <!-- section-menu-left -->
-                                                                                    <jsp:include page="../common/menuDashBoard/section-menu-left.jsp"></jsp:include>
+                                                                                    <jsp:include page="../common/sidebar.jsp"></jsp:include>
                                                                                         <!-- /section-menu-left -->
                                                                                         <!-- section-content-right -->
                                                                                         <div class="section-content-right">
                                                                                             <!-- header-dashboard -->
-                                                                                        <jsp:include page="../common/menuDashBoard/header-dashboard.jsp"></jsp:include>    
+                                                                                        <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
                                                                                             <!-- /header-dashboard -->
                                                                                             <!-- main-content -->
 
@@ -138,13 +139,13 @@
                                                                                                                         </td>
                                                                                                                         <td> <div class="item edit">
                                                                                                                                 <a href="type-of-request?action=accept&select=${foodD.getType()}&id=${foodD.getId()}" onclick="handleAccept(event)" title="Accept">
-                                                                                                                                    <i class="icon-edit-3"></i>
+                                                                                                                                    <i class="fa-solid fa-check"></i> 
                                                                                                                                 </a>
                                                                                                                             </div>
 
                                                                                                                             <a href="type-of-request?action=reject&select=${foodD.getType()}&id=${foodD.getId()}" onclick="handleReject(event)" title="Reject">
                                                                                                                                 <div class="item trash">
-                                                                                                                                    <i class="icon-trash-2"></i>
+                                                                                                                                    <i class="fa-solid fa-xmark"></i>
                                                                                                                                 </div>    
                                                                                                                             </a></td>
                                                                                                                         </div>
@@ -156,38 +157,37 @@
                                                                                                                 </c:forEach>
                                                                                                             </tbody>
                                                                                                         </table>
-
-
-
                                                                                                     </div>
                                                                                                     <!--end table-->
+                                                                                                    
+                                                                                                    <!--pagination--> 
+                                                                                                            <div class="flex items-center justify-between flex-wrap gap10">
+                                                                                                                <div class="text-tiny">Showing 10 entries</div>
+                                                                                                                    <ul class="wg-pagination">
+                                                                                                                        <li>
+                                                                                                                            <a href="#"><i class="icon-chevron-left"></i></a>
+                                                                                                                        </li>
+                                                                                                                        <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                                                                            <c:choose>
+                                                                                                                                <c:when test="${i == currentPage}">
+                                                                                                                                    <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 
+                                                                                                                                        40px;display: flex;justify-content: center;align-items: center">${i}</li>
+                                                                                                                                    </c:when>
+                                                                                                                                    <c:otherwise>
+                                                                                                                                    <li>
+                                                                                                                                        <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
+                                                                                                                                    </li>
 
+                                                                                                                                </c:otherwise>
+                                                                                                                            </c:choose>
+                                                                                                                        </c:forEach> 
+                                                                                                                        <li>
+                                                                                                                            <a href="#"><i class="icon-chevron-right"></i></a>
+                                                                                                                        </li>
+                                                                                                                    </ul>
+                                                                                                            </div>
                                                                                                 </div>
 
-                                                                                                <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                    <div class="text-tiny">Showing 10 entries</div>
-                                                                                                    <ul class="wg-pagination">
-                                                                                                        <li>
-                                                                                                            <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                        </li>
-                                                                                                        <c:forEach var="i" begin="1" end="${totalPages}">
-                                                                                                            <c:choose>
-                                                                                                                <c:when test="${i == currentPage}">
-                                                                                                                    <li style="color: white;background-color: #0000ff;border-radius: 50%;height: 40px;width: 40px;display: flex;justify-content: center;align-items: center">${i}</li>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                    <li>
-                                                                                                                        <a href="type-of-request?page=${i}&action=option&select=${select}">${i}</a>   
-                                                                                                                    </li>
-
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        </c:forEach> 
-                                                                                                        <li>
-                                                                                                            <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </div>
                                                                                             </div>
                                                                                             <!-- /product-list -->
                                                                                         </div>
@@ -195,7 +195,7 @@
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                     <!-- bottom-page -->
-                                                                                    <jsp:include page="../common/menuDashBoard/bottom-page.jsp"></jsp:include>
+                                                                                    <jsp:include page="../common/footer.jsp"></jsp:include>
                                                                                         <!-- /bottom-page -->
                                                                                     </div>
                                                                                     <!-- /main-content -->

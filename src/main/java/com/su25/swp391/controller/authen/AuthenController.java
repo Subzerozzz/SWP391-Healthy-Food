@@ -17,6 +17,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 
 /**
  *
@@ -42,6 +47,7 @@ public class AuthenController extends HttpServlet {
     private static final String FORGETPASSWORD_PAGE = "view/authen/forgetPassword.jsp";
     private static final String NEWPASS_PAGE = "view/authen/newPassword.jsp";
     private static final String CHANGEPASSWORD_PAGE = "view/authen/changePassword.jsp";
+    private static final String MYACCOUNT_PAGE = "view/authen/myaccount.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
@@ -72,6 +78,9 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/changepassword":
                 request.getRequestDispatcher(CHANGEPASSWORD_PAGE).forward(request, response);
+                break;
+            case "/myaccount":
+                request.getRequestDispatcher(MYACCOUNT_PAGE).forward(request, response);
                 break;
             case "/logout":
                 logoutDoGet(request, response);
@@ -105,6 +114,9 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/changepassword":
                 changepasswordDoPost(request, response);
+                break;
+             case "/myaccount":
+                myaccountDoPost(request, response);
                 break;
             case "/logout":
                 logoutDoGet(request, response);
@@ -452,6 +464,77 @@ public class AuthenController extends HttpServlet {
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
+    
+    
+    
+     private void myaccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+
+        String full_name = request.getParameter("full_name");
+        String birth_date = request.getParameter("birth_date");
+        String gender = request.getParameter("gender");
+        String mobile = request.getParameter("mobile");
+        String address = request.getParameter("address");
+        String email = (String) session.getAttribute("email");
+
+        Date date = null;
+        if (birth_date != null && !birth_date.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(birth_date);
+                date = new java.sql.Date(utilDate.getTime());
+
+                //tính tuổi
+                LocalDate birtDate = date.toLocalDate();
+                LocalDate now = LocalDate.now();
+                int age = Period.between(birtDate, now).getYears();
+                if (age < 18 || age > 80) {
+                    session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
+                    session.setAttribute("toastType", "error");
+                    return;
+                }
+
+            } catch (ParseException e) {
+                session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
+                session.setAttribute("toastType", "error");
+                return;
+            }
+        }
+        if (!isValidPhoneNumber(mobile)) {
+            session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
+        Account account = Account.builder()
+                .email(email)
+                .full_name(full_name)
+                .gender(gender)
+                .birth_date(date)
+                .address(address)
+                .mobile(mobile)
+                .build();
+
+        // Kiểm tra xem email đã tồn tại trong database chưa
+        Account accountFoundByEmail = accountDAO.findByEmail(account);
+
+        if (accountFoundByEmail != null) {
+            accountDAO.update(account);
+            Account newAccount = accountDAO.findByEmail(account);
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
+            url = MYACCOUNT_PAGE;
+        } else {
+            session.setAttribute("toastMessage", "Email incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
+
+    }
+
 
     /**
      * Kiểm tra định dạng email.
@@ -487,6 +570,16 @@ public class AuthenController extends HttpServlet {
             return user_name.matches("^[A-Za-z0-9+_.-]+$");
         }
         return false;
+    }
+    
+    public boolean isValidPhoneNumber(String phone) {
+        // Loại bỏ khoảng trắng, dấu gạch, ngoặc, v.v. nếu có
+        phone = phone.replaceAll("[\\s\\-()]", "");
+
+        // Regex cho số điện thoại Việt Nam (VD: 09xxxxxxxx, +849xxxxxxxx)
+        String regex = "^(0[3|5|7|8|9][0-9]{8})|(\\+84[3|5|7|8|9][0-9]{8})$";
+
+        return phone.matches(regex);
     }
 
 }

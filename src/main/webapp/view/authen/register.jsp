@@ -12,6 +12,8 @@
         <!--IzizToast-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
         <!--=== Link of CSS Files ===--> 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
@@ -63,6 +65,16 @@
             display: inline-block;
             color: #555;
         }
+        
+        .toggle-eye {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+          }
     </style>
     <body>
         <!-- Pre Loader -->
@@ -128,13 +140,26 @@
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <input style="border-radius:30px" class="form-control" type="password" name="password" placeholder="Password">
+                                            <input style="border-radius:30px" id="password" class="form-control" type="password" name="password" placeholder="Password">
+                                            
+                                            <i class="fa-solid fa-eye-slash" id="togglePassword"
+                                                style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+                                                       cursor: pointer;"></i>
                                         </div>
+                                        
+                                        
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <input style="border-radius:30px" class="form-control" type="password" name="confirmpassword" placeholder="Confirm password">
+                                            <input style="border-radius:30px" id="confirmPassword" class="form-control" type="password" name="confirmpassword" placeholder="Confirm password">
+                                            <i
+                                                class="fa-solid fa-eye-slash"
+                                                id="toggleConfirmPassword"
+                                                style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+                                                       cursor: pointer; color: #999;"
+                                                title="Hiện mật khẩu"
+                                              ></i>
                                         </div>
                                     </div>
                                 </div>
@@ -352,6 +377,37 @@
                 session.removeAttribute("toastMessage");
             %>
         </c:if>
+            
+        <script>
+            const toggle = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+
+            toggle.addEventListener("click", function () {
+              const isHidden = password.type === "password";
+
+              // Toggle kiểu hiển thị
+              password.type = isHidden ? "text" : "password";
+
+              // Toggle icon
+              this.classList.toggle("fa-eye-slash"); // mắt nhắm
+              this.classList.toggle("fa-eye");       // mắt mở
+
+              // Cập nhật tooltip
+              this.title = isHidden ? "Ẩn mật khẩu" : "Hiện mật khẩu";
+            });
+            
+            // Toggle ô confirm password
+            const confirmPassword = document.getElementById("confirmPassword");
+            const toggleConfirm = document.getElementById("toggleConfirmPassword");
+
+            toggleConfirm.addEventListener("click", function () {
+              const isHidden = confirmPassword.type === "password";
+              confirmPassword.type = isHidden ? "text" : "password";
+              this.classList.toggle("fa-eye-slash");
+              this.classList.toggle("fa-eye");
+              this.title = isHidden ? "Ẩn mật khẩu" : "Hiện mật khẩu";
+            });
+      </script>
     </body>
 
     <!-- Mirrored from templates.hibootstrap.com/hilo/default/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:14 GMT -->
