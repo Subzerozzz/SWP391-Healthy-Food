@@ -4,7 +4,6 @@
  */
 package com.su25.swp391.controller.authen;
 
-import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
@@ -17,6 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 
 /**
  *
@@ -24,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
  */
 @WebServlet(name = "AuthenController", urlPatterns = {"/home", "/changepassword",
     "/login", "/register", "/forgetpassword",
-    "/otp", "/newpassword", "/logout"})
+    "/otp", "/newpassword", "/logout", "/myaccount"})
 public class AuthenController extends HttpServlet {
 
     /**
@@ -41,7 +45,8 @@ public class AuthenController extends HttpServlet {
     private static final String OTP_PAGE = "view/authen/otp.jsp";
     private static final String FORGETPASSWORD_PAGE = "view/authen/forgetPassword.jsp";
     private static final String NEWPASS_PAGE = "view/authen/newPassword.jsp";
-    private static final String CHANGEPASSWORD_PAGE = "view/authen/changePassword.jsp";
+    private static final String CHANGEPASSWORD_PAGE = "view/authen/ChangePassword.jsp";
+    private static final String MYACCOUNT_PAGE = "view/authen/myaccount.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
     EmailUtils emailotp = new EmailUtils();
@@ -53,25 +58,28 @@ public class AuthenController extends HttpServlet {
 
         switch (path) {
             case "/login":
-                request.getRequestDispatcher("view/authen/login.jsp").forward(request, response);
+                request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
                 break;
             case "/register":
-                request.getRequestDispatcher("view/authen/register.jsp").forward(request, response);
+                request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
                 break;
             case "/home":
-                request.getRequestDispatcher("view/homePage/home.jsp").forward(request, response);
+                request.getRequestDispatcher(HOME_PAGE).forward(request, response);
                 break;
             case "/otp":
-                request.getRequestDispatcher("view/authen/otp.jsp").forward(request, response);
+                request.getRequestDispatcher(OTP_PAGE).forward(request, response);
                 break;
             case "/forgetpassword":
-                request.getRequestDispatcher("view/authen/forgetPassword.jsp").forward(request, response);
+                request.getRequestDispatcher(FORGETPASSWORD_PAGE).forward(request, response);
                 break;
             case "/newpassword":
-                request.getRequestDispatcher("view/authen/newPassword.jsp").forward(request, response);
+                request.getRequestDispatcher(NEWPASS_PAGE).forward(request, response);
                 break;
             case "/changepassword":
-                request.getRequestDispatcher("view/authen/changePassword.jsp").forward(request, response);
+                request.getRequestDispatcher(CHANGEPASSWORD_PAGE).forward(request, response);
+                break;
+            case "/myaccount":
+                request.getRequestDispatcher(MYACCOUNT_PAGE).forward(request, response);
                 break;
             case "/logout":
                 logoutDoGet(request, response);
@@ -108,6 +116,9 @@ public class AuthenController extends HttpServlet {
                 break;
             case "/logout":
                 logoutDoGet(request, response);
+                break;
+            case "/myaccount":
+                myaccountDoPost(request, response);
                 break;
             default:
                 break;
@@ -165,6 +176,7 @@ public class AuthenController extends HttpServlet {
                 .email(email)
                 .user_name(user_name)
                 .password(password)
+                .role("user")
                 .status("active")
                 .build();
 
@@ -188,7 +200,8 @@ public class AuthenController extends HttpServlet {
             String otp = EmailUtils.sendOTPMail(email);
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
-            session.setAttribute("email", email);
+            session.setAttribute("email", accountFoundByEmail.getEmail());
+            session.setAttribute("user_name", accountFoundByEmail.getUser_name());
             session.setAttribute("password", password);
             session.setAttribute("otpType", "register");
             url = OTP_PAGE;
@@ -204,10 +217,10 @@ public class AuthenController extends HttpServlet {
         HttpSession session = request.getSession();
 
         // get về các thong tin người dufg nhập
-        String usernameOrEmail = request.getParameter("username");
+        String email = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()
+        if (email == null || email.trim().isEmpty()
                 || password == null || password.trim().isEmpty()) {
             session.setAttribute("toastMessage", "All fields are required");
             session.setAttribute("toastType", "error");
@@ -217,8 +230,8 @@ public class AuthenController extends HttpServlet {
         }
         // kiểm tra thông tin có tồn tại trong DB ko
         Account account = Account.builder()
-                .user_name(usernameOrEmail)
-                .email(usernameOrEmail)
+                .user_name(email)
+                .email(email)
                 .password(MD5PasswordEncoderUtils.encodeMD5(password))
                 .build();
         Account accFoundByUsernamePass = accountDAO.findByEmailOrUsernameAndPass(account);
@@ -230,7 +243,8 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("toastType", "error");
                 url = LOGIN_PAGE;
             } else {
-                session.setAttribute("email", usernameOrEmail);
+                session.setAttribute("email", accFoundByUsernamePass.getEmail());
+                session.setAttribute("user_name", accFoundByUsernamePass.getUser_name());
                 session.setAttribute("password", password);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
                 url = HOME_PAGE;
@@ -453,6 +467,76 @@ public class AuthenController extends HttpServlet {
         request.getRequestDispatcher(url).forward(request, response);
     }
 
+    private void myaccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
+
+        String full_name = request.getParameter("full_name");
+        String birth_date = request.getParameter("birth_date");
+        String gender = request.getParameter("gender");
+        String mobile = request.getParameter("mobile");
+        String address = request.getParameter("address");
+        String email = (String) session.getAttribute("email");
+        String user_name = (String) session.getAttribute("user_name");
+
+        Date date = null;
+        if (birth_date != null && !birth_date.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(birth_date);
+                date = new java.sql.Date(utilDate.getTime());
+
+                //tính tuổi
+                LocalDate birtDate = date.toLocalDate();
+                LocalDate now = LocalDate.now();
+                int age = Period.between(birtDate, now).getYears();
+                if (age < 18 || age > 80) {
+                    session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
+                    session.setAttribute("toastType", "error");
+                    return;
+                }
+
+            } catch (ParseException e) {
+                session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
+                session.setAttribute("toastType", "error");
+                return;
+            }
+        }
+        if (!isValidPhoneNumber(mobile)) {
+            session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
+
+        Account account = Account.builder()
+                .email(email)
+                .user_name(user_name)
+                .full_name(full_name)
+                .gender(gender)
+                .birth_date(date)
+                .address(address)
+                .mobile(mobile)
+                .build();
+
+        // Kiểm tra xem email đã tồn tại trong database chưa
+        Account accountFoundByEmail = accountDAO.findByEmail(account);
+
+        if (accountFoundByEmail != null) {
+            accountDAO.update(account);
+            session.setAttribute("account", account);
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+            url = MYACCOUNT_PAGE;
+        } else {
+            session.setAttribute("toastMessage", "Email incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
+
+    }
+
     /**
      * Kiểm tra định dạng email.
      *
@@ -487,6 +571,16 @@ public class AuthenController extends HttpServlet {
             return user_name.matches("^[A-Za-z0-9+_.-]+$");
         }
         return false;
+    }
+
+    public static boolean isValidPhoneNumber(String phone) {
+        // Loại bỏ khoảng trắng, dấu gạch, ngoặc, v.v. nếu có
+        phone = phone.replaceAll("[\\s\\-()]", "");
+
+        // Regex cho số điện thoại Việt Nam (VD: 09xxxxxxxx, +849xxxxxxxx)
+        String regex = "^(0[3|5|7|8|9][0-9]{8})|(\\+84[3|5|7|8|9][0-9]{8})$";
+
+        return phone.matches(regex);
     }
 
 }

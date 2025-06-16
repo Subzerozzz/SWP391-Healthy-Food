@@ -24,7 +24,7 @@
                     <div class="center-item">
                         <ul class="menu-list">
                             <li class="menu-item">
-                                <a href="#" class="">
+                                <a href="${pageContext.request.contextPath}/myaccount" class="">
                                     <div class="icon">
                                         <i class="icon-settings"></i>
                                     </div>
@@ -47,24 +47,6 @@
                                         <i class="icon-settings"></i>
                                     </div>
                                     <div class="text">Order List</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="${pageContext.request.contextPath}/manage-account?action=list" class="menu-item-button">
-                                    <div class="icon"><i class="icon-layers"></i></div>
-                                    <div class="text">All Account</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="${pageContext.request.contextPath}/managercategoryproduct?action=addCate" class="menu-item-button">
-                                    <div class="icon"><i class="icon-settings"></i></div>
-                                    <div class="text">Add new Category</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="${pageContext.request.contextPath}/managercategoryproduct?action=listCate" class="menu-item-button">
-                                    <div class="icon"><i class="icon-layers"></i></div>
-                                    <div class="text">All Category</div>
                                 </a>
                             </li>
                         </ul>

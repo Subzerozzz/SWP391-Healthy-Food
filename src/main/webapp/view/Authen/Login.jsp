@@ -31,6 +31,7 @@
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
     </head>
     <style>
+        
         .btn-google {
             display: flex;
             align-items: center;

@@ -31,6 +31,7 @@
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
     </head>
     <body>
+        
         <!-- Pre Loader -->
         <div class="preloader">
             <div class="d-table">
