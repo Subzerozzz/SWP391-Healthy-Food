@@ -22,6 +22,7 @@ public class OrderItem {
 
     public OrderItem() {
     }
+    
 
     public int getOrderItemId() {
         return orderItemId;

@@ -6,6 +6,7 @@ package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.OrderItem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -165,6 +166,24 @@ public class OrderItemDAO extends DBContext {
 
         return null;
     }
+    public OrderItem findById(Integer id) {
+        String sql = "Select * from Food WHERE id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                OrderItem item = new OrderItem();
+                item.setFoodId(resultSet.getInt("food_id"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         OrderItemDAO o = new OrderItemDAO();
@@ -174,4 +193,6 @@ public class OrderItemDAO extends DBContext {
         }
 
     }
+
+    
 }

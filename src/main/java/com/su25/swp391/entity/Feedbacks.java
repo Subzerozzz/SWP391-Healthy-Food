@@ -4,7 +4,6 @@
  */
 package com.su25.swp391.entity;
 
-import java.sql.Timestamp;
 
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -31,5 +30,6 @@ public class Feedbacks {
     private boolean isVisible;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
+    private Account account;
+    private Food food;
 }
