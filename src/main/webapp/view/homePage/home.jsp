@@ -729,10 +729,10 @@
 
         <!-- Footer Area -->
         <jsp:include page="../common/homePage/footerUser.jsp"></jsp:include>
-            <!-- Footer Area End -->
+        <!-- Footer Area End -->
 
             <!--=== Link of JS Files ===-->
-            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/jquery.nice-select.min.js"></script>

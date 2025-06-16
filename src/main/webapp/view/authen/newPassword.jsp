@@ -43,7 +43,7 @@
         <!-- End Pre Loader -->
 
         <!-- Start Navbar Area -->
-        <jsp:include page = "/view/common/homePage/header.jsp"></jsp:include>
+        <jsp:include page = "/view/common/homePage/headerUser.jsp"></jsp:include>
             <!-- End Navbar Area -->
 
             <!-- Inner Banner Area -->
@@ -254,14 +254,9 @@
                     </div>
                 </div>
 
-                <div class="copy-right-area-three">
-                    <div class="copy-right-text">
-                        <p>
-                            Copyright @<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear())</script> Hilo. All Rights Reserved by 
-                            <a href="https://hibootstrap.com/" target="_blank">HiBootstrap</a> 
-                        </p>
-                    </div>
-                </div>
+                <!-- Footer Area -->
+                    <jsp:include page="../common/homePage/footerUser.jsp"></jsp:include>
+                <!-- Footer Area End -->
             </div>
         </footer>
         <!-- Footer Area End -->
