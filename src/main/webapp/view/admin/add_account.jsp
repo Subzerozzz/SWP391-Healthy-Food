@@ -161,10 +161,11 @@
                                                                                                             <div class="body-title mb-10">Role</div>
                                                                                                             <select name="role" class="flex-grow" >
                                                                                                                 <option value="">-- Select Role --</option>
-                                                                                                                <option value="admin" ${role == 'admin' ? 'selected' : ''}>Manager</option>
-                                                                                                                <option value="user" ${role == 'user' ? 'selected' : ''}>Shipper</option>
-                                                                                                                <option value="user" ${role == 'user' ? 'selected' : ''}>Nutritionist</option>
-                                                                                                                <option value="user" ${role == 'user' ? 'selected' : ''}>Saler</option>
+                                                                                                                <option value="manager" ${role == 'manager' ? 'selected' : ''}>Manager</option>
+                                                                                                                <option value="shipper" ${role == 'shipper' ? 'selected' : ''}>Shipper</option>
+                                                                                                                <option value="nutri" ${role == 'nutri' ? 'selected' : ''}>Nutritionist</option>
+                                                                                                                <option value="saler" ${role == 'saler' ? 'selected' : ''}>Saler</option>
+                                                                                                                <option value="customer" ${role == 'customer' ? 'selected' : ''}>Customer</option>
                                                                                                             </select>
                                                                                                         </fieldset>
 

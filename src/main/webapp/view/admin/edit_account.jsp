@@ -202,21 +202,20 @@
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Role</div>
                                                                                                             <c:choose>
-
-                                                                                                                <c:when test="${account.role == 'user'}">
-                                                                                                                    <input type="text" class="form-control" name="role" value="User" readonly>
+                                                                                                                <c:when test="${account.role == 'customer'}">
+                                                                                                                    <input type="text" class="form-control" name="role" value="customer" readonly>
                                                                                                                     </c:when>
                                                                                                                     <c:when test="${account.role == 'nutri'}">
-                                                                                                                        <input type="text" class="form-control" name="role" value="Nutritionist" readonly>
+                                                                                                                        <input type="text" class="form-control" name="role" value="nutri" readonly>
                                                                                                                         </c:when>
                                                                                                                         <c:when test="${account.role == 'saler'}">
-                                                                                                                            <input type="text" class="form-control" name="role" value="Sales" readonly>
+                                                                                                                            <input type="text" class="form-control" name="role" value="sales" readonly>
                                                                                                                             </c:when>
                                                                                                                             <c:when test="${account.role == 'manager'}">
-                                                                                                                                <input type="text" class="form-control" name="role" value="Manager" readonly>
+                                                                                                                                <input type="text" class="form-control" name="role" value="manager" readonly>
                                                                                                                                 </c:when>
                                                                                                                                 <c:when test="${account.role == 'shipper'}">
-                                                                                                                                    <input type="text" class="form-control" name="role" value="Shipper" readonly>
+                                                                                                                                    <input type="text" class="form-control" name="role" value="shipper" readonly>
                                                                                                                                     </c:when>
 
                                                                                                                                 </c:choose>

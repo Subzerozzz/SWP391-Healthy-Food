@@ -584,11 +584,12 @@
                                                                                                                 <div class="filter-group">
                                                                                                                     <select name="role" class="form-control">
                                                                                                                         <option value="">All Roles</option>
-                                                                                                                        <option value="admin" ${param.role=='manager' ? 'selected' : '' }>Manager</option>
-                                                                                                                        <option value="user" ${param.role=='user' ? 'selected' : '' }>User</option>
-                                                                                                                        <option value="user" ${param.role=='shipper' ? 'selected' : '' }>Shipper</option>
-                                                                                                                        <option value="user" ${param.role=='nutri' ? 'selected' : '' }>Nutritionist</option>
-                                                                                                                        <option value="user" ${param.role=='user' ? 'selected' : '' }>User</option>
+                                                                                                                        <option value="manager" ${param.role=='manager' ? 'selected' : '' }>Manager</option>
+                                                                                                                        <option value="customer" ${param.role=='customer' ? 'selected' : '' }>Customer</option>
+                                                                                                                        <option value="shipper" ${param.role=='shipper' ? 'selected' : '' }>Shipper</option>
+                                                                                                                        <option value="nutri" ${param.role=='nutri' ? 'selected' : '' }>Nutritionist</option>
+                                                                                                                        <option value="saler" ${param.role=='saler' ? 'selected' : '' }>Saler</option>
+                                                                                                                        
                                                                                                                     </select>
 
                                                                                                                     <select name="status" class="form-control">
