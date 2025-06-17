@@ -92,12 +92,12 @@
                                                                                 </div>
                                                                                 <!-- /preload -->
                                                                                 <!-- section-menu-left -->
-                                                                                <jsp:include page="/view/common/menuDashBoard/section-menu-left.jsp"></jsp:include>
+                                                                                <jsp:include page="../common/sidebar.jsp"></jsp:include>
                                                                                     <!-- /section-menu-left -->
                                                                                     <!-- section-content-right -->
                                                                                     <div class="section-content-right">
                                                                                         <!-- header-dashboard -->
-                                                                                    <jsp:include page="/view/common/menuDashBoard/header-dashboard.jsp"></jsp:include>
+                                                                                    <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
                                                                                         <!-- /header-dashboard -->
                                                                                         <!-- main-content -->
                                                                                         <div class="main-content">
@@ -108,7 +108,7 @@
                                                                                                 <!-- /Product Detail -->
                                                                                                 <div class="product-detail">
                                                                                                     <div class="product-image">
-                                                                                                        <img src="https://mediawinwin.vn/upload/images/sanpham/bao-gia-chup-mon-an-dich-vu-chup-anh-do-an-chuyen-nghiep-5.JPG" alt="Black Fresh Berry">
+                                                                                                        <img src="${foodD.getImage_url()}" alt="Black Fresh Berry">
                                                                                                     </div>
                                                                                                     <div class="product-info">
                                                                                                         <h2>${foodD.name}</h2>
@@ -153,23 +153,26 @@
                                                                                                                                         </div>
                                                                                                                                         </div>
                                                                                                                                         </div>
+                                                                                                                                            
                                                                                                                                         </div>
+                                                                                                                                            
+                                                                                                                                        
                                                                                                                                         <!-- /main-content-wrap -->
                                                                                                                                         </div>
-                                                                                                                                        <!-- /main-content-wrap -->
-                                                                                                                                        <!-- bottom-page -->
-                                                                                                                                        <jsp:include page="/view/common/menuDashBoard/bottom-page.jsp"></jsp:include>
-                                                                                                                                            <!-- /bottom-page -->
-                                                                                                                                            </div>
-                                                                                                                                            <!-- /main-content -->  
-                                                                                                                                            </div>
-                                                                                                                                            <!-- /section-content-right -->
-                                                                                                                                            </div>
-                                                                                                                                            <!-- /layout-wrap -->
-                                                                                                                                            </div>
-                                                                                                                                            <!-- /#page -->
-                                                                                                                                            </div>
-                                                                                                                                            <!-- /#wrapper -->
+                                                                                            <!-- /main-content-wrap -->
+                                                                                            <!-- bottom-page -->
+                                                                                                <jsp:include page="../common/footer.jsp"></jsp:include>
+                                                                                                <!-- /bottom-page -->
+                                                                                                </div>
+                                                                                                <!-- /main-content -->  
+                                                                                                </div>
+                                                                                                <!-- /section-content-right -->
+                                                                                                </div>
+                                                                                                <!-- /layout-wrap -->
+                                                                                                </div>
+                                                                                                <!-- /#page -->
+                                                                                                </div>
+                                                                                                <!-- /#wrapper -->
 
                                                                                                                                             <!-- Javascript -->
                                                                                                                                             <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>

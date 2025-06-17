@@ -3,7 +3,8 @@
     Created on : May 26, 2025, 6:03:59 PM
     Author     : Dell
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -150,15 +151,29 @@
                                             <img src="${pageContext.request.contextPath}/images/user_icon2.png" alt="">
                                         </span>
                                         <span class="flex flex-column">
-                                            <span class="body-title mb-2">Kristin Watson</span>
-                                            <span class="text-tiny">Manager</span>
+                                            <span class="body-title mb-2">${sessionScope.account.getUser_name()}</span>
+                                            <c:if test="${sessionScope.account.role eq 'nutri' }">
+                                                <span class="text-tiny">Nutritionist</span>
+                                            </c:if>
+                                            
+                                            <c:if test="${sessionScope.account.role eq 'admin' }">
+                                                <span class="text-tiny">Admin</span>
+                                            </c:if>
+                                                
+                                            <c:if test="${sessionScope.account.role eq 'customer' }">
+                                                <span class="text-tiny">Customer</span>
+                                            </c:if>
+                                                
+                                            <c:if test="${sessionScope.account.role eq 'manager' }">
+                                                <span class="text-tiny">Saler</span>
+                                            </c:if>
                                         </span>
                                     </span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end has-content" aria-labelledby="dropdownMenuButton3" >
 
                                     <li>
-                                        <a href="login.html" class="user-item">
+                                        <a href="${pageContext.request.contextPath}/logout" class="user-item">
                                             <div class="icon">
                                                 <i class="icon-log-out"></i>
                                             </div>
