@@ -631,7 +631,8 @@
                                                                                                                             </ul>
                                                                                                                             <ul class="flex flex-column">
                                                                                                                                 <c:forEach items="${listAccount}" var="account">
-                                                                                                                                    <li class="user-item gap14">
+                                                                                                                                    <c:if test="${account.getRole() != 'admin'}">
+                                                                                                                                        <li class="user-item gap14">
 
                                                                                                                                         <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                                             <div class="name">
@@ -677,6 +678,8 @@
                                                                                                                                                 </div>
                                                                                                                                             </div>
                                                                                                                                         </li>
+                                                                                                                                    </c:if>
+                                                                                                                                    
                                                                                                                                 </c:forEach>
                                                                                                                             </ul>
                                                                                                                         </div>

@@ -417,16 +417,18 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return accounts;
     }
 
-    public boolean isEmailExists(String email, Integer id) {
-        String sql = "SELECT COUNT (*) FROM Account WHERE email = ?";
-        if (id != null) {
-            //kiem tra xem co tai khoan nao trung id ma dung tk nay ko
-            sql += "AND id !=?";
-        }
+    public boolean isEmailExists(String email) {
+        String sql = "SELECT COUNT(*) FROM Account WHERE email = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, email);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int count = resultSet.getInt(1); // lấy cột đầu tiên (COUNT(*))
+                return count > 0;
+            }
         } catch (Exception e) {
             System.out.println("Is EmailExist" + e.getMessage());
         } finally {
@@ -512,8 +514,8 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return 0;
     }
-    
-    public boolean activateAccount(int accountId) {
+
+      public boolean activateAccount(int accountId) {
         String sql = "UPDATE Account SET Status = 'active' WHERE id=?";
         try {
             connection = getConnection();
@@ -543,5 +545,9 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         } finally {
             closeResources();
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new AccountDAO().isEmailExists("nguyenduyntn112004@gmail.com"));
     }
 }

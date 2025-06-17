@@ -146,7 +146,7 @@
 
 
                                         <div class="text-tiny mb-16 text-center">Or continue with social account</div>
-                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/SWP391-Healthy-Food/LoginGoogleHandler&response_type=code&client_id=603741791751-77ab6u1qf89i36uqfudjqc08agjs9obm.apps.googleusercontent.com&approval_prompt=force" class="btn-google">
+                                         <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/SWP391-Healthy-Food/LoginGoogleHandler&response_type=code&client_id=603741791751-77ab6u1qf89i36uqfudjqc08agjs9obm.apps.googleusercontent.com&approval_prompt=force" class="btn-google">
                                             <i class="fa-brands fa-google"></i>
                                             <span>Sign in with Google</span>
                                         </a>
