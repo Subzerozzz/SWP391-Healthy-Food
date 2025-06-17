@@ -12,7 +12,7 @@
 <body>
   <div class="section-menu-left">
     <div class="box-logo">
-      <a href="${pageContext.request.contextPath}/manage-food?action=view" id="site-logo-inner">
+      <a href="${pageContext.request.contextPath}/home" id="site-logo-inner">
         <img class="logo" src="${pageContext.request.contextPath}/images/logo3.png">
       </a>
       <div class="button-show-hide">
