@@ -283,6 +283,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         List<Account> findbyid = new ArrayList<>();
         String sql = "SELECT * FROM Account WHERE id = ?";
         try {
+             connection = getConnection(); 
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();

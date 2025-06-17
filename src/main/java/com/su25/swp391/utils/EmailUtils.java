@@ -66,7 +66,7 @@ public class EmailUtils {
     }
 }
   public static String sendAccountMail(String to, String username, String password) {
-    String subject = "Tài khoản truy cập hệ thống của bạn";
+    String subject = "Tai Khoan truy cap he thong:";
     String content = "<h3>Xin chào,</h3>"
             + "<p>Bạn đã được cấp một tài khoản để truy cập hệ thống:</p>"
             + "<p><strong>Tên đăng nhập:</strong> " + username + "</p>"

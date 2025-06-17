@@ -589,7 +589,7 @@
                                                                                                                         <option value="shipper" ${param.role=='shipper' ? 'selected' : '' }>Shipper</option>
                                                                                                                         <option value="nutri" ${param.role=='nutri' ? 'selected' : '' }>Nutritionist</option>
                                                                                                                         <option value="saler" ${param.role=='saler' ? 'selected' : '' }>Saler</option>
-                                                                                                                        
+
                                                                                                                     </select>
 
                                                                                                                     <select name="status" class="form-control">
@@ -860,38 +860,7 @@
                                                                                                                             <c:remove var="toastType" scope="session"/>
                                                                                                                         </c:if>
 
-                                                                                                                        <c:if test="${not empty sessionScope.toastMessage}">
-                                                                                                                            <script>
-                                                                                                                                document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                iziToast.$ {
-                                                                                                                                sessionScope.toastType
-                                                                                                                                }({
-                                                                                                                                title: "Thông báo",
-                                                                                                                                        message: "${sessionScope.toastMessage}",
-                                                                                                                                        position: 'topRight',
-                                                                                                                                        timeout: 5000
-                                                                                                                                });
-                                                                                                                                });
-                                                                                                                            </script>
-                                                                                                                            <% session.removeAttribute("toastMessage");
-                                                                                                                                session.removeAttribute("toastType"); %>
-                                                                                                                        </c:if>
-                                                                                                                        <c:if test="${not empty sessionScope.toastMessage}">
-                                                                                                                            <script>
-                                                                                                                                document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                iziToast.$ {
-                                                                                                                                sessionScope.toastType
-                                                                                                                                }({
-                                                                                                                                title: "Thông báo",
-                                                                                                                                        message: "${sessionScope.toastMessage}",
-                                                                                                                                        position: 'topRight',
-                                                                                                                                        timeout: 5000
-                                                                                                                                });
-                                                                                                                                });
-                                                                                                                            </script>
-                                                                                                                            <% session.removeAttribute("toastMessage");
-                                                                                                                                session.removeAttribute("toastType");%>
-                                                                                                                        </c:if>
+                                                                                                                        
 
                                                                                                                         <!-- Mirrored from themesflat.co/html/remos/all-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
 

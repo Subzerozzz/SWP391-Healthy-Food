@@ -142,7 +142,7 @@ public class ManageAccount extends HttpServlet {
         boolean deactivated = accountDao.deactivateAccount(accountId);
         if (deactivated) {
             // Gửi email thông báo
-            String subject = "Tài khoản của bạn đã bị vô hiệu hóa";
+            String subject = "Tai khoan da bi vo hieu hoa";
             String content = "<h3>Xin chào " + account.getFull_name() + ",</h3>"
                     + "<p>Tài khoản của bạn trên hệ thống đã bị vô hiệu hóa.</p>"
                     + "<p>Nếu bạn nghĩ đây là nhầm lẫn, vui lòng liên hệ quản trị viên.</p>"
@@ -179,7 +179,7 @@ public class ManageAccount extends HttpServlet {
             Account account = accountDao.findById(accountId);
             if (account != null) {
                 // Gửi email thông báo
-                String subject = "Tài khoản của bạn đã được kích hoạt";
+                String subject = "tai Khoan cua ban da duoc kich hoat";
                 String content = "<h3>Xin chào " + account.getFull_name() + ",</h3>"
                         + "<p>Tài khoản của bạn đã được <strong>kích hoạt</strong> thành công.</p>"
                         + "<p>Bạn có thể đăng nhập với tên người dùng: <strong>" + account.getUser_name() + "</strong>.</p>"
@@ -360,18 +360,19 @@ public class ManageAccount extends HttpServlet {
             
             String emailResult = EmailUtils.sendAccountMail(email, user_name, password);
             request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công! " + emailResult); 
+            request.getSession().setAttribute("toastType", "success");
                 // Redirect về trang quản lý tài khoản
                 response.sendRedirect(request.getContextPath() + "/manage-account");
                 return;
             } else {
                 request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
-                request.getSession().setAttribute("toastType", "Fail");
+                request.getSession().setAttribute("toastType", "error");
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {
-            request.getSession().setAttribute("totalMess", "Fail to add Account");
-            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            request.getSession().setAttribute("totalMessage", "Fail to add Account");
+            request.getSession().setAttribute("toastType ","error" + e.getMessage());
             e.printStackTrace();
             request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
         }
