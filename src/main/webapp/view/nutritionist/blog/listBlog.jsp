@@ -246,7 +246,7 @@
                                  }
 
                                  .filter-button {
-                                     background: #2275FC;
+                                     background: #15803D;
                                      color: white;
                                      border: none;
                                      padding: 10px 20px;
@@ -556,12 +556,13 @@
                                             </form>
                                           <!-- Search -->
                                           <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                              <div class="search-container">
-                                                  <input type="text" name="search" placeholder="Search here...">
-                                                      <button type="submit">
-                                                          <i class="icon-search"></i>
-                                                      </button>
-                                              </div>
+                                              <input type="hidden" name="action" value="search">
+                                                  <div class="search-container">
+                                                      <input type="text" name="search" placeholder="Search here...">
+                                                          <button type="submit">
+                                                              <i class="icon-search"></i>
+                                                          </button>
+                                                  </div>
                                           </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
@@ -673,15 +674,18 @@
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
-                        
-                         <!-- bottom-page -->
-                                <jsp:include page="../../common/footer.jsp"></jsp:include>
-                            <!-- /bottom-page -->
+
+
                     </div>
+                             
                     <!-- /main-content -->
                 </div>
+                                              
                 <!-- /section-content-right -->
             </div>
+             <!-- bottom-page -->
+                        <jsp:include page="../../common/footer.jsp"></jsp:include>
+                    <!-- /bottom-page -->    
             <!-- /layout-wrap -->
         </div>
         <!-- /#page -->
@@ -702,7 +706,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu xóa blog của bạn đã được gửi đi",
+                 message: "Yêu cầu xóa blog của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -721,7 +725,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu tạo blog của bạn đã được gửi đi",
+                 message: "Yêu cầu tạo blog của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -741,7 +745,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu chỉnh sửa blog của bạn đã được gửi đi",
+                 message: "Yêu cầu chỉnh sửa blog của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"

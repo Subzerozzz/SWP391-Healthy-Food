@@ -176,6 +176,7 @@ public class AuthenController extends HttpServlet {
         Account account = Account.builder()
                 .email(email)
                 .user_name(user_name)
+                .role("customer")
                 .password(password)
                 .status("active")
                 .build();

@@ -88,7 +88,7 @@
                             <div class="body-title">Food Name</div>
                           </li>
                           <li>
-                            <div class="body-title">Nutritionist</div>
+                            <div class="body-title">Full Name</div>
                           </li>
                           <li>
                             <div class="body-title">User_name</div>

@@ -13,11 +13,8 @@
   <div class="section-menu-left">
     <div class="box-logo">
       <a href="${pageContext.request.contextPath}/home" id="site-logo-inner">
-        <img class="logo" src="${pageContext.request.contextPath}/images/logo3.png">
+        <img class="logo" src="${pageContext.request.contextPath}/images/healthylogo.png">
       </a>
-      <div class="button-show-hide">
-        <i class="icon-menu-left"></i>
-      </div>
     </div>
     <div class="section-menu-left-wrap">
       <div class="center">
@@ -25,7 +22,7 @@
             
             <ul class="menu-list">
                 <li class="menu-item">
-                  <a href="$" class="">
+                    <a href="${pageContext.request.contextPath}/myaccount" class="">
                     <div class="icon">
                       <i class="icon-settings"></i>
                     </div>
@@ -34,7 +31,7 @@
                 </li>
 
                 <li class="menu-item">
-                  <a href="#" class="">
+                    <a href="${pageContext.request.contextPath}/changepassword" class="">
                     <div class="icon">
                       <i class="icon-settings"></i>
                     </div>
@@ -122,8 +119,7 @@
   </div>
 
   <style>
-    .box-logo {
-      height: 120px;
+/*   .box-logo {
       overflow: hidden;
       margin-bottom: 50px
     }
@@ -132,11 +128,17 @@
       width: 180px;
       height: 100%;
       display: block
-    }
+    }*/
 
     .section-menu-left-wrap {
       margin-top: 50px;
+      
     }
+    
+    .layout-wrap .section-menu-left::before{
+        background-color: #F0FDF4 !important
+    }
+    
   </style>
 
 </body>

@@ -77,7 +77,7 @@ public class LoginGoogleHandler extends HttpServlet {
         }
     } 
     
-    public static String getToken(String code) throws ClientProtocolException, IOException {
+   public static String getToken(String code) throws ClientProtocolException, IOException {
         // call api to get token
         String response = Request.Post(GlobalConfig.GOOGLE_LINK_GET_TOKEN)
                 .bodyForm(Form.form()

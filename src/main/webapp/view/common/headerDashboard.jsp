@@ -165,7 +165,7 @@
                                             </c:if>
                                                 
                                             <c:if test="${sessionScope.account.role eq 'manager' }">
-                                                <span class="text-tiny">Saler</span>
+                                                <span class="text-tiny">Manager</span>
                                             </c:if>
                                         </span>
                                     </span>
@@ -186,7 +186,13 @@
                     </div>
                 </div>
             </div>
-
+        
+                                            
+                                            <style>
+                                                .header-dashboard{
+                                                    background-color: #F0FDF4;
+                                                }
+                                            </style>
 
     </body>
 </html>

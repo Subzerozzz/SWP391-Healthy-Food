@@ -100,12 +100,12 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page="../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">
@@ -146,20 +146,21 @@
 
                                                                                                             <fieldset class="name mb-24">
                                                                                                                 <div class="body-title mb-10">Current Password</div>
-                                                                                                                <input type="text" class="form-control" name="current_password">
+                                                                                                                <input type="password" class="form-control" name="current_password">
+                                                                                                                    
                                                                                                             </fieldset>
 
 
                                                                                                             <fieldset class="name mb-24">
                                                                                                                 <div class="body-title mb-10">New Password</div>
-                                                                                                                <input type="text" class="form-control" name="new_password" >
+                                                                                                                <input type="password" class="form-control" name="new_password" >
                                                                                                             </fieldset>
 
 
                                                                                                             <!-- Mobile -->
                                                                                                             <fieldset class="name mb-24">
                                                                                                                 <div class="body-title mb-10">Confirm Password</div>
-                                                                                                                <input class="form-control" type="text" name="confirm_password">
+                                                                                                                <input class="form-control" type="password" name="confirm_password">
                                                                                                                 <c:if test="${not empty errors.mobile}">
                                                                                                                     <div class="text-danger">${errors.mobile}</div>
                                                                                                                 </c:if>
@@ -176,10 +177,12 @@
                                                                                         <!-- /add-new-user -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
+                                                                                    <!-- bottom-page -->
+                                                                                        <jsp:include page="../common/footer.jsp"></jsp:include>
+                                                                                    <!-- /bottom-page -->
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                <!-- /bottom-page -->
+                                                                                
                                                                             </div>
                                                                             <!-- /main-content -->
                                                                         </div>
@@ -218,6 +221,7 @@
                                                                         session.removeAttribute("toastMessage");
                                                                     %>
                                                                 </c:if>
+                                                                    
 
                                                                 <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
                                                                 </html>

@@ -72,7 +72,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
                 food = getFromResultSet(resultSet);
             }
         } catch (Exception e) {
-        }finally{
+        } finally {
             closeResources();
         }
         return food;
@@ -91,7 +91,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return foodList;
@@ -112,7 +112,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return listFood;
@@ -137,7 +137,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -164,7 +164,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -191,7 +191,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -332,10 +332,58 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         }
         return null;
     }
-    
-    
+
+    public List<Food> filterChanning(Integer categoryId, String foodName, Integer limit, Integer currentPage) {
+        List<Food> list = new ArrayList<>();
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT f.* FROM Food f WHERE 1=1");
+
+        // Lọc theo categoryId nếu có
+        if (categoryId != 0) {
+            sqlBuilder.append(" AND f.category_id = ?");
+        }
+
+        // Lọc theo foodName nếu khác rỗng
+        if (foodName != null && !foodName.trim().isEmpty()) {
+            sqlBuilder.append(" AND f.name LIKE ?");
+        }
+
+        // set limit dựa vào currentPage
+        if (currentPage != null) {
+            sqlBuilder.append(" LIMIT ? OFFSET ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sqlBuilder.toString());
+            int paramIndex = 1;
+            if (categoryId != 0) {
+                statement.setInt(paramIndex++, categoryId);
+            }
+            if (foodName != null && !foodName.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + foodName + "%");
+            }
+            if (currentPage != null) {
+                statement.setInt(paramIndex++, limit);
+                statement.setInt(paramIndex++, (currentPage - 1) * limit);
+            }
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
-        System.out.println(new FoodDAO().findById(1));
+        for (Food a : new FoodDAO().filterChanning(3, "gà", 10, null)) {
+            System.out.println(a.toString());
+        }
     }
 
 }

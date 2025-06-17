@@ -54,6 +54,22 @@ public class EmailUtils {
 
         return otp + "";
     }
+     public static String sendAccountMail(String to, String username, String password) throws MessagingException {
+    String subject = "Tai Khoan truy cap he thong:";
+    String content = "<h3>Xin chào,</h3>"
+            + "<p>Bạn đã được cấp một tài khoản để truy cập hệ thống:</p>"
+            + "<p><strong>Tên đăng nhập:</strong> " + username + "</p>"
+            + "<p><strong>Mật khẩu:</strong> " + password + "</p>"
+            + "<p>Hãy đăng nhập và thay đổi mật khẩu ngay sau lần đăng nhập đầu tiên.</p>"
+            + "<br><p>Trân trọng!</p>";
+
+    boolean sent = sendMail(to, subject, content);
+    if (sent) {
+        return "Gửi tài khoản qua email thành công!";
+    } else {
+        return "Gửi email thất bại!";
+    }
+}
 
     public static void main(String[] args) {
         try {
