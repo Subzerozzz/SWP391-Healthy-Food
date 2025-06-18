@@ -166,15 +166,19 @@ public class OrderItemDAO extends DBContext {
 
         return null;
     }
+    
+   
     public OrderItem findById(Integer id) {
-        String sql = "Select * from Food WHERE id = ?";
+        String sql = "Select * from order_items WHERE order_item_id = ?";
+         OrderItem item = new OrderItem();
         try {
+           
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                OrderItem item = new OrderItem();
+                
                 item.setFoodId(resultSet.getInt("food_id"));
             }
         } catch (Exception e) {
@@ -182,7 +186,7 @@ public class OrderItemDAO extends DBContext {
         } finally {
             closeResources();
         }
-        return null;
+        return item;
     }
 
     public static void main(String[] args) {

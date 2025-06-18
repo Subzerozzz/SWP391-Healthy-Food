@@ -92,7 +92,7 @@ public class ManagerFeedbackController extends HttpServlet {
             }
         } catch (Exception ex) {
 //            session.setAttribute("errorMessage", "Đã xảy ra lỗi: " + ex.getMessage());
-            response.sendRedirect(request.getContextPath() + "/feedbackControl");
+//            response.sendRedirect(request.getContextPath() + "/feedbackControl");
         }
     }
 
@@ -108,12 +108,13 @@ public class ManagerFeedbackController extends HttpServlet {
 
      private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
          // Get filter parameters by Status
-        String status = request.getParameter("status");
+        String status = request.getParameter("rating");
+        
         // Get search by name, id, email
         String search = request.getParameter("search");
         // Pagination
         int page = 1;
-        int pageSize = GlobalConfig.SIZE_PAGE;
+        int pageSize = 2;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -142,25 +143,20 @@ public class ManagerFeedbackController extends HttpServlet {
         
         // get account
          for (Feedbacks feedback : feedbacks) {
-              Account acc = accDAO.findById(feedback.getUserId());
-              feedback.setAccount(acc);
+              Account acc2 = accDAO.findById(feedback.getUserId());
+              feedback.setAccount(acc2);
               OrderItem item = itemDAO.findById(feedback.getOrderItemId());
               Food food = foodDAO.findById(item.getFoodId());
-              feedback.setFood(food);
+             feedback.setFood(food);
          }
          
         
         // Set attributes
-        request.setAttribute("orders", feedbacks);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
-        // Forword to the order list page
-        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
-        
-         List<Feedbacks> list = feedbackDAO.findAll();
-        request.setAttribute("feedbacks", list);
+        request.setAttribute("feedbacks", feedbacks);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
