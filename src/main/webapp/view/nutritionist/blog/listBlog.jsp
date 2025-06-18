@@ -558,12 +558,13 @@
                                             </form>
                                           <!-- Search -->
                                           <form class="search-box" action="${pageContext.request.contextPath}/manage-blog" method="get">
-                                              <div class="search-container">
-                                                  <input type="text" name="search" placeholder="Search here...">
-                                                      <button type="submit">
-                                                          <i class="icon-search"></i>
-                                                      </button>
-                                              </div>
+                                              <input type="hidden" name="action" value="search">
+                                                  <div class="search-container">
+                                                      <input type="text" name="search" placeholder="Search here...">
+                                                          <button type="submit">
+                                                              <i class="icon-search"></i>
+                                                          </button>
+                                                  </div>
                                           </form>
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/manage-blog?action=add&id=${blog.id}"><i class="icon-plus"></i>Add new</a>
