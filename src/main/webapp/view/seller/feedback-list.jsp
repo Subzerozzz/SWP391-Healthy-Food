@@ -224,261 +224,262 @@ main {
 <body class="body">
 
     <!-- #wrapper -->
-    <div id="wrapper">
-        <!-- #page -->
-        <div id="page" class="">
-            <!-- layout-wrap -->
-           <div class="layout-wrap">
-                <!-- preload -->
-                <div id="preload" class="preload-container">
-                    <div class="preloading">
-                        <span></span>
-                    </div>
-                </div>
-                <!-- /preload -->
-                <!-- section-menu-left -->
-                <jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
-                <!-- /section-menu-left -->
-                <!-- section-content-right -->
-                <div class="section-content-right">
-                    <!-- header-dashboard -->
-                    <jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>    
-                    <!-- /header-dashboard -->
-                    <!-- main-content -->
-                    <div class="main-content">
-                        <!-- main-content-wrap -->
-                        <div class="main-content-inner">
-                            <!-- main-content-wrap -->
-                            <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">Feedbacks</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">FeedBack List</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Feedback </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- order-detail -->
-                                <!--start fix-->
-                                
-                                 <div class="dashboard-main-body">
-                                     <div class="row g-24" >
-                <!-- Feedback list -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="GET">
-      <!-- Thêm class filter-row -->
-      <div class="filter-row">
-        <!-- Select Status -->
-       <select name="rating">
-    <option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALl Rating </option>       
-    <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
-    <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
-    <option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
-    <option value="4" ${param.rating == 4 ? 'selected' : ''}>4 </option>
-    <option value="5" ${param.rating == 5 ? 'selected' : ''}>5 </option>
-   </select>
-    <!-- Bên cạnh có thể hiển thị preview -->
-
-        <!-- Ô Search -->
-        <input type="text" class="form-control"
-               name="search"
-               placeholder="Search by customer name,email..."
-               value="${search}"/>
-
-        <!-- Nút Filter -->
-        <button type="submit" class="btn btn-primary">Filter</button>
-      </div>
-    </form>
-                </div>
-               
-                 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Food</th>
-                                    <th>Rating</th>
-                                    <th>Action</th>
-                                </tr>
-                                
-                            </thead>
-                            <tbody>
-                                  
-                                <c:forEach var="feedback" items="${feedbacks}">
-                                    <tr>
-                                        <td>${feedback.id}</td>
-                                         <td>${feedback.account.user_name}</td>
-                                         <td>${feedback.food.name}</td>
-                                       <td>
-                                              <c:forEach begin="1" end="${feedback.rating}">
-                                                  <i class="fa-solid fa-star" style="color: gold;"></i>
-                                              </c:forEach>
-                                          </td>
-                                     <td>  
-                                       <div  class="action-group">
-                                           <div class="item eye">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
-                                                   <i class="icon-eye"></i>
-                                               </a></div> 
-                                           <div class="item trash">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden"
-                                                  onclick="handleReject(event)">
-                                                   <i class="fa-solid fa-xmark"></i>
-                                               </a>         
-                                           </div>    
-
-                                       </div>
-                                   </td>
-                                    </tr>
-                                </c:forEach>
-                               
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="flex items-center justify-between flex-wrap gap10">
-                        <div class="text-tiny">Showing 10 entries</div>
-                        <ul class="wg-pagination">
-                          
-                          <li>
-                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
-                          </li>
-                            <c:choose>
-                                <c:when test="${currentPage <= totalPages - 2}">
-                                    <c:if test="${currentPage > 1}">
-                                         <li class="">
-                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
-                                        </li>
-                                    </c:if>
-                                    <li class="active">
-                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
-                                    </li>
-                                    
-                                    <li class="">
-                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback&page=${currentPage + 1}">${currentPage + 1}</a>
-                                    </li>
-                                    
-                                    <c:if test="${currentPage < totalPages - 2}">
-                                        <li>
-                                            <span>...</span>
-                                        </li>
-                                    </c:if>
-                                    
-                                    
-                                    <li class="">
-                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
-                                    </li>
-                                </c:when>
-                                
-                                <c:otherwise>
-                                    <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
-                                        <li class="${currentPage == i ? 'active' : ''}">
-                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
-                                        </li>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                            
-                          <li>
-                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
-                          </li>
-                        </ul>
-                          
-                    </div>
-                     <c:if test="${empty feedbacks}">
-                                    <tr>
-                                        <td colspan="8" class="text-center">
-                                            <div class="py-4">
-                                                <i class="fas fa-search fs-1 text-muted mb-3"></i>
-                                                <h5>No feedback found</h5>
-                                                <p class="text-muted">
-                                                    <c:choose>
-                                                        <c:when test="${not empty status || not empty search}">
-                                                            No feedback match your search criteria. Try adjusting your filters.
-                                                            <br>
-                                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2">
-                                                                <i class="fas fa-times me-2"></i>Clear Filters
-                                                            </a>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            There are no orders in the system yet.
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:if>      
-                </div>
-                          
-            </div>
-             </div>
-                                <!--end fix-->
-                                 <!-- Toast Container -->
-                                 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                                     <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                         <div class="toast-header" id="toast-header">
-                                             <strong class="me-auto" id="toast-title">Thông báo</strong>
-                                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                         </div>
-                                         <div class="toast-body" id="toast-body"></div>
-                                     </div>
-
-                                     <!-- Confirmation Toast -->
-                                     <div id="confirmToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                                         <div class="toast-header bg-warning text-white">
-                                             <strong class="me-auto">Confirmation</strong>
-                                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                         </div>
-                                         <div class="toast-body">
-                                             <p id="confirm-message">Are you sure you want to update this order status?</p>
-                                             <div class="mt-2 d-flex justify-content-end gap-2">
-                                                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="toast">No</button>
-                                                 <button type="button" class="btn btn-sm btn-primary" id="confirm-yes-btn">Yes, Update</button>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-
-                               
-                                <!-- /order-detail -->
-                            </div>
-                            <!-- /main-content-wrap -->
-                        </div>
-                        <!-- /main-content-wrap -->
-                        
-                    </div>
-                    <!-- /main-content -->
-                    <!-- bottom-page -->
-                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
-                        <!-- /bottom-page -->
-                </div>
-                <!-- /section-content-right -->
-            </div>
-            <!-- /layout-wrap -->
-        </div>
-        <!-- /#page -->
+<div id="wrapper">
+<!-- #page -->
+<div id="page" class="">
+<!-- layout-wrap -->
+<div class="layout-wrap">
+<!-- preload -->
+<div id="preload" class="preload-container">
+<div class="preloading">
+<span></span>
+</div>
+</div>
+<!-- /preload -->
+<!-- section-menu-left -->
+<jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+<!-- /section-menu-left -->
+<!-- section-content-right -->
+<div class="section-content-right">
+<!-- header-dashboard -->
+<jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>    
+<!-- /header-dashboard -->
+<!-- main-content -->
+<div class="main-content">
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+<!-- main-content-wrap -->
+<div class="main-content-wrap">
+    <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+        <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+            <li>
+                <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+            </li>
+            <li>
+                <i class="icon-chevron-right"></i>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">Feedbacks</div></a>
+            </li>
+            <li>
+                <i class="icon-chevron-right"></i>
+            </li>
+            <li>
+                <a href="#"><div class="text-tiny">FeedBack List</div></a>
+            </li>
+            <li>
+                <i class="icon-chevron-right"></i>
+            </li>
+            <li>
+                <div class="text-tiny">Feedback </div>
+            </li>
+        </ul>
     </div>
+    <!-- order-detail -->
+    <!--start fix-->
+    
+        <div class="dashboard-main-body">
+            <div class="row g-24" >
+<!-- Feedback list -->
+<div class="card mt-24">
+<div class="card-header">
+<form action="${pageContext.request.contextPath}/seller/manage-feedback" method="GET">
+<!-- Thêm class filter-row -->
+<div class="filter-row">
+<!-- Select Status -->
+<select name="rating">
+<option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALl Rating </option>       
+<option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
+<option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
+<option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
+<option value="4" ${param.rating == 4 ? 'selected' : ''}>4 </option>
+<option value="5" ${param.rating == 5 ? 'selected' : ''}>5 </option>
+</select>
+<!-- Bên cạnh có thể hiển thị preview -->
+
+<!-- Ô Search -->
+<input type="text" class="form-control"
+name="search"
+placeholder="Search by customer name,email..."
+value="${search}"/>
+
+<!-- Nút Filter -->
+<button type="submit" class="btn btn-primary">Filter</button>
+</div>
+</form>
+</div>
+
+
+<div class="card-body">
+<div class="table-responsive">
+<table class="table table-hover">
+<thead>
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Food</th>
+        <th>Rating</th>
+        <th>Action</th>
+    </tr>
+    
+</thead>
+<tbody>
+        
+    <c:forEach var="feedback" items="${feedbacks}">
+        <tr>
+            <td>${feedback.id}</td>
+                <td>${feedback.account.user_name}</td>
+                <td>${feedback.food.name}</td>
+            <td>
+                    <c:forEach begin="1" end="${feedback.rating}">
+                        <i class="fa-solid fa-star" style="color: gold;"></i>
+                    </c:forEach>
+                </td>
+            <td>  
+            <div  class="action-group">
+                <div class="item eye">
+                    <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
+                        <i class="icon-eye"></i>
+                    </a></div> 
+                <div class="item trash">
+                    <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden"
+                        onclick="handleReject(event)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>         
+                </div>    
+
+            </div>
+        </td>
+        </tr>
+    </c:forEach>
+    
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between flex-wrap gap10">
+<div class="text-tiny">Showing 10 entries</div>
+<ul class="wg-pagination">
+
+<li>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
+</li>
+<c:choose>
+    <c:when test="${currentPage <= totalPages - 2}">
+        <c:if test="${currentPage > 1}">
+                <li class="">
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
+            </li>
+        </c:if>
+        <li class="active">
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
+        </li>
+        
+        <li class="">
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback&page=${currentPage + 1}">${currentPage + 1}</a>
+        </li>
+        
+        <c:if test="${currentPage < totalPages - 2}">
+            <li>
+                <span>...</span>
+            </li>
+        </c:if>
+        
+        
+        <li class="">
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
+        </li>
+    </c:when>
+    
+    <c:otherwise>
+        <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+            <li class="${currentPage == i ? 'active' : ''}">
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
+            </li>
+        </c:forEach>
+    </c:otherwise>
+</c:choose>
+
+<li>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+</li>
+</ul>
+
+</div>
+<c:if test="${empty feedbacks}">
+<tr>
+    <td colspan="8" class="text-center">
+        <div class="py-4">
+            <i class="fas fa-search fs-1 text-muted mb-3"></i>
+            <h5>No feedback found</h5>
+            <p class="text-muted">
+                <c:choose>
+                    <c:when test="${not empty status || not empty search}">
+                        No feedback match your search criteria. Try adjusting your filters.
+                        <br>
+                        <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-times me-2"></i>Clear Filters
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        There are no orders in the system yet.
+                    </c:otherwise>
+                </c:choose>
+            </p>
+        </div>
+    </td>
+</tr>
+    </c:if>      
+</div>
+
+</div>
+</div>
+    <!--end fix-->
+        <!-- Toast Container -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header" id="toast-header">
+                    <strong class="me-auto" id="toast-title">Thông báo</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toast-body"></div>
+            </div>
+
+            <!-- Confirmation Toast -->
+            <div id="confirmToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                <div class="toast-header bg-warning text-white">
+                    <strong class="me-auto">Confirmation</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <p id="confirm-message">Are you sure you want to update this order status?</p>
+                    <div class="mt-2 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="toast">No</button>
+                        <button type="button" class="btn btn-sm btn-primary" id="confirm-yes-btn">Yes, Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+    <!-- /order-detail -->
+</div>
+<!-- /main-content-wrap -->
+</div>
+<!-- /main-content-wrap -->
+
+</div>
+<!-- /main-content -->
+<!-- bottom-page -->
+<jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+<!-- /bottom-page -->
+</div>
+<!-- /section-content-right -->
+</div>
+<!-- /layout-wrap -->
+</div>
+<!-- /#page -->
+</div>
+</div>
     <!-- /#wrapper -->
 
     <!-- Javascript -->
@@ -506,7 +507,7 @@ main {
                     message: "Processed successfully",
                     position: 'topRight',
                     timeout: 5000,
-                    backgroundColor:"#d4edda"
+                    backgroundColor:"#d4edda" 
                     });
               });
             </script>
