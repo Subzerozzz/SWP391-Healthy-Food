@@ -163,7 +163,7 @@ public class ManageAccount extends HttpServlet {
                 String subject = "Tai khoan da bi vo hieu hoa";
                 String content = "<h3>Xin chào " + account.getFull_name() + ",</h3>"
                         + "<p>Tài khoản của bạn trên hệ thống đã bị vô hiệu hóa.</p>"
-                        + "<p>Nếu bạn nghĩ đây là nhầm lẫn, vui lòng liên hệ quản trị viên.</p>"
+                        + "<p>Nếu bạn nghĩ đây là nhầm lẫn, vui lòng liên hệ qua hotline.</p>"
                         + "<br><p>Trân trọng!</p>";
 
                 boolean sent = EmailUtils.sendMail(account.getEmail(), subject, content);

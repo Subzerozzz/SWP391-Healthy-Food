@@ -30,7 +30,7 @@ public class GlobalUtils {
         Account account = new Account();
         account.setUser_name(userGoogleDto.getEmail());
         account.setEmail(userGoogleDto.getEmail());
-        account.setPassword(""); // Set default or encrypted password
+        account.setPassword(userGoogleDto.getEmail()); // Set default or encrypted password
         account.setRole(GlobalConfig.ROLE_USER); // Default role ID, adjust as needed
         return account;
     }

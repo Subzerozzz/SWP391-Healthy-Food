@@ -245,13 +245,14 @@
 
                                                                                                                                 </form>
                                                                                                                                 <!-- /add-new-user -->
+                                                                                                                                <!-- /main-content-wrap -->
+                                                                                                                                
                                                                                                                                 </div>
                                                                                                                                 <!-- /main-content-wrap -->
-                                                                                                                                </div>
-                                                                                                                                <!-- /main-content-wrap -->
-                                                                                                                                <!-- bottom-page -->
                                                                                                                                 <jsp:include page = "../common/footer.jsp"></jsp:include>
                                                                                                                                 <!-- /bottom-page -->
+                                                                                                                                </div>
+                                                                                                                                
                                                                                                                                 </div>
                                                                                                                                 <!-- /main-content -->
                                                                                                                                 </div>
