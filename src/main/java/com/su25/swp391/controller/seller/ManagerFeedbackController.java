@@ -163,6 +163,11 @@ public class ManagerFeedbackController extends HttpServlet {
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
         Feedbacks feedback = feedbackDAO.findById(feedbackId);
+        Account acc2 = accDAO.findById(feedback.getUserId());
+        feedback.setAccount(acc2);
+        OrderItem item = itemDAO.findById(feedback.getOrderItemId());
+        Food food = foodDAO.findById(item.getFoodId());
+        feedback.setFood(food);
         request.setAttribute("feedback", feedback);
         request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
     }

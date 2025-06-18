@@ -27,20 +27,12 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
    // Get Feedbacks by Id Feedback
     @Override
     public Feedbacks findById(Integer id) {
-        String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
-                + "FROM feedbacks f "
-                + "JOIN account a "
-                + "ON f.user_id = a.id "
-                + "JOIN order_items oi "
-                + "ON f.order_item_id = oi.order_item_id "
-                + "JOIN Food fo "
-                + "ON oi.food_id = fo.id "
-                + "WHERE f.id = ?";
-
+        String sql = "SELECT * from feedbacks where id = ?" ;
+               
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-
+      
             statement.setInt(1, id);
 
             resultSet = statement.executeQuery();
@@ -305,8 +297,10 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 //             feedback.setFood(food);
 //         }
 //       System.out.println(feedbacks);
-        List<Feedbacks> feedbacks = f.searchFeedback("Manh","2", 1, 2);
-        System.out.println(feedbacks);
+//        List<Feedbacks> feedbacks = f.searchFeedback("Manh","2", 1, 2);
+//        System.out.println(feedbacks);
+          Feedbacks fe = f.findById(1);
+          System.out.println(fe);
     }
 
 }

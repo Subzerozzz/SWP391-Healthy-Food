@@ -246,7 +246,7 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Feedback ${feedback.feedbackId}</div>
+                                            <div class="text-tiny">Feedback ${feedback.id}</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -257,7 +257,7 @@
                                             <div class="wg-table table-order-detail">
                                                 <ul class="table-title flex items-center justify-between gap20 mb-24">
                                                     <li>
-                                                        <div class="body-title">Item</div>
+                                                        <div class="body-title">Item Detail</div>
                                                     </li>    
                                                 </ul>
                                                 <ul class="flex flex-column">
@@ -267,44 +267,52 @@
                                                         </div>
                                                         <div class="flex items-center justify-between gap40 flex-grow">
                                                             <div class="name">
-                                                                <div class="text-tiny mb-1">Food name</div>
-                                                                <div>${feedback.productName}</div>
+                                                                <div class="text-tiny mb-1" style="color: black">Food name</div>
+                                                                <div style="color: black">${feedback.food.name}</div>
                                                             </div>
                                                             <div class="name">
-                                                                <div class="text-tiny mb-1">Customer</div>
-                                                                <div class="body-title-2">${feedback.userName}</div>
+                                                                <div class="text-tiny mb-1" style="color: black">Customer</div>
+                                                                <div class="body-title-2">${feedback.account.user_name}</div>
                                                             </div>
                                                             <div class="name">
-                                                                <div class="text-tiny mb-1">Rating</div>
+                                                                <div class="text-tiny mb-1" style="color: black">Rating</div>
                                                                 <div class="body-title-2"> <c:forEach begin="1" end="${feedback.rating}">
                                                                         <i class="fa-solid fa-star" style="color: gold;"></i>
                                                                     </c:forEach></div>
                                                             </div>
+                                                            
                                                         </div>
                                                     </li>
                                                    </ul>
                                             </div>
                                                               <div class="wg-box mb-20 gap10">
                                             <div class="body-title">Content Feedback</div>
-                                            <div class="body-text">${feedback.content}</div>
+                                            <div class="body-text" style="color: black">${feedback.content}</div>
                                         </div>
                                         </div>
 
                                     </div>
                                     <div class="right">
                                         <div class="wg-box mb-20 gap10">
-                                            <div class="body-title">Summary</div>
+                                            <div class="body-title">Summary of Food </div>
                                             <div class="summary-item">
-                                                <div class="body-text">FeedBack ID</div>
-                                                <div class="body-title-2">${feedback.feedbackId}</div>
+                                                <div class="body-text" style="color: black">Price:</div>
+                                                <div class="body-title-2">${feedback.food.price}</div>
                                             </div>
                                             <div class="summary-item">
-                                                <div class="body-text">Date</div>
-                                                <div class="body-title-2">${feedback.createdAt}</div>
+                                                <div class="body-text" style="color: black">Calo:</div>
+                                                <div class="body-title-2">${feedback.food.calo}</div>
                                             </div>
                                             <div class="summary-item">
-                                                <div class="body-text">OrderItemId</div>
-                                                <div class="body-title-2 tf-color-1">${feedback.orderItemId}</div>
+                                                <div class="body-text" style="color: black">Description: </div>
+                                                <div class="body-title-2">${feedback.food.description}</div>
+                                            </div>
+                                          
+                                             <div class="summary-item">
+                                                <div class="body-text" style="color: black">Created At: </div>
+                                                <div class="body-title-2 tf-color-1">
+                                             <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+                                                   </div>
                                             </div>
                                         </div>
                                           <div class="wg-box gap10">
