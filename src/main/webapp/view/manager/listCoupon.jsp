@@ -207,6 +207,7 @@
                                      border-radius: 12px;
                                      border: 1px solid #e2e8f0;
                                      transition: all 0.3s ease;
+                                     margin-top: -22px;
                                  }
 
                                  .form-search:hover {
@@ -271,6 +272,7 @@
                                  .search-box {
                                      display: flex;
                                      align-items: center;
+                                     transform: translateY(-28px);
                                  }
                                  .search-container {
                                      display: flex;
@@ -483,7 +485,7 @@
                                      flex: 0 0 150px;
                                      max-width: 150px;
                                      justify-content: center;
-                                     gap: 10px;
+                                     gap: 20px;
                                  }
 
                                  /* Style cho các link và text trong bảng */
@@ -503,7 +505,7 @@
                                      }
                                 .body-title-2:hover {
                                     color: #000000;
-                                    text-decoration: underline;
+                                    
                                 }
                                 .discount-type {
                                     padding: 4px 10px;
@@ -538,11 +540,11 @@
                                      display: inline-flex;
                                      align-items: center;
                                      justify-content: center;
-                                     width: 32px;
-                                     height: 32px;
+                                     width: 3px;
+                                     height: 2px;
                                      border-radius: 50%;
                                      background-color: #f1f1f1;
-                                     transition: all 0.3s ease;
+                                     transition: background-color 0.3s, transform 0.2s;
                                      text-decoration: none;
                                  }
 
@@ -703,7 +705,7 @@
                                                               <i class="icon-search"></i>
                                                           </button>
                                                   </div>
-                                          </form>
+                                          </form>                       
                                         </div>  
                                         <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/ManagerCoupon?action=add&id=${coupon.id}"><i class="icon-plus"></i>Add new</a>
                                     </div>
@@ -761,66 +763,73 @@
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing ${coupons.size()} entries</div>
                                         <!-- # Phân Trang -->
-                                       <ul class="wg-pagination">
-                                           <%-- Gộp lại chuỗi truy vấn với tham số lọc đúng --%>
-                                           <c:set var="queryString" value="&search=${search}&action=filter&discounttype=${discounttype}" />
 
-                                           <!-- Nút Trang Trước -->
-                                           <li class="${currentPage == 1 ? 'disabled' : ''}">
-                                               <c:choose>
-                                                   <c:when test="${currentPage > 1}">
-                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage - 1}${queryString}">
-                                                           <i class="icon-chevron-left"></i>
-                                                       </a>
-                                                   </c:when>
-                                                   <c:otherwise>
-                                                       <a href="javascript:void(0);">
-                                                           <i class="icon-chevron-left"></i>
-                                                       </a>
-                                                   </c:otherwise>
-                                               </c:choose>
-                                           </li>
+                                        <ul class="wg-pagination">
+                                            <%-- Tạo queryString với các tham số lọc --%>
+                                            <c:set var="queryString" value="&search=${search}&action=filter&discounttype=${discounttype}" />
 
-                                           <!-- Số trang -->
-                                           <c:choose>
-                                               <c:when test="${currentPage < totalPage - 2}">
-                                                   <li class="active">
-                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage}${queryString}">${currentPage}</a>
-                                                   </li>
-                                                   <li>
-                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
-                                                   </li>
-                                                   <li><span>...</span></li>
-                                                   <li>
-                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${totalPage}${queryString}">${totalPage}</a>
-                                                   </li>
-                                               </c:when>
-                                               <c:otherwise>
-                                                   <c:set var="startPage" value="${totalPage > 2 ? totalPage - 2 : 1}" />
-                                                   <c:forEach begin="${startPage}" end="${totalPage}" var="i">
-                                                       <li class="${currentPage == i ? 'active' : ''}">
-                                                           <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${i}${queryString}">${i}</a>
-                                                       </li>
-                                                   </c:forEach>
-                                               </c:otherwise>
-                                           </c:choose>
+                                            <!-- Nút Trang Trước (về trang 1) -->
+                                            <li class="${currentPage == 1 ? 'disabled' : ''}">
+                                                <c:choose>
+                                                    <c:when test="${currentPage > 1}">
+                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=1${queryString}">
+                                                            <i class="icon-chevron-left"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="javascript:void(0);">
+                                                            <i class="icon-chevron-left"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </li>
 
-                                           <!-- Nút Trang Sau -->
-                                           <li class="${currentPage == totalPage ? 'disabled' : ''}">
-                                               <c:choose>
-                                                   <c:when test="${currentPage < totalPage}">
-                                                       <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">
-                                                           <i class="icon-chevron-right"></i>
-                                                       </a>
-                                                   </c:when>
-                                                   <c:otherwise>
-                                                       <a href="javascript:void(0);">
-                                                           <i class="icon-chevron-right"></i>
-                                                       </a>
-                                                   </c:otherwise>
-                                               </c:choose>
-                                           </li>
-                                       </ul>
+                                            <!-- Phân trang logic hiển thị số trang -->
+                                            <c:choose>
+                                                <c:when test="${currentPage <= totalPage - 2}">
+                                                    <c:if test="${currentPage > 1}">
+                                                        <li>
+                                                            <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage - 1}${queryString}">${currentPage - 1}</a>
+                                                        </li>
+                                                    </c:if>
+                                                    <li class="active">
+                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage}${queryString}">${currentPage}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${currentPage + 1}${queryString}">${currentPage + 1}</a>
+                                                    </li>
+                                                    <li><span>...</span></li>
+                                                    <li>
+                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${totalPage}${queryString}">${totalPage}</a>
+                                                    </li>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    <c:set var="startPage" value="${totalPage - 2 <= 0 ? 1 : totalPage - 2}" />
+                                                    <c:forEach begin="${startPage}" end="${totalPage}" var="i">
+                                                        <li class="${currentPage == i ? 'active' : ''}">
+                                                            <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${i}${queryString}">${i}</a>
+                                                        </li>
+                                                    </c:forEach>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <!-- Nút Trang Sau (về trang cuối) -->
+                                            <li class="${currentPage == totalPage ? 'disabled' : ''}">
+                                                <c:choose>
+                                                    <c:when test="${currentPage < totalPage}">
+                                                        <a href="${pageContext.request.contextPath}/ManagerCoupon?index=${totalPage}${queryString}">
+                                                            <i class="icon-chevron-right"></i>
+                                                        </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <a href="javascript:void(0);">
+                                                            <i class="icon-chevron-right"></i>
+                                                        </a>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <!-- /product-list -->
@@ -853,7 +862,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu xóa coupon của bạn đã được gửi đi",
+                 message: "Yêu cầu xóa coupon của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -872,7 +881,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu tạo coupon của bạn đã được gửi đi",
+                 message: "Yêu cầu tạo coupon của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
@@ -892,7 +901,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu chỉnh sửa coupon của bạn đã được gửi đi",
+                 message: "Yêu cầu chỉnh sửa coupon của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"
