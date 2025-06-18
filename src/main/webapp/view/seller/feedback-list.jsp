@@ -316,7 +316,7 @@ main {
                                                    <i class="icon-eye"></i>
                                                </a></div> 
                                            <div class="item trash">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Delete"
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden"
                                                   onclick="handleReject(event)">
                                                    <i class="fa-solid fa-xmark"></i>
                                                </a>         
@@ -440,82 +440,7 @@ main {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" /> 
- <script>
-            // Function to show toast
-            function showToast(message, type) {
-                const toastEl = document.getElementById('orderToast');
-                const toastTitle = document.getElementById('toast-title');
-                const toastBody = document.getElementById('toast-body');
-                const header = document.getElementById('toast-header');
-                
-                // Set content
-                toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
-                toastBody.textContent = message;
-                
-                // Set header color
-                header.className = 'toast-header';
-//                if(type === 'success') {
-//                    header.classList.add('bg-success', 'text-white');
-//                } else if(type === 'error') {
-//                    header.classList.add('bg-danger', 'text-white');
-//                } else {
-//                    header.classList.add('bg-info', 'text-white');
-//                }
-//                
-//                // Show toast
-//                const toast = new bootstrap.Toast(toastEl);
-//                toast.show();
-//                
-//                return toast;
-//            }
-//            
-//            // Handle form submission with confirmation
-//            document.addEventListener('DOMContentLoaded', functiaddEventListeneron() {
-//                const orderForm = document.querySelector('form[action*="manage-order"]');
-//                if (orderForm) {
-//                    orderForm.addEventListener('submit', function(e) {
-//                        e.preventDefault();
-//                        
-//                        const statusSelect = document.querySelector('select[name="newStatus"]');
-//                        if (!statusSelect.value) {
-//                            showToast("Please select a status", "error");
-//                            return;
-//                        }
-//                        
-//                        // Get status text for confirmation message - make sure to get the visible text
-//                        const selectedOption = statusSelect.options[statusSelect.selectedIndex];
-//                        
-//                        // Update confirmation message with the proper status text
-//                        document.getElementById('confirm-message').textContent = 
-//                            "Are you sure you want to change the order status to \"" + selectedOption.textContent + "\"?";
-//                        
-//                        // Show confirmation toast
-//                        const confirmToast = new bootstrap.Toast(document.getElementById('confirmToast'));
-//                        confirmToast.show();
-//                        
-//                        // Set up confirmation button
-//                        document.getElementById('confirm-yes-btn').onclick = function() {
-//                            confirmToast.hide();
-//                            showToast("Processing update...", "info");
-//                            orderForm.submit();
-//                        };
-//                    });
-//                }
-//                
-//                // Check for messages in session
-//                <c:if test="${not empty sessionScope.successMessage}">
-//                    showToast("${sessionScope.successMessage}", "success");
-//                    // Remove message from session
-//                    <% session.removeAttribute("successMessage"); %>
-//                </c:if>
-//                
-//                <c:if test="${not empty sessionScope.errorMessage}">
-//                    showToast("${sessionScope.errorMessage}", "error");
-//                    // Remove message from session
-//                    <% session.removeAttribute("errorMessage"); %>
-//                </c:if>
-//            });
-//        </script>
+
   <c:if test="${isSuccess == true}">
             <script>
               document.addEventListener("DOMContentLoaded", function () {
@@ -542,7 +467,7 @@ main {
     Swal.fire({
         title: 'Are you sure?\nThis action cannot be undone.',
         showCancelButton: true,
-        confirmButtonText: 'Reject',
+        confirmButtonText: 'Hidden',
         cancelButtonText: 'Cancel',
         reverseButtons: true,
         background: '#ffffff',
@@ -565,6 +490,4 @@ main {
 
 </body>
 
-
-<!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
 </html>
