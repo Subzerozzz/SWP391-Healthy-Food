@@ -263,19 +263,19 @@ main {
       <div class="filter-row">
         <!-- Select Status -->
        <select name="rating">
-    <option value="1">ALl Rating </option>       
-    <option value="1">1 </option> 
-    <option value="2">2 </option>
-    <option value="3">3 </option>
-    <option value="4">4 </option>
-    <option value="5">5 </option>
-</select>
+    <option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALl Rating </option>       
+    <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
+    <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
+    <option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
+    <option value="4" ${param.rating == 4 ? 'selected' : ''}>4 </option>
+    <option value="5" ${param.rating == 5 ? 'selected' : ''}>5 </option>
+   </select>
     <!-- Bên cạnh có thể hiển thị preview -->
 
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
-               placeholder="Search by feedback ID, customer name,..."
+               placeholder="Search by customer name,email..."
                value="${search}"/>
 
         <!-- Nút Filter -->
@@ -298,8 +298,8 @@ main {
                             <tbody>
                                 <c:forEach var="feedback" items="${feedbacks}">
                                     <tr>
-                                        <td>${feedback.feedbackId}</td>
-                                         <td>${feedback.userName}</td>
+                                        <td>${feedback.id}</td>
+                                         <td>${feedback.account.user_name}</td>
                                        <td>
                                               <c:forEach begin="1" end="${feedback.rating}">
                                                   <i class="fa-solid fa-star" style="color: gold;"></i>
@@ -309,11 +309,11 @@ main {
                                    <td>  
                                        <div  class="action-group">
                                            <div class="item eye">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.feedbackId}" title="View Detail" >
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
                                                    <i class="icon-eye"></i>
                                                </a></div> 
                                            <div class="item trash">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.feedbackId}" title="Delete">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Delete">
                                                    <i class="icon-trash-2"></i>
                                                </a>         
                                            </div>    
@@ -322,13 +322,57 @@ main {
                                    </td>
                                     </tr>
                                 </c:forEach>
-                                <c:if test="${empty feedbacks}">
-                                    <tr>
-                                        <td colspan="5" class="text-center">No Feedback</td>
-                                    </tr>
-                                </c:if>
+                               
                             </tbody>
                         </table>
+                    </div>
+                    <div class="flex items-center justify-between flex-wrap gap10">
+                        <div class="text-tiny">Showing 10 entries</div>
+                        <ul class="wg-pagination">
+                          
+                          <li>
+                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
+                          </li>
+                            <c:choose>
+                                <c:when test="${currentPage <= totalPages - 2}">
+                                    <c:if test="${currentPage > 1}">
+                                         <li class="">
+                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
+                                        </li>
+                                    </c:if>
+                                    <li class="active">
+                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
+                                    </li>
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback&page=${currentPage + 1}">${currentPage + 1}</a>
+                                    </li>
+                                    
+                                    <c:if test="${currentPage < totalPages - 2}">
+                                        <li>
+                                            <span>...</span>
+                                        </li>
+                                    </c:if>
+                                    
+                                    
+                                    <li class="">
+                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
+                                    </li>
+                                </c:when>
+                                
+                                <c:otherwise>
+                                    <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                        <li class="${currentPage == i ? 'active' : ''}">
+                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                            
+                          <li>
+                            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+                          </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -366,11 +410,12 @@ main {
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
-                        <!-- /bottom-page -->
+                        
                     </div>
                     <!-- /main-content -->
+                    <!-- bottom-page -->
+                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+                        <!-- /bottom-page -->
                 </div>
                 <!-- /section-content-right -->
             </div>

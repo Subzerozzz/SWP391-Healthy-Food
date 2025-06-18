@@ -7,8 +7,11 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Feedbacks;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -129,6 +132,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
                 .isVisible(resultSet.getBoolean("is_visible"))
                 .createdAt(resultSet.getTimestamp("created_at"))
                 .updatedAt(resultSet.getTimestamp("updated_at"))
+                .account(null)
+                .food(null)
                 .build();
      }
      public List<Feedbacks> searchFeedback(String search, String status, int page, int pageSize) {
@@ -136,21 +141,23 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
                 + "FROM feedbacks f "
                 + "JOIN account a ON f.user_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
         params.add(searchPattern);
         params.add(searchPattern);
-        params.add(search);
-
+//        params.add(search);
+        if(status != null && status.contains("-1")){
+            status = null;
+        }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.is_visible = ? ");
+            sql.append("AND f.rating = ? ");
             params.add(status);
         }
         
 
-        sql.append("ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
         params.add((page - 1) * pageSize);
 
@@ -184,9 +191,11 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         params.add(searchPattern);
         params.add(searchPattern);
         params.add(search);
-
+        if(status != null && status.contains("-1")){
+            status = null;
+        }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.is_visible = ? ");
+            sql.append("AND f.rating = ? ");
             params.add(status);
         }
        try {
@@ -210,14 +219,15 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     
      public List<Feedbacks> findFeedbackWithFilters(String status,  int page, int pageSize) {
         List<Feedbacks> feedbacks = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
+        StringBuilder sql = new StringBuilder("SELECT f.* "
                 + "FROM feedbacks f "
-                + "JOIN account a ON f.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
-
+        if(status != null && status.contains("-1")){
+            status = null;
+        }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.is_visible = ? ");
+            sql.append("AND f.rating = ? ");
             params.add(status);
         }
         
@@ -249,9 +259,11 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
                 + "JOIN account a ON f.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
-
+         if(status != null && status.contains("-1")){
+            status = null;
+        }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.is_visible = ? ");
+            sql.append("AND f.rating = ? ");
             params.add(status);
         }
        
@@ -281,8 +293,20 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 //        Feedbacks f2 = f.findById(2);
 //        System.out.println(f2);
 //        f.update(f2);
-       List<Feedbacks> l = f.findFeedbackWithFilters("", 1, 10);
-        System.out.println(l);
+//       List<Feedbacks> feedbacks = f.findFeedbackWithFilters("", 1, 10);
+//          AccountDAO acc = new AccountDAO();
+//          OrderItemDAO itemD = new OrderItemDAO();
+//          FoodDAO fo = new FoodDAO();
+//       for (Feedbacks feedback : feedbacks) {
+//              Account acc2 = acc.findById(feedback.getUserId());
+//              feedback.setAccount(acc2);
+//              OrderItem item = itemD.findById(feedback.getOrderItemId());
+//              Food food = fo.findById(item.getFoodId());
+//             feedback.setFood(food);
+//         }
+//       System.out.println(feedbacks);
+        List<Feedbacks> feedbacks = f.searchFeedback("Manh","2", 1, 2);
+        System.out.println(feedbacks);
     }
 
 }
