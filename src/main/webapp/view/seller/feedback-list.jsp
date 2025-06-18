@@ -197,7 +197,27 @@ body {
 main {
   flex-grow: 1;
 }
-         
+       .text-center {
+  text-align: center;
+}
+
+.py-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  min-height: 250px;
+  color: #666;
+}  
+.py-4 a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  margin-left: 40%
+}
+
         </style>
 </head>
 
@@ -288,6 +308,8 @@ main {
       </div>
     </form>
                 </div>
+               
+                 
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -299,8 +321,10 @@ main {
                                     <th>Rating</th>
                                     <th>Action</th>
                                 </tr>
+                                
                             </thead>
                             <tbody>
+                                  
                                 <c:forEach var="feedback" items="${feedbacks}">
                                     <tr>
                                         <td>${feedback.id}</td>
@@ -379,8 +403,34 @@ main {
                             <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
                           </li>
                         </ul>
+                          
                     </div>
+                     <c:if test="${empty feedbacks}">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="py-4">
+                                                <i class="fas fa-search fs-1 text-muted mb-3"></i>
+                                                <h5>No feedback found</h5>
+                                                <p class="text-muted">
+                                                    <c:choose>
+                                                        <c:when test="${not empty status || not empty search}">
+                                                            No feedback match your search criteria. Try adjusting your filters.
+                                                            <br>
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2">
+                                                                <i class="fas fa-times me-2"></i>Clear Filters
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            There are no orders in the system yet.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:if>      
                 </div>
+                          
             </div>
              </div>
                                 <!--end fix-->
