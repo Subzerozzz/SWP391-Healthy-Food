@@ -26,8 +26,11 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!--Fontawsoem-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<
+   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
 
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
@@ -290,8 +293,8 @@ main {
                                 <tr>
                                     <th>ID</th>
                                     <th>Customer</th>
+                                    <th>Food</th>
                                     <th>Rating</th>
-                                    <th>Created At</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -300,21 +303,22 @@ main {
                                     <tr>
                                         <td>${feedback.id}</td>
                                          <td>${feedback.account.user_name}</td>
+                                         <td>${feedback.food.name}</td>
                                        <td>
                                               <c:forEach begin="1" end="${feedback.rating}">
                                                   <i class="fa-solid fa-star" style="color: gold;"></i>
                                               </c:forEach>
                                           </td>
-                                  <td><fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                   <td>  
+                                     <td>  
                                        <div  class="action-group">
                                            <div class="item eye">
                                                <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
                                                    <i class="icon-eye"></i>
                                                </a></div> 
                                            <div class="item trash">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Delete">
-                                                   <i class="icon-trash-2"></i>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Delete"
+                                                  onclick="handleReject(event)">
+                                                   <i class="fa-solid fa-xmark"></i>
                                                </a>         
                                            </div>    
 
@@ -433,6 +437,9 @@ main {
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" /> 
  <script>
             // Function to show toast
             function showToast(message, type) {
@@ -447,68 +454,114 @@ main {
                 
                 // Set header color
                 header.className = 'toast-header';
-                if(type === 'success') {
-                    header.classList.add('bg-success', 'text-white');
-                } else if(type === 'error') {
-                    header.classList.add('bg-danger', 'text-white');
-                } else {
-                    header.classList.add('bg-info', 'text-white');
-                }
-                
-                // Show toast
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
-                
-                return toast;
-            }
-            
-            // Handle form submission with confirmation
-            document.addEventListener('DOMContentLoaded', function() {
-                const orderForm = document.querySelector('form[action*="manage-order"]');
-                if (orderForm) {
-                    orderForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        
-                        const statusSelect = document.querySelector('select[name="newStatus"]');
-                        if (!statusSelect.value) {
-                            showToast("Please select a status", "error");
-                            return;
-                        }
-                        
-                        // Get status text for confirmation message - make sure to get the visible text
-                        const selectedOption = statusSelect.options[statusSelect.selectedIndex];
-                        
-                        // Update confirmation message with the proper status text
-                        document.getElementById('confirm-message').textContent = 
-                            "Are you sure you want to change the order status to \"" + selectedOption.textContent + "\"?";
-                        
-                        // Show confirmation toast
-                        const confirmToast = new bootstrap.Toast(document.getElementById('confirmToast'));
-                        confirmToast.show();
-                        
-                        // Set up confirmation button
-                        document.getElementById('confirm-yes-btn').onclick = function() {
-                            confirmToast.hide();
-                            showToast("Processing update...", "info");
-                            orderForm.submit();
-                        };
+//                if(type === 'success') {
+//                    header.classList.add('bg-success', 'text-white');
+//                } else if(type === 'error') {
+//                    header.classList.add('bg-danger', 'text-white');
+//                } else {
+//                    header.classList.add('bg-info', 'text-white');
+//                }
+//                
+//                // Show toast
+//                const toast = new bootstrap.Toast(toastEl);
+//                toast.show();
+//                
+//                return toast;
+//            }
+//            
+//            // Handle form submission with confirmation
+//            document.addEventListener('DOMContentLoaded', functiaddEventListeneron() {
+//                const orderForm = document.querySelector('form[action*="manage-order"]');
+//                if (orderForm) {
+//                    orderForm.addEventListener('submit', function(e) {
+//                        e.preventDefault();
+//                        
+//                        const statusSelect = document.querySelector('select[name="newStatus"]');
+//                        if (!statusSelect.value) {
+//                            showToast("Please select a status", "error");
+//                            return;
+//                        }
+//                        
+//                        // Get status text for confirmation message - make sure to get the visible text
+//                        const selectedOption = statusSelect.options[statusSelect.selectedIndex];
+//                        
+//                        // Update confirmation message with the proper status text
+//                        document.getElementById('confirm-message').textContent = 
+//                            "Are you sure you want to change the order status to \"" + selectedOption.textContent + "\"?";
+//                        
+//                        // Show confirmation toast
+//                        const confirmToast = new bootstrap.Toast(document.getElementById('confirmToast'));
+//                        confirmToast.show();
+//                        
+//                        // Set up confirmation button
+//                        document.getElementById('confirm-yes-btn').onclick = function() {
+//                            confirmToast.hide();
+//                            showToast("Processing update...", "info");
+//                            orderForm.submit();
+//                        };
+//                    });
+//                }
+//                
+//                // Check for messages in session
+//                <c:if test="${not empty sessionScope.successMessage}">
+//                    showToast("${sessionScope.successMessage}", "success");
+//                    // Remove message from session
+//                    <% session.removeAttribute("successMessage"); %>
+//                </c:if>
+//                
+//                <c:if test="${not empty sessionScope.errorMessage}">
+//                    showToast("${sessionScope.errorMessage}", "error");
+//                    // Remove message from session
+//                    <% session.removeAttribute("errorMessage"); %>
+//                </c:if>
+//            });
+//        </script>
+  <c:if test="${isSuccess == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Notification",
+                    message: "Processed successfully",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
                     });
-                }
-                
-                // Check for messages in session
-                <c:if test="${not empty sessionScope.successMessage}">
-                    showToast("${sessionScope.successMessage}", "success");
-                    // Remove message from session
-                    <% session.removeAttribute("successMessage"); %>
-                </c:if>
-                
-                <c:if test="${not empty sessionScope.errorMessage}">
-                    showToast("${sessionScope.errorMessage}", "error");
-                    // Remove message from session
-                    <% session.removeAttribute("errorMessage"); %>
-                </c:if>
-            });
-        </script>
+              });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("isSuccess");
+            %>
+          </c:if>
+ <script>
+     function handleReject(event) {
+    event.preventDefault();
+
+    const url = event.currentTarget.href;
+
+    Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Reject',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: true,
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showRejectToast', 'true');
+            window.location.href = url ;
+        }
+    });
+}
+ </script>
 
 </body>
 
