@@ -23,6 +23,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -177,8 +178,37 @@ public class ManagerFeedbackController extends HttpServlet {
 
     private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedbacks feedback = feedbackDAO.findById(feedbackId);
-        feedbackDAO.update(feedback);
+        Feedbacks feedbackHiden = feedbackDAO.findById(feedbackId);
+        feedbackDAO.update(feedbackHiden);
+        HttpSession session = request.getSession();
+        session.setAttribute("isSuccess", true);
+         List<Feedbacks> feedbacks;
+        int totalOrders;
+       int page = 1;
+        int pageSize = 2;
+        try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Keep default value
+        }// Get orders with filters
+      
+        // If no search, use filters
+            feedbacks=feedbackDAO.findFeedbackWithFilters(null, page, pageSize);
+            // count order
+            totalOrders = feedbackDAO.getTotalFilteredFeedback(null);
+            for (Feedbacks feedback : feedbacks) {
+              Account acc2 = accDAO.findById(feedback.getUserId());
+              feedback.setAccount(acc2);
+              OrderItem item = itemDAO.findById(feedback.getOrderItemId());
+              Food food = foodDAO.findById(item.getFoodId());
+             feedback.setFood(food);
+         }
+          request.setAttribute("feedbacks", feedbacks);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
