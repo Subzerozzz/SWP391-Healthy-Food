@@ -130,20 +130,20 @@ public class ManagerFeedbackController extends HttpServlet {
             // Keep default value
         }// Get orders with filters
         List<Feedbacks> feedbacks;
-        int totalOrders;
+        int totalFeedback;
 
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
             feedbacks = feedbackDAO.searchFeedback(search, status, page, pageSize);
-            totalOrders = feedbackDAO.getTotalFeedbackResults(search, status);
+            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, status);
         } else {
             // If no search, use filters
             feedbacks=feedbackDAO.findFeedbackWithFilters(status, page, pageSize);
             // count order
-            totalOrders = feedbackDAO.getTotalFilteredFeedback(status);
+            totalFeedback = feedbackDAO.getTotalFilteredFeedback(status);
         }
         // Number of page can have
-        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+        int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
         
         // get account
          for (Feedbacks feedback : feedbacks) {
@@ -183,7 +183,7 @@ public class ManagerFeedbackController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("isSuccess", true);
          List<Feedbacks> feedbacks;
-        int totalOrders;
+        int totalFeedback;
        int page = 1;
         int pageSize = 2;
         try {
@@ -200,7 +200,9 @@ public class ManagerFeedbackController extends HttpServlet {
         // If no search, use filters
             feedbacks=feedbackDAO.findFeedbackWithFilters(null, page, pageSize);
             // count order
-            totalOrders = feedbackDAO.getTotalFilteredFeedback(null);
+            totalFeedback = feedbackDAO.getTotalFilteredFeedback(null);
+            // Number of page can have
+        int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
             for (Feedbacks feedback : feedbacks) {
               Account acc2 = accDAO.findById(feedback.getUserId());
               feedback.setAccount(acc2);
@@ -208,6 +210,9 @@ public class ManagerFeedbackController extends HttpServlet {
               Food food = foodDAO.findById(item.getFoodId());
              feedback.setFood(food);
          }
+          // Set attributes
+         request.setAttribute("currentPage", page);
+         request.setAttribute("totalPages", totalPages);  
           request.setAttribute("feedbacks", feedbacks);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
