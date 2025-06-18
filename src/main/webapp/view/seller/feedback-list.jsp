@@ -29,8 +29,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!--Fontawsoem-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
@@ -439,9 +441,14 @@ main {
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" /> 
+                                                                                                                                                                     
+                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                                                                                                                                        <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+                                                                                                                                                                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />                                                                                                      <!--Alert Information about AccpetFood-->
+        
 
-  <c:if test="${isSuccess == true}">
+  
+      <c:if test="${sessionScope.isSuccess == true}">
             <script>
               document.addEventListener("DOMContentLoaded", function () {
                 iziToast.error({

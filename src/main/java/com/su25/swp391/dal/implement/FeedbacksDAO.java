@@ -133,7 +133,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
                 + "FROM feedbacks f "
                 + "JOIN account a ON f.user_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? ) ");
+                + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -176,7 +176,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM feedbacks f "
                 + "JOIN account a ON f.user_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -213,7 +213,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         List<Feedbacks> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT f.* "
                 + "FROM feedbacks f "
-                + "WHERE 1=1 ");
+                + "WHERE f.is_visible = 1  ");
         List<Object> params = new ArrayList<>();
         if(status != null && status.contains("-1")){
             status = null;
@@ -249,7 +249,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM feedbacks f "
                 + "JOIN account a ON f.user_id = a.id "
-                + "WHERE 1=1 ");
+                + "WHERE f.is_visible = 1 ");
         List<Object> params = new ArrayList<>();
          if(status != null && status.contains("-1")){
             status = null;
