@@ -66,6 +66,9 @@ public class ManagerFeedbackController extends HttpServlet {
                 case "view":
                     viewDetailFeedback(request, response);
                     break;
+                case "update":
+                    hiddenFeedback(request, response);
+                    break;
                 default:
                     listFeedbacks(request, response);
             }

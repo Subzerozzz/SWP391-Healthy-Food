@@ -84,7 +84,7 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 
     @Override
     public boolean update(Feedbacks t) {
-        String sql = "UPDATE swp391_healthy_food.feedbacks SET  is_visible = ? "
+        String sql = "UPDATE feedbacks SET  is_visible = ? "
                 + "WHERE id = ?";
 
         try {
@@ -299,8 +299,11 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 //       System.out.println(feedbacks);
 //        List<Feedbacks> feedbacks = f.searchFeedback("Manh","2", 1, 2);
 //        System.out.println(feedbacks);
-          Feedbacks fe = f.findById(1);
-          System.out.println(fe);
+//          Feedbacks fe = f.findById(1);
+//          System.out.println(fe);
+        Feedbacks fe = f.findById(1);
+       
+           System.out.println(f.update(fe));
     }
 
 }
