@@ -112,19 +112,17 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public boolean update(Account t) {
         try {
             connection = getConnection();
-            String sql = "UPDATE Account SET password = ?, full_name = ?, "
-                    + "user_name = ?, birth_date = ?, gender = ?, role = ?, address = ?, mobie = ?, status= ? WHERE email = ?";
+            String sql = "UPDATE Account SET full_name = ?, "
+                    + " birth_date = ?, gender = ?, role = ?, address = ?, mobile = ?, status= ? WHERE email = ?";
             statement = connection.prepareStatement(sql);
-            statement.setObject(1, t.getPassword());
-            statement.setObject(2, t.getFull_name());
-            statement.setObject(3, t.getUser_name());
-            statement.setObject(4, t.getBirth_date());
-            statement.setObject(5, t.getGender());
-            statement.setObject(6, t.getRole());
-            statement.setObject(7, t.getAddress());
-            statement.setObject(8, t.getMobile());
-            statement.setObject(9, t.getStatus());
-            statement.setObject(10, t.getEmail());
+            statement.setString(1, t.getFull_name());
+            statement.setObject(2, t.getBirth_date());
+            statement.setObject(3, t.getGender());
+            statement.setObject(4, t.getRole());
+            statement.setObject(5, t.getAddress());
+            statement.setObject(6, t.getMobile());
+            statement.setObject(7, t.getStatus());
+            statement.setObject(8, t.getEmail());
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -154,15 +152,15 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     public int insert(Account t) {
         try {
             connection = getConnection();
-            String sql = "INSERT INTO Account (email, password, full_name, user_name, gender, birth_date, role, address, mobile, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Account (email, password, full_name, user_name, birth_date, gender, role, address, mobile, status ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             statement.setObject(1, t.getEmail());
             statement.setObject(2, t.getPassword());
             statement.setObject(3, t.getFull_name());
             statement.setObject(4, t.getUser_name());
-            statement.setObject(5, t.getGender());
-            statement.setObject(6, t.getBirth_date());
+            statement.setObject(5, t.getBirth_date());
+            statement.setObject(6, t.getGender());
             statement.setObject(7, t.getRole());
             statement.setObject(8, t.getAddress());
             statement.setObject(9, t.getMobile());
@@ -237,4 +235,23 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return null;
     }
 
+public static void main(String[] args) {
+        AccountDAO accountDAO = new AccountDAO(); // hoặc AccountDAOImpl nếu bạn dùng interface
+        Account account = new Account();
+
+        // Chỉ truyền email, password, user_name
+        account.setEmail("test@example.com");
+        account.setPassword("secure123");
+        account.setUser_name("testuser");
+
+       
+
+        int id = accountDAO.insert(account);
+
+        if (id != -1) {
+            System.out.println("Insert thành công! ID mới: " + id);
+        } else {
+            System.out.println("Insert thất bại.");
+        }
+    }
 }
