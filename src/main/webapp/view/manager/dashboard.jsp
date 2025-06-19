@@ -91,6 +91,8 @@
                                                                                                                     <input type="hidden" name="action" value="option">
                                                                                                                         <select  name="select" class="selected">
                                                                                                                             <option style="display: flex;align-items: center" value="-1" ${param.select == '-1' ? 'selected' : ''}>--All Type Of Request--</option>
+                                                                                                                            
+                                                                                                                            <option>Pending</option>
                                                                                                                             <c:forEach items="${type}" var="t">
                                                                                                                                 <option value="${t}" ${param.select == t ? 'selected' : ''}>--${t}--</option>
                                                                                                                                 <i class="ti-arrow-down" style="color: white; font-size: 15px;"></i>
