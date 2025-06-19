@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package com.su25.swp391.controller.authen;
 
 import com.google.gson.Gson;
@@ -25,58 +24,84 @@ import org.apache.http.client.fluent.Request;
 
 @WebServlet(name = "LoginGoogleHandler", urlPatterns = {"/LoginGoogleHandler"})
 public class LoginGoogleHandler extends HttpServlet {
-   
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-   
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        AccountDAO userDao = new AccountDAO();
-        String code = request.getParameter("code"); // Dùng code để đổi lấy access token
-        String accessToken = getToken(code);  // Dùng token để lấy info người dùng từ Google
-        UserGoogleDto userGoogleDto = getUserInfo(accessToken);
-        
-        // Convert UserGoogleDto to User
-        Account user = GlobalUtils.convertToAccount(userGoogleDto);
-        
-        try {
-            //check  user exist by mail
-            Account userInDB = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
-            //if not exist => insert
-            if (userInDB == null) {
-                userDao.insert(user);
-            }
-            HttpSession session = request.getSession();
-            user = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
-            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, user);
-            session.setMaxInactiveInterval(60 * 60 * 24); // Đặt thời gian sống của session là 24 giờ
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
-            Cookie u = new Cookie("userC", user.getEmail()); //tạo cookie để lưu email và password
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            AccountDAO userDao = new AccountDAO();
+            String code = request.getParameter("code");
+
+            if (code == null || code.isEmpty()) {
+                response.sendRedirect("home.jsp");
+                return;
+            }
+
+            String accessToken = getToken(code);
+            if (accessToken == null || accessToken.isEmpty()) {
+                response.sendRedirect("home.jsp");
+                return;
+            }
+
+            UserGoogleDto userGoogleDto = getUserInfo(accessToken);
+            if (userGoogleDto == null || userGoogleDto.getEmail() == null) {
+                response.sendRedirect("home.jsp");
+                return;
+            }
+
+            Account user = GlobalUtils.convertToAccount(userGoogleDto);
+            
+
+            // Check user tồn tại chưa
+            Account userInDB = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
+
+            if (userInDB == null) {
+                int insertResult = userDao.insert(user);
+                if (insertResult == -1) {
+                    response.sendRedirect("home.jsp"); // hoặc thông báo lỗi hợp lý
+                    return;
+                }
+            }
+
+            // Lấy lại thông tin user từ DB (dù là mới hay cũ)
+            user = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
+
+            if (user == null) {
+                response.sendRedirect("home.jsp");
+                return;
+            }
+
+            // Tạo session và cookie
+            HttpSession session = request.getSession();
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, user);
+            session.setMaxInactiveInterval(60 * 60 * 24);
+
+            Cookie u = new Cookie("userC", user.getEmail());
             Cookie p = new Cookie("passC", user.getPassword());
-            u.setMaxAge(60 * 60 * 24); // thời gian lưu cookie
+            u.setMaxAge(60 * 60 * 24);
             p.setMaxAge(60 * 60 * 24);
-            response.addCookie(p); // Thêm cookie vào response gửi về trình duyệt
             response.addCookie(u);
+            response.addCookie(p);
 
             response.sendRedirect("home");
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
+            response.sendRedirect("error.jsp");
         }
-    } 
-    
+    }
+
     public static String getToken(String code) throws ClientProtocolException, IOException {
         // call api to get token
         String response = Request.Post(GlobalConfig.GOOGLE_LINK_GET_TOKEN)
@@ -96,7 +121,7 @@ public class LoginGoogleHandler extends HttpServlet {
     public static UserGoogleDto getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
         String link = GlobalConfig.GOOGLE_LINK_GET_USER_INFO + accessToken;
         String response = Request.Get(link).execute().returnContent().asString();
-        System.out.println("---------------------------\n" +  response);
+        System.out.println("---------------------------\n" + response);
         UserGoogleDto googlePojo = new Gson().fromJson(response, UserGoogleDto.class);
 
         return googlePojo;

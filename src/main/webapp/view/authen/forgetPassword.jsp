@@ -81,7 +81,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 ">
                                         <div class="form-group">
-                                            <input style="border-radius:30px" type="text" class="form-control" name="email" placeholder="Email">
+                                            <input style="border-radius:30px" type="email" class="form-control" name="email" placeholder="Email">
                                         </div>
                                     </div>
                                     <p style="color:red">${toastMessage}</p>
