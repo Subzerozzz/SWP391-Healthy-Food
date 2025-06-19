@@ -7,6 +7,7 @@ package com.su25.swp391.admin;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
+import static com.su25.swp391.utils.MD5PasswordEncoderUtils.encodeMD5;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -343,7 +344,7 @@ public class ManageAccount extends HttpServlet {
                     .full_name(full_name)
                     .user_name(user_name)
                     .email(email)
-                    .password(password)
+                    .password(encodeMD5(password))
                     .address(address)
                     .role(role)
                     .status(status)

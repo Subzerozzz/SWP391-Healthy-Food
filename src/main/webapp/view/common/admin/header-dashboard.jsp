@@ -105,9 +105,7 @@
                                                 <img src="${pageContext.request.contextPath}/images/products/21.png" alt="">
                                             </div>
                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                <div class="name">
-                                                    <a href="product-list.html" class="body-text">Kristin Watson</a>
-                                                </div>
+                                                
                                             </div>
                                         </li>
                                         <li class="mb-10">
@@ -384,11 +382,9 @@
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="header-user wg-user">
-                                    <span class="image">
-                                        <img src="${pageContext.request.contextPath}/images/avatar/user-1.png" alt="">
-                                    </span>
+                                    
                                     <span class="flex flex-column">
-                                        <span class="body-title mb-2">Kristin Watson</span>
+                                     
                                         <span class="text-tiny">Admin</span>
                                     </span>
                                 </span>
