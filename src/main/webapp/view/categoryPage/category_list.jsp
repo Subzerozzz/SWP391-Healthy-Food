@@ -157,7 +157,7 @@
                                                                                                                             <div class="wg-table table-all-category">
                                                                                                                                 <ul class="table-title flex gap20 mb-14">
                                                                                                                                     <li style = "width: 100px">
-                                                                                                                                        <div class="body-title">ID</div>
+                                                                                                                                        <div class="body-title" >ID</div>
                                                                                                                                     </li>
                                                                                                                                     <li>
                                                                                                                                         <div class="body-title">Category</div>
@@ -182,11 +182,11 @@
                                                                                                                                         <li class="product-item gap14">
 
                                                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                                                <div class="body-title">
+                                                                                                                                                <div class="body-title"  style="width: 500px">
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.id}</a>
-                                                                                                                                                    <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px;"></div>
+                                                                                                                                                   
                                                                                                                                                 </div>
-                                                                                                                                                
+<!--                                                                                                                                                 <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px; width: 50px"></div>-->
                                                                                                                                                 <div class="body-title-2">
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.name_category}</a>
                                                                                                                                                 </div>

@@ -173,15 +173,9 @@
                                                                                                             <c:if test="${not empty errors.minBMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.minBMI}</div>
                                                                                                             </c:if>
-                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập Số MinBMI</div>
                                                                                                         </fieldset>
-                                                                                                        <!-- BMI logic error -->
-                                                                                                        <fieldset class="name mb-24">
-                                                                                                            <c:if test="${not empty errors.BMI}">
-                                                                                                                <div class="error" style="color:red;">${errors.BMI}</div>
-                                                                                                            </c:if>
-                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
-                                                                                                        </fieldset>
+                                                                                                        
                                                                                                         <!-- MaxBMI -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">MaxBMI</div>
@@ -190,9 +184,15 @@
                                                                                                             <c:if test="${not empty errors.maxBMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.maxBMI}</div>
                                                                                                             </c:if>
-                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập Số MaxBMI</div>
                                                                                                         </fieldset>
-
+                                                                                                            <!-- BMI logic error -->
+                                                                                                        <fieldset class="name mb-24">
+                                                                                                            <c:if test="${not empty errors.BMI}">
+                                                                                                                <div class="error" style="color:red;">${errors.BMI}</div>
+                                                                                                            </c:if>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập Số</div>
+                                                                                                        </fieldset>
                                                                                                         <!-- Description -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Description</div>
@@ -201,7 +201,7 @@
                                                                                                             <c:if test="${not empty errors.description}">
                                                                                                                 <div class="error" style="color:red;">${errors.description}</div>
                                                                                                             </c:if>
-                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
+                                                                                                            <div class="invalid-feedback">Vui lòng nhập tên description</div>
                                                                                                         </fieldset>
                                                                                                     </div>
 
@@ -334,24 +334,24 @@
                                                                             const value = input.value.trim();
 
                                                                             if (value === "") {
-                                                                                showError(input, `${fieldName} vui long nhap `);
+                                                                                showError(input, ` vui long nhap `);
                                                                                 return false;
                                                                             }
 
                                                                             if (isNaN(value)) {
-                                                                                showError(input, `${fieldName} vui long nhap so`);
+                                                                                showError(input, ` Vui long nhap so`);
                                                                                 return false;
                                                                             }
 
                                                                             const number = parseFloat(value);
 
                                                                             if (number < 0) {
-                                                                                showError(input, `${fieldName} số phải ≥ 0`);
+                                                                                showError(input, `Số phải ≥ 0`);
                                                                                 return false;
                                                                             }
 
                                                                             if (number < minValue || number > maxValue) {
-                                                                                showError(input, `${fieldName} số phải nằm trong khoảng ${minValue} - ${maxValue}`);
+                                                                                showError(input, ` Số phải nằm trong khoảng 10-50`);
                                                                                                 return false;
                                                                                             }
 
