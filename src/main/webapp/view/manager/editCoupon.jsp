@@ -41,7 +41,44 @@
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="apple-touch-icon-precomposied" href="images/favicon.png">
 </head>
+                 <style>
+                                footer-wrap {
+                                    background: #fff;
+                                    padding: 16px;
+                                    text-align: center;
+                                    box-shadow: 0px 4px 24px 2px rgba(20, 25, 38, 0.05);
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    color: #333;
+                                }
 
+                                .footer-wrap .bottom-page {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 6px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                    padding-left: 650px;
+                                }
+
+                                .footer-wrap .bottom-page .body-text {
+                                    margin: 0;
+                                }
+
+                                .footer-wrap .bottom-page i.icon-heart {
+                                    color: #ff6a00;
+                                    font-style: normal; /* hoặc dùng font-awesome nếu có */
+                                }
+
+                                .footer-wrap .bottom-page a {
+                                    color: #007bff;
+                                    text-decoration: none;
+                                }
+
+                                .footer-wrap .bottom-page a:hover {
+                                    text-decoration: underline;
+                                }
+                    </style>
 <body class="body">
     <!-- #wrapper -->
     <div id="wrapper">
@@ -62,7 +99,7 @@
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/manager/header.jsp"></jsp:include> 
+                    <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -146,23 +183,21 @@
                                              <button class="tf-button w-full" type="submit">Edit Coupon</button>
                                          </div>
                                 </div>
-                                   
-                                         
-                                   
                                  </form>
                                  <!-- /form-edit-coupon -->
                              </div>
                              <!-- /main-content-wrap -->
                          </div>
                          <!-- /main-content-wrap -->
-                         <!-- bottom-page -->
-                         <div class="bottom-page">
-                             
-                         </div>
-                         <!-- /bottom-page -->
                      </div>
+                          <!-- bottom-page -->
+                        <
+                         <!-- /bottom-page -->                                             
                      <!-- /main-content -->
                  </div>
+                        <div class="footer-wrap">
+                          <jsp:include page="../common/manager/footer.jsp"></jsp:include>
+                      </div>                                             
                  <!-- /section-content-right -->
              </div>
              <!-- /layout-wrap -->
@@ -182,16 +217,30 @@
      
      <script>
          // Validate form before submit
-         document.querySelector('form').addEventListener('submit', function(e) {
-             const startDate = new Date(document.querySelector('input[name="date1"]').value);
-             const endDate = new Date(document.querySelector('input[name="date2"]').value);
-             
-             if (startDate >= endDate) {
-                 e.preventDefault();
-                 alert('End date must be after start date');
-                 return false;
-             }
-             
+        document.querySelector('form').addEventListener('submit', function(e) {
+        const startInput = document.querySelector('input[name="date1"]').value;
+        const endInput = document.querySelector('input[name="date2"]').value;
+
+        const startDate = new Date(startInput);
+        const endDate = new Date(endInput);
+
+         // Lấy ngày hôm nay, bỏ giờ để so sánh chính xác
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+
+        if (startDate < today) {
+            e.preventDefault();
+            alert('Start date must be today or in the future');
+            return false;
+         }
+
+        if (endDate < startDate) {
+            e.preventDefault();
+            alert('End date must be the same or after start date');
+            return false;
+        }
              const discountType = document.querySelector('select[name="discountype"]').value;
              const discountValue = parseFloat(document.querySelector('input[name="discountvalue"]').value);
              

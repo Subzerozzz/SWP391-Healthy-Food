@@ -51,7 +51,7 @@
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/manager/header.jsp"></jsp:include> 
+                    <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     
                     <!-- main-content -->
@@ -139,7 +139,6 @@
                                             </div>
                                         </c:if>
                                     </div>
-
                                     <!-- Date Range Row -->
                                     <div style="display: flex; gap: 30px; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;">
                                         <div style="flex: 1;">
@@ -162,10 +161,9 @@
                                 <!-- /coupon-details -->
                             </div>
                         </div>
-                        
                         <!-- bottom-page -->
                         <div class="bottom-page">
-                            
+                            <jsp:include page="../common/manager/footer.jsp"></jsp:include>
                         </div>
                         <!-- /bottom-page -->
                     </div>

@@ -43,7 +43,44 @@
     <link rel="shortcut icon" href="images/favicon.png">
     <link rel="apple-touch-icon-precomposied" href="images/favicon.png">
 </head>
+                            <style>
+                                footer-wrap {
+                                    background: #fff;
+                                    padding: 16px;
+                                    text-align: center;
+                                    box-shadow: 0px 4px 24px 2px rgba(20, 25, 38, 0.05);
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    color: #333;
+                                }
 
+                                .footer-wrap .bottom-page {
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 6px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                    padding-left: 700px;
+                                }
+
+                                .footer-wrap .bottom-page .body-text {
+                                    margin: 0;
+                                }
+
+                                .footer-wrap .bottom-page i.icon-heart {
+                                    color: #ff6a00;
+                                    font-style: normal; /* hoặc dùng font-awesome nếu có */
+                                }
+
+                                .footer-wrap .bottom-page a {
+                                    color: #007bff;
+                                    text-decoration: none;
+                                }
+
+                                .footer-wrap .bottom-page a:hover {
+                                    text-decoration: underline;
+                                }
+                    </style>
 <body class="body">
     <!-- #wrapper -->
     <div id="wrapper">
@@ -64,7 +101,7 @@
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/manager/header.jsp"></jsp:include> 
+                    <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -148,12 +185,13 @@
                              <!-- /main-content-wrap -->
                          </div>
                          <!-- /main-content-wrap -->
-                         <!-- bottom-page -->
-                         <div class="bottom-page">
-                             
-                         </div>
-                         <!-- /bottom-page -->
                      </div>
+                     <!-- bottom-page -->
+                     <div class="footer-wrap">
+                            <jsp:include page="../common/manager/footer.jsp"></jsp:include>
+                    </div>
+                      <!-- /bottom-page -->
+                 </div> 
                      <!-- /main-content -->
                  </div>
                  <!-- /section-content-right -->
