@@ -62,6 +62,9 @@ public class CartController extends HttpServlet {
             case "showCart":
                 showCart(request, response);
                 break;
+            case "checkout":
+                showCheckout(request, response);
+                break;
             default:
                 throw new AssertionError();
         }
@@ -80,7 +83,7 @@ public class CartController extends HttpServlet {
                     updateItemToCart(request, response);
                     break;
                 case "delete":
-                    deleteItemToCart(request,response);
+                    deleteItemToCart(request, response);
                     break;
                 default:
                     throw new AssertionError();
@@ -123,6 +126,40 @@ public class CartController extends HttpServlet {
             request.setAttribute("foodMap", foodMap);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
+    }
+
+    private void showCheckout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+            Integer subTotal = Integer.parseInt(request.getParameter("subTotal"));
+            Integer totalPrice = Integer.parseInt(request.getParameter("totalPrice"));
+        
+            if (account != null) {
+
+            } else {
+                List<CartItem> listCartItem = (List<CartItem>) session.getAttribute("cart");
+                if (listCartItem == null) {
+                    listCartItem = new ArrayList<>();
+                }
+                //cart rong thi tra ve JSP va thong bao
+                if (listCartItem.size() == 0) {
+                    request.setAttribute("isEmptyListCartItem", true);
+                    request.setAttribute("listCartItem", listCartItem);
+                    request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
+                    return;
+                }
+                request.setAttribute("listCartItem", listCartItem);
+                request.setAttribute("subTotal", subTotal);
+                request.setAttribute("totalPrice", totalPrice);
+                request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
+                
+
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private void addItemToCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -236,15 +273,15 @@ public class CartController extends HttpServlet {
             listID.add(foodId);
             map.put(foodId, quantity);
         }
-        
+
         List<CartItem> listCartItem = new ArrayList<>();
 
         if (account != null) {
             //Lay ra cartID theo accID
             Cart cart = cartDao.findCartByAccountId(account.getId());
             //Lấy ra tất cả cartItem theo cartId
-            listCartItem = cartItemDao.findAllCartItemByCartId(cart.getId()); 
-            
+            listCartItem = cartItemDao.findAllCartItemByCartId(cart.getId());
+
             //Cap nhat lai quantiy cho nhung foodId nay trong listCartItem
             for (Integer id : listID) {
                 for (int i = 0; i < listCartItem.size(); i++) {
@@ -260,14 +297,14 @@ public class CartController extends HttpServlet {
                 foodMap.put(item.getFood_id(), food);
             }
             //Co the cap nhat lai ca coupon neu co
-            
+
             //Trả listCartItem ra JSP
             request.setAttribute("listCartItem", listCartItem);
             request.setAttribute("foodMap", foodMap);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         } else {
             listCartItem = (List<CartItem>) session.getAttribute("cart");
-            
+
             //Cap nhat lai quantiy cho nhung foodId nay trong listCartItem
             for (Integer id : listID) {
                 for (int i = 0; i < listCartItem.size(); i++) {
@@ -282,13 +319,12 @@ public class CartController extends HttpServlet {
                 Food food = foodDao.findById(item.getFood_id());
                 foodMap.put(item.getFood_id(), food);
             }
-            
+
             //Trả listCartItem ra JSP
             request.setAttribute("listCartItem", listCartItem);
             request.setAttribute("foodMap", foodMap);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
-        
 
     }
 
@@ -297,30 +333,29 @@ public class CartController extends HttpServlet {
         Integer deleteID = Integer.parseInt(request.getParameter("deleteId"));
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-        
-        if(account != null){
+
+        if (account != null) {
             //Lay ra cartID theo accID
             Cart cart = cartDao.findCartByAccountId(account.getId());
             Integer cartId = cart.getId();
             //Lấy ra tất cả cartItem theo cartId
-            List<CartItem> listCartItem = cartItemDao.findAllCartItemByCartId(cartId); 
+            List<CartItem> listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
             //Tim cartItemId theo deleteID do
-            for(CartItem cartItem : listCartItem){
-                if(cartItem.getFood_id() == deleteID){
+            for (CartItem cartItem : listCartItem) {
+                if (cartItem.getFood_id() == deleteID) {
                     cartItemDao.delete(cartItem);
                 }
             }
-        }
-        else{
-            List<CartItem> listCartItem = (List<CartItem>)session.getAttribute("cart");
-            for(int i = 0 ; i < listCartItem.size() ; i++){
-                if(listCartItem.get(i).getFood_id() == deleteID){
+        } else {
+            List<CartItem> listCartItem = (List<CartItem>) session.getAttribute("cart");
+            for (int i = 0; i < listCartItem.size(); i++) {
+                if (listCartItem.get(i).getFood_id() == deleteID) {
                     listCartItem.remove(listCartItem.get(i));
                 }
             }
-            session.setAttribute("listCartItem", listCartItem);
+            request.setAttribute("listCartItem", listCartItem);
         }
-        showCart(request,response);
+        showCart(request, response);
     }
 
 }
