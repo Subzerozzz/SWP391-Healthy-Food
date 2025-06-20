@@ -166,7 +166,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             connection = getConnection();
             connection.setAutoCommit(false);// Disable auto-commit for transaction control
             // Step 1: Fetch current status of the order
-            String getStatusSql = "SELECT status FROM orders WHERE order_id = ?";
+            String getStatusSql = "SELECT status FROM orders WHERE id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -181,7 +181,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Step 2: Update order status and timestamp
-            String updateSql = "UPDATE orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
+            String updateSql = "UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);

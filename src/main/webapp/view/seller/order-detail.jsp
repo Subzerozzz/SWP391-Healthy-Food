@@ -292,17 +292,17 @@ textarea.form-control {
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <strong>Total Amount:</strong> <fmt:formatNumber value="" type="currency" currencySymbol="" maxFractionDigits="0"/> ${order.total}VNĐ
+                                <strong>Total Amount:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                             </div>
                             <c:if test="${not empty order.coupon.code}">
                                 <div class="mb-3">
                                     <strong>Coupon Applied:</strong> ${order.coupon.code}
                                 </div>
                                 <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="" type="currency" currencySymbol="" maxFractionDigits="0"/>${order.coupon.discount_value} VNĐ
+                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.coupon.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                                 </div>
                                 <div class="mb-3">
-<!--                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.total.add(order.coupon.discount_value)}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ-->
+<!--                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.coupon.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ-->
                                 </div>
                             </c:if>
                         </div>
@@ -434,13 +434,13 @@ textarea.form-control {
                                         <td>${item.food.name}</td>
                                         <td><fmt:formatNumber value="${item.food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                         <td>${item.quantity}</td>
-                                        <td><fmt:formatNumber value="${item.food.price*item.food.quantity}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td><fmt:formatNumber value="${item.food.price*item.quantity}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                     </tr>
                                 </c:forEach>
                                 <c:if test="${not empty order.coupon.discount_value}">
                                     <tr>
                                         <td colspan="4" class="text-end"><strong>Discount Amount:</strong></td>
-                                        <td>-<fmt:formatNumber value="${order.coupon.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td><fmt:formatNumber value="${order.coupon.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                     </tr>
                                 </c:if>
                                 <tr>
@@ -453,7 +453,7 @@ textarea.form-control {
                 </div>
             </div>     
                    <!-- Order History -->
-<!--            <div class="card mt-24">
+            <div class="card mt-24">
                 <div class="card-header">
                     <h6 class="card-title mb-0">Order History</h6>
                 </div>
@@ -472,8 +472,8 @@ textarea.form-control {
                             <tbody>
                                 <c:forEach var="approval" items="${approvals}">
                                     <tr>
-                                        <td>${approval.sellerUsername}</td>
-                                        <td><fmt:formatDate value="${approval.approvedAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                        <td>${approval.acc.user_name}</td>
+                                        <td><fmt:formatDate value="${approval.approved_at}" pattern="dd/MM/yyyy HH:mm"/></td>
                                         <td>
                                             <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
                                                                 approval.statusBefore == 'accepted' ? 'bg-info' : 
@@ -500,7 +500,7 @@ textarea.form-control {
                         </table>
                     </div>
                 </div>
-            </div>-->
+            </div>
              </div>
                                 <!--end fix-->
                                  <!-- Toast Container -->
