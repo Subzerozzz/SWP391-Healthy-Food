@@ -7,6 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.OrderApproval;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -100,10 +101,11 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
               .id(resultSet.getInt("id"))
               .order_id(resultSet.getInt("order_id"))
               .approved_by(resultSet.getInt("approved_by"))
-              .approved_at(resultSet.getTimestamp("approced_at"))
+              .approved_at(resultSet.getTimestamp("approved_at"))
               .statusBefore(resultSet.getString("status_before"))
               .statusAfter(resultSet.getString("status_after"))
               .note(resultSet.getString("note"))
+              .acc(null)
               .build();
     }
 
@@ -113,7 +115,12 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
     }
      public static void main(String[] args) {
         OrderApprovalDAO d = new OrderApprovalDAO();
-        List<OrderApproval> l = d.getOrderApprovalsByOrderId(60);
+        AccountDAO acc = new AccountDAO();
+        List<OrderApproval> l = d.getOrderApprovalsByOrderId(62);
+         for (OrderApproval oA : l) {
+             Account a = acc.findById(oA.getApproved_by());
+             oA.setAcc(a);
+         }
         System.out.println(l);
     }
 

@@ -385,6 +385,7 @@
                                     <th>Status</th>
                                     <th>Coupon Code</th>
                                     <th>Actions</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>

@@ -271,6 +271,10 @@ public class ManagerOrderController extends HttpServlet {
             order.setOrderItems(orderItems);
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+             for (OrderApproval orderApproval : approvals) {
+             Account a = accDAO.findById(orderApproval.getApproved_by());
+             orderApproval.setAcc(a);
+         }
             // check existing order
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
@@ -282,7 +286,8 @@ public class ManagerOrderController extends HttpServlet {
             // Forward to the order detail page
 //            PrintWriter out = response.getWriter();
 //            out.print(order);
-           request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
+         
+          request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
