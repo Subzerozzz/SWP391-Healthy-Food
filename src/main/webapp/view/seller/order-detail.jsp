@@ -253,7 +253,7 @@ textarea.form-control {
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Order #${order.orderId}</div>
+                                            <div class="text-tiny">Order #${order.id}</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -262,7 +262,7 @@ textarea.form-control {
                                 
                                  <div class="dashboard-main-body">
 <!--            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-                <h6 class="fw-semibold mb-0">Order Details #${order.orderId}</h6>
+                <h6 class="fw-semibold mb-0">Order Details #${order.id}</h6>
                 
             </div> -->
                 
@@ -275,13 +275,13 @@ textarea.form-control {
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <strong>Order ID:</strong> #${order.orderId}
+                                <strong>Order ID:</strong> #${order.id}
                             </div>
                             <div class="mb-3">
-                                <strong>Order Date:</strong> <fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/>
+                                <strong>Order Date:</strong> <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
                             </div>
                             <div class="mb-3">
-                                <strong>Payment Method:</strong> ${order.paymentMethod}
+                                <strong>Payment Method:</strong> ${order.payment_method}
                             </div>
                             <div class="mb-3">
                                 <strong>Status:</strong>
@@ -294,15 +294,15 @@ textarea.form-control {
                             <div class="mb-3">
                                 <strong>Total Amount:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                             </div>
-                            <c:if test="${not empty order.couponCode}">
+                            <c:if test="${not empty order.coupon.code}">
                                 <div class="mb-3">
-                                    <strong>Coupon Applied:</strong> ${order.couponCode}
+                                    <strong>Coupon Applied:</strong> ${order.coupon.code}
                                 </div>
                                 <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discountAmount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
+                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.coupon.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                                 </div>
                                 <div class="mb-3">
-                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.total.add(order.discountAmount)}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
+                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.total.add(order.coupon.discount_value)}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                                 </div>
                             </c:if>
                         </div>
@@ -316,13 +316,13 @@ textarea.form-control {
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <strong>Name:</strong> ${order.username}
+                                <strong>Name:</strong> ${order.acc.username}
                             </div>
                             <div class="mb-3">
-                                <strong>Email:</strong> ${order.email}
+                                <strong>Email:</strong> ${order.acc.email}
                             </div>
                             <div class="mb-3">
-                                <strong>Mobile:</strong> ${order.mobie}
+                                <strong>Mobile:</strong> ${order.acc.mobile}
                             </div>
                             <div class="mb-3">
                                 <strong>Shipping Address:</strong><br>
