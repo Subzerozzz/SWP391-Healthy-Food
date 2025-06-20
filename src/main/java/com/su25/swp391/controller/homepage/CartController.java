@@ -220,9 +220,9 @@ public class CartController extends HttpServlet {
     }
 
     private void updateItemToCart(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        //Lay ra list foodId tuong ung voi so quantity moi
         String[] quantityList = request.getParameterValues("quantity");
         String[] foodIdList = request.getParameterValues("foodId");
 
@@ -242,7 +242,6 @@ public class CartController extends HttpServlet {
         if (account != null) {
             //Lay ra cartID theo accID
             Cart cart = cartDao.findCartByAccountId(account.getId());
-            Integer cartId = cart.getId();
             //Lấy ra tất cả cartItem theo cartId
             listCartItem = cartItemDao.findAllCartItemByCartId(cart.getId()); 
             
@@ -293,8 +292,35 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void deleteItemToCart(HttpServletRequest request, HttpServletResponse response) {
+    private void deleteItemToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //Lay ban ghi can xoa
+        Integer deleteID = Integer.parseInt(request.getParameter("deleteId"));
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         
+        if(account != null){
+            //Lay ra cartID theo accID
+            Cart cart = cartDao.findCartByAccountId(account.getId());
+            Integer cartId = cart.getId();
+            //Lấy ra tất cả cartItem theo cartId
+            List<CartItem> listCartItem = cartItemDao.findAllCartItemByCartId(cartId); 
+            //Tim cartItemId theo deleteID do
+            for(CartItem cartItem : listCartItem){
+                if(cartItem.getFood_id() == deleteID){
+                    cartItemDao.delete(cartItem);
+                }
+            }
+        }
+        else{
+            List<CartItem> listCartItem = (List<CartItem>)session.getAttribute("cart");
+            for(int i = 0 ; i < listCartItem.size() ; i++){
+                if(listCartItem.get(i).getFood_id() == deleteID){
+                    listCartItem.remove(listCartItem.get(i));
+                }
+            }
+            session.setAttribute("listCartItem", listCartItem);
+        }
+        showCart(request,response);
     }
 
 }
