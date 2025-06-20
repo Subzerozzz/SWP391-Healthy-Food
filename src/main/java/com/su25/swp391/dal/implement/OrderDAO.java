@@ -8,6 +8,9 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
+import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Coupon;
+import com.su25.swp391.entity.OrderItem;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,28 +28,22 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      */
     @Override
     public Order getFromResultSet(ResultSet rs) throws SQLException {
-        // Basic order information
-        Order order = new Order();
-        order.setOrderId(rs.getInt("order_id"));
-        order.setUserId(rs.getInt("user_id"));
-        order.setStatus(rs.getString("status"));
-        order.setTotal(rs.getBigDecimal("total"));
-        order.setShippingAddress(rs.getString("shipping_address"));
-        order.setPaymentMethod(rs.getString("payment_method"));
-        order.setCreatedAt(rs.getTimestamp("created_at"));
-        order.setUpdatedAt(rs.getTimestamp("updated_at"));
-
-        // Coupon-related information (if any)
-        order.setCouponCode(rs.getString("coupon_code"));
-        order.setDiscountAmount(rs.getBigDecimal("discount_amount"));
-
-        // Customer info (retrieved from JOIN with user/account table)
-        order.setUsername(rs.getString("user_name"));
-        order.setEmail(rs.getString("email"));
-        order.setMobie(rs.getString("mobie"));
-
-        return order;
-    }
+       return Order
+               .builder()
+               .id(resultSet.getInt("id"))
+               .user_id(resultSet.getInt("user_id"))
+               .status(resultSet.getString("status"))
+               .total(resultSet.getDouble("total"))
+               .shipping_address(resultSet.getString("shipping_address"))
+               .payment_method(resultSet.getString("payment_method"))
+               .created_at(resultSet.getTimestamp("created_at"))
+               .updated_at(resultSet.getTimestamp("updated_at"))
+               .coupon_id(resultSet.getInt("coupon_id"))
+               .acc(null)
+               .coupon(null)
+               .orderItems(null)
+               .build();
+         }
     /**
  * Retrieves a paginated list of orders based on optional status and payment method filters.
  *
@@ -60,9 +57,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         List<Order> orders = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
-                "SELECT o.*, a.user_name, a.email, a.mobie "
+                "SELECT o.* "
                 + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.id "
+                + "JOIN Account a ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
@@ -113,7 +110,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM orders o "
-                + "JOIN account a "
+                + "JOIN Account a "
                 + "ON o.user_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
@@ -279,11 +276,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
         List<Order> orders = new ArrayList<>();
         // Build the base SQL query to search by user name, email, or order ID
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
+        StringBuilder sql = new StringBuilder("SELECT o.*"
                 + "FROM orders o "
-                + "JOIN account a "
+                + "JOIN Account a "
                 + "ON o.user_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
         // Prepare the wildcard search pattern (for LIKE)
         String searchPattern = "%" + search.trim() + "%";
@@ -338,8 +335,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // Build the SQL to count rows with conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM orders o "
-                + "JOIN account a "
-                + "ON o.user_id = a.user_id "
+                + "JOIN Account a "
+                + "ON o.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
         // Prepare search pattern with wildcard for LIKE
@@ -381,20 +378,18 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public int insert(Order order) {
-        String sql = "INSERT INTO orders (user_id, status, total, shipping_address, payment_method, coupon_code, discount_amount, type) "
+        String sql = "INSERT INTO orders (user_id, status, total, shipping_address, payment_method, coupon_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, order.getUserId());
+            statement.setInt(1, order.getUser_id());
             statement.setString(2, order.getStatus());
-            statement.setBigDecimal(3, order.getTotal());
-            statement.setString(4, order.getShippingAddress());
-            statement.setString(5, order.getPaymentMethod());
-            statement.setString(6, order.getCouponCode());
-            statement.setBigDecimal(7, order.getDiscountAmount());
-
-            int affectedRows = statement.executeUpdate();
+            statement.setDouble(3, order.getTotal());
+            statement.setString(4, order.getShipping_address());
+            statement.setString(5, order.getPayment_method());
+            statement.setInt(6, order.getCoupon_id());
+             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating order failed, no rows affected.");
             }
@@ -455,15 +450,21 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     public static void main(String[] args) {
+        AccountDAO aD = new AccountDAO();
+        CouponDAO cD = new CouponDAO();
+        OrderItemDAO otD = new OrderItemDAO();
         OrderDAO o = new OrderDAO();
-        System.out.println(o.findById(60));
-        List<Order> l = o.findOrdersWithFilters(null, null, 1, 10);
-        System.out.println(l);
-        //System.out.println(o.searchOrders("60", "", "", 1, 10));
-        //System.out.println(o.getTotalSearchResults("60", "", "");
-//        o.updateOrderStatus(60, "cancelled", 22, "He Hang");
-        List<Order> l2 = o.searchOrders("60", "", "", 1, 10);
-        System.out.println(l2);
+//        List<Order> or = o.findOrdersWithFilters("", "", 1, 10);
+        List<Order> or = o.searchOrders("phong", "", "", 1, 10);
+        for (Order order : or) {
+            Account acc = aD.findById(order.getUser_id());
+            order.setAcc(acc);
+            Coupon cp = cD.findById(order.getCoupon_id());
+            order.setCoupon(cp);
+            List<OrderItem> oT = otD.getOrderItemsByOrderId(order.getId());
+            order.setOrderItems(oT);
+        }
+        System.out.println(or);
     }
 
 }
