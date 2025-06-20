@@ -17,6 +17,7 @@ import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Coupon;
+import com.su25.swp391.entity.Food;
 
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderApproval;
@@ -45,6 +46,7 @@ public class ManagerOrderController extends HttpServlet {
     private OrderItemDAO itemDAO;
     private AccountDAO accDAO = new AccountDAO();
     private CouponDAO couponDAO;
+    private FoodDAO foodDAO;
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
@@ -52,6 +54,7 @@ public class ManagerOrderController extends HttpServlet {
         itemDAO = new OrderItemDAO();
         accDAO = new AccountDAO();
         couponDAO = new CouponDAO();
+        foodDAO = new FoodDAO();
     }
 
     @Override
@@ -258,10 +261,14 @@ public class ManagerOrderController extends HttpServlet {
             Order order = orderDAO.findById(orderId);
             Account acc = accDAO.findById(order.getUser_id());
             order.setAcc(acc);
-            Coupon cp = couponDAO.findById(order.getCoupon_id());
-            order.setCoupon(cp);
-            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
-            order.setOrderItems(oT);
+            Coupon coupon = couponDAO.findById(order.getCoupon_id());
+            order.setCoupon(coupon);
+            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
+            for (OrderItem orderItem : orderItems) {
+            Food fo = foodDAO.findById(orderItem.getFood_id());
+            orderItem.setFood(fo);
+          }
+            order.setOrderItems(orderItems);
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
             // check existing order
@@ -273,7 +280,9 @@ public class ManagerOrderController extends HttpServlet {
             request.setAttribute("order", order);
             request.setAttribute("approvals", approvals);
             // Forward to the order detail page
-            request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
+//            PrintWriter out = response.getWriter();
+//            out.print(order);
+           request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);

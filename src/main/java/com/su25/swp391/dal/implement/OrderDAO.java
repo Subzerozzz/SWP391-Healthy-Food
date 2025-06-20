@@ -454,7 +454,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             for (OrderItem orderItem : oT) {
                Food fo = f.findById(orderItem.getFood_id());
                orderItem.setFood(fo);
-        }
+          }
             order.setOrderItems(oT);
        
         System.out.println(order);
