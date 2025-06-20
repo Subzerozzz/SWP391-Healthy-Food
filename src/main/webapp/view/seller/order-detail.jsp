@@ -219,12 +219,12 @@ textarea.form-control {
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+                 <jsp:include page="./../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>    
+                    <jsp:include page="./../common/headerDashboard.jsp"></jsp:include>   
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -536,7 +536,7 @@ textarea.form-control {
                         </div>
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
-                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+                         <jsp:include page="./../common/footer.jsp"></jsp:include>
                         <!-- /bottom-page -->
                     </div>
                     <!-- /main-content -->
