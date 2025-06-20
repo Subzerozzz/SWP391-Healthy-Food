@@ -55,12 +55,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+                <jsp:include page="../../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                   <!-- header-dashboard -->
-                  <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
+                  <jsp:include page="../../common/headerDashboard.jsp"></jsp:include>
                   <!-- /header-dashboard -->
                   <!-- main-content -->
                   <div class="main-content">
@@ -176,13 +176,7 @@
                     </div>
                     <!-- /main-content-wrap -->
                     <!-- bottom-page -->
-                    <div class="bottom-page">
-                      <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                      <i class="icon-heart"></i>
-                      <div class="body-text">by <a
-                          href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a>
-                        All rights reserved.</div>
-                    </div>
+                    <jsp:include page="../../common/footer.jsp"></jsp:include>
                     <!-- /bottom-page -->
                   </div>
                   <!-- /main-content -->

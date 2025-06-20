@@ -61,12 +61,12 @@
             </div>
             <!-- /preload -->
             <!-- section-menu-left -->
-            <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+            <jsp:include page="../../common/sidebar.jsp"></jsp:include>
             <!-- /section-menu-left -->
             <!-- section-content-right -->
             <div class="section-content-right">
               <!-- header-dashboard -->
-              <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include>
+              <jsp:include page="../../common/headerDashboard.jsp"></jsp:include>
               <!-- /header-dashboard -->
               <!-- main-content -->
               <div class="main-content">
@@ -226,13 +226,6 @@
                                     <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
                                 </div>
                                 <div class="list-icon-function">
-                                  <div class="item eye">
-                                    <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=viewDetail&id=${item.id}">
-                                      <i class="icon-eye" style="color: blue"></i>
-                                    </a>
-
-                                  </div>
                                   <div class="item edit">
                                     <a
                                       href="${pageContext.request.contextPath}/manage-food?action=update&id=${item.id}">
@@ -259,7 +252,12 @@
                             <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=1"><i class="icon-chevron-left"></i></a>
                           </li>
                           <c:choose>
-                                <c:when test="${currentPage < totalPage - 2}">
+                                <c:when test="${currentPage <= totalPage - 2}">
+                                    <c:if test="${currentPage > 1}">
+                                         <li class="">
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${currentPage - 1}">${currentPage - 1}</a>
+                                        </li>
+                                    </c:if>
                                     <li class="active">
                                         <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${currentPage}">${currentPage}</a>
                                     </li>
@@ -268,16 +266,18 @@
                                         <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${currentPage + 1}">${currentPage + 1}</a>
                                     </li>
                                     
-                                    <li>
-                                        <span>...</span>
-                                    </li>
+                                    <c:if test="${currentPage < totalPage - 2}">
+                                        <li>
+                                            <span>...</span>
+                                        </li>
+                                    </c:if>
                                     
                                     <li class="">
                                         <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${totalPage}">${totalPage}</a>
                                     </li>
                                 </c:when>
                                 <c:otherwise>
-                                    <c:forEach begin="${totalPage-2 < 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
+                                    <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
                                             <a href="${pageContext.request.contextPath}/manage-food?action=paginationSearch&name=${foodName}&page=${i}">${i}</a>
                                         </li>
@@ -297,7 +297,7 @@
                 </div>
                 <!-- /main-content-wrap -->
                 <!-- bottom-page -->
-                <jsp:include page="../../common/nutritionist/footer.jsp"></jsp:include>
+                <jsp:include page="../../common/footer.jsp"></jsp:include>
                 <!-- /bottom-page -->
               </div>
               <!-- /main-content -->

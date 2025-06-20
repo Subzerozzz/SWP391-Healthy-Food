@@ -132,6 +132,7 @@
 
     // Input Plus & Minus Number JS
     $('.input-counter').each(function() {
+
         var spinner = jQuery(this),
         input = spinner.find('input[type="text"]'),
         btnUp = spinner.find('.plus-btn'),

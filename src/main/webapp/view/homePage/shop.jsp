@@ -52,7 +52,7 @@
             </div>
 
             <!-- Menu For Desktop Device -->
-            <jsp:include page="../common/homePage/header.jsp"></jsp:include>
+            <jsp:include page="../common/homePage/headerUser.jsp"></jsp:include>
 
                 <div class="side-nav-responsive">
                     <div class="container">
@@ -307,7 +307,7 @@
         <!-- Product Area End -->
 
         <!-- Footer Area -->
-        <jsp:include page="../common/homePage/footer.jsp"></jsp:include>
+        <jsp:include page="../common/homePage/footerUser.jsp"></jsp:include>
         <!-- Footer Area End -->
 
             <!--=== Link of JS Files ===-->
@@ -436,9 +436,6 @@
             .categoryList li.active {
                 background-color: #F78600;
             }
-            
-            
-
 
 
         </style>
