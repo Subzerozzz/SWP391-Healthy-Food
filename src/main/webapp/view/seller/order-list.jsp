@@ -383,7 +383,7 @@
                                     <th>Total</th>
                                     <th>Payment Method</th>
                                     <th>Status</th>
-                                    <th>Created Date</th>
+                                    <th>Coupon Code</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -414,17 +414,17 @@
                                 </c:if>
                                     <c:forEach var="order" items="${orders}">
                                         <tr>
-                                            <td>#${order.orderId}</td>
+                                            <td>#${order.id}</td>
                                             <td>
-                                                ${order.username}<br>
-                                                <small class="text-muted">${order.email}</small><br>
-                                                <small class="text-muted">${order.mobie}</small>
+                                                ${order.acc.user_name}<br>
+                                                <small class="text-muted">${order.acc.email}</small><br>
+                                                <small class="text-muted">${order.acc.mobile}</small>
                                             </td>
-                                            <td>${order.shippingAddress}</td>
+                                            <td>${order.shipping_address}</td>
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
                                                 <span class="badge bg-info">
-                                                    ${order.paymentMethod}
+                                                    ${order.payment_method}
                                                 </span>
                                             </td>
                                             <td>
@@ -434,11 +434,12 @@
                                                     ${order.status}
                                                 </span>
                                             </td>
-                                            <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                           
+                                             <td>${order.coupon.code}</td>
                                             <td>
 
                                                 <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.orderId}"  title="View Detial">
+                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
                                                     </a></div>
 

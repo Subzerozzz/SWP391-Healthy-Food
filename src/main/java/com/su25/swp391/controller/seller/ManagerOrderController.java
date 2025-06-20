@@ -5,6 +5,8 @@
 package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CouponDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.FoodDraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
@@ -14,6 +16,7 @@ import com.su25.swp391.dal.implement.OrderItemDAO;
 
 import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Coupon;
 
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderApproval;
@@ -40,12 +43,15 @@ public class ManagerOrderController extends HttpServlet {
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
-
+    private AccountDAO accDAO = new AccountDAO();
+    private CouponDAO couponDAO;
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
+        accDAO = new AccountDAO();
+        couponDAO = new CouponDAO();
     }
 
     @Override
@@ -133,16 +139,32 @@ public class ManagerOrderController extends HttpServlet {
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
             orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
+             for (Order order : orders) {
+            Account acc = accDAO.findById(order.getUser_id());
+            order.setAcc(acc);
+            Coupon cp = couponDAO.findById(order.getCoupon_id());
+            order.setCoupon(cp);
+            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
+            order.setOrderItems(oT);
+        }
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
             orders = orderDAO.findOrdersWithFilters(status, paymentMethod, page, pageSize);
+            for (Order order : orders) {
+            Account acc = accDAO.findById(order.getUser_id());
+            order.setAcc(acc);
+            Coupon cp = couponDAO.findById(order.getCoupon_id());
+            order.setCoupon(cp);
+            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
+            order.setOrderItems(oT);
+        }
             // count order
             totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-
+        
         // Set attributes
         request.setAttribute("orders", orders);
         request.setAttribute("currentPage", page);
@@ -150,7 +172,8 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
-        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+       request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+
     }
 
     // Update status
