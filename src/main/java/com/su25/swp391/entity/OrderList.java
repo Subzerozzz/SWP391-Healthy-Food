@@ -26,7 +26,8 @@ import lombok.ToString;
 @Getter
 @Setter
 
-    public class OrderList {
+public class OrderList {
+    
     private int orderId;
     private String foodName;
     private String imageUrl;
@@ -34,5 +35,6 @@ import lombok.ToString;
     private int quantity;
     private String paymentMethod;
     private String status;
+    private int orderItemId;
 
 }

@@ -6,8 +6,6 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-
-
     <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
         <!-- Basic Page Needs -->
@@ -57,12 +55,12 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                        <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
                                                                                 <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                            <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
 
                                                                                 <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
@@ -72,38 +70,33 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                            <c:if test="${empty orderItem}">
-                                                                                                    <p style="color:red;">Không có đơn hàng nào.</p>
+                                                                                            <c:forEach var="order" items="${orderDetails}" varStatus="status">
+                                                                                                <c:if test="${status.first}">
+                                                                                                    <h3>Order #${order.orderId}</h3>
                                                                                                 </c:if>
-                                                                                            <c:forEach var="order" items="${orderItem}">
-                                                                                                
-                                                                                                <h3>Order ${order.orderId} </h3>
-                                                                                                <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                                                                                    <li>
-                                                                                                        <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <i class="icon-chevron-right"></i>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#"><div class="text-tiny">Order</div></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <i class="icon-chevron-right"></i>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#"><div class="text-tiny">Order detail</div></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <i class="icon-chevron-right"></i>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="text-tiny">Order</div>
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                                </c:forEach>
-                                                                                            </div>
-                                                                                        
+                                                                                                <!-- Thông tin chi tiết -->
+                                                                                            </c:forEach>
+                                                                                            <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                                                                                <li>
+                                                                                                    <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <i class="icon-chevron-right"></i>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <a href="#"><div class="text-tiny">Order</div></a>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <i class="icon-chevron-right"></i>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <a href="#"><div class="text-tiny">Order detail</div></a>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <i class="icon-chevron-right"></i>
+                                                                                                </li>
+                                                                                            </ul>
+                                                                                        </div>
                                                                                         <!-- order-detail -->
                                                                                         <div class="wg-order-detail">
                                                                                             <div class="left flex-grow">
@@ -133,63 +126,27 @@
                                                                                                             </li>
                                                                                                         </ul>
                                                                                                         <ul class="flex flex-column">
-                                                                                                            <li class="product-item gap14">
-                                                                                                                <div class="image no-bg">
-                                                                                                                    <img src="images/products/41.png" alt="">
-                                                                                                                </div>
-                                                                                                                <div class="flex items-center justify-between gap40 flex-grow">
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Product name</div>
-                                                                                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
+                                                                                                            <c:forEach var="order" items="${orderDetails}">
+                                                                                                                <li class="product-item gap14">
+                                                                                                                    <div class="image no-bg">
+                                                                                                                        <img src="images/products/41.png" alt="">
                                                                                                                     </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                        <div class="body-title-2">1</div>
+                                                                                                                    <div class="flex items-center justify-between gap40 flex-grow">
+                                                                                                                        <div class="name">
+                                                                                                                            <div class="text-tiny mb-1">Food name</div>
+                                                                                                                            <a href="product-list.html" class="body-title-2">${order.foodname}</a>
+                                                                                                                        </div>
+                                                                                                                        <div class="name">
+                                                                                                                            <div class="text-tiny mb-1">Quantity</div>
+                                                                                                                            <div class="body-title-2">${order.quantity}</div>
+                                                                                                                        </div>
+                                                                                                                        <div class="name">
+                                                                                                                            <div class="text-tiny mb-1">Price</div>
+                                                                                                                            <div class="body-title-2">${order.price}</div>
+                                                                                                                        </div>
                                                                                                                     </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Price</div>
-                                                                                                                        <div class="body-title-2">$50.47</div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </li>
-                                                                                                            <li class="product-item gap14">
-                                                                                                                <div class="image no-bg">
-                                                                                                                    <img src="images/products/44.png" alt="">
-                                                                                                                </div>
-                                                                                                                <div class="flex items-center justify-between gap40 flex-grow">
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Product name</div>
-                                                                                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                                    </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                        <div class="body-title-2">1</div>
-                                                                                                                    </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Price</div>
-                                                                                                                        <div class="body-title-2">$50.47</div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </li>
-                                                                                                            <li class="product-item gap14">
-                                                                                                                <div class="image no-bg">
-                                                                                                                    <img src="images/products/43.png" alt="">
-                                                                                                                </div>
-                                                                                                                <div class="flex items-center justify-between gap40 flex-grow">
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Product name</div>
-                                                                                                                        <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                                    </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                        <div class="body-title-2">1</div>
-                                                                                                                    </div>
-                                                                                                                    <div class="name">
-                                                                                                                        <div class="text-tiny mb-1">Price</div>
-                                                                                                                        <div class="body-title-2">$50.47</div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </li>
+                                                                                                                </li>
+                                                                                                            </c:forEach>
                                                                                                         </ul>
                                                                                                     </div>
                                                                                                 </div>
@@ -203,61 +160,65 @@
                                                                                                                 <div class="body-title">Price</div>
                                                                                                             </li>    
                                                                                                         </ul>
-                                                                                                        <ul class="flex flex-column gap14">
+                                                                                                <c:forEach var="order" items="${orderDetails}" varStatus="status">
+                                                                                                <c:if test="${status.first}">
+                                                                                                   <ul class="flex flex-column gap14">
                                                                                                             <li class="cart-totals-item">
                                                                                                                 <span class="body-text">Subtotal:</span>
-                                                                                                                <span class="body-title-2">$70.13</span>
+                                                                                                                <span class="body-title-2">${requestScope.totalprice}</span>
                                                                                                             </li>
                                                                                                             <li class="divider"></li>
                                                                                                             <li class="cart-totals-item">
                                                                                                                 <span class="body-text">Shipping:</span>
-                                                                                                                <span class="body-title-2">$10.00</span>
+                                                                                                                <span class="body-title-2">10%</span>
                                                                                                             </li>
-                                                                                                            <li class="divider"></li>
-                                                                                                            <li class="cart-totals-item">
-                                                                                                                <span class="body-text">Tax (GST):</span>
-                                                                                                                <span class="body-title-2">$5.00</span>
-                                                                                                            </li>
+
                                                                                                             <li class="divider"></li>
                                                                                                             <li class="cart-totals-item">
                                                                                                                 <span class="body-title">Total price:</span>
-                                                                                                                <span class="body-title tf-color-1">$90.58</span>
+                                                                                                                <span class="body-title tf-color-1">${order.total}</span>
                                                                                                             </li>
-
                                                                                                         </ul>
+                                                                                                </c:if>
+                                                                                                <!-- Thông tin chi tiết -->
+                                                                                               </c:forEach>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
+                                                                                            <c:forEach var="order" items="${orderDetails}" varStatus="status">
+                                                                                                <c:if test="${status.first}">
                                                                                             <div class="right">
                                                                                                 <div class="wg-box mb-20 gap10">
                                                                                                     <div class="body-title">Summary</div>
                                                                                                     <div class="summary-item">
                                                                                                         <div class="body-text">Order ID</div>
-                                                                                                        <div class="body-title-2">#192847</div>
+                                                                                                        <div class="body-title-2">#${order.orderId}</div>
                                                                                                     </div>
                                                                                                     <div class="summary-item">
-                                                                                                        <div class="body-text">Date</div>
-                                                                                                        <div class="body-title-2">20 Nov 2023</div>
+                                                                                                        <div class="body-text">Create At</div>
+                                                                                                        <div class="body-title-2">${order.createdAt}</div>
                                                                                                     </div>
                                                                                                     <div class="summary-item">
                                                                                                         <div class="body-text">Total</div>
-                                                                                                        <div class="body-title-2 tf-color-1">$948.5</div>
+                                                                                                        <div class="body-title-2 tf-color-1">${order.total}</div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="wg-box mb-20 gap10">
                                                                                                     <div class="body-title">Shipping Address</div>
-                                                                                                    <div class="body-text">3517 W. Gray St. Utica, Pennsylvania 57867</div>
+                                                                                                    <div class="body-text">${order.ship_address}</div>
                                                                                                 </div>
                                                                                                 <div class="wg-box mb-20 gap10">
                                                                                                     <div class="body-title">Payment Method</div>
-                                                                                                    <div class="body-text">Pay on Delivery (Cash/Card). Cash on delivery (COD) available. Card/Net banking acceptance subject to device availability.</div>
+                                                                                                    <div class="body-text">${order.paymen_method}</div>
                                                                                                 </div>
                                                                                                 <div class="wg-box gap10">
                                                                                                     <div class="body-title">Expected Date Of Delivery</div>
-                                                                                                    <div class="body-title-2 tf-color-2">20 Nov 2023</div>
-                                                                                                    <a class="tf-button style-1 w-full" href="oder-tracking.html"><i class="icon-truck"></i>Track order</a>
+                                                                                                    <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
                                                                                                 </div>
                                                                                             </div>
+                                                                                            </c:if>
+                                                                                                <!-- Thông tin chi tiết -->
+                                                                                               </c:forEach>
                                                                                         </div>
                                                                                         <!-- /order-detail -->
                                                                                     </div>

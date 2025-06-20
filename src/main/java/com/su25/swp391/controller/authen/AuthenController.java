@@ -85,7 +85,6 @@ public class AuthenController extends HttpServlet {
             case "/logout":
                 logoutDoGet(request, response);
                 break;
-
             default:
                 break;
         }
@@ -182,11 +181,12 @@ public class AuthenController extends HttpServlet {
 
         // Kiểm tra xem email đã tồn tại trong database chưa
         Account accountFoundByEmail = accountDAO.findByEmail(account);
+        Account accountFoundByUsername = accountDAO.findByUsername(account);
 
         // Nếu email đã tồn tại
-        if (accountFoundByEmail != null) {
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
             // Nếu username trùng với email
-            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(email)) {
+            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
                 session.setAttribute("toastMessage", "Username already exists!");
                 session.setAttribute("toastType", "error");
             } else {
@@ -201,6 +201,7 @@ public class AuthenController extends HttpServlet {
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
             session.setAttribute("email", email);
+            session.setAttribute("user_name", user_name);
             session.setAttribute("password", password);
             session.setAttribute("otpType", "register");
             url = OTP_PAGE;
@@ -244,6 +245,7 @@ public class AuthenController extends HttpServlet {
             } else {
                 session.setAttribute("email", usernameOrEmail);
                 session.setAttribute("password", password);
+                session.setAttribute("user_name", usernameOrEmail);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
                 url = HOME_PAGE;
             }
@@ -396,11 +398,12 @@ public class AuthenController extends HttpServlet {
             accountDAO.updatePasswordByEmail(account);
             session.setAttribute("password", new_password);
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
-            url = HOME_PAGE;
+            url = LOGIN_PAGE;
         } else {
             session.setAttribute("toastMessage", "Email incorect!");
             session.setAttribute("toastType", "error");
-            url = LOGIN_PAGE;
+            response.sendRedirect(HOME_PAGE);
+            return;
         }
         request.getRequestDispatcher(url).forward(request, response);
 

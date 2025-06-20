@@ -20,18 +20,13 @@
                                     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
                                         <!-- Font -->
                                         <link rel="stylesheet" href="font/fonts.css">
-
                                             <!-- Icon -->
                                             <link rel="stylesheet" href="icon/style.css">
-
                                                 <!-- Favicon and Touch Icons  -->
                                                 <link rel="shortcut icon" href="images/favicon.png">
                                                     <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
-
                                                         </head>
-
                                                         <body class="body">
-
                                                             <!-- #wrapper -->
                                                             <div id="wrapper">
                                                                 <!-- #page -->
@@ -46,12 +41,12 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                        <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
                                                                                 <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                            <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
                                                                                 <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
                                                                                 <div class="main-content">
@@ -66,7 +61,7 @@
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form class="form-search">
+                                                                                                        <form class="form-search" action="search" method="post">
                                                                                                             <fieldset class="name">
                                                                                                                 <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
                                                                                                             </fieldset>
@@ -75,7 +70,7 @@
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </div>
-                                                                                                    <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all order</a>
+                                                                                                    <!--                                                                                                    <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all order</a>-->
                                                                                                 </div>
                                                                                                 <div class="wg-table table-all-category">
                                                                                                     <ul class="table-title flex gap20 mb-14">
@@ -98,41 +93,35 @@
                                                                                                             <div class="body-title">Status</div>
                                                                                                         </li>
                                                                                                         <li>
-                                                                                                            <div class="body-title">Tracking</div>
-                                                                                                        </li>
-                                                                                                        <li>
                                                                                                             <div class="body-title">Action</div>
                                                                                                         </li>
                                                                                                     </ul>
                                                                                                     <ul class="flex flex-column">
-                                                                                                    
+
                                                                                                     <c:forEach var="order" items="${orderList}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="image no-bg">
-                                                                                                                <img src="images/products/51.png" alt="">
+                                                                                                                <img src="images/products/51.png" >
                                                                                                             </div>
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                 <div class="name">
-                                                                                                                    <a href="product-list.html" class="body-title-2">a</a>
+                                                                                                                    <a href="product-list.html" class="body-title-2">${order.foodName}</a>
                                                                                                                 </div>
-                                                                                                                <div class="body-text">#${order.orderId}</div>
-                                                                                                                <div class="body-text">${order.total}VND</div>
-                                                                                                                
+                                                                                                                <div class="body-text">#${order.orderId} </div>
+                                                                                                                <div class="body-text">${order.foodPrice}VND</div>
+                                                                                                                <div class="body-text">${order.quantity}</div>
                                                                                                                 <div class="body-text">${order.paymentMethod}</div>
                                                                                                                 <div>
                                                                                                                     <div class="block-available">${order.status}</div>
-                                                                                                                </div>
-                                                                                                                <div>
-                                                                                                                    <div class="block-tracking">Tracking</div>
                                                                                                                 </div>
                                                                                                                 <div class="list-icon-function">
                                                                                                                     <a href="${pageContext.request.contextPath}/orderdetail?orderId=${order.orderId}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>
-                                                                                                                    <button class="item edit" onclick="editProduct(${order.orderId})">
+<!--                                                                                                                    <button class="item edit" onclick="editProduct(${order.orderId})">
                                                                                                                         <i class="icon-edit-3"></i>
-                                                                                                                    </button>
-                                                                                                                    <button class="item trash" onclick="deleteProduct(${order.orderId})">
+                                                                                                                    </button>-->
+                                                                                                                    <button class="item trash" onclick="deleteProduct(${order.orderItemId})">
                                                                                                                         <i class="icon-trash-2"></i>
                                                                                                                     </button>
                                                                                                                 </div>
@@ -187,6 +176,29 @@
                                                             <!-- /#wrapper -->
 
                                                             <!-- Javascript -->
+                                                            <script>
+                                                                function deleteProduct(orderItemId) {
+                                                                    fetch('hide-order', {
+                                                                        method: 'POST',
+                                                                        headers: {
+                                                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                                                        },
+                                                                        body: 'orderItemId=' + orderItemId
+                                                                    }).then(response => {
+                                                                        if (response.ok) {
+                                                                            const element = document.getElementById("order-" + orderItemId);
+                                                                            if (element) {
+                                                                                element.remove(); // Ẩn khỏi UI
+                                                                            }
+                                                                        } else {
+                                                                            console.error("Failed to hide order");
+                                                                        }
+                                                                    }).catch(error => {
+                                                                        console.error("Error:", error);
+                                                                    });
+                                                                }
+                                                            </script>
+
                                                             <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
@@ -194,7 +206,6 @@
                                                             <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/main.js"></script>
-
                                                         </body>
 
 
