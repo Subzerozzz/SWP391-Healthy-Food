@@ -34,4 +34,10 @@ public class OrderDetails {
     private BigDecimal price;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String ship_address;
+    private BigDecimal total;
+    private String paymen_method;
+    private String status;
+    private String image_url;
+    private String foodname;
 }

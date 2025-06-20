@@ -195,6 +195,24 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
+    
+    public Account findByUsername(Account t) {
+        String sql = "SELECT * FROM Account WHERE user_name = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getUser_name());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
 
     @Override
     public Account findById(Integer id) {
