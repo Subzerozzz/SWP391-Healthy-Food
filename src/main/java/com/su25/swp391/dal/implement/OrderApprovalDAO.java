@@ -44,11 +44,10 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
     public List<OrderApproval> getOrderApprovalsByOrderId(int orderId) {
         List<OrderApproval> approvals = new ArrayList<>();
 
-        String sql = "SELECT oa.*, a.user_name "
-                + "FROM order_approvals oa "
-                + "JOIN account a ON oa.approved_by = a.id "
-                + "WHERE oa.order_id = ? "
-                + "ORDER BY oa.approved_at DESC";
+        String sql = "SELECT * "
+                + "FROM order_approvals "
+                + "WHERE order_id = ? "
+                + "ORDER BY approved_at DESC";
 
         try {
             connection = getConnection();
@@ -68,12 +67,7 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
         return approvals;
     }
     
-    public static void main(String[] args) {
-        OrderApprovalDAO d = new OrderApprovalDAO();
-        List<OrderApproval> l = d.getOrderApprovalsByOrderId(60);
-        System.out.println(l);
-    }
-
+   
     @Override
     public List<OrderApproval> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -110,7 +104,6 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
               .statusBefore(resultSet.getString("status_before"))
               .statusAfter(resultSet.getString("status_after"))
               .note(resultSet.getString("note"))
-              .acc(null)
               .build();
     }
 
@@ -118,4 +111,10 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
     public OrderApproval findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+     public static void main(String[] args) {
+        OrderApprovalDAO d = new OrderApprovalDAO();
+        List<OrderApproval> l = d.getOrderApprovalsByOrderId(60);
+        System.out.println(l);
+    }
+
 }

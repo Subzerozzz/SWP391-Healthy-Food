@@ -22,7 +22,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
     public List<OrderItem> getOrderItemsByOrderId(int orderId) {
         List<OrderItem> items = new ArrayList<>();
 
-        String sql = "SELECT *"
+        String sql = "SELECT * "
                 + "FROM order_items  "
                 + "WHERE order_id = ?";
 

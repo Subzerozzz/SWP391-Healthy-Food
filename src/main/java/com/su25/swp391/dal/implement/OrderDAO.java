@@ -10,6 +10,7 @@ import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Coupon;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.OrderItem;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -147,27 +148,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return 0;
     }
 
-    public Order findById(int orderId) {
-        String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM orders o "
-                + "JOIN account a "
-                + "ON o.user_id = a.id "
-                + "WHERE o.order_id = ?";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderId);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return getFromResultSet(resultSet);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding order by ID: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return null;
-    }
     /**
  * Updates the status of a specific order and logs the change in the order_approvals table.
  * This method uses a transaction to ensure consistency between the order update and the approval log.
@@ -410,10 +390,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public Order findById(Integer id) {
-        String sql = "SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE o.order_id = ?";
+        String sql = "SELECT * "
+                + "FROM orders  "
+                + "WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -454,17 +433,32 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         CouponDAO cD = new CouponDAO();
         OrderItemDAO otD = new OrderItemDAO();
         OrderDAO o = new OrderDAO();
+        FoodDAO f = new FoodDAO();
 //        List<Order> or = o.findOrdersWithFilters("", "", 1, 10);
-        List<Order> or = o.searchOrders("phong", "", "", 1, 10);
-        for (Order order : or) {
+//        List<Order> or = o.searchOrders("phong", "", "", 1, 10);
+//        for (Order order : or) {
+//            Account acc = aD.findById(order.getUser_id());
+//            order.setAcc(acc);
+//            Coupon cp = cD.findById(order.getCoupon_id());
+//            order.setCoupon(cp);
+//            List<OrderItem> oT = otD.getOrderItemsByOrderId(order.getId());
+//            order.setOrderItems(oT);
+//        }
+//        System.out.println(or);
+         Order order = o.findById(60);
             Account acc = aD.findById(order.getUser_id());
             order.setAcc(acc);
             Coupon cp = cD.findById(order.getCoupon_id());
             order.setCoupon(cp);
             List<OrderItem> oT = otD.getOrderItemsByOrderId(order.getId());
-            order.setOrderItems(oT);
+            for (OrderItem orderItem : oT) {
+               Food fo = f.findById(orderItem.getFood_id());
+               orderItem.setFood(fo);
         }
-        System.out.println(or);
+            order.setOrderItems(oT);
+       
+        System.out.println(order);
+        
     }
 
 }

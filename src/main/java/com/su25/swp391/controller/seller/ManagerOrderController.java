@@ -256,18 +256,20 @@ public class ManagerOrderController extends HttpServlet {
             int orderId = Integer.parseInt(request.getParameter("id"));
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
+            Account acc = accDAO.findById(order.getUser_id());
+            order.setAcc(acc);
+            Coupon cp = couponDAO.findById(order.getCoupon_id());
+            order.setCoupon(cp);
+            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
+            order.setOrderItems(oT);
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-            // get list order item of order by id
-            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(orderId);
             // check existing order
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-            // set orderItem for Order
-            order.setOrderItems(orderItems);
             request.setAttribute("order", order);
             request.setAttribute("approvals", approvals);
             // Forward to the order detail page
