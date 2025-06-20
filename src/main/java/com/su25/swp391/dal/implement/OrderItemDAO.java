@@ -17,16 +17,16 @@ import java.util.List;
 public class OrderItemDAO extends DBContext {
 
     // Lấy danh sách items của một đơn hàng
-    public List<OrderItem> getOrderItemsByOrderId(int orderId)  {
+    public List<OrderItem> getOrderItemsByOrderId(int orderId) {
         List<OrderItem> items = new ArrayList<>();
 
         String sql = "SELECT oi.*, f.name, f.image_url "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".order_items oi "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".Food f ON oi.food_id = f.id "
+                + "FROM order_items oi "
+                + "JOIN Food f ON oi.food_id = f.id "
                 + "WHERE oi.order_id = ?";
 
         try {
-            
+
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, orderId);
@@ -48,10 +48,9 @@ public class OrderItemDAO extends DBContext {
 
                 items.add(item);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             closeResources();
         }
 
@@ -105,7 +104,7 @@ public class OrderItemDAO extends DBContext {
     public boolean insert(OrderItem item) {
         String sql = "INSERT INTO order_items (order_id, product_id, quantity, price, created_at, updated_at) "
                 + "VALUES (?, ?, ?, ?, NOW(), NOW())";
-        
+
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -113,7 +112,7 @@ public class OrderItemDAO extends DBContext {
             statement.setInt(2, item.getFoodId());
             statement.setInt(3, item.getQuantity());
             statement.setBigDecimal(4, item.getPrice());
-            
+
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException ex) {
@@ -126,6 +125,7 @@ public class OrderItemDAO extends DBContext {
 
     /**
      * Get order item by ID
+     * 
      * @param orderItemId ID of the order item to get
      * @return OrderItem object if found, null otherwise
      */
@@ -134,13 +134,13 @@ public class OrderItemDAO extends DBContext {
                 + "FROM order_items oi "
                 + "JOIN products p ON oi.product_id = p.product_id "
                 + "WHERE oi.order_item_id = ?";
-        
+
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, orderItemId);
             resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 OrderItem item = new OrderItem();
                 item.setOrderItemId(resultSet.getInt("order_item_id"));
@@ -150,11 +150,11 @@ public class OrderItemDAO extends DBContext {
                 item.setPrice(resultSet.getBigDecimal("price"));
                 item.setCreatedAt(resultSet.getTimestamp("created_at"));
                 item.setUpdatedAt(resultSet.getTimestamp("updated_at"));
-                
+
                 // Thông tin sản phẩm
                 item.setFoodName(resultSet.getString("product_name"));
                 item.setFoodImage(resultSet.getString("product_image"));
-                
+
                 return item;
             }
         } catch (SQLException ex) {
@@ -162,16 +162,16 @@ public class OrderItemDAO extends DBContext {
         } finally {
             closeResources();
         }
-        
+
         return null;
     }
-    public static void main(String[] args)  {
+
+    public static void main(String[] args) {
         OrderItemDAO o = new OrderItemDAO();
         List<OrderItem> l = o.getOrderItemsByOrderId(60);
         for (OrderItem orderItem : l) {
             System.out.println(orderItem);
         }
-        
+
     }
 }
-

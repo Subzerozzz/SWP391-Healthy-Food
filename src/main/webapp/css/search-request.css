@@ -1,21 +1,20 @@
-.filter{
+.filter {
     display: flex;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: none;
     padding: 6px;
     padding-right: 20px;
-    padding-left:10px;
-    height: 110px;
+    padding-left: 10px;
+    height: 70px;
     width: 100%;
     border-radius: 10px;
-    background-color:#0c0404 ;
     justify-content: space-between;
-    align-items: start
-/*     màu xám   #f0f0f0*/
+    align-items: start /* màu xám #f0f0f0*/;
+    background-color: #F8F9FB;
 }
 .selected{
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-  color: white;
+  background: #fff;
+  color: #333;
   height: 50px;
   padding: 0 20px;
   border-radius: 12px;
@@ -24,16 +23,18 @@
   justify-content: center;
   font-weight: 600;
   font-size: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/*  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);*/
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+/*  border: 1px solid #333;*/
 }
 
 .selected:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid #333;
 }
 .selected option {
-  background-color: #fdfdfd;  /* Nền nhẹ nhàng */
+  background-color: #fff;  /* Nền nhẹ nhàng */
   color: #333;                /* Màu chữ cơ bản dễ đọc */
   font-size: 15px;
   padding: 10px;              /* Có thể không áp dụng được tùy trình duyệt */
@@ -42,7 +43,7 @@
 
 /* Hover – chỉ hoạt động trên Firefox */
 .selected option:hover {
-  background-color: #e6f0fa;  /* Màu nền hover nhẹ xanh dương */
+  background-color: #FFFAF0;  /* Màu nền hover nhẹ xanh dương */
   color: #007bff;             /* Màu chữ hover hiện đại */
 }
 .filter-btn{
@@ -50,19 +51,20 @@
     padding: 8px 20px;
     font-size: 12px;
     font-weight: bold;
-    color: #ffffff;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: #333;
+    background: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.4s ease, transform 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-
+/*    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);*/
+/*    border: 1px solid #333;*/
 }
 .filter-btn:hover {
-    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+    background:#FFFAF0;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid #333;*/
 }
 .filter-btn:active {
     transform: translateY(1px);

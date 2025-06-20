@@ -7,7 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.mysql.cj.xdevapi.Result;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Food_Draft;
+import com.su25.swp391.entity.FoodDraft;
 import com.su25.swp391.entity.LogRequest;
 import com.su25.swp391.entity.Request;
 import java.sql.PreparedStatement;
@@ -54,7 +54,7 @@ public class LogRequestDAO extends DBContext implements I_DAO<LogRequest> {
                 .build();
     }
     // Get LogRequest By Rquest And Food_Draft
-    public LogRequest getFromResultFoodDAndRequest(Request r, Food_Draft f) {
+    public LogRequest getFromResultFoodDAndRequest(Request r, FoodDraft f) {
         return LogRequest
                 .builder()
                 .result(r.getResult())
