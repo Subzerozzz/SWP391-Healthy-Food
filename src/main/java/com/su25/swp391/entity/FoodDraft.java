@@ -34,4 +34,6 @@ public class FoodDraft {
   private Integer nutri_id;
   private Double calo;
 
+
+
 }

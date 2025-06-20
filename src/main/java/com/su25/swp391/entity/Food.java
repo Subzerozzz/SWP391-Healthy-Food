@@ -5,7 +5,6 @@
 package com.su25.swp391.entity;
 
 import java.sql.Timestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author Dell
- */
 @ToString
 @Builder
 @Data
@@ -26,6 +21,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Food {
+
   private Integer id;
   private String name;
   private String description;
@@ -37,5 +33,6 @@ public class Food {
   private Timestamp updated_at;
   private Integer nutri_id;
   private Double calo;
+
 
 }
