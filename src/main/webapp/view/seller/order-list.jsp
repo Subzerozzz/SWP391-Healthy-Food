@@ -48,7 +48,7 @@
                               display:block
                           }
                           
-                          /*style for filter*/
+                          style for filter
                            .fixed-width-btn {
                 min-width: 120px;
                 text-align: center;
@@ -103,7 +103,7 @@
                 transform: translateX(2px);
             }
             
-            /* Responsive adjustments */
+/*             Responsive adjustments */
             @media (max-width: 768px) {
                 .view-btn {
                     padding: 6px 12px;
@@ -125,7 +125,7 @@
   width: 100%;
 }
 
-/* Style chung cho input & select */
+ Style chung cho input & select 
 .filter-row select,
 .filter-row input[type="text"] {
   height: 40px;
@@ -155,7 +155,7 @@
   background-color: #0056b3;
 }
 
-/* Table styling */
+ Table styling 
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -187,17 +187,17 @@
   font-weight: 500;
 }
 
-/* Zebra rows */
+ Zebra rows 
 .table tbody tr:nth-child(even) {
   background-color: #fafafa;
 }
 
-/* Hover row */
+ Hover row 
 .table-hover tbody tr:hover {
   background-color: #f0f8ff;
 }
 
-/* Badge style for payment & status */
+ Badge style for payment & status 
 .badge {
   font-size: 13px;
   padding: 5px 10px;
@@ -206,13 +206,13 @@
   text-transform: capitalize;
 }
 
-/* Status colors */
+ Status colors 
 .bg-warning { background-color: #ffc107; color: #000; }
 .bg-info    { background-color: #17a2b8; color: #fff; }
 .bg-success { background-color: #28a745; color: #fff; }
 .bg-danger  { background-color: #dc3545; color: #fff; }
 
-/* Pagination styling */
+ Pagination styling 
 .pagination {
   margin-top: 24px;
 }
@@ -240,9 +240,9 @@
   border-color: #007bff;
 }
 .table td, .table th {
-  vertical-align: top; /* Cho nội dung nằm sát trên */
+  vertical-align: top;  Cho nội dung nằm sát trên 
   text-align: left;
-  white-space: nowrap; /* Không xuống dòng lung tung */
+  white-space: nowrap;  Không xuống dòng lung tung 
 }
 
 /* Nhưng riêng Customer nên cho xuống dòng mềm */
@@ -265,25 +265,9 @@
   line-height: 1.4;
   font-size: 16px;
   font-weight: 500;
-  vertical-align: middle; /* thêm dòng này để căn giữa theo chiều dọc */
+  vertical-align: middle;  thêm dòng này để căn giữa theo chiều dọc 
 }
 
-/* Footer style (tuỳ chỉnh nếu cần) */
-footer {
-  background-color: #f8f9fa;
-  padding: 16px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  border-top: 1px solid #ddd;
-}
-.table td:nth-child(2) * {
-  margin: 0;
-  padding: 0;
-}
-.table td, .table th {
-  vertical-align: middle;
-}
 
                       </style>
 </head>
@@ -304,12 +288,13 @@ footer {
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                 <jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+             <jsp:include page="./../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>  
+                 <jsp:include page="./../common/headerDashboard.jsp"></jsp:include>
+                 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -339,8 +324,8 @@ footer {
                                 </div>
                                 <!-- order-list -->
                                 <div class="wg-box">
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
+                                    <div class="">
+                                        <div class="">
                                          <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
                 <h6 class="fw-semibold mb-0">Order Management</h6>
@@ -354,7 +339,8 @@ footer {
       <!-- Thêm class filter-row -->
       <div class="filter-row">
         <!-- Select Status -->
-        <select class="form-select" name="status">
+        <select  style="height: 35px;font-size: 15px;"
+            class="form-select" name="status">
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
@@ -363,7 +349,8 @@ footer {
         </select>
 
         <!-- Select Payment Method -->
-        <select class="form-select" name="paymentMethod">
+        <select    style="height: 35px;font-size: 15px; "
+            class="form-select" name="paymentMethod">
           <option value="">All Payment Methods</option>
           <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
           <option value="Digital Wallet"   ${paymentMethod == 'Digital Wallet'   ? 'selected' : ''}>Digital Wallet</option>
@@ -463,48 +450,72 @@ footer {
                     </div>
 
                     <!-- Pagination -->
-                    <nav class="mt-24">
-                        <ul class="pagination justify-content-center">
-                            <c:if test="${currentPage > 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
+                       <div class="pagination-wrapper">
+                           <div class="text-tiny">Showing 10 entries</div>
 
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
-                                </li>
-                            </c:forEach>
+                           <!--   Start Pagination-->
+                           <ul class="pagination-wrapper">
 
-                            <c:if test="${currentPage < totalPages}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </nav>
+                               <li >
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=1&status=${status}&search=${search}"><i class="icon-chevron-left"></i></a>
+                               </li>
+                               <c:choose>
+                                   <c:when test="${currentPage <= totalPages - 2}">
+                                       <c:if test="${currentPage > 1}">
+                                           <li class="">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">${currentPage - 1}</a>
+                                           </li>
+                                       </c:if>
+                                       <li class="active">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage}&status=${status}&search=${search}">${currentPage}</a>
+                                       </li>
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">${currentPage + 1}</a>
+                                       </li>
+
+                                       <c:if test="${currentPage < totalPages - 2}">
+                                           <li>
+                                               <span>...</span>
+                                           </li>
+                                       </c:if>
+
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}">${totalPages}</a>
+                                       </li>
+                                   </c:when>
+
+                                   <c:otherwise>
+                                       <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                           <li class="${currentPage == i ? 'active' : ''}">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                           </li>
+                                       </c:forEach>
+                                   </c:otherwise>
+                               </c:choose>
+
+                               <li>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}"><i class="icon-chevron-right"></i></a>
+                               </li>
+                           </ul>
+                       </div>  
                 </div>
             </div>
         </div>
                                     </div>
+                
                                 </div>
                                 <!-- /order-list -->
+                      
                             </div>
                             <!-- /main-content-wrap -->
+                            
                         </div>
                         <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        <footer>
-                            <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
-                        </footer>
-                        
-                        <!-- /bottom-page -->
+                    
                     </div>
+               <jsp:include page="./../common/footer.jsp"></jsp:include>
                     <!-- /main-content -->
                 </div>
                 <!-- /section-content-right -->
@@ -512,6 +523,7 @@ footer {
             <!-- /layout-wrap -->
         </div>
         <!-- /#page -->
+    </div>
     </div>
     <!-- /#wrapper -->
  <!-- Toast Container -->

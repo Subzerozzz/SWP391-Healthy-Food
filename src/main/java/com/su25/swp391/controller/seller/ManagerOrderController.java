@@ -6,7 +6,7 @@ package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.FoodDAO;
-import com.su25.swp391.dal.implement.Food_DraftDAO;
+import com.su25.swp391.dal.implement.FoodDraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
@@ -34,7 +34,7 @@ import java.sql.SQLException;
  *
  * @author FPTSHOP
  */
-@WebServlet(name = "ManagerOrderController", urlPatterns = {"/seller/manage-order"})
+@WebServlet(name = "ManagerOrderController", urlPatterns = { "/seller/manage-order" })
 public class ManagerOrderController extends HttpServlet {
 
     private OrderDAO orderDAO;
@@ -102,8 +102,10 @@ public class ManagerOrderController extends HttpServlet {
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
+
     // View All Lists Orders
-    private void listOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void listOrders(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // Get filter parameters by Status
         String status = request.getParameter("status");
         // Filter by paymentMethod
@@ -150,12 +152,13 @@ public class ManagerOrderController extends HttpServlet {
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
     }
+
     // Update status
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
         try {
             // Get orderId by update
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            // Get new Status 
+            // Get new Status
             String newStatus = request.getParameter("newStatus");
             // Get note of seller for order
             String note = request.getParameter("note");
@@ -172,7 +175,7 @@ public class ManagerOrderController extends HttpServlet {
 
             if (acc == null) {
                 // response.sendRedirect(request.getContextPath() + "/authen");
-                //   return;
+                // return;
             }
 
             Order order = orderDAO.findById(orderId);
@@ -207,7 +210,8 @@ public class ManagerOrderController extends HttpServlet {
                         default:
                             statusText = newStatus;
                     }
-                    session.setAttribute("successMessage", "Order #" + orderId + " has been " + statusText + " successfully.");
+                    session.setAttribute("successMessage",
+                            "Order #" + orderId + " has been " + statusText + " successfully.");
                 }
 
             } else {
@@ -221,7 +225,8 @@ public class ManagerOrderController extends HttpServlet {
     }
 
     // View Order Detail
-    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
 
         try {
             // Get orderId by order parameter
@@ -230,7 +235,7 @@ public class ManagerOrderController extends HttpServlet {
             Order order = orderDAO.findById(orderId);
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-            // get list order item of order by id 
+            // get list order item of order by id
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(orderId);
             // check existing order
             if (order == null) {
@@ -250,5 +255,5 @@ public class ManagerOrderController extends HttpServlet {
         }
 
     }
-    
+
 }

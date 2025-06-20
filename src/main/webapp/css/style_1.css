@@ -26,6 +26,9 @@
   --hv-item: #EDF1F5;
 }
 
+
+
+
 /**
   * Name: Remos eCommerce Admin Dashboard HTML Template
   * Version: 1.0.1
@@ -403,7 +406,33 @@ del,
 }
 
 /* Table */
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
+=======
+>>>>>>> origin/feauture_manage_account
+table,
+th,
+td {
+  border: 1px solid #343444;
+}
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/manager-request
+=======
+>>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
+=======
+>>>>>>> origin/feauture_manage_account
 
 table {
   border-collapse: separate;
@@ -502,7 +531,11 @@ input[type=submit] {
 input[type=checkbox],
 input[type=radio] {
   padding: 0;
+<<<<<<< HEAD
   width: 22px;
+=======
+  width: 50px;
+>>>>>>> origin/feauture_manage_account
   height: 22px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0) !important;
@@ -1888,9 +1921,14 @@ a:hover, a:focus {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  gap:10px;
   align-items: center;
   justify-content: start;
+<<<<<<< HEAD
   gap: 20px;
+=======
+  gap: 10px;
+>>>>>>> origin/feauture_manage_account
 }
 .list-icon-function .item {
   font-size: 20px;
@@ -4128,7 +4166,11 @@ select.h40 {
   gap: 10px;
   border-radius: 50%;
   background: #F0FDF4;
+<<<<<<< HEAD
   color: var(--22-c-55-e);
+=======
+ color: var(--22-c-55-e);
+>>>>>>> origin/feauture_manage_account
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
@@ -5531,7 +5573,23 @@ select.h40 {
   color: #94A3B8 !important;
 }
 .dark-theme .section-menu-left .menu-item a .icon svg path {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+  stroke: #A3D9A5;
+=======
   stroke: #94A3B8;
+>>>>>>> origin/manager-request
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/feature-manager-blog
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/feature-authen
+=======
+  stroke: #94A3B8;
+>>>>>>> origin/feauture_manage_account
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;
@@ -6511,7 +6569,19 @@ select.h40 {
   .wg-chart-default,
   .wg-box {
     padding: 24px 15px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     
+>>>>>>> origin/manager-request
+=======
+>>>>>>> origin/feature-manager-blog
+=======
+>>>>>>> origin/feature-authen
+=======
+>>>>>>> origin/feauture_manage_account
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;

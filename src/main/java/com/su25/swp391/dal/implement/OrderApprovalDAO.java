@@ -17,7 +17,7 @@ import java.util.List;
 public class OrderApprovalDAO extends DBContext {
 
     // Thêm approval mới (sử dụng connection được truyền vào để hỗ trợ transaction)
-    public boolean addOrderApproval(int orderId, int adminId, String statusBefore, String statusAfter, String note)  {
+    public boolean addOrderApproval(int orderId, int adminId, String statusBefore, String statusAfter, String note) {
         String sql = "INSERT INTO order_approvals (order_id, approved_by, approved_at, status_before, status_after, note) "
                 + "VALUES (?, ?, NOW(), ?, ?, ?)";
 
@@ -30,22 +30,21 @@ public class OrderApprovalDAO extends DBContext {
             statement.setString(5, note);
 
             return statement.executeUpdate() > 0;
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-       finally {
+        } finally {
             closeResources();
         }
         return false;
     }
 
     // Lấy lịch sử approval của một đơn hàng
-    public List<OrderApproval> getOrderApprovalsByOrderId(int orderId)  {
+    public List<OrderApproval> getOrderApprovalsByOrderId(int orderId) {
         List<OrderApproval> approvals = new ArrayList<>();
 
         String sql = "SELECT oa.*, a.user_name "
-                + "FROM "+ GlobalConfig.DB_SCHEMA + ".order_approvals oa "
-                + "JOIN "+ GlobalConfig.DB_SCHEMA + ".account a ON oa.approved_by = a.id "
+                + "FROM order_approvals oa "
+                + "JOIN account a ON oa.approved_by = a.id "
                 + "WHERE oa.order_id = ? "
                 + "ORDER BY oa.approved_at DESC";
 
@@ -68,15 +67,15 @@ public class OrderApprovalDAO extends DBContext {
 
                 approvals.add(approval);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             closeResources();
         }
 
         return approvals;
     }
+
     public static void main(String[] args) {
         OrderApprovalDAO d = new OrderApprovalDAO();
         List<OrderApproval> l = d.getOrderApprovalsByOrderId(60);
