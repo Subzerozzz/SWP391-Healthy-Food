@@ -309,7 +309,7 @@
           <c:if test="${addSuccess == true}">
             <script>
               document.addEventListener("DOMContentLoaded", function () {
-                iziToast.error({
+                iziToast.success({
                     title: "Thông báo",
                     message: "Sản phẩm đã được thêm vào giỏ hàng",
                     position: 'topRight',

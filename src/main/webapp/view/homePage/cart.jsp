@@ -23,6 +23,10 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/theme-dark.css">
+        
+        <!--IzizToast-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
         <!--=== Title & Favicon ===-->
         <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
@@ -143,7 +147,7 @@
                                       <c:forEach items="${listCartItem}" var="item">
 
                                         <c:set var="food" value="${foodMap[item.getFood_id()]}" />
-                                        <tr>
+                                        <tr name="tr-food">
                                           <td class="product-thumbnail">
                                             <a href="#">
                                               <img src="${food.getImage_url()}" alt="Image">
@@ -167,13 +171,13 @@
                                                 <i class='bx bx-minus'></i>
                                               </span>
                                               <input name="quantity" type="text" value="${item.getQuantity()}" min="1">
-                                              
+
                                               <span class="plus-btn">
                                                 <i class='bx bx-plus'></i>
                                               </span>
                                             </div>
                                           </td>
-                                          
+
                                           <input type="hidden" name="foodId" value="${item.getFood_id()}"/>
 
                                           <td class="product-subtotal">
@@ -218,28 +222,12 @@
 
                       
                   <div class="row">
+                      <!--Coupon--> 
                     <div class="col-lg-6">
                       <div class="cart-calc">
                         <div class="cart-wraps-form">
-                          <h3>Calculate Shipping</h3>
-                          <div class="row">
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <select>
-                                  <option value="">Credit Card Type</option>
-                                  <option value="">Another option</option>
-                                  <option value="">A option</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                              <input type="text" class="form-control" placeholder="Credit Card Number">
-                            </div>
-                            <div class="form-group col-12">
-                              <input type="text" class="form-control" placeholder="Card Verification Number">
-                            </div>
-                          </div>
-                          <div class="form-group">
+                          <h3>Coupon</h3>
+                          <div name="couponCode" class="form-group">
                             <input type="text" class="form-control" placeholder="Coupon Code">
                           </div>
                           <a href="#" class="default-btn btn-bg-three">
@@ -248,17 +236,21 @@
                         </div>
                       </div>
                     </div>
-
+                      <!--Total-->
                     <div class="col-lg-6">
                       <div class="cart-totals">
                         <h3>Cart Totals</h3>
                         <ul>
-                          <li>Subtotal <span>$150.00</span></li>
-                          <li>Shipping <span>$30.00</span></li>
-                          <li>Coupon <span>$20.00</span></li>
-                          <li>Total <span><b>$160.00</b></span></li>
+                          <li class="subTotal">Subtotal<span></span></li>
+                          <li class="coupon">Coupon <span>0</span></li>
+                          <li class="totalPrice">Total <span><b></b></span></li>
                         </ul>
-                        <a href="#" class="default-btn btn-bg-three">
+                        <form action="${pageContext.request.contextPath}/cart" method="GET" id="formCheckout">
+                            <input type="hidden" name="action" value="checkout">
+                            <input type="hidden" name="subTotal" value="">
+                            <input type="hidden" name="totalPrice" value="">
+                        </form>
+                        <a href="#" onclick="submitCheckout()" class="default-btn btn-bg-three">
                           Proceed To Checkout
                         </a>
                       </div>
@@ -314,6 +306,56 @@
                 form.submit();
             }
         </script>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded" , () => {
+                const listRow = document.querySelectorAll("tr[name='tr-food']")
+                let totalPrice = 0;
+                listRow.forEach(row => {
+                    const totalRow = row.querySelector(".subtotal-amount")
+                    const priceText = totalRow.textContent.trim()
+                    const priceNumber = parseInt(priceText.replace(/[^\d]/g, ""));
+                    totalPrice += priceNumber;
+                })
+                console.log(totalPrice)
+                //Lay ra the Subtotal
+                const subTotal = document.querySelector(".subTotal").querySelector("span")
+                subTotal.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                //Lay ra the coupon
+                
+                //Tinh toan total = subTotal - coupon
+                const total = document.querySelector(".totalPrice").querySelector("span b");
+                total.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                
+                //Lay ra input subTotal va totalPrice
+                const inputSubTotal = document.querySelector("input[name='subTotal']")
+                const inputTotalPrice = document.querySelector("input[name='totalPrice']")
+                inputSubTotal.value = totalPrice
+                inputTotalPrice.value = totalPrice
+            })
+        </script>
+        
+        <script>
+            const submitCheckout = () => {
+                const formCheckout = document.getElementById("formCheckout");
+                formCheckout.submit();
+            }
+        </script>
+        
+        <!--Thong bao cart rong-->
+         <c:if test="${isEmptyListCartItem == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Vui lòng thêm sản phẩm để thanh toán !",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#d4edda"
+                    });
+              });
+            </script>
+          </c:if>
 
       </body>
 
