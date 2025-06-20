@@ -81,24 +81,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
         return category;
     }
-//      public static void main(String[] args) {
-//        CategoryDAO dao = new CategoryDAO();
-//        
-//        int page = 1;
-//        int pageSize = 10;
-//
-//        System.out.println("Testing findAllWithPagination with page = " + page + " and pageSize = " + pageSize);
-//        
-//        List<Category> categories = dao.findAllWithPagination(page, pageSize);
-//        
-//        if (categories == null || categories.isEmpty()) {
-//            System.out.println("No categories found.");
-//        } else {
-//            for (Category c : categories) {
-//                System.out.println("ID: " + c.getIdcategory() + ", Name: " + c.getName_category() + ",Description:" + c.getDescription() +",MinMBI:" + c.getMinBMI()+",MaxMBI:" + c.getMaxBMI());
-//            }
-//        }
-//    }
+
 
     @Override
     public Map<Integer, Category> findAllMap() {
@@ -189,22 +172,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         return -1;
     }
 
-//public static void main(String[] args) {
-//        CategoryDAO dao = new CategoryDAO();
-//
-//        Category c = new Category();
-//        c.setName_category("Test từ main()");
-//        c.setDescription("Thêm từ hàm main trong DAO");
-//        c.setMinBMI(21.0);
-//        c.setMaxBMI(23.5);
-//
-//        int result = dao.insert(c);
-//        if (result > 0) {
-//            System.out.println("✅ Insert thành công! ID mới: " + result);
-//        } else {
-//            System.out.println("❌ Insert thất bại.");
-//        }
-//    }
+
     @Override
     public Category getFromResultSet(ResultSet resultSet) throws SQLException {
         return Category.builder()

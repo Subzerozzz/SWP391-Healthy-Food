@@ -5,9 +5,7 @@
  */
 package com.su25.swp391.controller;
 
-import com.su25.swp391.config.CategoryFilterService;
 import com.su25.swp391.config.GlobalConfig;
-import com.su25.swp391.config.GlobalConfig.BMIRange;
 import com.su25.swp391.dal.implement.CategoryDAO;
 import com.su25.swp391.entity.Category;
 import jakarta.servlet.RequestDispatcher;
@@ -252,16 +250,8 @@ public class ManageCategory extends HttpServlet {
             } catch (NumberFormatException e) {
                 errors.put("BMIFormat", "Chỉ số BMI phải là số hợp lệ");
             }
-            //validate name_category
-            if (name_category == null || name_category.trim().isEmpty()) {
-                errors.put("name_category", "name_category is required");
-            } else if (!name_category.equals(name_category.trim())) {
-                errors.put("name_category", "name_category must not start or end with a space");
-            } else if (name_category.length() < 3 || name_category.length() > 100) {
-                errors.put("name_category", "name_category must be between 3 and 100 characters");
-            } else if (!Pattern.matches("^[\\p{L}\\p{N}_ ,.-]+$", name_category)) {
-                errors.put("name_category", "Name can only contain letters (with accents), numbers, commas, dots, hyphens, and spaces");
-            }
+             //validate name
+            errors.putAll(validateAccountData(name_category));
 
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
@@ -286,8 +276,7 @@ public class ManageCategory extends HttpServlet {
             boolean isSuccess = cateDao.insert(category) > 0;
             if (isSuccess) {
                 // Lưu message thành công vào session để hiển thị 1 lần
-                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công!");
-                request.getSession().setAttribute("toastType", "success");
+                  request.getSession().setAttribute("isUpdate", true);
                 // Redirect về trang quản lý tài khoản
                 response.sendRedirect(request.getContextPath() + "/manageCategory");
                 return;
@@ -319,15 +308,7 @@ public class ManageCategory extends HttpServlet {
             Double minBMI = null;
             Double maxBMI = null;
             //validate name
-            if (name_category == null || name_category.trim().isEmpty()) {
-                errors.put("name_category", "Name category is required");
-            } else if (!name_category.equals(name_category.trim())) {
-                errors.put("name_category", "Name category must not start or end with a space");
-            } else if (name_category.length() < 3 || name_category.length() > 50) {
-                errors.put("name_category", "Name must between 3 and 50 characters");
-            } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", name_category)) {
-                errors.put("name_category", "Name can only contain letter,numbers,underscores,and space");
-            }
+            errors.putAll(validateAccountData(name_category));
             //validate description
             if (description != null && description.length() > 500) {
                 errors.put("description", "Description must not exceed 500 characters.");
@@ -360,17 +341,20 @@ public class ManageCategory extends HttpServlet {
                 }
             }
 
-            // Validate mối quan hệ giữa min và max
+            // validate giữa min và max 
             if (minBMI != null && maxBMI != null && minBMI > maxBMI) {
                 errors.put("BMI", "minBMI must be less than or equal to maxBMI.");
             }
             if (!errors.isEmpty()) {
+                //tao ra một formdata đê luu nhưng dữ liệ người dùng nhập
                 Map<String, String> formData = new HashMap<>();
                 formData.put("name_category", name_category);
                 formData.put("description", description);
                 formData.put("minBMI", minBMIStr);
                 formData.put("maxBMI", maxBMIStr);
+                //set nhưng lỗi vào 
                 request.setAttribute("errors", errors);
+                //giữ nhưng trường không lỗi vào 
                 request.setAttribute("formData", formData);
                 request.setAttribute("cate", cate);
                 request.getRequestDispatcher("/view/categoryPage/category_edit.jsp").forward(request, response);
@@ -430,48 +414,62 @@ public class ManageCategory extends HttpServlet {
         }
     }
 
-   private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
-   
-    // Lấy toàn bộ danh mục
-    CategoryDAO dao = new CategoryDAO();
-    List<Category> allCategories = dao.findAll();
- 
+    private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
 
-    // Xác định khoảng BMI cần lọc
-    double[] range = getBMIRange(filterType);
-    double minBMI = range[0];
-    double maxBMI = range[1];
-    
-
-    // Lọc trực tiếp trong vòng lặp (gộp hàm filterCategoryByBMI)
-    List<Category> filtered = new ArrayList<>();
-    for (Category c : allCategories) {
-        if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
-            filtered.add(c);
+        // Lấy toàn bộ danh mục
+        CategoryDAO dao = new CategoryDAO();
+        List<Category> allCategories = dao.findAll();
+        // Xác định khoảng BMI cần lọc
+        double[] range = getBMIRange(filterType);
+        double minBMI = range[0];
+        double maxBMI = range[1];
+        // Lọc trực tiếp trong vòng lặp  và goppj hàm filterCategoryByBMI
+        List<Category> filtered = new ArrayList<>();
+        for (Category c : allCategories) {
+            if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
+                filtered.add(c);
+            }
         }
-    }
 
-    // Truyền dữ liệu sang JSP
-    request.setAttribute("listcategory", filtered);
-    request.setAttribute("selectedFilter", filterType);
-    
-    request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
-}
+        // Truyền dữ liệu sang JSP
+        request.setAttribute("listcategory", filtered);
+        request.setAttribute("selectedFilter", filterType);
+        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+    }
 
 // Hàm lấy khoảng BMI tương ứng với filterType
- private double[] getBMIRange(String filterType) {
-    switch (filterType) {
-        case "low":
-            return BMIRange.LOW;
-        case "normal":
-            return BMIRange.NORMAL;
-        case "overweight":
-            return BMIRange.OVERWEIGHT;
-        case "obese":
-            return BMIRange.OBESE;
-        default:
-            return BMIRange.ALL;
+    private double[] getBMIRange(String filterType) {
+        switch (filterType) {
+            case "low":
+                return GlobalConfig.LOW;
+            case "normal":
+                return GlobalConfig.NORMAL;
+            case "overweight":
+                return GlobalConfig.OVERWEIGHT;
+            case "obese":
+                return GlobalConfig.OBESE;
+            default:
+                return GlobalConfig.ALL;
+        }
     }
-}
+    private Map<String, String> validateAccountData(String name) {
+        Map<String, String> errors = new HashMap<>();
+        CategoryDAO catedao = new CategoryDAO();
+
+        // Trim inputs
+        name = name != null ? name.trim() : null;
+        
+        // Validate full_name
+        if (name == null || name.trim().isEmpty()) {
+            errors.put("name", "name is required");
+        } else if (!name.equals(name.trim())) {
+            errors.put("name", "name must not start or end with a space");
+        } else if (name.length() < 3 || name.length() > 30) {
+            errors.put("name", "name must be between 3 and 50 characters");
+        } else if (!Pattern.matches("^[\\p{L}0-9 ]+$", name)) {
+            errors.put("full_name", "Full_name can only contain letters, and spaces");
+        }
+        return errors;
+    }
 }
