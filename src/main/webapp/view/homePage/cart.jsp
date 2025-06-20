@@ -182,7 +182,7 @@
                                                 groupingUsed="true" maxFractionDigits="0" /> VNĐ
                                             </span>
 
-                                            <a onclick="submitDelete()" href="#" class="remove">
+                                            <a href="#" onclick="submitDelete(${item.getFood_id()})" class="remove">
                                               <i class='bx bx-trash'></i>
                                             </a>
                                           </td>
@@ -203,10 +203,10 @@
                                     </div>
 
                                     <div class="col-lg-5 col-sm-5 col-md-5 text-end">
-                                        <a onclick="submitUpdate(${item.getFood_id()})" href="#"
-                                        class="default-btn btn-bg-three">
-                                        Update Cart
-                                      </a>
+                                        <a href="#" onclick="submitUpdate()" 
+                                            class="default-btn btn-bg-three">
+                                            Update Cart
+                                        </a>
                                     </div>
                                   </div>
                                 </div>
@@ -216,7 +216,7 @@
                     </c:otherwise>
                   </c:choose>
 
-
+                      
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="cart-calc">
@@ -301,14 +301,15 @@
             
             const submitDelete = (foodId) => {
                 const form = document.getElementById("cartForm");
+                const inputAction = document.createElement("input");
+                inputAction.type="hidden";
+                inputAction.name="action";
+                inputAction.value="delete";
                 const input = document.createElement("input");
                 input.type="hidden";
-                input.name="action";
-                input.value="delete";
-                const input = document.createElement("input");
-                input.type="hidden";
-                input.name="foodId";
+                input.name="deleteId";
                 input.value=foodId;
+                form.appendChild(inputAction)
                 form.appendChild(input);
                 form.submit();
             }
