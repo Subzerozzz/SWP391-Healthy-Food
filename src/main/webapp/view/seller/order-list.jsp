@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage-request.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search-request.css"/>
-
+   
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
 
@@ -125,7 +125,7 @@
   width: 100%;
 }
 
- Style chung cho input & select 
+/* Style chung cho input & select */
 .filter-row select,
 .filter-row input[type="text"] {
   height: 40px;
@@ -155,118 +155,197 @@
   background-color: #0056b3;
 }
 
- Table styling 
+
+   .badge-modern {
+    padding: 0.4rem 0.9rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.badge-modern::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+.badge-modern:hover {
+    transform: scale(1.05);
+}
+
+.badge-pending {
+    background: linear-gradient(135deg, #ffea00, #ffd600); /* Vàng neon */
+    color: #000;
+}
+.badge-accepted {
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh biển sáng */
+    color: #fff;
+}
+.badge-completed {
+    background: linear-gradient(135deg, #00ff94, #00c853); /* Xanh lá tươi như bạc hà */
+    color: #fff;
+}
+.badge-rejected {
+    background: linear-gradient(135deg, #ff1744, #d50000); /* Đỏ neon */
+    color: #fff;
+}
+.bg-info-glow {
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh dương bóng loáng */
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4); /* Đổ bóng nhẹ */
+}
+/* ======= TABLE ========== */
 .table {
   width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  border-collapse: separate;
+  border-spacing: 0 8px; /* spacing giữa các dòng cho hiện đại */
+  background-color: transparent;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .table thead {
-  background-color: #f8f9fa;
-  font-weight: bold;
+  background-color: transparent;
 }
 
 .table thead th {
-  padding: 16px 12px;
-  text-align: left;
-  color: #333;
-  border-bottom: 1px solid #dee2e6;
+  padding: 14px 18px;
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
   white-space: nowrap;
+}
+
+.table tbody tr {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .table tbody td {
-  padding: 14px 12px;
-  border-bottom: 1px solid #f1f1f1;
-  vertical-align: middle;
-  color: #444;
+   padding: 8px 10px;
+  color: #000;
   font-size: 14px;
-  font-weight: 500;
+  border: none;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
- Zebra rows 
-.table tbody tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
- Hover row 
-.table-hover tbody tr:hover {
-  background-color: #f0f8ff;
-}
-
- Badge style for payment & status 
-.badge {
-  font-size: 13px;
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
- Status colors 
-.bg-warning { background-color: #ffc107; color: #000; }
-.bg-info    { background-color: #17a2b8; color: #fff; }
-.bg-success { background-color: #28a745; color: #fff; }
-.bg-danger  { background-color: #dc3545; color: #fff; }
-
- Pagination styling 
-.pagination {
-  margin-top: 24px;
-}
-
-.page-item {
-  margin: 0 4px;
-}
-
-.page-link {
-  border: 1px solid #dee2e6;
-  color: #007bff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-.page-link:hover {
-  background-color: #e9f5ff;
-  text-decoration: none;
-}
-
-.page-item.active .page-link {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-.table td, .table th {
-  vertical-align: top;  Cho nội dung nằm sát trên 
-  text-align: left;
-  white-space: nowrap;  Không xuống dòng lung tung 
-}
-
-/* Nhưng riêng Customer nên cho xuống dòng mềm */
 .table td:nth-child(2) {
   white-space: normal;
-  line-height: 1.4;
+  line-height: 1.5;
+  font-weight: 500;
 }
-/* Cột ID - nhỏ gọn */
+
+.table td small {
+  display: block;
+  color: #000;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ===== COLUMN WIDTH TUNING ===== */
 .table th:nth-child(1),
 .table td:nth-child(1) {
   width: 60px;
-  white-space: nowrap;
   text-align: center;
 }
-
 .table th:nth-child(2),
 .table td:nth-child(2) {
   width: 220px;
-  white-space: normal;
-  line-height: 1.4;
-  font-size: 16px;
-  font-weight: 500;
-  vertical-align: middle;  thêm dòng này để căn giữa theo chiều dọc 
 }
+.table th:nth-child(4),
+.table td:nth-child(4),
+.table th:nth-child(5),
+.table td:nth-child(5),
+.table th:nth-child(6),
+.table td:nth-child(6) {
+  text-align: center;
+}
+.table th:nth-child(7),
+.table td:nth-child(7),
+.table th:nth-child(8),
+.table td:nth-child(8) {
+  text-align: center;
+  width: 100px;
+}
+
+/* ======= BADGE ========== */
+.badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+/* Glowing style */
+.bg-info-glow {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4);
+}
+
+/* Modern badge status */
+.badge-modern {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badge colors */
+.badge-pending {
+  background: linear-gradient(135deg, #ffeb3b, #ffc107);
+  color: #000;
+}
+
+.badge-accepted {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+}
+
+.badge-completed {
+  background: linear-gradient(135deg, #00e676, #1de9b6);
+  color: #fff;
+}
+
+.badge-rejected {
+  background: linear-gradient(135deg, #ff1744, #d50000);
+  color: #fff;
+}
+
 
 
                       </style>
@@ -418,22 +497,32 @@
                                             <td>#${order.id}</td>
                                             <td>
                                                 ${order.acc.user_name}<br>
-                                                <small class="text-muted">${order.acc.email}</small><br>
+                                                <small class="text-muted">${order.acc.email}</small>
                                                 <small class="text-muted">${order.acc.mobile}</small>
                                             </td>
                                             <td>${order.shipping_address}</td>
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
-                                                <span class="badge bg-info">
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px"
+                                                      class="badge bg-info-glow">
                                                     ${order.payment_method}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
+<!--                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
                                                                 order.status == 'accepted' ? 'bg-info' : 
                                                                 order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
                                                     ${order.status}
-                                                </span>
+                                                </span>-->
+                                                    <span style="display: flex;align-items: center;justify-content: center;height: 25px"
+ class="badge-modern ${
+    order.status == 'pending' ? 'badge-pending' :
+    order.status == 'accepted' ? 'badge-accepted' :
+    order.status == 'completed' ? 'badge-completed' :
+    'badge-rejected'
+}">
+    ${order.status}
+</span>
                                             </td>
                                            
                                              <td>${order.coupon.code}</td>
@@ -546,7 +635,7 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<script>
+    <script>
             // Function to show toast
             function showToast(message, type) {
                 const toastEl = document.getElementById('orderToast');
