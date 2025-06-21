@@ -24,7 +24,7 @@ import lombok.ToString;
 @Setter
 public class Category {
    private int id;
-   private String name_category;
+   private String name;
    private String description;
    private Double maxBMI;
    private Double minBMI;

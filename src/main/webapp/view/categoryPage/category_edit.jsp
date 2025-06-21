@@ -108,13 +108,13 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page = "section-menu-left.jsp"></jsp:include>
+                                                                            <jsp:include page = "../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "header.jsp"></jsp:include>
-                                                                                    <!-- main-content -->
+                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
+                                                                                    <!-- /header-dashboard -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-inner">
@@ -157,10 +157,10 @@
                                                                                                         <!-- Name -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">Name</div>
-                                                                                                            <input type="text" class="form-control" name="name_category" 
-                                                                                                                   value="${empty formData.name_category ? cate.name_category : formData.name_category}"  />
-                                                                                                            <c:if test="${not empty errors.name_category}">
-                                                                                                                <div class="error" style="color:red;">${errors.name_category}</div>
+                                                                                                            <input type="text" class="form-control" name="name" 
+                                                                                                                   value="${empty formData.name ? cate.name : formData.name}"  />
+                                                                                                            <c:if test="${not empty errors.name}">
+                                                                                                                <div class="error" style="color:red;">${errors.name}</div>
                                                                                                             </c:if>
                                                                                                             <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                         </fieldset>
@@ -241,11 +241,11 @@
                                                                 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/main.js"></script>
                                                                 <!--Start hiem thi izitoat-->
-                                                                <c:if test="${not empty errors.name_category}">
+                                                                <c:if test="${not empty errors.name}">
                                                                     <script>
                                                                         iziToast.error({
                                                                             title: 'Lỗi',
-                                                                            message: '${errors.name_category}',
+                                                                            message: '${errors.name}',
                                                                             position: 'topRight',
                                                                             timeout: 5000
                                                                         });
@@ -365,7 +365,7 @@
                                                                                             let isValid = true;
 
                                                                                             // Validate name_category
-                                                                                            const nameInput = form.querySelector('[name="name_category"]');
+                                                                                            const nameInput = form.querySelector('[name="name"]');
                                                                                             if (nameInput.value.trim().length < 3) {
                                                                                                 showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
                                                                                                 isValid = false;

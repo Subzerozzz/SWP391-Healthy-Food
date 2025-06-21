@@ -62,13 +62,13 @@
                                                                                 </div>
                                                                             </div>
                                                                             <!-- /preload -->
-                                                                            <!-- section-menu-left -->
-                                                                            <jsp:include page = "section-menu-left.jsp"></jsp:include>
+                                                                           <!-- section-menu-left -->
+                                                                            <jsp:include page = "../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "header.jsp"></jsp:include>
+                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">
@@ -100,9 +100,9 @@
                                                                                                 <div class="wg-box">
                                                                                                     <form class="form-new-category form-style-1" method="POST" action="${pageContext.request.contextPath}/manageCategory?action=add">
                                                                                                                                                                                                     
-                                                                                                    <fieldset class="name_category">
+                                                                                                    <fieldset class="name">
                                                                                                         <div class="body-title"> Name: <span class="tf-color-1">*</span></div>
-                                                                                                        <input class="flex-grow" type="text" placeholder="Category name" name="name_category" tabindex="0" value="${name_category != null ? name_category : ''}" aria-required="true" >
+                                                                                                        <input class="flex-grow" type="text" placeholder="Category name" name="name" tabindex="0" value="${name != null ? name : ''}" aria-required="true" >
                                                                                                             <div class="invalid-feedback">Vui lòng nhập tên category (2-50 ký tự)</div>
                                                                                                     </fieldset>
                                                                                                     <fieldset>
@@ -237,7 +237,7 @@
                                                                                             let isValid = true;
 
                                                                                             // Validate name_category
-                                                                                            const nameInput = form.querySelector('[name="name_category"]');
+                                                                                            const nameInput = form.querySelector('[name="name"]');
                                                                                             if (nameInput.value.trim().length < 3) {
                                                                                                 showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
                                                                                                 isValid = false;

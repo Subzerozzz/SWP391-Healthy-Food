@@ -216,7 +216,7 @@ public class ManageCategory extends HttpServlet {
 
     private void addCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String name_category = request.getParameter("name_category");
+            String name = request.getParameter("name");
             String description = request.getParameter("description");
             String minBMI_raw = request.getParameter("minBMI");
             String maxBMI_raw = request.getParameter("maxBMI");
@@ -251,13 +251,13 @@ public class ManageCategory extends HttpServlet {
                 errors.put("BMIFormat", "Chỉ số BMI phải là số hợp lệ");
             }
              //validate name
-            errors.putAll(validateAccountData(name_category));
+            errors.putAll(validateAccountData(name));
 
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("hasValidateErr", true);
                 //gan lai cac gia tri da nhap vao request de hien lai trong form
-                request.setAttribute("name_category", name_category);
+                request.setAttribute("name", name);
                 request.setAttribute("minBMI", minBMI);
                 request.setAttribute("maxBMI", maxBMI);
                 request.setAttribute("description", description);
@@ -267,7 +267,7 @@ public class ManageCategory extends HttpServlet {
             }
             // tao doi tuong category moi
             Category category = Category.builder()
-                    .name_category(name_category)
+                    .name(name)
                     .minBMI(minBMI)
                     .maxBMI(maxBMI)
                     .description(description)
@@ -297,7 +297,7 @@ public class ManageCategory extends HttpServlet {
     private void updateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
-            String name_category = request.getParameter("name_category");
+            String name = request.getParameter("name");
             String description = request.getParameter("description");
             String maxBMIStr = request.getParameter("maxBMI");
             String minBMIStr = request.getParameter("minBMI");
@@ -308,7 +308,7 @@ public class ManageCategory extends HttpServlet {
             Double minBMI = null;
             Double maxBMI = null;
             //validate name
-            errors.putAll(validateAccountData(name_category));
+            errors.putAll(validateAccountData(name));
             //validate description
             if (description != null && description.length() > 500) {
                 errors.put("description", "Description must not exceed 500 characters.");
@@ -348,7 +348,7 @@ public class ManageCategory extends HttpServlet {
             if (!errors.isEmpty()) {
                 //tao ra một formdata đê luu nhưng dữ liệ người dùng nhập
                 Map<String, String> formData = new HashMap<>();
-                formData.put("name_category", name_category);
+                formData.put("name", name);
                 formData.put("description", description);
                 formData.put("minBMI", minBMIStr);
                 formData.put("maxBMI", maxBMIStr);
@@ -363,7 +363,7 @@ public class ManageCategory extends HttpServlet {
 
             //cap nhap nhung truong có the thay doi
             cate.setDescription(description);
-            cate.setName_category(name_category);
+            cate.setName(name);
             cate.setMaxBMI(maxBMI);
             cate.setMinBMI(minBMI);
 

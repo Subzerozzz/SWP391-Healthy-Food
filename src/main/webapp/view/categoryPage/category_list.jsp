@@ -72,15 +72,14 @@
                                                                                 </div>
                                                                             </div>
                                                                             <!-- /preload -->
-                                                                            <!-- section-menu-left -->
-                                                                            <jsp:include page = "./section-menu-left.jsp"></jsp:include>
+                                                                          <!-- section-menu-left -->
+                                                                            <jsp:include page = "../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "header.jsp"></jsp:include>
+                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
                                                                                     <!-- /header-dashboard -->
-                                                                                    <!-- main-content -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-inner">
@@ -186,9 +185,9 @@
                                                                                                                                                     <a href="product-list.html" class="body-title-2">${cate.id}</a>
                                                                                                                                                    
                                                                                                                                                 </div>
-<!--                                                                                                                                                 <div class="error-message" style="color: red; margin-top: 5px; font-size: 12px; width: 50px"></div>-->
+
                                                                                                                                                 <div class="body-title-2">
-                                                                                                                                                    <a href="product-list.html" class="body-title-2">${cate.name_category}</a>
+                                                                                                                                                    <a href="product-list.html" class="body-title-2">${cate.name}</a>
                                                                                                                                                 </div>
 
                                                                                                                                                 <div class="body-title-2">${cate.minBMI}</div>
