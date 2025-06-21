@@ -29,6 +29,5 @@ public class OrderItem {
     private Double price;
     private Timestamp created_at;
     private Timestamp updated_at;
-    
-  
+   
 }

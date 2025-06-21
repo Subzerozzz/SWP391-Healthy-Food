@@ -33,7 +33,5 @@ public class Order {
     private Timestamp updated_at;
     private String coupon_code;
     private Double discount_value;
-    // Danh sách các items trong order
-    private List<OrderItem> orderItems;
-
+   
 }
