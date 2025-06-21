@@ -366,7 +366,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setDouble(3, order.getTotal());
             statement.setString(4, order.getShipping_address());
             statement.setString(5, order.getPayment_method());
-            statement.setInt(6, order.getCoupon_id());
+            
              int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating order failed, no rows affected.");

@@ -152,22 +152,21 @@ public class ManagerOrderController extends HttpServlet {
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-        HashMap<Integer,Account> AccountMap = new HashMap<>();
+        HashMap<Integer, Account> AccountMap = new HashMap<>();
         for (Order order : orders) {
             Account acc = accDAO.findById(order.getUser_id());
             AccountMap.put(order.getUser_id(), acc);
         }
         // Set attributes
         request.setAttribute("orders", orders);
-        request.setAttribute("AccountMap",AccountMap);
+        request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
-//        PrintWriter o = response.getWriter();
-//        o.print(AccountMap[16]);
-      request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+
+        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
 
     }
 
@@ -252,18 +251,20 @@ public class ManagerOrderController extends HttpServlet {
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
             Account acc = accDAO.findById(order.getUser_id());
-           
+            
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
+            HashMap<Integer,Food> OrderItemMap = new HashMap<>();
             for (OrderItem orderItem : orderItems) {
-            Food fo = foodDAO.findById(orderItem.getFood_id());
-            orderItem.setFood(fo);
-          }
-            order.setOrderItems(orderItems);
+            Food food = foodDAO.findById(orderItem.getFood_id());
+            OrderItemMap.put(orderItem.getFood_id(), food);
+           }
+            
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+            HashMap<Integer,Account> OrderApprovalMap = new HashMap<>();
              for (OrderApproval orderApproval : approvals) {
-             Account a = accDAO.findById(orderApproval.getApproved_by());
-             orderApproval.setAcc(a);
+             Account accApproval = accDAO.findById(orderApproval.getApproved_by());
+             OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval );
          }
             // check existing order
             if (order == null) {
@@ -272,10 +273,14 @@ public class ManagerOrderController extends HttpServlet {
                 return;
             }
             request.setAttribute("order", order);
+            request.setAttribute("account", acc);
+            request.setAttribute("OrderItem", orderItems);
+            request.setAttribute("OrderItemMap", OrderItemMap);
+            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
-            // Forward to the order detail page
-//            PrintWriter out = response.getWriter();
-//            out.print(order);
+        //     Forward to the order detail page
+           // PrintWriter out = response.getWriter();
+          // out.print(order);
          
           request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {

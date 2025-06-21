@@ -105,7 +105,6 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
               .statusBefore(resultSet.getString("status_before"))
               .statusAfter(resultSet.getString("status_after"))
               .note(resultSet.getString("note"))
-              .acc(null)
               .build();
     }
 
@@ -119,7 +118,7 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
         List<OrderApproval> l = d.getOrderApprovalsByOrderId(62);
          for (OrderApproval oA : l) {
              Account a = acc.findById(oA.getApproved_by());
-             oA.setAcc(a);
+             
          }
         System.out.println(l);
     }

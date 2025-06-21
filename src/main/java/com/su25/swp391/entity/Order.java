@@ -31,7 +31,6 @@ public class Order {
     private String payment_method;
     private Timestamp created_at;
     private Timestamp updated_at;
-    private Integer coupon_id;
     private String coupon_code;
     private Double discount_value;
     // Danh sách các items trong order
