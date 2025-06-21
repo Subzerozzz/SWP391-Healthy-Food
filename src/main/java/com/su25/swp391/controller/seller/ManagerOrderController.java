@@ -33,6 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *
@@ -142,40 +143,31 @@ public class ManagerOrderController extends HttpServlet {
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
             orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
-             for (Order order : orders) {
-            Account acc = accDAO.findById(order.getUser_id());
-            order.setAcc(acc);
-            Coupon cp = couponDAO.findById(order.getCoupon_id());
-            order.setCoupon(cp);
-            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
-            order.setOrderItems(oT);
-        }
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
             orders = orderDAO.findOrdersWithFilters(status, paymentMethod, page, pageSize);
-            for (Order order : orders) {
-            Account acc = accDAO.findById(order.getUser_id());
-            order.setAcc(acc);
-            Coupon cp = couponDAO.findById(order.getCoupon_id());
-            order.setCoupon(cp);
-            List<OrderItem> oT = itemDAO.getOrderItemsByOrderId(order.getId());
-            order.setOrderItems(oT);
-        }
             // count order
             totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-        
+        HashMap<Integer,Account> AccountMap = new HashMap<>();
+        for (Order order : orders) {
+            Account acc = accDAO.findById(order.getUser_id());
+            AccountMap.put(order.getUser_id(), acc);
+        }
         // Set attributes
         request.setAttribute("orders", orders);
+        request.setAttribute("AccountMap",AccountMap);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
-       request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+//        PrintWriter o = response.getWriter();
+//        o.print(AccountMap[16]);
+      request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
 
     }
 
@@ -260,9 +252,7 @@ public class ManagerOrderController extends HttpServlet {
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
             Account acc = accDAO.findById(order.getUser_id());
-            order.setAcc(acc);
-            Coupon coupon = couponDAO.findById(order.getCoupon_id());
-            order.setCoupon(coupon);
+           
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
             for (OrderItem orderItem : orderItems) {
             Food fo = foodDAO.findById(orderItem.getFood_id());

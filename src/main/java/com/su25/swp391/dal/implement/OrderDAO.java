@@ -39,10 +39,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                .payment_method(resultSet.getString("payment_method"))
                .created_at(resultSet.getTimestamp("created_at"))
                .updated_at(resultSet.getTimestamp("updated_at"))
-               .coupon_id(resultSet.getInt("coupon_id"))
-               .acc(null)
-               .coupon(null)
-               .orderItems(null)
+               .coupon_code(resultSet.getString("coupon_code"))
+               .discount_value(resultSet.getDouble("discount_value"))
                .build();
          }
     /**
@@ -432,33 +430,15 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         AccountDAO aD = new AccountDAO();
         CouponDAO cD = new CouponDAO();
         OrderItemDAO otD = new OrderItemDAO();
-        OrderDAO o = new OrderDAO();
-        FoodDAO f = new FoodDAO();
-//        List<Order> or = o.findOrdersWithFilters("", "", 1, 10);
-//        List<Order> or = o.searchOrders("phong", "", "", 1, 10);
-//        for (Order order : or) {
-//            Account acc = aD.findById(order.getUser_id());
-//            order.setAcc(acc);
-//            Coupon cp = cD.findById(order.getCoupon_id());
-//            order.setCoupon(cp);
-//            List<OrderItem> oT = otD.getOrderItemsByOrderId(order.getId());
-//            order.setOrderItems(oT);
-//        }
-//        System.out.println(or);
-         Order order = o.findById(60);
+       OrderDAO d = new OrderDAO();
+       List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
+       HashMap<Integer,Account> Account = new HashMap<>();
+        for (Order order : l) {
             Account acc = aD.findById(order.getUser_id());
-            order.setAcc(acc);
-            Coupon cp = cD.findById(order.getCoupon_id());
-            order.setCoupon(cp);
-            List<OrderItem> oT = otD.getOrderItemsByOrderId(order.getId());
-            for (OrderItem orderItem : oT) {
-               Food fo = f.findById(orderItem.getFood_id());
-               orderItem.setFood(fo);
+            Account.put(order.getUser_id(), acc);
           }
-            order.setOrderItems(oT);
-       
-        System.out.println(order);
-        
+        System.out.println(l);
+        System.out.println(Account.get(16));
     }
 
 }
