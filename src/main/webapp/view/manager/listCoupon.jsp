@@ -240,11 +240,11 @@
                                      align-items: center;
                                      gap: 12px;
                                      background: #f8fafc;
-                                     padding: 16px 20px;
+                                     padding: 2px 21px;
                                      border-radius: 12px;
                                      border: 1px solid #e2e8f0;
                                      transition: all 0.3s ease;
-                                     margin-top: -22px;
+                                     margin-top: -51px;
                                  }
 
                                  .form-search:hover {
@@ -309,7 +309,8 @@
                                  .search-box {
                                      display: flex;
                                      align-items: center;
-                                     transform: translateY(-28px);
+                                     transform: translateY(-46px);
+                                     
                                  }
                                  .search-container {
                                      display: flex;
@@ -453,10 +454,11 @@
                                      padding: 0 8px;
                                      text-align: left;
                                      display: flex;
-                                     align-items: center;
+                                     align-items: center;        
+                                     justify-content: flex-start; 
                                      word-wrap: break-word;
                                      overflow-wrap: break-word;
-                                 }
+}
 
                                  /* Code Column */
                                  .table-header .col:nth-child(1),
@@ -533,13 +535,14 @@
                                     transition: color 0.2s ease;
                                     font-size: 14px;
                                 }
-                                .body-title_3{
-                                         font-size: 14px;          
-                                         font-weight: normal !important;     
-                                         font-family: Arial, sans-serif; 
-                                         margin-bottom: 10px;     
-                                         color: #000000;       
-                                     }
+                                .body-title_3 {
+                                    font-size: 14px;
+                                    font-weight: normal !important;
+                                    font-family: Arial, sans-serif;
+                                    color: #000000;
+                                    margin: 0; /* Xóa margin gây lệch */
+                                    line-height: 1.5;
+}
                                 .body-title-2:hover {
                                     color: #000000;
                                     
@@ -625,62 +628,71 @@
                                      
                                      .table-header,
                                      .table-row {
-                                         min-width: 1200px;
+                                         display: flex;
+                                         align-items: center;
+                                         min-height: 56px; /* Có thể điều chỉnh theo nhu cầu */
+                                         padding: 16px 10px;
+                                         border-bottom: 1px solid #e9ecef;
                                      }
                                  }
 
                                  @media (max-width: 768px) {
                                      .table-header .col:nth-child(1),
                                      .table-row .col:nth-child(1) {
-                                         flex: 0 0 100px;
-                                         max-width: 100px;
+                                         flex: 0 0 130px;
+                                         max-width: 130px;
                                      }
 
                                      .table-header .col:nth-child(2),
                                      .table-row .col:nth-child(2) {
-                                         flex: 0 0 80px;
-                                         max-width: 80px;
+                                         flex: 0 0 100px;
+                                         max-width: 100px;
+                                         justify-content: center;
+                                         text-align: center;
                                      }
 
                                      .table-header .col:nth-child(3),
                                      .table-row .col:nth-child(3) {
-                                         flex: 0 0 160px;
-                                         max-width: 160px;
+                                         flex: 0 0 200px;
+                                         max-width: 200px;
                                      }
 
                                      .table-header .col:nth-child(4),
                                      .table-row .col:nth-child(4) {
-                                         flex: 0 0 100px;
-                                         max-width: 100px;
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
                                      }
 
                                      .table-header .col:nth-child(5),
                                      .table-row .col:nth-child(5) {
-                                         flex: 0 0 100px;
-                                         max-width: 100px;
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
                                      }
 
                                      .table-header .col:nth-child(6),
                                      .table-row .col:nth-child(6) {
-                                         flex: 0 0 100px;
-                                         max-width: 100px;
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
                                      }
 
                                      .table-header .col:nth-child(7),
                                      .table-row .col:nth-child(7) {
-                                         flex: 0 0 90px;
-                                         max-width: 90px;
+                                         flex: 0 0 110px;
+                                         max-width: 110px;
                                      }
 
                                      .table-header .col:nth-child(8),
                                      .table-row .col:nth-child(8) {
-                                         flex: 0 0 90px;
-                                         max-width: 90px;
+                                         flex: 0 0 110px;
+                                         max-width: 110px;
                                      }
+
                                      .table-header .col:nth-child(9),
                                      .table-row .col:nth-child(9) {
-                                         flex: 0 0 120px;
-                                         max-width: 120px;
+                                         flex: 0 0 150px;
+                                         max-width: 150px;
+                                         justify-content: center;
+                                         gap: 20px;
                                      }
                                      
         </style>    
