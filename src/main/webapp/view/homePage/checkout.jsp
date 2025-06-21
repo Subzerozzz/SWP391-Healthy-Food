@@ -42,15 +42,17 @@
 
               .order-table th,
               .order-table td {
-                padding: 18px 20px; /* Tăng khoảng cách hàng */
+                padding: 18px 25px; 
                 text-align: left;
-                border-bottom: none; /* Ẩn border */
+                border-bottom: none;
+                font-size: 18px
               }
 
               .order-table thead th {
                 font-weight: 600;
                 background-color: #f9f9f9;
                 color: #111;
+                font-size: 20px
               }
 
               .order-table tbody tr {
@@ -65,9 +67,9 @@
 
               .order-table .order-total th,
               .order-table .order-total td {
-                color: #ff6600; /* Màu cam cho chữ Total */
+                color: #ff6600;
                 font-weight: bold;
-                font-size: 17px;
+                font-size: 20px;
               }
 
               /* Responsive tweak nếu cần */
@@ -81,6 +83,7 @@
 
 
         </style>
+        
         <!-- Pre Loader -->
         <div class="preloader">
             <div class="d-table">
@@ -169,103 +172,174 @@
         <div class="checkout-area pt-100 pb-70">
             <div class="container">
                 <div class="row align-items-center">
-                    <form id="contactForm" style="display: flex; gap: 20px">
-                        <div class="col-lg-6">
-                            <div class="checkout-form">
-                                <div class="contact-form">
-                                    <h2>Billing Information</h2>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label>First Name</label>
-                                                    <input type="text"  class="form-control" placeholder=" First Name">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label>Last Name</label>
-                                                    <input type="text"  class="form-control" placeholder="Last Name">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Email Address</label>
-                                                    <input type="email" class="form-control"  placeholder="Email Address">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Phone Number</label>
-                                                    <input type="text" class="form-control" placeholder="Phone">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Address</label>
-                                                    <input type="text" class="form-control" placeholder="Address">
-                                                    <span>Bạn có thể chỉnh sửa địa chị chi tiết nếu cần.</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="payment-method-section">
-                                                <h4 class="mb-3">Payment Method</h4>
-
-                                                <!-- Cash on Delivery -->
-                                                <div class="payment-option">
-                                                    <div class="payment-label">
-                                                        <input type="radio" id="cash-on-delivery" name="paymentMethod" value="cod" checked="">
-                                                        <div class="payment-icon">
-                                                            <iconify-icon icon="uil:money-bill" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                    <form id="contactForm" class="row">
+                        <c:choose>
+                            <c:when test="${sessionScope.account == null}">
+                                <div class="col-lg-6">
+                                    <div class="checkout-form">
+                                        <div class="contact-form">
+                                            <h2>Billing Information</h2>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label>First Name</label>
+                                                            <input type="text"  class="form-control" placeholder=" First Name">
                                                         </div>
-                                                        <label for="cash-on-delivery">Cash On Delivery</label>
                                                     </div>
-                                                    <div class="payment-details">
-                                                        Pay with cash upon delivery. Please have the exact amount ready for our delivery personnel.
-                                                    </div>
-                                                </div>
 
-                                                <!-- Digital Wallet -->
-                                                <div class="payment-option">
-                                                    <div class="payment-label">
-                                                        <input type="radio" id="digital-wallet" name="paymentMethod" value="digital wallet">
-                                                        <div class="payment-icon">
-                                                            <iconify-icon icon="uil:wallet" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label>Last Name</label>
+                                                            <input type="text"  class="form-control" placeholder="Last Name">
                                                         </div>
-                                                        <label for="digital-wallet">Digital Wallet</label>
                                                     </div>
-                                                    <div class="payment-details">
-                                                        Pay via digital wallet services. Your payment will be processed securely through our verified payment gateway.
-                                                    </div>
-                                                </div>
 
-                                                <!-- Bank Transfer -->
-                                                <div class="payment-option active">
-                                                    <div class="payment-label">
-                                                        <input type="radio" name="paymentMethod" id="bank-transfer" value="vnpay">
-                                                        <div class="payment-icon">
-                                                            <iconify-icon icon="mdi:bank-outline" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Email Address</label>
+                                                            <input type="email" class="form-control"  placeholder="Email Address">
                                                         </div>
-                                                        <label for="bank-transfer">VNPAY</label>
                                                     </div>
-                                                    <div class="payment-details">
-                                                        Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won't be processed until the funds have cleared in our account.
+
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Phone Number</label>
+                                                            <input type="text" class="form-control" placeholder="Phone">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Address</label>
+                                                            <input type="text" class="form-control" placeholder="Address">
+                                                            <span>Bạn có thể chỉnh sửa địa chị chi tiết nếu cần.</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="payment-method-section">
+                                                        <h4 class="mb-3">Payment Method</h4>
+
+                                                        <!-- Cash on Delivery -->
+                                                        <div class="payment-option">
+                                                            <div class="payment-label">
+                                                                <input type="radio" id="cash-on-delivery" name="paymentMethod" value="cod" checked="">
+                                                                <div class="payment-icon">
+                                                                    <iconify-icon icon="uil:money-bill" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                                </div>
+                                                                <label for="cash-on-delivery">Cash On Delivery</label>
+                                                            </div>
+                                                            <div class="payment-details">
+                                                                Pay with cash upon delivery. Please have the exact amount ready for our delivery personnel.
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- VNPay -->
+                                                        <div class="payment-option active">
+                                                            <div class="payment-label">
+                                                                <input type="radio" name="paymentMethod" id="bank-transfer" value="vnpay">
+                                                                <div class="payment-icon">
+                                                                    <iconify-icon icon="mdi:bank-outline" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                                </div>
+                                                                <label for="bank-transfer">VNPAY</label>
+                                                            </div>
+                                                            <div class="payment-details">
+                                                                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won't be processed until the funds have cleared in our account.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12 col-md-12">
+                                                        <button type="submit" class="default-btn btn-bg-three">
+                                                            Send Message
+                                                        </button>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="col-lg-12 col-md-12">
-                                                <button type="submit" class="default-btn btn-bg-three">
-                                                    Send Message
-                                                </button>
-                                            </div>
                                         </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="acc" value="${sessionScope.account}"/>
+                                <div class="col-lg-6">
+                                    <div class="checkout-form">
+                                        <div class="contact-form">
+                                            <h2>Billing Information</h2>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label>Full Name</label>
+                                                            <input type="text"  class="form-control" placeholder=" First Name" value="${acc.getFull_name()}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label>User Name</label>
+                                                            <input type="text"  class="form-control" placeholder="Last Name" value="${acc.getUser_name()}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Email Address</label>
+                                                            <input type="email" class="form-control"  placeholder="Email Address" value="${acc.getEmail()}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Phone Number</label>
+                                                            <input type="text" class="form-control" placeholder="Phone" value="${acc.getMobile()}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Address</label>
+                                                            <input type="text" class="form-control" placeholder="Address" value="${acc.getAddress()}">
+                                                            <span>Bạn có thể chỉnh sửa địa chị chi tiết nếu cần.</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!--payment--> 
+                                                    <div class="payment-method-section">
+                                                        <h4 class="mb-3">Payment Method</h4>
+
+                                                        <!-- Cash on Delivery -->
+                                                        <div class="payment-option">
+                                                            <div class="payment-label">
+                                                                <input type="radio" id="cash-on-delivery" name="paymentMethod" value="cod" checked="">
+                                                                <div class="payment-icon">
+                                                                    <iconify-icon icon="uil:money-bill" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                                </div>
+                                                                <label for="cash-on-delivery">Cash On Delivery</label>
+                                                            </div>
+                                                            <div class="payment-details">
+                                                                Pay with cash upon delivery. Please have the exact amount ready for our delivery personnel.
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- VNPay -->
+                                                        <div class="payment-option active">
+                                                            <div class="payment-label">
+                                                                <input type="radio" name="paymentMethod" id="bank-transfer" value="vnpay">
+                                                                <div class="payment-icon">
+                                                                    <iconify-icon icon="mdi:bank-outline" width="24" height="24" style="color: #80b82d;"></iconify-icon>
+                                                                </div>
+                                                                <label for="bank-transfer">VNPAY</label>
+                                                            </div>
+                                                            <div class="payment-details">
+                                                                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won't be processed until the funds have cleared in our account.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                        
 
                         <div class="col-lg-6">
                             <div class="checkout-form">
@@ -279,17 +353,24 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <c:forEach items="${listCartItem}" var="item">
+                                                <c:set var="food" value="${foodMap[item.getFood_id()]}" />
+                                                    <tr>
+                                                        <td>${food.getName()} × ${item.getQuantity()}</td>
+                                                        <td style="text-align: right;">
+                                                            <fmt:formatNumber value="${food.getPrice() * item.getQuantity()}" type="number" groupingUsed="true"
+                                                                maxFractionDigits="0" /> VNĐ</td>
+                                                    </tr>
+                                            </c:forEach>
                                             
-                                            <tr>
-                                                <td>Hoa Ghost Orchid × 1</td>
-                                                <td style="text-align: right;">150,000 VNĐ</td>
-                                            </tr>
                                             
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th>Subtotal</th>
-                                                <td style="text-align: right;">150,000 VNĐ</td>
+                                                <td style="text-align: right;">
+                                                    <fmt:formatNumber value="${subTotal}" type="number" groupingUsed="true"
+                                                                maxFractionDigits="0" /> VNĐ</td>
                                             </tr>
                                             
                                             <tr>
@@ -298,15 +379,18 @@
                                             </tr>
                                             <tr class="order-total">
                                                 <th>Total</th>
-                                                <td style="text-align: right;">150,000 VNĐ</td>
+                                                <td style="text-align: right;">
+                                                    <fmt:formatNumber value="${totalPrice}" type="number" groupingUsed="true"
+                                                                maxFractionDigits="0" /> VNĐ
+                                                </td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                     
                                     <div class="col-lg-12 col-md-12">
-                                            <button type="submit" class="default-btn btn-bg-three">
-                                                Place Order
-                                            </button>
+                                        <button type="submit" class="default-btn btn-bg-three">
+                                            Place Order
+                                        </button>
                                     </div>
                                 </div>
                             </div>

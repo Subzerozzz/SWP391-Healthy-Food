@@ -134,28 +134,36 @@ public class CartController extends HttpServlet {
             Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
             Integer subTotal = Integer.parseInt(request.getParameter("subTotal"));
             Integer totalPrice = Integer.parseInt(request.getParameter("totalPrice"));
-        
-            if (account != null) {
+            List<CartItem> listCartItem = new ArrayList<>();
 
+            if (account != null) {
+                //Lấy ra cartId theo accountId
+                Cart cart = cartDao.findCartByAccountId(account.getId());
+                //Lấy ra tất cả cartItem theo cartId
+                listCartItem = cartItemDao.findAllCartItemByCartId(cart.getId());
             } else {
-                List<CartItem> listCartItem = (List<CartItem>) session.getAttribute("cart");
+                listCartItem = (List<CartItem>) session.getAttribute("cart");
                 if (listCartItem == null) {
                     listCartItem = new ArrayList<>();
                 }
-                //cart rong thi tra ve JSP va thong bao
-                if (listCartItem.size() == 0) {
-                    request.setAttribute("isEmptyListCartItem", true);
-                    request.setAttribute("listCartItem", listCartItem);
-                    request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
-                    return;
-                }
-                request.setAttribute("listCartItem", listCartItem);
-                request.setAttribute("subTotal", subTotal);
-                request.setAttribute("totalPrice", totalPrice);
-                request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
-                
-
             }
+            //cart rong thi tra ve JSP va thong bao
+            if (listCartItem.size() == 0) {
+                request.setAttribute("isEmptyListCartItem", true);
+                request.setAttribute("listCartItem", listCartItem);
+                request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
+                return;
+            }
+            Map<Integer, Food> foodMap = new HashMap<>();
+            for (CartItem item : listCartItem) {
+                Food food = foodDao.findById(item.getFood_id());
+                foodMap.put(item.getFood_id(), food);
+            }
+            request.setAttribute("listCartItem", listCartItem);
+            request.setAttribute("foodMap", foodMap);
+            request.setAttribute("subTotal", subTotal);
+            request.setAttribute("totalPrice", totalPrice);
+            request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
