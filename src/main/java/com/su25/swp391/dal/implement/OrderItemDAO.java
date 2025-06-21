@@ -106,7 +106,6 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
               .price(resultSet.getDouble("price"))
               .created_at(resultSet.getTimestamp("created_at"))
               .updated_at(resultSet.getTimestamp("updated_at"))
-              .food(null)
               .build();
     }
 
