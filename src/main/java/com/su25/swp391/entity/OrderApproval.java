@@ -29,5 +29,4 @@ public class OrderApproval {
     private String statusBefore;
     private String statusAfter;
     private String note;
-    
 }

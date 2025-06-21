@@ -251,21 +251,21 @@ public class ManagerOrderController extends HttpServlet {
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
             Account acc = accDAO.findById(order.getUser_id());
-            
+
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
-            HashMap<Integer,Food> OrderItemMap = new HashMap<>();
+            HashMap<Integer, Food> OrderItemMap = new HashMap<>();
             for (OrderItem orderItem : orderItems) {
-            Food food = foodDAO.findById(orderItem.getFood_id());
-            OrderItemMap.put(orderItem.getFood_id(), food);
-           }
-            
+                Food food = foodDAO.findById(orderItem.getFood_id());
+                OrderItemMap.put(orderItem.getFood_id(), food);
+            }
+
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-            HashMap<Integer,Account> OrderApprovalMap = new HashMap<>();
-             for (OrderApproval orderApproval : approvals) {
-             Account accApproval = accDAO.findById(orderApproval.getApproved_by());
-             OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval );
-         }
+            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
+            for (OrderApproval orderApproval : approvals) {
+                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
+                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+            }
             // check existing order
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
@@ -274,15 +274,15 @@ public class ManagerOrderController extends HttpServlet {
             }
             request.setAttribute("order", order);
             request.setAttribute("account", acc);
-            request.setAttribute("OrderItem", orderItems);
+            request.setAttribute("OrderItems", orderItems);
             request.setAttribute("OrderItemMap", OrderItemMap);
             request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
-        //     Forward to the order detail page
-           // PrintWriter out = response.getWriter();
-          // out.print(order);
-         
-          request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
+            //     Forward to the order detail page
+            // PrintWriter out = response.getWriter();
+            // out.print(order);
+
+            request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
