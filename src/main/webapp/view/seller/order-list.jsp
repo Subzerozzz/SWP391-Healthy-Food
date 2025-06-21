@@ -418,7 +418,7 @@
       <!-- Thêm class filter-row -->
       <div class="filter-row">
         <!-- Select Status -->
-        <select  style="height: 35px;font-size: 15px;"
+        <select  style="height: 40px;font-size: 15px;"
             class="form-select" name="status">
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
@@ -428,7 +428,7 @@
         </select>
 
         <!-- Select Payment Method -->
-        <select    style="height: 35px;font-size: 15px; "
+        <select    style="height: 40px;font-size: 15px; "
             class="form-select" name="paymentMethod">
           <option value="">All Payment Methods</option>
           <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
@@ -493,12 +493,15 @@
                                     </tr>
                                 </c:if>
                                     <c:forEach var="order" items="${orders}">
+                                        <c:set var="acc" value="${AccountMap[order.user_id]}"/>
                                         <tr>
                                             <td>#${order.id}</td>
+                                            
                                             <td>
-                                                ${order.acc.user_name}<br>
-                                                <small class="text-muted">${order.acc.email}</small>
-                                                <small class="text-muted">${order.acc.mobile}</small>
+                                                
+                                                  ${acc.user_name}<br>
+                                                <small class="text-muted">${acc.email}</small>
+                                                <small class="text-muted">${acc.mobile}</small>
                                             </td>
                                             <td>${order.shipping_address}</td>
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
@@ -515,17 +518,17 @@
                                                     ${order.status}
                                                 </span>-->
                                                     <span style="display: flex;align-items: center;justify-content: center;height: 25px"
- class="badge-modern ${
-    order.status == 'pending' ? 'badge-pending' :
-    order.status == 'accepted' ? 'badge-accepted' :
-    order.status == 'completed' ? 'badge-completed' :
-    'badge-rejected'
-}">
-    ${order.status}
-</span>
+                                                          class="badge-modern ${
+                                                          order.status == 'pending' ? 'badge-pending' :
+                                                              order.status == 'accepted' ? 'badge-accepted' :
+                                                              order.status == 'completed' ? 'badge-completed' :
+                                                              'badge-rejected'
+                                                          }">
+                                                        ${order.status}
+                                                    </span>
                                             </td>
                                            
-                                             <td>${order.coupon.code}</td>
+                                             <td>${order.coupon_code}</td>
                                             <td>
 
                                                 <div class="item eye">
