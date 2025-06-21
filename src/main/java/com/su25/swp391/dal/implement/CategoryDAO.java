@@ -26,7 +26,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public List<Category> findAll() {
         List<Category> category = new ArrayList<>();
-        String sql = "SELECT * FROM category";
+        String sql = "SELECT * FROM FoodCategory";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -42,7 +42,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     public int getTotalCategoryCount() {
-        String sql = "SELECT COUNT(*) FROM category";
+        String sql = "SELECT COUNT(*) FROM FoodCategory";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -60,7 +60,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
     public List<Category> findAllWithPagination(int page, int pageSize) {
         List<Category> category = new ArrayList<>();
-        String sql = "SELECT * FROM category ORDER BY id LIMIT ?, ?";
+        String sql = "SELECT * FROM FoodCategory ORDER BY id LIMIT ?, ?";
 
         try {
             connection = getConnection();
@@ -86,7 +86,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public Map<Integer, Category> findAllMap() {
         Map<Integer, Category> categoryMap = new HashMap<>();
-        String sql = "SELECT * FROM category";
+        String sql = "SELECT * FROM FoodCategory";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -105,13 +105,13 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public boolean update(Category t) {
         List<Category> updatecategory = new ArrayList<>();
-        String sql = "UPDATE category "
-                + "SET name_category = ?, description = ?, minBMI = ?, maxBMI = ?"
+        String sql = "UPDATE FoodCategory "
+                + "SET name = ?, description = ?, minBMI = ?, maxBMI = ?"
                 + " WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, t.getName_category());
+            statement.setString(1, t.getName());
             statement.setString(2, t.getDescription());
             statement.setDouble(3, t.getMinBMI());
             statement.setDouble(4, t.getMaxBMI());
@@ -129,7 +129,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     @Override
     public boolean delete(Category t) {
         List<Category> deletecategory = new ArrayList<>();
-        String sql = "DELETE FROM category WHERE id = ?";
+        String sql = "DELETE FROM FoodCategory WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -145,14 +145,13 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
     @Override
     public int insert(Category t) {
-        String sql = "INSERT INTO category "
-                + " (name_category, description, maxBMI, minBMI) "
+        String sql = "INSERT INTO FoodCategory "
+                + " (name, description, maxBMI, minBMI) "
                 + "VALUES (?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-            statement.setString(1, t.getName_category());
+            statement.setString(1, t.getName());
             statement.setString(2, t.getDescription());
             statement.setDouble(3, t.getMaxBMI());
             statement.setDouble(4, t.getMinBMI());
@@ -177,7 +176,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     public Category getFromResultSet(ResultSet resultSet) throws SQLException {
         return Category.builder()
                 .id(resultSet.getInt("id"))
-                .name_category(resultSet.getString("name_category"))
+                .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
                 .maxBMI(resultSet.getDouble("maxBMI"))
                 .minBMI(resultSet.getDouble("minBMI"))
@@ -186,7 +185,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
     @Override
     public Category findById(Integer id) {
-        String sql = "SELECT * FROM category WHERE id = ?";
+        String sql = "SELECT * FROM FoodCategory WHERE id = ?";
         try {
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
@@ -206,7 +205,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
     public List<Category> findCategorybyName(String keyword) {
         List<Category> category = new ArrayList<>();
-        String sql = "SELECT * FROM category WHERE name_category LIKE ? ";
+        String sql = "SELECT * FROM FoodCategory WHERE name LIKE ? ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -226,7 +225,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
     public List<Category> filterCategoryByBMI(double min, double max) {
     List<Category> list = new ArrayList<>();
-    String sql = "SELECT * FROM category WHERE minBMI >= ? AND maxBMI <= ?";
+    String sql = "SELECT * FROM FoodCategory WHERE minBMI >= ? AND maxBMI <= ?";
     try {
         connection = getConnection();
         statement = connection.prepareStatement(sql);
