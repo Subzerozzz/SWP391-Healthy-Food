@@ -493,17 +493,16 @@
                                     </tr>
                                 </c:if>
                                     <c:forEach var="order" items="${orders}">
-                                        <c:set var="acc" value="${AccountMap[order.user_id]}"/>
+                                        <c:set var="acc" value="${AccountMap[order.account_id]}"/>
                                         <tr>
                                             <td>#${order.id}</td>
                                             
                                             <td>
-                                                
-                                                  ${acc.user_name}<br>
-                                                <small class="text-muted">${acc.email}</small>
-                                                <small class="text-muted">${acc.mobile}</small>
+                                               ${acc.user_name}<br>
+                                             </td>
+                                            <td>
+                                                ${order.shipping_address}
                                             </td>
-                                            <td>${order.shipping_address}</td>
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px"

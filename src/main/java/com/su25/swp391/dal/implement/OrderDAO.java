@@ -32,7 +32,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
        return Order
                .builder()
                .id(resultSet.getInt("id"))
-               .user_id(resultSet.getInt("user_id"))
+               .account_id(resultSet.getInt("account_id"))
                .status(resultSet.getString("status"))
                .total(resultSet.getDouble("total"))
                .shipping_address(resultSet.getString("shipping_address"))
@@ -44,7 +44,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                .build();
          }
     /**
- * Retrieves a paginated list of orders based on optional status and payment method filters.
+ * Retrieves a paginated list of Order based on optional status and payment method filters.
  *
  * @param status         Optional order status filter (e.g., "pending", "completed", etc.)
  * @param paymentMethod  Optional payment method filter (e.g., "Cash on Delivery", "Bank Transfer", etc.)
@@ -53,12 +53,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
  * @return List of filtered and paginated Order objects
  */
     public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
-        List<Order> orders = new ArrayList<>();
+        List<Order> Order = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
                 "SELECT o.* "
-                + "FROM orders o "
-                + "JOIN Account a ON o.user_id = a.id "
+                + "FROM `Order` o "
+                + "JOIN Account a ON account_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
@@ -87,30 +87,30 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             // Execute query and map results to Order objects
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
+                Order.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error finding filtered orders: " + ex.getMessage());
+            System.out.println("Error finding filtered Order: " + ex.getMessage());
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
         }
-        return orders;
+        return Order;
     }
     /**
- * Counts the total number of orders that match optional filters for status and payment method.
+ * Counts the total number of Order that match optional filters for status and payment method.
  * This is typically used to support pagination (by calculating the total number of pages).
  *
  * @param status         Optional status filter (e.g., "pending", "completed", etc.)
  * @param paymentMethod  Optional payment method filter (e.g., "Cash on Delivery", "Bank Transfer", etc.)
- * @return Total number of matching orders, or 0 if none found or in case of error
+ * @return Total number of matching Order, or 0 if none found or in case of error
  */
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
+                + "FROM `Order` o "
                 + "JOIN Account a "
-                + "ON o.user_id = a.id "
+                + "ON account_id = a.id "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
@@ -138,7 +138,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-            System.out.println("Error counting filtered orders: " + ex.getMessage());
+            System.out.println("Error counting filtered Order: " + ex.getMessage());
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
@@ -147,7 +147,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     /**
- * Updates the status of a specific order and logs the change in the order_approvals table.
+ * Updates the status of a specific order and logs the change in the OrderApproval table.
  * This method uses a transaction to ensure consistency between the order update and the approval log.
  *
  * @param orderId    ID of the order to update
@@ -164,7 +164,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             connection = getConnection();
             connection.setAutoCommit(false);// Disable auto-commit for transaction control
             // Step 1: Fetch current status of the order
-            String getStatusSql = "SELECT status FROM orders WHERE id = ?";
+            String getStatusSql = "SELECT status FROM `Order` WHERE id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -179,7 +179,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Step 2: Update order status and timestamp
-            String updateSql = "UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?";
+            String updateSql = "UPDATE Order SET status = ?, updated_at = NOW() WHERE id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -188,8 +188,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             System.out.println("Update order status rows affected: " + rowsAffected);
 
             if (rowsAffected > 0) {
-                // Step 3: Log status change into order_approvals table
-                String approvalSql = "INSERT INTO order_approvals (order_id, approved_by, status_before, status_after, note) "
+                // Step 3: Log status change into OrderApproval table
+                String approvalSql = "INSERT INTO OrderApproval (order_id, approved_by, status_before, status_after, note) "
                         + "VALUES (?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(approvalSql);
                 statement.setInt(1, orderId);
@@ -240,7 +240,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
     }
     /**
- * Searches for orders based on keyword, status, and payment method.
+ * Searches for Order based on keyword, status, and payment method.
  * The search keyword is matched against username, email, or order ID (cast to string).
  * Supports pagination through LIMIT and OFFSET.
  *
@@ -252,12 +252,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
  * @return               A list of matching Order objects
  */
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
-        List<Order> orders = new ArrayList<>();
+        List<Order> Order = new ArrayList<>();
         // Build the base SQL query to search by user name, email, or order ID
         StringBuilder sql = new StringBuilder("SELECT o.*"
-                + "FROM orders o "
+                + "FROM `Order` o "
                 + "JOIN Account a "
-                + "ON o.user_id = a.id "
+                + "ON account_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
         // Prepare the wildcard search pattern (for LIKE)
@@ -287,34 +287,34 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
-            // Execute query and build list of orders
+            // Execute query and build list of Order
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
+                Order.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error searching orders: " + ex.getMessage());
+            System.out.println("Error searching Order: " + ex.getMessage());
         } finally {
             // Close resultSet, statement, connection
             closeResources();
         }
-        return orders;
+        return Order;
     }
     /**
- * Returns the total number of orders that match a search keyword and optional filters.
+ * Returns the total number of Order that match a search keyword and optional filters.
  * This is used for pagination to know how many pages of results there are.
  *
  * @param search         The keyword to search (matches user name, email, or order ID)
  * @param status         Optional status filter (e.g., "pending", "completed")
  * @param paymentMethod  Optional payment method filter (e.g., "COD", "PayPal")
- * @return               The total number of matching orders
+ * @return               The total number of matching Order
  */
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
         // Build the SQL to count rows with conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
+                + "FROM `Order` o "
                 + "JOIN Account a "
-                + "ON o.user_id = a.id "
+                + "ON account_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
         // Prepare search pattern with wildcard for LIKE
@@ -356,12 +356,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public int insert(Order order) {
-        String sql = "INSERT INTO orders (user_id, status, total, shipping_address, payment_method, coupon_id) "
+        String sql = "INSERT INTO `Order` (user_id, status, total, shipping_address, payment_method, coupon_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, order.getUser_id());
+            statement.setInt(1, order.getAccount_id());
             statement.setString(2, order.getStatus());
             statement.setDouble(3, order.getTotal());
             statement.setString(4, order.getShipping_address());
@@ -389,7 +389,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     @Override
     public Order findById(Integer id) {
         String sql = "SELECT * "
-                + "FROM orders  "
+                + "FROM `Order`  "
                 + "WHERE id = ?";
         try {
             connection = getConnection();
@@ -414,7 +414,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public boolean delete(Order order) {
-        throw new UnsupportedOperationException("Delete operation is not supported for orders");
+        throw new UnsupportedOperationException("Delete operation is not supported for Order");
     }
     @Override
     public List<Order> findAll() {
@@ -434,8 +434,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
        List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
        HashMap<Integer,Account> Account = new HashMap<>();
         for (Order order : l) {
-            Account acc = aD.findById(order.getUser_id());
-            Account.put(order.getUser_id(), acc);
+            Account acc = aD.findById(order.getAccount_id());
+            Account.put(order.getAccount_id(), acc);
           }
         System.out.println(l);
         System.out.println(Account.get(16));
