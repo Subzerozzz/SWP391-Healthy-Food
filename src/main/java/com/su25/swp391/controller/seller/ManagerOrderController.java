@@ -154,8 +154,8 @@ public class ManagerOrderController extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
         HashMap<Integer, Account> AccountMap = new HashMap<>();
         for (Order order : orders) {
-            Account acc = accDAO.findById(order.getUser_id());
-            AccountMap.put(order.getUser_id(), acc);
+            Account acc = accDAO.findById(order.getAccount_id());
+            AccountMap.put(order.getAccount_id(), acc);
         }
         // Set attributes
         request.setAttribute("orders", orders);
@@ -165,8 +165,10 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
-
-        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+//        PrintWriter o = response.getWriter();
+//        o.print(orders);
+//        o.print(AccountMap);
+       request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
 
     }
 
@@ -250,7 +252,7 @@ public class ManagerOrderController extends HttpServlet {
             int orderId = Integer.parseInt(request.getParameter("id"));
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
-            Account acc = accDAO.findById(order.getUser_id());
+            Account acc = accDAO.findById(order.getAccount_id());
 
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
             HashMap<Integer, Food> OrderItemMap = new HashMap<>();

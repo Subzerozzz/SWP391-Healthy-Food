@@ -24,7 +24,7 @@ import lombok.ToString;
 public class Order {
 
     private Integer id;
-    private Integer user_id;
+    private Integer account_id;
     private String status; // enum: pending, accepted, cancelled, completed
     private Double total;
     private String shipping_address;
