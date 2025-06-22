@@ -237,12 +237,12 @@ main {
 </div>
 <!-- /preload -->
 <!-- section-menu-left -->
-<jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+<jsp:include page="./../common/sidebar.jsp"></jsp:include>
 <!-- /section-menu-left -->
 <!-- section-content-right -->
 <div class="section-content-right">
 <!-- header-dashboard -->
-<jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>    
+<jsp:include page="./../common/headerDashboard.jsp"></jsp:include>   
 <!-- /header-dashboard -->
 <!-- main-content -->
 <div class="main-content">
@@ -327,7 +327,7 @@ value="${search}"/>
         
     <c:forEach var="feedback" items="${feedbacks}">
         <c:set var="account" value="${AccountMap[feedback.user_id]}"/>
-        <c:set var="food" value="${FoodMap[feedback.orderItem_id]}"/>
+        <c:set var="food" value="${FoodMap[feedback.order_item_id]}"/>
         <tr>
             <td>${feedback.id}</td>
                 <td>${account.user_name}</td>
@@ -472,7 +472,7 @@ value="${search}"/>
 </div>
 <!-- /main-content -->
 <!-- bottom-page -->
-<jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
+<jsp:include page="./../common/footer.jsp"></jsp:include>
 <!-- /bottom-page -->
 </div>
 <!-- /section-content-right -->

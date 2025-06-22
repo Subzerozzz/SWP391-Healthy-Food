@@ -8,7 +8,7 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Account;
-import com.su25.swp391.entity.Feedbacks;
+import com.su25.swp391.entity.Feedback;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
@@ -23,11 +23,11 @@ import java.util.Map;
  *
  * @author Admin
  */
-public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
+public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
    
-   // Get Feedbacks by Id Feedback
+   // Get Feedback by Id Feedback
     @Override
-    public Feedbacks findById(Integer id) {
+    public Feedback findById(Integer id) {
         String sql = "SELECT * from feedbacks where id = ?" ;
                
         try {
@@ -49,8 +49,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     }
     // Lấy tất cả feedback của một người dùng
     @Override
-    public List<Feedbacks> findAll() {
-    List<Feedbacks> feedbacks = new ArrayList<>();
+    public List<Feedback> findAll() {
+    List<Feedback> feedbacks = new ArrayList<>();
         String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
                 + "FROM feedbacks f "
                 + "JOIN account a "
@@ -79,12 +79,12 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     }
 
     @Override
-    public Map<Integer, Feedbacks> findAllMap() {
+    public Map<Integer, Feedback> findAllMap() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean update(Feedbacks t) {
+    public boolean update(Feedback t) {
         String sql = "UPDATE feedbacks SET  is_visible = ? "
                 + "WHERE id = ?";
 
@@ -104,18 +104,18 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     }
 
     @Override
-    public boolean delete(Feedbacks t) {
+    public boolean delete(Feedback t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int insert(Feedbacks t) {
+    public int insert(Feedback t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Feedbacks getFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Feedbacks()
+    public Feedback getFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Feedback()
                 .builder()
                 .id(resultSet.getInt("id"))
                 .user_id(resultSet.getInt("user_id"))
@@ -127,10 +127,10 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
                 .updatedAt(resultSet.getTimestamp("updated_at"))
                 .build();
      }
-     public List<Feedbacks> searchFeedback(String search, String status, int page, int pageSize) {
-        List<Feedbacks> feedbacks = new ArrayList<>();
+     public List<Feedback> searchFeedback(String search, String status, int page, int pageSize) {
+        List<Feedback> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
-                + "FROM Feedbacks f "
+                + "FROM Feedback f "
                 + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
@@ -208,8 +208,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         return 0;
     }
     
-     public List<Feedbacks> findFeedbackWithFilters(String status,  int page, int pageSize) {
-        List<Feedbacks> feedbacks = new ArrayList<>();
+     public List<Feedback> findFeedbackWithFilters(String status,  int page, int pageSize) {
+        List<Feedback> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * "
                 + "FROM Feedback  "
                 + "WHERE is_visible = 1  ");
@@ -278,17 +278,17 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     }
 
     public static void main(String[] args) {
-        FeedbacksDAO f = new FeedbacksDAO();
-//        List<Feedbacks> l = f.findAll();
+        FeedbackDAO f = new FeedbackDAO();
+//        List<Feedback> l = f.findAll();
 //        System.out.println(l);
-//        Feedbacks f2 = f.findById(2);
+//        Feedback f2 = f.findById(2);
 //        System.out.println(f2);
 //        f.update(f2);
-//       List<Feedbacks> feedbacks = f.findFeedbackWithFilters("", 1, 10);
+//       List<Feedback> feedbacks = f.findFeedbackWithFilters("", 1, 10);
 //          AccountDAO acc = new AccountDAO();
 //          OrderItemDAO itemD = new OrderItemDAO();
 //          FoodDAO fo = new FoodDAO();
-//       for (Feedbacks feedback : feedbacks) {
+//       for (Feedback feedback : feedbacks) {
 //              Account acc2 = acc.findById(feedback.getUserId());
 //              feedback.setAccount(acc2);
 //              OrderItem item = itemD.findById(feedback.getOrderItemId());
@@ -296,21 +296,21 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 //             feedback.setFood(food);
 //         }
 //       System.out.println(feedbacks);
-//        List<Feedbacks> feedbacks = f.searchFeedback("Manh","2", 1, 2);
+//        List<Feedback> feedbacks = f.searchFeedback("Manh","2", 1, 2);
 //        System.out.println(feedbacks);
-//          Feedbacks fe = f.findById(1);
+//          Feedback fe = f.findById(1);
 //          System.out.println(fe);
        AccountDAO accDAO = new AccountDAO();
        OrderItemDAO itemDAO = new OrderItemDAO();
         FoodDAO foodDAO = new FoodDAO();
-        List<Feedbacks> feedbacks = f.findFeedbackWithFilters("", 1, 2);
+        List<Feedback> feedbacks = f.findFeedbackWithFilters("", 1, 2);
         HashMap<Integer,Account> AccountMap = new HashMap<>();
-         for (Feedbacks feedback : feedbacks) {
+         for (Feedback feedback : feedbacks) {
               Account acc = accDAO.findById(feedback.getUser_id());
               AccountMap.put(feedback.getUser_id(), acc);
           }
          HashMap<Integer,Food> FoodMap = new HashMap<>();
-         for (Feedbacks feedback : feedbacks) {
+         for (Feedback feedback : feedbacks) {
              OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
              Food food = foodDAO.findById(item.getFood_id());
              FoodMap.put(feedback.getOrder_item_id(), food);

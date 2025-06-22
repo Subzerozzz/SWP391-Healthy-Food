@@ -21,7 +21,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Feedbacks {
+public class Feedback {
     private Integer id;
     private Integer user_id;
     private Integer order_item_id;
@@ -30,6 +30,5 @@ public class Feedbacks {
     private boolean isVisible;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private Account account;
-    private Food food;
+    
 }
