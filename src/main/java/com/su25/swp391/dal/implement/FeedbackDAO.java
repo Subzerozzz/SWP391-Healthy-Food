@@ -28,7 +28,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
    // Get Feedback by Id Feedback
     @Override
     public Feedback findById(Integer id) {
-        String sql = "SELECT * from Feedback where id = ?";
+        String sql = "SELECT * from Feedback WHERE id = ?";
 
         try {
             connection = getConnection();
@@ -83,7 +83,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 
     @Override
     public boolean update(Feedback t) {
-        String sql = "UPDATE feedbacks SET  is_visible = ? "
+        String sql = "UPDATE Feedback SET  is_visible = ? "
                 + "WHERE id = ?";
 
         try {
@@ -127,7 +127,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
      }
      public List<Feedback> searchFeedback(String search, String status, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
+        StringBuilder sql = new StringBuilder("SELECT * "
                 + "FROM Feedback f "
                 + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? ) ");
@@ -312,10 +312,12 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
              Food food = foodDAO.findById(item.getFood_id());
              FoodMap.put(feedback.getOrder_item_id(), food);
           }
-         System.out.println(feedbacks);
-         System.out.println(AccountMap);
-         System.out.println(FoodMap);
-         
+//         System.out.println(feedbacks);
+//         System.out.println(AccountMap);
+//         System.out.println(FoodMap);
+          List<Feedback> listF = f.searchFeedback("Phong", "", 1, 10);
+          System.out.println(listF);
+                  
     }
 
 }
