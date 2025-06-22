@@ -31,16 +31,20 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public Order getFromResultSet(ResultSet rs) throws SQLException {
        return Order
                .builder()
-               .id(resultSet.getInt("id"))
-               .account_id(resultSet.getInt("account_id"))
-               .status(resultSet.getString("status"))
-               .total(resultSet.getDouble("total"))
-               .shipping_address(resultSet.getString("shipping_address"))
-               .payment_method(resultSet.getString("payment_method"))
-               .created_at(resultSet.getTimestamp("created_at"))
-               .updated_at(resultSet.getTimestamp("updated_at"))
-               .coupon_code(resultSet.getString("coupon_code"))
-               .discount_value(resultSet.getDouble("discount_value"))
+               .id(rs.getInt("id"))
+               .account_id(rs.getInt("account_id"))
+               .status(rs.getString("status"))
+               .total(rs.getDouble("total"))
+               .shipping_address(rs.getString("shipping_address"))
+               .payment_method(rs.getString("payment_method"))
+               .created_at(rs.getTimestamp("created_at"))
+               .updated_at(rs.getTimestamp("updated_at"))
+               .coupon_code(rs.getString("coupon_code"))
+               .discount_value(rs.getDouble("discount_value"))
+               .full_name(rs.getString("full_name"))
+               .mobile(rs.getString("mobile"))
+               .address(rs.getString("address"))
+               .email(rs.getString("email"))
                .build();
          }
     /**
@@ -56,23 +60,22 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         List<Order> Order = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
-                "SELECT o.* "
-                + "FROM `Order` o "
-                + "JOIN Account a ON account_id = a.id "
+                "SELECT * "
+                + "FROM `Order` "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append("AND status = ? ");
             params.add(status);
         }
         // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
         }
         // Append sorting and pagination
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);                // LIMIT
         params.add((page - 1) * pageSize);     // OFFSET
 
@@ -94,7 +97,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
-        }
+        } 
         return Order;
     }
     /**
@@ -108,19 +111,17 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     public int getTotalFilteredOrders(String status, String paymentMethod) {
         // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM `Order` o "
-                + "JOIN Account a "
-                + "ON account_id = a.id "
+                + "FROM `Order`  "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append("AND status = ? ");
             params.add(status);
         }
         // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
         }
 
@@ -252,34 +253,42 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
  * @return               A list of matching Order objects
  */
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
-        List<Order> Order = new ArrayList<>();
+
         // Build the base SQL query to search by user name, email, or order ID
-        StringBuilder sql = new StringBuilder("SELECT o.*"
-                + "FROM `Order` o "
-                + "JOIN Account a "
-                + "ON account_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.id AS CHAR) = ?) ");
+        List<Order> orders = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT o.* FROM `Order` o ")
+                .append("LEFT JOIN Account a ON o.account_id = a.id ")
+                .append("WHERE (") // << mở ngoặc block OR
+                .append("COALESCE(a.user_name, '') LIKE ? ")
+                .append("OR COALESCE(a.email, '') LIKE ? ")
+                .append("OR CAST(o.id AS CHAR) LIKE ? ")
+                .append("OR COALESCE(o.full_name, '') LIKE ? ")
+                .append("OR COALESCE(o.email, '') LIKE ? ")
+                .append(") "); // << đóng ngoặc trước khi thêm AND
+
         List<Object> params = new ArrayList<>();
         // Prepare the wildcard search pattern (for LIKE)
         String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);// for user_name
-        params.add(searchPattern);// for email
-        params.add(search);       // for exact order ID (casted to string)
+        params.add(searchPattern); // user_name
+        params.add(searchPattern); // account email
+        params.add(searchPattern); // order id
+        params.add(searchPattern); // full_name
+        params.add(searchPattern); // order email
+
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append(" AND o.status = ? ");
             params.add(status);
         }
         // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append(" AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
         // Add ordering and pagination
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);            // LIMIT
         params.add((page - 1) * pageSize); // OFFSET (start index)
-
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
@@ -290,7 +299,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             // Execute query and build list of Order
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Order.add(getFromResultSet(resultSet));
+                orders.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
             System.out.println("Error searching Order: " + ex.getMessage());
@@ -298,7 +307,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             // Close resultSet, statement, connection
             closeResources();
         }
-        return Order;
+        return orders;
     }
     /**
  * Returns the total number of Order that match a search keyword and optional filters.
@@ -313,15 +322,19 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // Build the SQL to count rows with conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM `Order` o "
-                + "JOIN Account a "
+                + "LEFT JOIN Account a "
                 + "ON account_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.id AS CHAR) = ?"
+                + " OR o.full_name LIKE ? OR o.email LIKE ? OR o.id = ?) ");
         List<Object> params = new ArrayList<>();
         // Prepare search pattern with wildcard for LIKE
         String searchPattern = "%" + search.trim() + "%";
         params.add(searchPattern);// For user_name
         params.add(searchPattern);// For email
         params.add(search);        // For exact order ID
+        params.add(searchPattern);// for full_name
+        params.add(searchPattern);// for email
+        params.add(search);       // for exact order ID (casted to string)
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
             sql.append("AND o.status = ? ");
@@ -431,14 +444,18 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         CouponDAO cD = new CouponDAO();
         OrderItemDAO otD = new OrderItemDAO();
        OrderDAO d = new OrderDAO();
-       List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
-       HashMap<Integer,Account> Account = new HashMap<>();
-        for (Order order : l) {
-            Account acc = aD.findById(order.getAccount_id());
-            Account.put(order.getAccount_id(), acc);
-          }
+//       List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
+//       HashMap<Integer,Account> Account = new HashMap<>();
+//        for (Order order : l) {
+//            Account acc = aD.findById(order.getAccount_id());
+//            Account.put(order.getAccount_id(), acc);
+//          }
+//        System.out.println(l);
+//        System.out.println(Account.get(16));
+//    }
+    List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
+        System.out.println(l2);
+     List<Order> l = d.searchOrders("kien", "", "", 1, 10);
         System.out.println(l);
-        System.out.println(Account.get(16));
-    }
-
+}
 }
