@@ -38,7 +38,7 @@ public class Coupon {
     private Integer usageLimit;
     private Integer usageCount;
     private Integer perCustomerLimit;
-    private boolean active;
+    private Integer isactive;
     private Date createdAt;
     private Date updatedAt;
 }

@@ -87,7 +87,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
             statement.setInt(9, coupon.getUsageLimit());
             statement.setInt(10, coupon.getPerCustomerLimit());
-            statement.setBoolean(11, coupon.isActive());
+            statement.setInt(11, coupon.getIsactive());
             statement.setInt(12, coupon.getId()); 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -131,7 +131,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         statement.setBigDecimal(6, coupon.getMaxDiscount());
         statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
         statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-        statement.setBoolean(9, coupon.isActive());
+        statement.setInt(9, coupon.getIsactive());
         // Xử lý null an toàn
         statement.setObject(10, coupon.getUsageLimit(), java.sql.Types.INTEGER);
         statement.setObject(11, coupon.getPerCustomerLimit(), java.sql.Types.INTEGER);
@@ -153,6 +153,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         closeResources();
     }   
 }
+   
 
     @Override
     public Coupon getFromResultSet(ResultSet rs) throws SQLException {
@@ -168,7 +169,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         coupon.setEndDate(rs.getDate("end_date"));
         coupon.setUsageLimit(rs.getInt("usage_limit"));
         coupon.setUsageCount(rs.getInt("usage_count"));
-        coupon.setActive(rs.getBoolean("is_active"));
+        coupon.setIsactive(rs.getInt("is_active"));
         coupon.setPerCustomerLimit(rs.getInt("per_customer_limit"));
         coupon.setCreatedAt(rs.getDate("created_at"));
         coupon.setUpdatedAt(rs.getDate("updated_at"));

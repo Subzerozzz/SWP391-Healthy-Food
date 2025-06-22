@@ -763,113 +763,10 @@
                                          width: 100%;
                                      }
 
-                                     /* Cấu trúc bảng */
-                                     .wg-table.table-product-list .table-header,
-                                     .wg-table.table-product-list .table-row {
-                                         display: flex;
-                                         align-items: center;
-                                         min-height: 56px;
-                                         padding: 16px 10px;
-                                         border-bottom: 1px solid #e9ecef;
-                                         min-width: 1600px; /* đủ cho 11 cột */
-                                         box-sizing: border-box;
-                                     }
 
-                                     /* Cột trong bảng */
-                                     .wg-table.table-product-list .col {
-                                         padding: 8px;
-                                         flex-shrink: 0;
-                                         box-sizing: border-box;
-                                         word-break: break-word;
-                                     }
 
-                                     /* Header style */
-                                     .wg-table.table-product-list .table-header {
-                                         background-color: #f8f9fa;
-                                         font-weight: 600;
-                                         color: #495057;
-                                         text-transform: uppercase;
-                                     }
-
-                                     /* Định kích thước từng cột */
-                                     .wg-table.table-product-list .table-header .col:nth-child(1),
-                                     .wg-table.table-product-list .table-row .col:nth-child(1) {
-                                         flex: 0 0 130px;
-                                         max-width: 130px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(2),
-                                     .wg-table.table-product-list .table-row .col:nth-child(2) {
-                                         flex: 0 0 100px;
-                                         max-width: 100px;
-                                         text-align: center;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(3),
-                                     .wg-table.table-product-list .table-row .col:nth-child(3) {
-                                         flex: 0 0 200px;
-                                         max-width: 200px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(4),
-                                     .wg-table.table-product-list .table-row .col:nth-child(4) {
-                                         flex: 0 0 120px;
-                                         max-width: 120px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(5),
-                                     .wg-table.table-product-list .table-row .col:nth-child(5) {
-                                         flex: 0 0 120px;
-                                         max-width: 120px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(6),
-                                     .wg-table.table-product-list .table-row .col:nth-child(6) {
-                                         flex: 0 0 120px;
-                                         max-width: 120px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(7),
-                                     .wg-table.table-product-list .table-row .col:nth-child(7) {
-                                         flex: 0 0 110px;
-                                         max-width: 110px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(8),
-                                     .wg-table.table-product-list .table-row .col:nth-child(8) {
-                                         flex: 0 0 110px;
-                                         max-width: 110px;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(9),
-                                     .wg-table.table-product-list .table-row .col:nth-child(9) {
-                                         flex: 0 0 150px;
-                                         max-width: 150px;
-                                         text-align: center;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(10),
-                                     .wg-table.table-product-list .table-row .col:nth-child(10) {
-                                         flex: 0 0 150px;
-                                         max-width: 150px;
-                                         text-align: center;
-                                     }
-
-                                     .wg-table.table-product-list .table-header .col:nth-child(11),
-                                     .wg-table.table-product-list .table-row .col:nth-child(11) {
-                                         flex: 0 0 120px;
-                                         max-width: 120px;
-                                         text-align: center;
-                                     }
-
-                                     /* Responsive giữ min-width để cuộn ngang */
-                                     @media (max-width: 768px) {
-                                         .wg-table.table-product-list .table-header,
-                                         .wg-table.table-product-list .table-row {
-                                             min-width: 1600px;
-                                         }
-                                     }
                                  }
+                                 
         </style>    
 </head>
 
@@ -978,7 +875,7 @@
                                      <div class="col body-title_3">
                                          <div class="col">
                                              <c:choose>
-                                                 <c:when test="${coupon.active}">
+                                                 <c:when test="${coupon.isactive==1}">
                                                      <span class="status-label status-active">ACTIVE</span>
                                                  </c:when>
                                                  <c:otherwise>
@@ -1107,7 +1004,7 @@
            document.addEventListener("DOMContentLoaded", function () {
              iziToast.error({
                  title: "Thông báo",
-                 message: "Yêu cầu xóa coupon của bạn đã thành công",
+                 message: "Xóa coupon của bạn đã thành công",
                  position: 'topRight',
                  timeout: 5000,
                  backgroundColor:"#d4edda"

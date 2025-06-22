@@ -272,7 +272,8 @@ public class ManagerCouponController extends HttpServlet {
             String percustomerlimitStr=request.getParameter("percuslimit");
             Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
                     ? Integer.parseInt(percustomerlimitStr) : null;
-            boolean isActive = request.getParameter("isActive") != null;
+            String isActiveStr = request.getParameter("isActive");
+            int isActive = (isActiveStr != null) ? 1 : 0;
             Date date1 = null;
             try {
                 if (dateStr1 != null && !dateStr1.isEmpty()) {
@@ -315,7 +316,7 @@ public class ManagerCouponController extends HttpServlet {
                     .discountValue(discountValue)
                     .minPurchase(minPurchase)
                     .maxDiscount(maxDiscount)
-                    .active(isActive)
+                    .isactive(isActive)
                     .usageLimit(usageLimit)
                     .perCustomerLimit(percustomerlimit)
                     .startDate(date1)
@@ -359,7 +360,8 @@ public class ManagerCouponController extends HttpServlet {
             String percustomerlimitStr=request.getParameter("percuslimit");
             Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
                     ? Integer.parseInt(percustomerlimitStr) : null;
-            boolean isActive = request.getParameter("isActive") != null;
+            String isActiveStr = request.getParameter("isActive");
+            int isActive = (isActiveStr != null) ? 1 : 0;
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
             Date date1 = null;
@@ -398,7 +400,7 @@ public class ManagerCouponController extends HttpServlet {
             Coupon.setDiscountValue(discountValue);
             Coupon.setMinPurchase(minPurchase);
             Coupon.setMaxDiscount(maxDiscount);
-            Coupon.setActive(isActive);
+            Coupon.setIsactive(isActive);
             Coupon.setUsageLimit(usageLimit);
             Coupon.setPerCustomerLimit(percustomerlimit);
             Coupon.setStartDate(date1);
