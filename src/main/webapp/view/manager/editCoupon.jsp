@@ -236,17 +236,20 @@
                                                                        <div class="text-tiny">Maximum number of times a customer can use this coupon. Leave empty for unlimited.</div>
                                                                </fieldset>       
                                                     <!-- Status -->
-                                                    <fieldset class="status">
+                                                    <<fieldset class="status">
                                                         <div class="body-title mb-10">Status</div>
                                                         <div style="display: flex; align-items: center; gap: 10px;">
+                                                            <!-- Hidden input để gửi giá trị 0 nếu checkbox không được chọn -->
+                                                            <input type="hidden" name="isActive" value="0" />
+
                                                             <label class="switch">
-                                                                <input type="checkbox" name="isActive" value="true"
-                                                                       <c:if test="${coupon.active}">checked</c:if> >
-                                                                    <span class="slider round"></span>
+                                                                <input type="checkbox" name="isActive" value="1"
+                                                                       <c:if test="${coupon.isactive==1}">checked</c:if> />
+                                                                <span class="slider round"></span>
                                                             </label>
                                                             <span class="label">Active</span>
                                                         </div>
-                                                    </fieldset>  
+                                                    </fieldset>
                                                        <div class="cols gap10">
                                                            <fieldset class="startDate">
                                                                <div class="body-title mb-10">Start Date <span class="tf-color-1">*</span></div>
