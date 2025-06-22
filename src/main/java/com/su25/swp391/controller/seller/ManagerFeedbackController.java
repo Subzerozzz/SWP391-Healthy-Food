@@ -6,13 +6,13 @@ package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
-import com.su25.swp391.dal.implement.FeedbacksDAO;
+import com.su25.swp391.dal.implement.FeedbackDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
-import com.su25.swp391.entity.Feedbacks;
+import com.su25.swp391.entity.Feedback;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
@@ -37,7 +37,7 @@ public class ManagerFeedbackController extends HttpServlet {
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
-    private FeedbacksDAO feedbackDAO;
+    private FeedbackDAO feedbackDAO;
     private AccountDAO accDAO;
     private FoodDAO foodDAO;
     @Override
@@ -45,7 +45,7 @@ public class ManagerFeedbackController extends HttpServlet {
         orderDAO = new OrderDAO();
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
-        feedbackDAO = new FeedbacksDAO();
+        feedbackDAO = new FeedbackDAO();
         accDAO = new AccountDAO();
         foodDAO = new FoodDAO();
     }
@@ -130,7 +130,7 @@ public class ManagerFeedbackController extends HttpServlet {
         } catch (NumberFormatException e) {
             // Keep default value
         }// Get orders with filters
-        List<Feedbacks> feedbacks;
+        List<Feedback> feedbacks;
         int totalFeedback;
 
         if (search != null && !search.trim().isEmpty()) {
@@ -148,12 +148,12 @@ public class ManagerFeedbackController extends HttpServlet {
         
         // get account
          HashMap<Integer,Account> AccountMap = new HashMap<>();
-         for (Feedbacks feedback : feedbacks) {
+         for (Feedback feedback : feedbacks) {
               Account acc = accDAO.findById(feedback.getUser_id());
               AccountMap.put(feedback.getUser_id(), acc);
           }
          HashMap<Integer,Food> FoodMap = new HashMap<>();
-         for (Feedbacks feedback : feedbacks) {
+         for (Feedback feedback : feedbacks) {
              OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
              Food food = foodDAO.findById(item.getFood_id());
              FoodMap.put(feedback.getOrder_item_id(), food);
@@ -165,16 +165,18 @@ public class ManagerFeedbackController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         request.setAttribute("feedbacks", feedbacks);
-        request.setAttribute("accountMap",AccountMap);
+        request.setAttribute("AccountMap",AccountMap);
         request.setAttribute("FoodMap", FoodMap);
         PrintWriter o = response.getWriter();
         o.print(feedbacks);
+        o.print(AccountMap);
+        o.print(FoodMap);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedbacks feedback = feedbackDAO.findById(feedbackId);
+        Feedback feedback = feedbackDAO.findById(feedbackId);
         Account acc2 = accDAO.findById(feedback.getUser_id());
         feedback.setAccount(acc2);
         OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
@@ -186,11 +188,11 @@ public class ManagerFeedbackController extends HttpServlet {
 
     private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedbacks feedbackHiden = feedbackDAO.findById(feedbackId);
+        Feedback feedbackHiden = feedbackDAO.findById(feedbackId);
         feedbackDAO.update(feedbackHiden);
         HttpSession session = request.getSession();
         session.setAttribute("isSuccess", true);
-         List<Feedbacks> feedbacks;
+         List<Feedback> feedbacks;
         int totalFeedback;
        int page = 1;
         int pageSize = 2;
@@ -211,7 +213,7 @@ public class ManagerFeedbackController extends HttpServlet {
             totalFeedback = feedbackDAO.getTotalFilteredFeedback(null);
             // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
-            for (Feedbacks feedback : feedbacks) {
+            for (Feedback feedback : feedbacks) {
               Account acc2 = accDAO.findById(feedback.getUser_id());
               feedback.setAccount(acc2);
               OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
