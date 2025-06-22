@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.su25.swp391.controller;
+package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.CategoryDAO;

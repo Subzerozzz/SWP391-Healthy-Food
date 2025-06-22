@@ -28,5 +28,4 @@ public class Category {
    private String description;
    private Double maxBMI;
    private Double minBMI;
-   
 }
