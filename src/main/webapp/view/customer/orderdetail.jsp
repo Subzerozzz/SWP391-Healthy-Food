@@ -8,6 +8,7 @@
     <!--<![endif]-->
     <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
+        
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -70,9 +71,9 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                            <c:forEach var="order" items="${orderDetails}" varStatus="status">
+                                                                                            <c:forEach var="vm" items="${orderViews}" varStatus="status">
                                                                                                 <c:if test="${status.first}">
-                                                                                                    <h3>Order #${order.orderId}</h3>
+                                                                                                    <h3>Order #${vm.order.order_id}</h3>
                                                                                                 </c:if>
                                                                                                 <!-- Thông tin chi tiết -->
                                                                                             </c:forEach>
@@ -106,43 +107,26 @@
                                                                                                             <li>
                                                                                                                 <div class="body-title">All item</div>
                                                                                                             </li>    
-                                                                                                            <li>
-                                                                                                                <div class="dropdown default">
-                                                                                                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                                                        <span class="body-title-2 flex items-center gap8">Sort<i class="h6 icon-chevron-down"></i></span>
-                                                                                                                    </button>
-                                                                                                                    <ul class="dropdown-menu">
-                                                                                                                        <li>  
-                                                                                                                            <a href="javascript:void(0);">Name</a>
-                                                                                                                        </li>
-                                                                                                                        <li>  
-                                                                                                                            <a href="javascript:void(0);">Quantity</a>
-                                                                                                                        </li>
-                                                                                                                        <li>  
-                                                                                                                            <a href="javascript:void(0);">Price</a>
-                                                                                                                        </li>
-                                                                                                                    </ul>
-                                                                                                                </div>
-                                                                                                            </li>
+
                                                                                                         </ul>
                                                                                                         <ul class="flex flex-column">
-                                                                                                            <c:forEach var="order" items="${orderDetails}">
+                                                                                                            <c:forEach var="vm" items="${orderViews}">
                                                                                                                 <li class="product-item gap14">
                                                                                                                     <div class="image no-bg">
-                                                                                                                        <img src="images/products/41.png" alt="">
+                                                                                                                        <img src="${vm.food.image_url}" alt="">
                                                                                                                     </div>
                                                                                                                     <div class="flex items-center justify-between gap40 flex-grow">
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Food name</div>
-                                                                                                                            <a href="product-list.html" class="body-title-2">${order.foodname}</a>
+                                                                                                                            <a href="product-list.html" class="body-title-2">${vm.food.name}</a>
                                                                                                                         </div>
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                            <div class="body-title-2">${order.quantity}</div>
+                                                                                                                            <div class="body-title-2">${vm.item.quantity}</div>
                                                                                                                         </div>
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Price</div>
-                                                                                                                            <div class="body-title-2">${order.price}</div>
+                                                                                                                            <div class="body-title-2">${vm.food.price}</div>
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </li>
@@ -160,65 +144,69 @@
                                                                                                                 <div class="body-title">Price</div>
                                                                                                             </li>    
                                                                                                         </ul>
-                                                                                                <c:forEach var="order" items="${orderDetails}" varStatus="status">
-                                                                                                <c:if test="${status.first}">
-                                                                                                   <ul class="flex flex-column gap14">
-                                                                                                            <li class="cart-totals-item">
-                                                                                                                <span class="body-text">Subtotal:</span>
-                                                                                                                <span class="body-title-2">${requestScope.totalprice}</span>
-                                                                                                            </li>
-                                                                                                            <li class="divider"></li>
-                                                                                                            <li class="cart-totals-item">
-                                                                                                                <span class="body-text">Shipping:</span>
-                                                                                                                <span class="body-title-2">10%</span>
-                                                                                                            </li>
+                                                                                                        <c:forEach var="vm" items="${orderViews}" varStatus="status">
+                                                                                                            <c:if test="${status.first}">
+                                                                                                                <ul class="flex flex-column gap14">
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-text">Subtotal:</span>
+                                                                                                                        <span class="body-title-2">${requestScope.totalprice}</span>
+                                                                                                                    </li>
+                                                                                                                    <li class="divider"></li>
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-text">Shipping:</span>
+                                                                                                                        <span class="body-title-2">10%</span>
+                                                                                                                    </li>
 
-                                                                                                            <li class="divider"></li>
-                                                                                                            <li class="cart-totals-item">
-                                                                                                                <span class="body-title">Total price:</span>
-                                                                                                                <span class="body-title tf-color-1">${order.total}</span>
-                                                                                                            </li>
-                                                                                                        </ul>
+                                                                                                                    <li class="divider"></li>
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-title">Total price:</span>
+                                                                                                                        <span class="body-title tf-color-1">${vm.order.total}</span>
+                                                                                                                    </li>
+                                                                                                                </ul>
+                                                                                                            </c:if>
+                                                                                                            <!-- Thông tin chi tiết -->
+                                                                                                        </c:forEach>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <c:forEach var="vm" items="${orderViews}" varStatus="status">
+                                                                                                <c:if test="${status.first}">
+                                                                                                    <div class="right">
+                                                                                                        <div class="wg-box mb-20 gap10">
+                                                                                                            <div class="body-title">Summary</div>
+                                                                                                            <div class="summary-item">
+                                                                                                                <div class="body-text">Order ID</div>
+                                                                                                                <div class="body-title-2">#${vm.order.order_id}</div>
+                                                                                                            </div>
+                                                                                                            <div class="summary-item">
+                                                                                                                <div class="body-text">Create At</div>
+                                                                                                                <div class="body-title-2">${vm.order.created_at}</div>
+                                                                                                            </div>
+                                                                                                            <div class="summary-item">
+                                                                                                                <div class="body-text">Total</div>
+                                                                                                                <div class="body-title-2 tf-color-1">${vm.order.total}</div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="wg-box mb-20 gap10">
+                                                                                                            <div class="body-title">Shipping Address</div>
+                                                                                                            <div class="body-text">${vm.order.shipping_address}</div>
+                                                                                                        </div>
+                                                                                                        <div class="wg-box mb-20 gap10">
+                                                                                                            <div class="body-title">Payment Method</div>
+                                                                                                            <div class="body-text">${vm.order.payment_method}</div>
+                                                                                                        </div>
+                                                                                                        <div class="wg-box gap10">
+                                                                                                            <div class="body-title">Expected Date Of Delivery</div>
+                                                                                                            <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
+                                                                                                        </div>
+                                                                                                        <div class="wg-box gap10">
+                                                                                                            <a class="tf-button style-1 w-full" onclick="cancelOrder(${vm.order.order_id}, '${vm.order.status}')">Cancel</a>
+                                                                                                            <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back</a>
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </c:if>
                                                                                                 <!-- Thông tin chi tiết -->
-                                                                                               </c:forEach>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <c:forEach var="order" items="${orderDetails}" varStatus="status">
-                                                                                                <c:if test="${status.first}">
-                                                                                            <div class="right">
-                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                    <div class="body-title">Summary</div>
-                                                                                                    <div class="summary-item">
-                                                                                                        <div class="body-text">Order ID</div>
-                                                                                                        <div class="body-title-2">#${order.orderId}</div>
-                                                                                                    </div>
-                                                                                                    <div class="summary-item">
-                                                                                                        <div class="body-text">Create At</div>
-                                                                                                        <div class="body-title-2">${order.createdAt}</div>
-                                                                                                    </div>
-                                                                                                    <div class="summary-item">
-                                                                                                        <div class="body-text">Total</div>
-                                                                                                        <div class="body-title-2 tf-color-1">${order.total}</div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                    <div class="body-title">Shipping Address</div>
-                                                                                                    <div class="body-text">${order.ship_address}</div>
-                                                                                                </div>
-                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                    <div class="body-title">Payment Method</div>
-                                                                                                    <div class="body-text">${order.paymen_method}</div>
-                                                                                                </div>
-                                                                                                <div class="wg-box gap10">
-                                                                                                    <div class="body-title">Expected Date Of Delivery</div>
-                                                                                                    <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            </c:if>
-                                                                                                <!-- Thông tin chi tiết -->
-                                                                                               </c:forEach>
+                                                                                            </c:forEach>
                                                                                         </div>
                                                                                         <!-- /order-detail -->
                                                                                     </div>
@@ -244,6 +232,38 @@
                                                             <!-- /#wrapper -->
 
                                                             <!-- Javascript -->
+                                                            <script>
+                                                                function cancelOrder(orderId, status) {
+                                                                    if (status.toLowerCase() !== 'pending') {
+                                                                        alert("Chỉ có thể hủy đơn hàng khi trạng thái là 'pending'");
+                                                                        return;
+                                                                    }
+
+                                                                    if (!confirm("Bạn có chắc muốn hủy đơn hàng này không?"))
+                                                                        return;
+
+                                                                    fetch('cancel-order', {
+                                                                        method: 'POST',
+                                                                        headers: {
+                                                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                                                        },
+                                                                        body: 'orderId=' + orderId
+                                                                    })
+                                                                            .then(response => {
+                                                                                if (response.ok) {
+                                                                                    alert("Đơn hàng đã được hủy.");
+                                                                                    location.reload(); // reload để cập nhật UI
+                                                                                } else {
+                                                                                    alert("Không thể hủy đơn hàng. Đơn hàng có thể đã được xử lý.");
+                                                                                }
+                                                                            })
+                                                                            .catch(error => {
+                                                                                console.error("Lỗi:", error);
+                                                                                alert("Có lỗi xảy ra khi hủy đơn.");
+                                                                            });
+                                                                }
+                                                            </script>
+
                                                             <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>

@@ -44,19 +44,19 @@ public class LoginGoogleHandler extends HttpServlet {
             String code = request.getParameter("code");
 
             if (code == null || code.isEmpty()) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
             String accessToken = getToken(code);
             if (accessToken == null || accessToken.isEmpty()) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
             UserGoogleDto userGoogleDto = getUserInfo(accessToken);
             if (userGoogleDto == null || userGoogleDto.getEmail() == null) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
@@ -69,7 +69,7 @@ public class LoginGoogleHandler extends HttpServlet {
             if (userInDB == null) {
                 int insertResult = userDao.insert(user);
                 if (insertResult == -1) {
-                    response.sendRedirect("home.jsp"); // hoặc thông báo lỗi hợp lý
+                    response.sendRedirect("home"); // hoặc thông báo lỗi hợp lý
                     return;
                 }
             }

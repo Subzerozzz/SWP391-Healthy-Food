@@ -1,11 +1,54 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <head>
+        <style>
+            .wg-table.table-all-category ul.table-title li {
+                width: 120px !important;
+            }
+            .wg-table.table-all-category ul.table-title li:first-child {
+                width: 100px;
+                flex-shrink: 0;
+            }
+            ul.table-title {
+                display: flex;
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+
+            .wg-table.table-all-category .product-item > .flex > div:first-child {
+                width: 25vh !important;
+                flex-shrink: 0;
+            }
+
+
+            .block-available.pending {
+                background-color: #e0e0e0;
+                color: #555;
+            }
+
+            .block-available.accepted {
+                background-color: #d4f6dd;
+                color: #2e7d32;
+            }
+
+            .block-available.cancelled {
+                background-color: #fdecea;
+                color: #c62828;
+            }
+
+            .block-available.complete {
+                background-color: #fff8e1;
+                color: #f9a825;
+            }
+
+        </style>
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <title>Remos eCommerce Admin Dashboard HTML Template</title>
@@ -63,28 +106,32 @@
                                                                                                     <div class="wg-filter flex-grow">
                                                                                                         <form class="form-search" action="search" method="post">
                                                                                                             <fieldset class="name">
-                                                                                                                <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
-                                                                                                            </fieldset>
+                                                                                                                <select name="status" required>
+                                                                                                                    <option value="">-- Filter by Status --</option>
+                                                                                                                    <option value="pending">Pending</option>
+                                                                                                                    <option value="accepted">Accepted</option>
+                                                                                                                    <option value="cancelled">Cancelled</option>
+                                                                                                                    <option value="completed">Completed</option>
+                                                                                                                </select>                                                                                                            </fieldset>
                                                                                                             <div class="button-submit">
                                                                                                                 <button class="" type="submit"><i class="icon-search"></i></button>
                                                                                                             </div>
                                                                                                         </form>
                                                                                                     </div>
-                                                                                                    <!--                                                                                                    <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all order</a>-->
                                                                                                 </div>
                                                                                                 <div class="wg-table table-all-category">
-                                                                                                    <ul class="table-title flex gap20 mb-14">
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Product</div>
-                                                                                                        </li>    
+                                                                                                    <ul class="table-title">
                                                                                                         <li>
                                                                                                             <div class="body-title">Order ID</div>
+                                                                                                        </li>    
+                                                                                                        <li>
+                                                                                                            <div class="body-title">Ship Address</div>
                                                                                                         </li>
                                                                                                         <li>
-                                                                                                            <div class="body-title">Price</div>
+                                                                                                            <div class="body-title">Total</div>
                                                                                                         </li>
                                                                                                         <li>
-                                                                                                            <div class="body-title">Quantity</div>
+                                                                                                            <div class="body-title">Create At</div>
                                                                                                         </li>
                                                                                                         <li>
                                                                                                             <div class="body-title">Payment Method</div>
@@ -93,37 +140,26 @@
                                                                                                             <div class="body-title">Status</div>
                                                                                                         </li>
                                                                                                         <li>
-                                                                                                            <div class="body-title">Action</div>
+                                                                                                            <div class="body-title">Active</div>
                                                                                                         </li>
                                                                                                     </ul>
                                                                                                     <ul class="flex flex-column">
 
                                                                                                     <c:forEach var="order" items="${orderList}">
                                                                                                         <li class="product-item gap14">
-                                                                                                            <div class="image no-bg">
-                                                                                                                <img src="images/products/51.png" >
-                                                                                                            </div>
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="name">
-                                                                                                                    <a href="product-list.html" class="body-title-2">${order.foodName}</a>
-                                                                                                                </div>
-                                                                                                                <div class="body-text">#${order.orderId} </div>
-                                                                                                                <div class="body-text">${order.foodPrice}VND</div>
-                                                                                                                <div class="body-text">${order.quantity}</div>
-                                                                                                                <div class="body-text">${order.paymentMethod}</div>
+                                                                                                                <div class="body-text">#${order.order_id} </div>
+                                                                                                                <div class="body-text">${order.shipping_address} </div>
+                                                                                                                <div class="body-text">${order.total}VND</div>
+                                                                                                                <div class="body-text">${order.created_at} </div>
+                                                                                                                <div class="body-text"><a>${order.payment_method}</a></div>
                                                                                                                 <div>
-                                                                                                                    <div class="block-available">${order.status}</div>
+                                                                                                                    <div class="block-available ${order.status}"><a>${order.status}</a></div>
                                                                                                                 </div>
                                                                                                                 <div class="list-icon-function">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderdetail?orderId=${order.orderId}" class="item eye">
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderdetail?order_id=${order.order_id}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>
-<!--                                                                                                                    <button class="item edit" onclick="editProduct(${order.orderId})">
-                                                                                                                        <i class="icon-edit-3"></i>
-                                                                                                                    </button>-->
-                                                                                                                    <button class="item trash" onclick="deleteProduct(${order.orderItemId})">
-                                                                                                                        <i class="icon-trash-2"></i>
-                                                                                                                    </button>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </li>
@@ -132,24 +168,72 @@
                                                                                             </div>
                                                                                             <div class="divider"></div>
                                                                                             <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                <div class="text-tiny">Showing 10 entries</div>
-                                                                                                <ul class="wg-pagination">
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">1</a>
-                                                                                                    </li>
-                                                                                                    <li class="active">
-                                                                                                        <a href="#">2</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">3</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                    </li>
-                                                                                                </ul>
+                                                                                                <div class="text-tiny">
+                                                                                                    Showing ${startRecord} to ${endRecord} of ${totalAccounts} entries
+                                                                                                </div>
+                                                                                                <!--phân trang--> 
+                                                                                                <c:if test="${totalPages > 1}">
+                                                                                                    <ul class="wg-pagination">
+                                                                                                        <!-- Nút Previous -->
+                                                                                                        <li>
+                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=1&pageSize=${pageSize}">
+                                                                                                                <i class="icon-chevron-left"></i>
+                                                                                                            </a>
+                                                                                                        </li>
+
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${currentPage <= totalPages - 2}">
+                                                                                                                <c:if test="${currentPage > 1}">
+                                                                                                                    <li>
+                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage - 1}&pageSize=${pageSize}">
+                                                                                                                            ${currentPage - 1}
+                                                                                                                        </a>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+
+                                                                                                                <li class="active">
+                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage}&pageSize=${pageSize}">
+                                                                                                                        ${currentPage}
+                                                                                                                    </a>
+                                                                                                                </li>
+
+                                                                                                                <li>
+                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
+                                                                                                                        ${currentPage + 1}
+                                                                                                                    </a>
+                                                                                                                </li>
+
+                                                                                                                <c:if test="${currentPage < totalPages - 2}">
+                                                                                                                    <li><span>...</span></li>
+                                                                                                                    </c:if>
+
+                                                                                                                <li>
+                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
+                                                                                                                        ${totalPages}
+                                                                                                                    </a>
+                                                                                                                </li>
+                                                                                                            </c:when>
+
+                                                                                                            <c:otherwise>
+                                                                                                                <c:forEach begin="${totalPages - 2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                                                                                                    <li class="${currentPage == i ? 'active' : ''}">
+                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">
+                                                                                                                            ${i}
+                                                                                                                        </a>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
+                                                                                                        <!-- Nút Next -->
+                                                                                                        <li>
+                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
+                                                                                                                <i class="icon-chevron-right"></i>
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    </ul>
+                                                                                                </c:if>
+
                                                                                             </div>
                                                                                         </div>
                                                                                         <!-- /order-list -->
@@ -176,28 +260,6 @@
                                                             <!-- /#wrapper -->
 
                                                             <!-- Javascript -->
-                                                            <script>
-                                                                function deleteProduct(orderItemId) {
-                                                                    fetch('hide-order', {
-                                                                        method: 'POST',
-                                                                        headers: {
-                                                                            'Content-Type': 'application/x-www-form-urlencoded'
-                                                                        },
-                                                                        body: 'orderItemId=' + orderItemId
-                                                                    }).then(response => {
-                                                                        if (response.ok) {
-                                                                            const element = document.getElementById("order-" + orderItemId);
-                                                                            if (element) {
-                                                                                element.remove(); // Ẩn khỏi UI
-                                                                            }
-                                                                        } else {
-                                                                            console.error("Failed to hide order");
-                                                                        }
-                                                                    }).catch(error => {
-                                                                        console.error("Error:", error);
-                                                                    });
-                                                                }
-                                                            </script>
 
                                                             <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
