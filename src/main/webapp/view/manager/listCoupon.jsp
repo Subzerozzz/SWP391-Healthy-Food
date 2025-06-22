@@ -526,7 +526,30 @@
                                      justify-content: center;
                                      gap: 20px;
                                  }
+                                 /* Status */
+                                 
+                                 .status-label {
+                                     padding: 4px 12px;
+                                     border-radius: 20px;
+                                     display: inline-block;
+                                     font-weight: bold;
+                                     font-size: 12px;
+                                     text-transform: uppercase;
+                                     background-color: white;
+                                     border: 2px solid;
+                                 }
 
+                                 /* Trạng thái Active - màu xanh */
+                                 .status-active {
+                                     color: #008000;
+                                     border-color: #008000;
+                                 }
+
+                                 /* Trạng thái Inactive - màu đỏ */
+                                 .status-inactive {
+                                     color: #cc0000;
+                                     border-color: #cc0000;
+                                 }
                                  /* Style cho các link và text trong bảng */
                                 .body-title-2 {
                                     color: #000000;
@@ -573,7 +596,7 @@
                                      display: flex;
                                      justify-content: center;
                                      align-items: center;
-                                     gap: 8px;
+                                     gap: 20px;
                                  }
 
                                  .col.actions a {
@@ -609,7 +632,7 @@
                                  }
 
                                  /* Status badge styling */
-                                 .table-row .col span {
+                                 .table-row .col span:not(.status-label) {
                                      background-color: #f8f9fa !important;
                                      color: white;
                                      padding: 4px 12px;
@@ -620,23 +643,51 @@
                                      text-transform: uppercase;
                                  }
 
-                                 /* Responsive design */
                                  @media (max-width: 1200px) {
                                      .wg-table.table-product-list {
-                                         overflow-x: scroll;
+                                         overflow-x: auto; /* Tốt hơn dùng scroll */
+                                         -webkit-overflow-scrolling: touch; /* Mượt mà trên iOS */
                                      }
-                                     
+
                                      .table-header,
                                      .table-row {
                                          display: flex;
                                          align-items: center;
-                                         min-height: 56px; /* Có thể điều chỉnh theo nhu cầu */
+                                         min-height: 56px;
                                          padding: 16px 10px;
                                          border-bottom: 1px solid #e9ecef;
+                                         min-width: 1600px; 
+                                     }
+
+                                     .table-header .col,
+                                     .table-row .col {
+                                         padding: 8px;
+                                         flex-shrink: 0; /* Không bị co nhỏ */
+                                         box-sizing: border-box;
+                                     }
+
+                                     /* Optional: giữ màu nền cho header dễ nhìn */
+                                     .table-header {
+                                         background-color: #f8f9fa;
+                                         font-weight: 600;
+                                         color: #495057;
                                      }
                                  }
-
                                  @media (max-width: 768px) {
+                                     .wg-table.table-product-list {
+                                         overflow-x: auto;
+                                     }
+
+                                     .table-header,
+                                     .table-row {
+                                         display: flex;
+                                         align-items: center;
+                                         min-height: 56px;
+                                         padding: 16px 10px;
+                                         border-bottom: 1px solid #e9ecef;
+                                         min-width: 1200px; /* đảm bảo không vỡ layout khi nhiều cột */
+                                     }
+
                                      .table-header .col:nth-child(1),
                                      .table-row .col:nth-child(1) {
                                          flex: 0 0 130px;
@@ -647,7 +698,6 @@
                                      .table-row .col:nth-child(2) {
                                          flex: 0 0 100px;
                                          max-width: 100px;
-                                         justify-content: center;
                                          text-align: center;
                                      }
 
@@ -691,10 +741,135 @@
                                      .table-row .col:nth-child(9) {
                                          flex: 0 0 150px;
                                          max-width: 150px;
-                                         justify-content: center;
-                                         gap: 20px;
+                                         text-align: center;
                                      }
-                                     
+
+                                     .table-header .col:nth-child(10),
+                                     .table-row .col:nth-child(10) {
+                                         flex: 0 0 150px;
+                                         max-width: 150px;
+                                         text-align: center;
+                                     }
+
+                                     .table-header .col:nth-child(11),
+                                     .table-row .col:nth-child(11) {
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
+                                         text-align: center;
+                                     }
+                                     /* Wrapper cuộn ngang khi tràn */
+                                     .table-wrapper {
+                                         overflow-x: auto;
+                                         width: 100%;
+                                     }
+
+                                     /* Cấu trúc bảng */
+                                     .wg-table.table-product-list .table-header,
+                                     .wg-table.table-product-list .table-row {
+                                         display: flex;
+                                         align-items: center;
+                                         min-height: 56px;
+                                         padding: 16px 10px;
+                                         border-bottom: 1px solid #e9ecef;
+                                         min-width: 1600px; /* đủ cho 11 cột */
+                                         box-sizing: border-box;
+                                     }
+
+                                     /* Cột trong bảng */
+                                     .wg-table.table-product-list .col {
+                                         padding: 8px;
+                                         flex-shrink: 0;
+                                         box-sizing: border-box;
+                                         word-break: break-word;
+                                     }
+
+                                     /* Header style */
+                                     .wg-table.table-product-list .table-header {
+                                         background-color: #f8f9fa;
+                                         font-weight: 600;
+                                         color: #495057;
+                                         text-transform: uppercase;
+                                     }
+
+                                     /* Định kích thước từng cột */
+                                     .wg-table.table-product-list .table-header .col:nth-child(1),
+                                     .wg-table.table-product-list .table-row .col:nth-child(1) {
+                                         flex: 0 0 130px;
+                                         max-width: 130px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(2),
+                                     .wg-table.table-product-list .table-row .col:nth-child(2) {
+                                         flex: 0 0 100px;
+                                         max-width: 100px;
+                                         text-align: center;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(3),
+                                     .wg-table.table-product-list .table-row .col:nth-child(3) {
+                                         flex: 0 0 200px;
+                                         max-width: 200px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(4),
+                                     .wg-table.table-product-list .table-row .col:nth-child(4) {
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(5),
+                                     .wg-table.table-product-list .table-row .col:nth-child(5) {
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(6),
+                                     .wg-table.table-product-list .table-row .col:nth-child(6) {
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(7),
+                                     .wg-table.table-product-list .table-row .col:nth-child(7) {
+                                         flex: 0 0 110px;
+                                         max-width: 110px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(8),
+                                     .wg-table.table-product-list .table-row .col:nth-child(8) {
+                                         flex: 0 0 110px;
+                                         max-width: 110px;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(9),
+                                     .wg-table.table-product-list .table-row .col:nth-child(9) {
+                                         flex: 0 0 150px;
+                                         max-width: 150px;
+                                         text-align: center;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(10),
+                                     .wg-table.table-product-list .table-row .col:nth-child(10) {
+                                         flex: 0 0 150px;
+                                         max-width: 150px;
+                                         text-align: center;
+                                     }
+
+                                     .wg-table.table-product-list .table-header .col:nth-child(11),
+                                     .wg-table.table-product-list .table-row .col:nth-child(11) {
+                                         flex: 0 0 120px;
+                                         max-width: 120px;
+                                         text-align: center;
+                                     }
+
+                                     /* Responsive giữ min-width để cuộn ngang */
+                                     @media (max-width: 768px) {
+                                         .wg-table.table-product-list .table-header,
+                                         .wg-table.table-product-list .table-row {
+                                             min-width: 1600px;
+                                         }
+                                     }
+                                 }
         </style>    
 </head>
 
@@ -767,6 +942,8 @@
                                  <div class="col">Discount_Type</div> 
                                  <div class="col">Discount_Value(%)</div>
                                  <div class="col">Min_Purchase(VNĐ)</div>
+                                 <div class="col">Status</div>
+                                 <div class="col">Per_Customer_Limit</div>
                                  <div class="col">Start_date</div>
                                  <div class="col">End_date</div>
                                  <div class="col">Action</div>
@@ -798,6 +975,19 @@
                                      </c:choose>
                                      <div class="col body-title_3">${coupon.discountValue}</div>
                                      <div class="col body-title_3">${coupon.minPurchase}</div>
+                                     <div class="col body-title_3">
+                                         <div class="col">
+                                             <c:choose>
+                                                 <c:when test="${coupon.active}">
+                                                     <span class="status-label status-active">ACTIVE</span>
+                                                 </c:when>
+                                                 <c:otherwise>
+                                                     <span class="status-label status-inactive">INACTIVE</span>
+                                                 </c:otherwise>
+                                             </c:choose>
+                                         </div>
+                                     </div>
+                                     <div class="col body-title_3">${coupon.perCustomerLimit}</div>
                                      <div class="col body-title_3">${coupon.startDate}</div>
                                      <div class="col body-title_3">${coupon.endDate}</div>
                                      <div class="col actions">

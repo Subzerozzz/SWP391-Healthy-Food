@@ -266,6 +266,13 @@ public class ManagerCouponController extends HttpServlet {
             BigDecimal maxDiscount = new BigDecimal(request.getParameter("maxdiscount"));
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
+            String usageLimitStr = request.getParameter("usageLimit");
+            Integer usageLimit = (usageLimitStr != null && !usageLimitStr.isEmpty())
+                    ? Integer.parseInt(usageLimitStr) : null;
+            String percustomerlimitStr=request.getParameter("percuslimit");
+            Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
+                    ? Integer.parseInt(percustomerlimitStr) : null;
+            boolean isActive = request.getParameter("isActive") != null;
             Date date1 = null;
             try {
                 if (dateStr1 != null && !dateStr1.isEmpty()) {
@@ -294,7 +301,7 @@ public class ManagerCouponController extends HttpServlet {
                 request.getRequestDispatcher("/view/manager/addCoupon.jsp").forward(request, response);
                 return;
             }
-            Map<String, String> errors = validateCouponData(code, description, discounType, discountValue, minPurchase, maxDiscount, 0);
+            Map<String, String> errors = validateCouponData(code, description, discounType, discountValue, minPurchase, maxDiscount,usageLimit,percustomerlimit,0 );
             if (!errors.isEmpty()) {
                 request.getSession().setAttribute("errors", errors);
                 request.getSession().setAttribute("formData", request.getParameterMap());
@@ -308,6 +315,9 @@ public class ManagerCouponController extends HttpServlet {
                     .discountValue(discountValue)
                     .minPurchase(minPurchase)
                     .maxDiscount(maxDiscount)
+                    .active(isActive)
+                    .usageLimit(usageLimit)
+                    .perCustomerLimit(percustomerlimit)
                     .startDate(date1)
                     .endDate(date2)
                     .build();
@@ -343,6 +353,13 @@ public class ManagerCouponController extends HttpServlet {
             BigDecimal discountValue = new BigDecimal(request.getParameter("discountvalue"));
             BigDecimal minPurchase = new BigDecimal(request.getParameter("minpurchase"));
             BigDecimal maxDiscount = new BigDecimal(request.getParameter("maxdiscount"));
+            String usageLimitStr = request.getParameter("usageLimit");
+            Integer usageLimit = (usageLimitStr != null && !usageLimitStr.isEmpty())
+                    ? Integer.parseInt(usageLimitStr) : null;
+            String percustomerlimitStr=request.getParameter("percuslimit");
+            Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
+                    ? Integer.parseInt(percustomerlimitStr) : null;
+            boolean isActive = request.getParameter("isActive") != null;
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
             Date date1 = null;
@@ -381,6 +398,9 @@ public class ManagerCouponController extends HttpServlet {
             Coupon.setDiscountValue(discountValue);
             Coupon.setMinPurchase(minPurchase);
             Coupon.setMaxDiscount(maxDiscount);
+            Coupon.setActive(isActive);
+            Coupon.setUsageLimit(usageLimit);
+            Coupon.setPerCustomerLimit(percustomerlimit);
             Coupon.setStartDate(date1);
             Coupon.setEndDate(date2);
             boolean isSuccess = couponDao.update(Coupon);
@@ -407,7 +427,9 @@ public class ManagerCouponController extends HttpServlet {
     }
 
     private Map<String, String> validateCouponData(String code, String description, String discountType,
-            BigDecimal discountValue, BigDecimal minPurchase, BigDecimal maxDiscount, Integer id) {
+            BigDecimal discountValue, BigDecimal minPurchase, BigDecimal maxDiscount,
+            Integer usageLimit, Integer perCustomerLimit, Integer id) {
+
         Map<String, String> errors = new HashMap<>();
 
         // Validate code
@@ -416,7 +438,6 @@ public class ManagerCouponController extends HttpServlet {
         } else if (code.length() > 50) {
             errors.put("code", "Coupon code must be less than 50 characters");
         } else {
-            // Check if code already exists
             boolean codeExists = id == null
                     ? couponDAO.isCouponCodeExists(code)
                     : couponDAO.isCouponCodeExists(code, id);
@@ -457,6 +478,19 @@ public class ManagerCouponController extends HttpServlet {
         } else if (maxDiscount.compareTo(BigDecimal.ZERO) < 0) {
             errors.put("maxDiscount", "Maximum discount must be greater than or equal to 0");
         }
+
+        // Validate usage limit
+        if (usageLimit != null && usageLimit < 0) {
+            errors.put("usageLimit", "Usage limit must be greater than or equal to 0");
+        }
+
+        // Validate per-customer limit
+        if (perCustomerLimit != null && perCustomerLimit < 0) {
+            errors.put("perCustomerLimit", "Per-customer limit must be greater than or equal to 0");
+        }
+
+        // Optional: Validate isActive
+        // (Usually not needed, but add if you need some logic like must be true for specific conditions)
         return errors;
     }
 }
