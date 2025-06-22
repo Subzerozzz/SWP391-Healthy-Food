@@ -302,34 +302,32 @@
      <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
      <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
      <script src="${pageContext.request.contextPath}/js/main.js"></script>
-    <script>
+     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('form');
         const discountTypeSelect = form.querySelector('[name="discountype"]');
         const maxDiscountField = form.querySelector('fieldset.maxDiscount');
         const discountValueInput = form.querySelector('[name="discountvalue"]');
 
-        // Show error message
         function showError(input, message) {
             input.classList.add('is-invalid');
-            let feedback = input.parentElement.querySelector('.text-tiny');
+            let feedback = input.closest('fieldset')?.querySelector('.text-tiny');
             if (feedback) {
                 feedback.textContent = message;
                 feedback.style.color = '#dc3545';
             }
         }
 
-        // Clear error
         function clearError(input) {
             input.classList.remove('is-invalid');
-            let feedback = input.parentElement.querySelector('.text-tiny');
+            let feedback = input.closest('fieldset')?.querySelector('.text-tiny');
             if (feedback) {
                 feedback.textContent = '';
+                feedback.style.color = '';
             }
         }
 
-        // Validate number input
-        function validateNumberInput(input, label, minValue = 0, maxValue = Infinity) {
+        function validateIntegerRequired(input, label, minValue = 0) {
             const value = input.value.trim();
 
             if (value === "") {
@@ -343,8 +341,13 @@
             }
 
             const number = parseFloat(value);
-            if (number < minValue || number > maxValue) {
-                showError(input, `${label} must be between ${minValue} and ${maxValue}`);
+            if (number < minValue) {
+                showError(input, `${label} must be greater than or equal to ${minValue}`);
+                return false;
+            }
+
+            if (!Number.isInteger(number)) {
+                showError(input, `${label} must be an integer`);
                 return false;
             }
 
@@ -352,7 +355,6 @@
             return true;
         }
 
-        // Handle form submit
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             let isValid = true;
@@ -398,6 +400,17 @@
                 }
             }
 
+            // ✅ validate bắt buộc và kiểu số nguyên cho 2 trường mới
+            const usageLimitInput = form.querySelector('[name="usageLimit"]');
+            if (!validateIntegerRequired(usageLimitInput, 'Usage limit', 0)) {
+                isValid = false;
+            }
+
+            const perCusLimitInput = form.querySelector('[name="percuslimit"]');
+            if (!validateIntegerRequired(perCusLimitInput, 'Per customer limit', 0)) {
+                isValid = false;
+            }
+
             const startDateInput = form.querySelector('[name="date1"]');
             const endDateInput = form.querySelector('[name="date2"]');
             const startDate = new Date(startDateInput.value);
@@ -434,7 +447,6 @@
             }
         });
 
-        // Handle change event of discount type
         discountTypeSelect.addEventListener('change', function () {
             if (this.value === 'percentage') {
                 discountValueInput.placeholder = 'Enter percentage (0–100)';
@@ -447,7 +459,6 @@
             }
         });
 
-        // Realtime validation
         form.querySelectorAll('input, textarea, select').forEach(input => {
             input.addEventListener('input', () => clearError(input));
             input.addEventListener('blur', function () {
@@ -473,10 +484,17 @@
                 if (name === 'maxdiscount' && discountTypeSelect.value === 'percentage') {
                     validateNumberInput(this, 'Max discount', 0);
                 }
+
+                if (name === 'usageLimit') {
+                    validateIntegerRequired(this, 'Usage limit', 0);
+                }
+
+                if (name === 'percuslimit') {
+                    validateIntegerRequired(this, 'Per customer limit', 0);
+                }
             });
         });
 
-        // Set default start/end date
         const now = new Date();
         const startDateInput = document.querySelector('input[name="date1"]');
         const endDateInput = document.querySelector('input[name="date2"]');
@@ -484,7 +502,6 @@
         if (!startDateInput.value) startDateInput.valueAsDate = now;
         if (!endDateInput.value) endDateInput.valueAsDate = endDate;
 
-        // ✅ Initialize max discount field on page load
         const discountTypeInit = discountTypeSelect.value;
         if (discountTypeInit === 'percentage') {
             maxDiscountField.style.display = 'block';
@@ -494,6 +511,29 @@
             maxDiscountField.style.display = 'none';
             discountValueInput.placeholder = 'Enter fixed amount';
             discountValueInput.removeAttribute('max');
+        }
+
+        function validateNumberInput(input, label, minValue = 0, maxValue = Infinity) {
+            const value = input.value.trim();
+
+            if (value === "") {
+                showError(input, `${label} is required`);
+                return false;
+            }
+
+            if (isNaN(value)) {
+                showError(input, `${label} must be a number`);
+                return false;
+            }
+
+            const number = parseFloat(value);
+            if (number < minValue || number > maxValue) {
+                showError(input, `${label} must be between ${minValue} and ${maxValue}`);
+                return false;
+            }
+
+            clearError(input);
+            return true;
         }
     });
 </script>
