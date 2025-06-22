@@ -5,8 +5,10 @@
 package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CouponDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
-import com.su25.swp391.dal.implement.Food_DraftDAO;
+import com.su25.swp391.dal.implement.FoodDraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
@@ -14,10 +16,14 @@ import com.su25.swp391.dal.implement.OrderItemDAO;
 
 import com.su25.swp391.dal.implement.RequestDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Coupon;
+import com.su25.swp391.entity.Food;
 
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderApproval;
 import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,23 +35,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *
  * @author FPTSHOP
  */
-@WebServlet(name = "ManagerOrderController", urlPatterns = {"/seller/manage-order"})
+@WebServlet(name = "ManagerOrderController", urlPatterns = { "/seller/manage-order" })
 public class ManagerOrderController extends HttpServlet {
-
+    // Declare properties for DAO 
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
-
+    private AccountDAO accDAO = new AccountDAO();
+    private CouponDAO couponDAO;
+    private FoodDAO foodDAO;
+    // Method in Servlet Container call only 1 time in lifecycle
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
+        accDAO = new AccountDAO();
+        couponDAO = new CouponDAO();
+        foodDAO = new FoodDAO();
     }
 
     @Override
@@ -53,11 +66,10 @@ public class ManagerOrderController extends HttpServlet {
             throws ServletException, IOException {
         // Get action from submit
         String action = request.getParameter("action");
-
+        // If action == null
         if (action == null) {
             action = "list";
         }
-
         try {
             switch (action) {
                 case "list":
@@ -104,7 +116,8 @@ public class ManagerOrderController extends HttpServlet {
     }
 
     // View All Lists Orders
-    private void listOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void listOrders(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // Get filter parameters by Status
         String status = request.getParameter("status");
         // Filter by paymentMethod
@@ -113,7 +126,7 @@ public class ManagerOrderController extends HttpServlet {
         String search = request.getParameter("search");
         // Pagination
         int page = 1;
-        int pageSize = GlobalConfig.SIZE_PAGE;
+        int pageSize = 2;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -132,6 +145,7 @@ public class ManagerOrderController extends HttpServlet {
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
             orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
+            // count order
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
@@ -141,15 +155,24 @@ public class ManagerOrderController extends HttpServlet {
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-
+        // AccountMap get key with account_id and value is Account find by account_id
+        HashMap<Integer, Account> AccountMap = new HashMap<>();
+        for (Order order : orders) {
+            // Find Account by id
+            Account acc = accDAO.findById(order.getAccount_id());
+            //  key with account_id and value is Account find by account_id
+            AccountMap.put(order.getAccount_id(), acc);
+        }
         // Set attributes
         request.setAttribute("orders", orders);
+        request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+
     }
 
     // Update status
@@ -157,7 +180,7 @@ public class ManagerOrderController extends HttpServlet {
         try {
             // Get orderId by update
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            // Get new Status 
+            // Get new Status
             String newStatus = request.getParameter("newStatus");
             // Get note of seller for order
             String note = request.getParameter("note");
@@ -174,7 +197,7 @@ public class ManagerOrderController extends HttpServlet {
 
             if (acc == null) {
                 // response.sendRedirect(request.getContextPath() + "/authen");
-                //   return;
+                // return;
             }
 
             Order order = orderDAO.findById(orderId);
@@ -186,8 +209,6 @@ public class ManagerOrderController extends HttpServlet {
 
             // Get current status for message
             String oldStatus = order.getStatus();
-
-            // Log gỡ rối
             System.out.println("DEBUG: update order #" + orderId + " from '" + oldStatus + "' to '" + newStatus + "'");
 
             boolean update = orderDAO.updateOrderStatus(orderId, newStatus, 21, note);
@@ -209,12 +230,29 @@ public class ManagerOrderController extends HttpServlet {
                         default:
                             statusText = newStatus;
                     }
-                    session.setAttribute("successMessage", "Order #" + orderId + " has been " + statusText + " successfully.");
+                    session.setAttribute("successMessage",
+                            "Order #" + orderId + " has been " + statusText + " successfully.");
                 }
 
             } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
 
+            }
+
+            // If Account_id == 0 => This is Guest so give a mail for order status
+            if (order.getAccount_id() == 0) {
+                String customerEmail = order.getEmail();
+                String customerName = order.getFull_name();
+                String subject = "Trạng thái Đơn hàng!";
+                String content = "<h3>Chào " + customerName + ",</h3>"
+                        + "<p>Đơn hàng của bạn đã được <strong>" + newStatus 
+                        + "<p>Cảm ơn bạn đã mua sắm tại Healthy Food Store!</p>"
+                        + "<br><em>Trân trọng,</em><br>Đội ngũ Hỗ trợ Khách hàng ";
+                try {
+                    EmailUtils.sendMail(customerEmail, subject, content);
+                } catch (MessagingException ex) {
+                    ex.printStackTrace(); // hoặc log lỗi
+                }
             }
             // Redirect to the order detail page
             response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
@@ -223,28 +261,43 @@ public class ManagerOrderController extends HttpServlet {
     }
 
     // View Order Detail
-    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
 
         try {
             // Get orderId by order parameter
             int orderId = Integer.parseInt(request.getParameter("id"));
             // get order findById of orderId
             Order order = orderDAO.findById(orderId);
+            Account acc = accDAO.findById(order.getAccount_id());
+
+            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
+            HashMap<Integer, Food> OrderItemMap = new HashMap<>();
+            for (OrderItem orderItem : orderItems) {
+                Food food = foodDAO.findById(orderItem.getFood_id());
+                OrderItemMap.put(orderItem.getFood_id(), food);
+            }
+
             // get list approvals of seller
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-            // get list order item of order by id 
-            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(orderId);
+            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
+            for (OrderApproval orderApproval : approvals) {
+                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
+                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+            }
             // check existing order
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-            // set orderItem for Order
-            order.setOrderItems(orderItems);
             request.setAttribute("order", order);
+            request.setAttribute("account", acc);
+            request.setAttribute("OrderItems", orderItems);
+            request.setAttribute("OrderItemMap", OrderItemMap);
+            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
-            // Forward to the order detail page
+            //     Forward to the order detail page
             request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");

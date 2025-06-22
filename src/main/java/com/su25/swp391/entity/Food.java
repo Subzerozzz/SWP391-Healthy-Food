@@ -21,15 +21,17 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Food {
-    private Integer id;
-    private String name;
-    private String description;
-    private Double price;
-    private String image_url;
-    private String status;
-    private Integer category_id;
-    private Timestamp created_at;
-    private Timestamp updated_at;
-    private Integer nutri_id;
-    private Double calo;
+  private Integer id;
+  private String name;
+  private String description;
+  private Double price;
+  private String image_url;
+  private String status;
+  private Integer category_id;
+  private Timestamp created_at;
+  private Timestamp updated_at;
+  private Integer nutri_id;
+  private Double calo;
+
+  
 }

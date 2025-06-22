@@ -150,7 +150,7 @@ public class ManagerFeedbackController extends HttpServlet {
               Account acc2 = accDAO.findById(feedback.getUserId());
               feedback.setAccount(acc2);
               OrderItem item = itemDAO.findById(feedback.getOrderItemId());
-              Food food = foodDAO.findById(item.getFoodId());
+              Food food = foodDAO.findById(item.getFood_id());
              feedback.setFood(food);
          }
          
@@ -170,7 +170,7 @@ public class ManagerFeedbackController extends HttpServlet {
         Account acc2 = accDAO.findById(feedback.getUserId());
         feedback.setAccount(acc2);
         OrderItem item = itemDAO.findById(feedback.getOrderItemId());
-        Food food = foodDAO.findById(item.getFoodId());
+        Food food = foodDAO.findById(item.getFood_id());
         feedback.setFood(food);
         request.setAttribute("feedback", feedback);
         request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
@@ -207,7 +207,7 @@ public class ManagerFeedbackController extends HttpServlet {
               Account acc2 = accDAO.findById(feedback.getUserId());
               feedback.setAccount(acc2);
               OrderItem item = itemDAO.findById(feedback.getOrderItemId());
-              Food food = foodDAO.findById(item.getFoodId());
+              Food food = foodDAO.findById(item.getFood_id());
              feedback.setFood(food);
          }
           // Set attributes

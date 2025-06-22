@@ -8,6 +8,10 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
+import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Coupon;
+import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.OrderItem;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,162 +21,166 @@ import java.util.HashMap;
 
 public class OrderDAO extends DBContext implements I_DAO<Order> {
 
-    @Override
-    public Map<Integer, Order> findAllMap() {
-        // Implement the logic to fetch all orders and store them in a map
-        // where the key is the order ID and the value is the Order object.
-        Map<Integer, Order> orderMap = new HashMap<>();
-        String sql = "SELECT o.*, a.username, a.email, a.phone FROM orders o JOIN account a ON o.user_id = a.user_id";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Order order = getFromResultSet(resultSet);
-                orderMap.put(order.getOrderId(), order);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding all orders: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return orderMap;
-    }
-
-    @Override
-    public boolean delete(Order order) {
-        throw new UnsupportedOperationException("Delete operation is not supported for orders");
-    }
-
+    /*
+     * Convert a ResultSet row into an Order object.
+     * 
+     * @param rs the ResultSet from a SQL query (likely includes JOIN with user
+     * table)
+     * 
+     * @return Order object populated with data from the current ResultSet row
+     * 
+     * @throws SQLException if there is an error reading from the ResultSet
+     */
     @Override
     public Order getFromResultSet(ResultSet rs) throws SQLException {
-        Order order = new Order();
-        order.setOrderId(rs.getInt("order_id"));
-        order.setUserId(rs.getInt("user_id"));
-        order.setStatus(rs.getString("status"));
-        order.setTotal(rs.getBigDecimal("total"));
-        order.setShippingAddress(rs.getString("shipping_address"));
-        order.setPaymentMethod(rs.getString("payment_method"));
-        order.setCreatedAt(rs.getTimestamp("created_at"));
-        order.setUpdatedAt(rs.getTimestamp("updated_at"));
-
-        // Add coupon information
-        order.setCouponCode(rs.getString("coupon_code"));
-        order.setDiscountAmount(rs.getBigDecimal("discount_amount"));
-
-        // Customer info from JOIN
-        order.setUsername(rs.getString("user_name"));
-        order.setEmail(rs.getString("email"));
-        order.setMobie(rs.getString("mobie"));
-
-        return order;
+        return Order
+                .builder()
+                .id(rs.getInt("id"))
+                .account_id(rs.getInt("account_id"))
+                .status(rs.getString("status"))
+                .total(rs.getDouble("total"))
+                .shipping_address(rs.getString("shipping_address"))
+                .payment_method(rs.getString("payment_method"))
+                .created_at(rs.getTimestamp("created_at"))
+                .updated_at(rs.getTimestamp("updated_at"))
+                .coupon_code(rs.getString("coupon_code"))
+                .discount_value(rs.getDouble("discount_value"))
+                .full_name(rs.getString("full_name"))
+                .mobile(rs.getString("mobile"))
+                .email(rs.getString("email"))
+                .build();
     }
 
+    /**
+     * Retrieves a paginated list of Order based on optional status and payment
+     * method filters.
+     *
+     * @param status        Optional order status filter (e.g., "pending",
+     *                      "completed", etc.)
+     * @param paymentMethod Optional payment method filter (e.g., "Cash on
+     *                      Delivery", "Bank Transfer", etc.)
+     * @param page          The current page number (starting from 1)
+     * @param pageSize      The number of results to return per page
+     * @return List of filtered and paginated Order objects
+     */
     public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
-        List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
-                + "WHERE 1=1 ");
+        List<Order> Order = new ArrayList<>();
+        // Build the SQL query dynamically with optional filters
+        StringBuilder sql = new StringBuilder(
+                "SELECT * "
+                        + "FROM `Order` "
+                        + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
-
+        // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append("AND status = ? ");
             params.add(status);
         }
+        // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
         }
-
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
+        // Append sorting and pagination
+        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize); // LIMIT
+        params.add((page - 1) * pageSize); // OFFSET
 
         try {
+            // Open connection and prepare statement
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
+            // Set parameters in PreparedStatement
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
-
+            // Execute query and map results to Order objects
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
+                Order.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error finding filtered orders: " + ex.getMessage());
+            System.out.println("Error finding filtered Order: " + ex.getMessage());
         } finally {
-
+            // Close ResultSet, Statement, Connection
+            closeResources();
         }
-        return orders;
+        return Order;
     }
 
+    /**
+     * Counts the total number of Order that match optional filters for status and
+     * payment method.
+     * This is typically used to support pagination (by calculating the total number
+     * of pages).
+     *
+     * @param status        Optional status filter (e.g., "pending", "completed",
+     *                      etc.)
+     * @param paymentMethod Optional payment method filter (e.g., "Cash on
+     *                      Delivery", "Bank Transfer", etc.)
+     * @return Total number of matching Order, or 0 if none found or in case of
+     *         error
+     */
     public int getTotalFilteredOrders(String status, String paymentMethod) {
+        // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
+                + "FROM `Order`  "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
-
+        // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append("AND status = ? ");
             params.add(status);
         }
+        // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
         }
 
         try {
+            // Prepare and execute query
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
+            // Set query parameters
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
-
+            // Extract result (single integer)
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-            System.out.println("Error counting filtered orders: " + ex.getMessage());
+            System.out.println("Error counting filtered Order: " + ex.getMessage());
         } finally {
+            // Close ResultSet, Statement, Connection
             closeResources();
         }
         return 0;
     }
 
-    public Order findById(int orderId) {
-        String sql = "SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
-                + "WHERE o.order_id = ?";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderId);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return getFromResultSet(resultSet);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding order by ID: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return null;
-    }
-
+    /**
+     * Updates the status of a specific order and logs the change in the
+     * OrderApproval table.
+     * This method uses a transaction to ensure consistency between the order update
+     * and the approval log.
+     *
+     * @param orderId   ID of the order to update
+     * @param newStatus New status to set (e.g., "accepted", "completed", etc.)
+     * @param sellerId  ID of the seller who approves the status change
+     * @param note      Optional note explaining the reason for status change
+     * @return true if update and logging were successful, false otherwise
+     */
     public boolean updateOrderStatus(int orderId, String newStatus, int sellerId, String note) {
-        String currentStatus = null;
-
         // Get current status
+        String currentStatus = null;
         try {
+            // Begin transaction
             connection = getConnection();
-            connection.setAutoCommit(false);
-
-            String getStatusSql = "SELECT status FROM " + GlobalConfig.DB_SCHEMA + ".orders WHERE order_id = ?";
+            connection.setAutoCommit(false);// Disable auto-commit for transaction control
+            // Step 1: Fetch current status of the order
+            String getStatusSql = "SELECT status FROM `Order` WHERE id = ?";
             statement = connection.prepareStatement(getStatusSql);
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
@@ -181,12 +189,13 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 currentStatus = resultSet.getString("status");
                 System.out.println("Current status: " + currentStatus);
             } else {
+                // Order not found
                 System.out.println("Order not found with ID: " + orderId);
                 return false;
             }
 
-            // Update order status
-            String updateSql = "UPDATE " + GlobalConfig.DB_SCHEMA + ".orders SET status = ?, updated_at = NOW() WHERE order_id = ?";
+            // Step 2: Update order status and timestamp
+            String updateSql = "UPDATE `Order` SET status = ?, updated_at = NOW() WHERE id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -195,8 +204,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             System.out.println("Update order status rows affected: " + rowsAffected);
 
             if (rowsAffected > 0) {
-                // Add approval record directly instead of using OrderApprovalDAO
-                String approvalSql = "INSERT INTO " + GlobalConfig.DB_SCHEMA + ".order_approvals (order_id, approved_by, status_before, status_after, note) "
+                // Step 3: Log status change into OrderApproval table
+                String approvalSql = "INSERT INTO OrderApproval (order_id, approved_by, status_before, status_after, note) "
                         + "VALUES (?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(approvalSql);
                 statement.setInt(1, orderId);
@@ -209,17 +218,19 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 System.out.println("Insert approval rows affected: " + approvalRowsAffected);
 
                 if (approvalRowsAffected > 0) {
+                    // Commit transaction if all operations succeeded
                     connection.commit();
                     System.out.println("Transaction committed successfully");
                     return true;
                 }
             }
-
+            // Rollback if anything failed
             System.out.println("Rolling back transaction");
             connection.rollback();
             return false;
 
         } catch (SQLException ex) {
+            // Rollback on exception
             try {
                 if (connection != null) {
                     System.out.println("Exception occurred, rolling back: " + ex.getMessage());
@@ -232,6 +243,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             ex.printStackTrace();
             return false;
         } finally {
+            // Ensure auto-commit is reset
             try {
                 if (connection != null) {
                     connection.setAutoCommit(true);
@@ -239,187 +251,118 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             } catch (SQLException e) {
                 System.out.println("Error resetting auto-commit: " + e.getMessage());
             }
+            // Close connection, statement, and result set
             closeResources();
         }
-    }
-
-//    public static void main(String[] args) {
-//        OrderDAO orderDAO = new OrderDAO();
-//     
-//        // Test updateOrderStatus
-//        System.out.println("\n--- Testing updateOrderStatus ---");
-//        try {
-//            int orderId = 1; // Thay đổi ID này thành ID đơn hàng thực tế trong DB của bạn
-//            String newStatus = "pending"; // Thay đổi trạng thái này nếu cần
-//            int adminId = 81; // Admin ID cố định để test
-//            String note = "Test update from main method";
-//
-//            System.out.println("Updating order #" + orderId + " to status: " + newStatus);
-//            boolean result = orderDAO.updateOrderStatus(orderId, newStatus, adminId, note);
-//
-//            if (result) {
-//                System.out.println("Update successful!");
-//
-//                // Verify the update
-//                Order updatedOrder = orderDAO.findById(orderId);
-//                if (updatedOrder != null) {
-//                    System.out.println("Verified order #" + orderId + " now has status: " + updatedOrder.getStatus());
-//                }
-//            } else {
-//                System.out.println("Update failed!");
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Error during updateOrderStatus test: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//       
-//    }
-//    }
-    /**
-     * Find orders by user ID with optional status filter and pagination
-     */
-    public List<Order> findOrdersByUserId(int userId, String status, String paymentMethod, int page, int pageSize) {
-        List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE o.user_id = ? ");
-        List<Object> params = new ArrayList<>();
-        params.add(userId);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding orders by user ID: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return orders;
     }
 
     /**
-     * Get total number of orders for a user with optional status filter
+     * Searches for Order based on keyword, status, and payment method.
+     * The search keyword is matched against username, email, or order ID (cast to
+     * string).
+     * Supports pagination through LIMIT and OFFSET.
+     *
+     * @param search        The keyword to search (matches user name, email, or
+     *                      order ID)
+     * @param status        Optional order status filter (e.g., "pending",
+     *                      "completed")
+     * @param paymentMethod Optional payment method filter (e.g., "COD", "PayPal")
+     * @param page          Page number for pagination (1-based)
+     * @param pageSize      Number of results per page
+     * @return A list of matching Order objects
      */
-    public int getTotalOrdersByUserId(int userId, String status, String paymentMethod) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM orders o "
-                + "WHERE o.user_id = ? ");
-        List<Object> params = new ArrayList<>();
-        params.add(userId);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error counting orders by user ID: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return 0;
-    }
-
     public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
+
+        // Build the base SQL query to search by user name, email, or order ID
         List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.user_name, a.email, a.mobie "
-                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+        StringBuilder sql = new StringBuilder("SELECT o.* FROM `Order` o ")
+                .append("LEFT JOIN Account a ON o.account_id = a.id ")
+                .append("WHERE (") // << mở ngoặc block OR
+                .append("COALESCE(a.user_name, '') LIKE ? ")
+                .append("OR COALESCE(a.email, '') LIKE ? ")
+                .append("OR CAST(o.id AS CHAR) LIKE ? ")
+                .append("OR COALESCE(o.full_name, '') LIKE ? ")
+                .append("OR COALESCE(o.email, '') LIKE ? ")
+                .append(") "); // << đóng ngoặc trước khi thêm AND
+
         List<Object> params = new ArrayList<>();
-
+        // Prepare the wildcard search pattern (for LIKE)
         String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-        params.add(search);
+        params.add(searchPattern); // user_name
+        params.add(searchPattern); // account email
+        params.add(searchPattern); // order id
+        params.add(searchPattern); // full_name
+        params.add(searchPattern); // order email
 
+        // Add status filter if provided
         if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
+            sql.append(" AND o.status = ? ");
             params.add(status);
         }
+        // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
+            sql.append(" AND o.payment_method = ? ");
             params.add(paymentMethod);
         }
-
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-
+        // Add ordering and pagination
+        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        params.add(pageSize); // LIMIT
+        params.add((page - 1) * pageSize); // OFFSET (start index)
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
+            // Set all parameters into PreparedStatement
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
-
+            // Execute query and build list of Order
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 orders.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error searching orders: " + ex.getMessage());
+            System.out.println("Error searching Order: " + ex.getMessage());
         } finally {
+            // Close resultSet, statement, connection
             closeResources();
         }
         return orders;
     }
 
+    /**
+     * Returns the total number of Order that match a search keyword and optional
+     * filters.
+     * This is used for pagination to know how many pages of results there are.
+     *
+     * @param search        The keyword to search (matches user name, email, or
+     *                      order ID)
+     * @param status        Optional status filter (e.g., "pending", "completed")
+     * @param paymentMethod Optional payment method filter (e.g., "COD", "PayPal")
+     * @return The total number of matching Order
+     */
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
+        // Build the SQL to count rows with conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM " + GlobalConfig.DB_SCHEMA + ".orders o "
-                + "JOIN " + GlobalConfig.DB_SCHEMA + ".account a ON o.user_id = a.user_id "
-                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "FROM `Order` o "
+                + "LEFT JOIN Account a "
+                + "ON account_id = a.id "
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.id AS CHAR) = ?"
+                + " OR o.full_name LIKE ? OR o.email LIKE ? OR o.id = ?) ");
         List<Object> params = new ArrayList<>();
-
+        // Prepare search pattern with wildcard for LIKE
         String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-        params.add(search);
-
+        params.add(searchPattern);// For user_name
+        params.add(searchPattern);// For email
+        params.add(search); // For exact order ID
+        params.add(searchPattern);// for full_name
+        params.add(searchPattern);// for email
+        params.add(search); // for exact order ID (casted to string)
+        // Add status filter if provided
         if (status != null && !status.isEmpty()) {
             sql.append("AND o.status = ? ");
             params.add(status);
         }
+        // Add payment method filter if provided
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND o.payment_method = ? ");
             params.add(paymentMethod);
@@ -428,196 +371,36 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql.toString());
+            // Bind parameters to prepared statement
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
-
+            // Execute the count query
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt(1);
+                return resultSet.getInt(1);// Return the count
             }
         } catch (SQLException ex) {
             System.out.println("Error counting search results: " + ex.getMessage());
         } finally {
             closeResources();
         }
+        // Fallback if error or no result
         return 0;
-    }
-
-    /**
-     * Kiểm tra xem một đơn hàng đã hoàn thành chưa
-     *
-     * @param orderId ID của đơn hàng cần kiểm tra
-     * @return true nếu đơn hàng đã hoàn thành, ngược lại trả về false
-     */
-    public boolean isOrderCompleted(int orderId) {
-        String sql = "SELECT COUNT(*) FROM orders WHERE order_id = ? AND status = 'completed'";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderId);
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error checking if order is completed: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
-    /**
-     * Kiểm tra xem một đơn hàng có thuộc về người dùng cụ thể hay không
-     *
-     * @param orderId ID của đơn hàng cần kiểm tra
-     * @param userId ID của người dùng cần kiểm tra
-     * @return true nếu đơn hàng thuộc về người dùng, ngược lại trả về false
-     */
-    public boolean isOrderBelongsToUser(int orderId, int userId) {
-        String sql = "SELECT COUNT(*) FROM orders WHERE order_id = ? AND user_id = ?";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderId);
-            statement.setInt(2, userId);
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error checking if order belongs to user: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
-    /**
-     * Kiểm tra xem một đơn hàng đã hoàn thành và thuộc về người dùng cụ thể hay
-     * không
-     *
-     * @param orderId ID của đơn hàng cần kiểm tra
-     * @param userId ID của người dùng cần kiểm tra
-     * @return true nếu đơn hàng đã hoàn thành và thuộc về người dùng, ngược lại
-     * trả về false
-     */
-    public boolean isOrderCompletedAndBelongsToUser(int orderId, int userId) {
-        String sql = "SELECT COUNT(*) FROM orders WHERE order_id = ? AND user_id = ? AND status = 'completed'";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderId);
-            statement.setInt(2, userId);
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error checking if order completed and belongs to user: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
-    /**
-     * Kiểm tra xem người dùng đã mua sản phẩm này chưa và đơn hàng đã hoàn
-     * thành
-     *
-     * @param userId ID của người dùng
-     * @param productId ID của sản phẩm
-     * @return true nếu người dùng đã mua sản phẩm và đơn hàng đã hoàn thành,
-     * ngược lại trả về false
-     */
-    public boolean hasUserPurchasedProduct(int userId, int productId) {
-        String sql = "SELECT COUNT(*) FROM orders o "
-                + "JOIN order_items oi ON o.order_id = oi.order_id "
-                + "WHERE o.user_id = ? AND oi.product_id = ? AND o.status = 'completed'";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, userId);
-            statement.setInt(2, productId);
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error checking if user purchased product: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return false;
-    }
-
-    @Override
-    public List<Order> findAll() {
-        List<Order> orders = new ArrayList<>();
-        String sql = "SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding all orders: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return orders;
-    }
-
-    @Override
-    public boolean update(Order order) {
-        String sql = "UPDATE orders SET status = ?, total = ?, shipping_address = ?, "
-                + "payment_method = ?, updated_at = NOW() WHERE order_id = ?";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setString(1, order.getStatus());
-            statement.setBigDecimal(2, order.getTotal());
-            statement.setString(3, order.getShippingAddress());
-            statement.setString(4, order.getPaymentMethod());
-            statement.setInt(5, order.getOrderId());
-
-            int affectedRows = statement.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException ex) {
-            System.out.println("Error updating order: " + ex.getMessage());
-            return false;
-        } finally {
-            closeResources();
-        }
     }
 
     @Override
     public int insert(Order order) {
-        String sql = "INSERT INTO orders (user_id, status, total, shipping_address, payment_method, coupon_code, discount_amount, type) "
+        String sql = "INSERT INTO `Order` (user_id, status, total, shipping_address, payment_method, coupon_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, order.getUserId());
+            statement.setInt(1, order.getAccount_id());
             statement.setString(2, order.getStatus());
-            statement.setBigDecimal(3, order.getTotal());
-            statement.setString(4, order.getShippingAddress());
-            statement.setString(5, order.getPaymentMethod());
-            statement.setString(6, order.getCouponCode());
-            statement.setBigDecimal(7, order.getDiscountAmount());
+            statement.setDouble(3, order.getTotal());
+            statement.setString(4, order.getShipping_address());
+            statement.setString(5, order.getPayment_method());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -640,10 +423,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public Order findById(Integer id) {
-        String sql = "SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE o.order_id = ?";
+        String sql = "SELECT * "
+                + "FROM `Order`  "
+                + "WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -660,183 +442,46 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return null;
     }
 
-    public List<Order> findOrdersWithFiltersBySeller(String status, String paymentMethod, int page, int pageSize, int sellerId) {
-        List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) ");
-        List<Object> params = new ArrayList<>();
-        params.add(sellerId);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error finding filtered orders by seller: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return orders;
+    @Override
+    public Map<Integer, Order> findAllMap() {
+        return null;
     }
 
-    public int getTotalFilteredOrdersBySeller(String status, String paymentMethod, int sellerId) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM swp391_healthy_food.orders o "
-                + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) ");
-        List<Object> params = new ArrayList<>();
-        params.add(sellerId);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append("AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error counting filtered orders by seller: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return 0;
+    @Override
+    public boolean delete(Order order) {
+        throw new UnsupportedOperationException("Delete operation is not supported for Order");
     }
 
-    public List<Order> searchOrdersBySeller(String search, String status, String paymentMethod, int page, int pageSize, int sellerId) {
-        List<Order> orders = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT o.*, a.username, a.email, a.phone "
-                + "FROM orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) AND (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
-        List<Object> params = new ArrayList<>();
-        params.add(sellerId);
-
-        String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-        params.add(search);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append(" AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append(" AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        sql.append("ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
-        params.add(pageSize);
-        params.add((page - 1) * pageSize);
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                orders.add(getFromResultSet(resultSet));
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error searching orders by seller: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return orders;
+    @Override
+    public List<Order> findAll() {
+        return null;
     }
 
-    public int getTotalSearchResultsBySeller(String search, String status, String paymentMethod, int sellerId) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM swp391_healthy_food.orders o "
-                + "JOIN account a ON o.user_id = a.user_id "
-                + "WHERE EXISTS (SELECT 1 FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = o.order_id AND p.seller_id = ?) AND (a.username LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
-        List<Object> params = new ArrayList<>();
-        params.add(sellerId);
-
-        String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-        params.add(search);
-
-        if (status != null && !status.isEmpty()) {
-            sql.append(" AND o.status = ? ");
-            params.add(status);
-        }
-
-        if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            sql.append(" AND o.payment_method = ? ");
-            params.add(paymentMethod);
-        }
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error counting search results by seller: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return 0;
+    @Override
+    public boolean update(Order order) {
+        return true;
     }
 
     public static void main(String[] args) {
-        OrderDAO o = new OrderDAO();
-        System.out.println(o.findById(60));
-        List<Order> l = o.findOrdersWithFilters(null, null, 1, 10);
-        System.out.println(l);
-        //System.out.println(o.searchOrders("60", "", "", 1, 10));
-        //System.out.println(o.getTotalSearchResults("60", "", "");
-//        o.updateOrderStatus(60, "cancelled", 22, "He Hang");
-        List<Order> l2 = o.searchOrders("60", "", "", 1, 10);
-        System.out.println(l2);
-    }
+        AccountDAO aD = new AccountDAO();
+        CouponDAO cD = new CouponDAO();
+        OrderItemDAO otD = new OrderItemDAO();
+        OrderDAO d = new OrderDAO();
+        // List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
+        // HashMap<Integer,Account> Account = new HashMap<>();
+        // for (Order order : l) {
+        // Account acc = aD.findById(order.getAccount_id());
+        // Account.put(order.getAccount_id(), acc);
+        // }
+        // System.out.println(l);
+        // System.out.println(Account.get(16));
+        // }
+        // List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
+        // System.out.println(l2);
+        // List<Order> l = d.searchOrders("kien", "", "", 1, 10);
+        // System.out.println(l);
+        Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
+        System.out.println(b);
 
+    }
 }

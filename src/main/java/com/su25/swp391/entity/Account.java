@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.su25.swp391.entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,10 +24,9 @@ public class Account {
     private String full_name;
     private String user_name;
     private Date birth_date;
-    private Boolean gender;
+    private String gender;
     private String role;
     private String address;
-    private Integer mobie;
+    private String mobile;
     private String status;
-
 }
