@@ -147,7 +147,7 @@
 /* Action buttons - hiện đại hơn */
 .action-group {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   justify-content: center;
   align-items: center;
 }
@@ -286,15 +286,16 @@ main {
 <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="GET">
 <!-- Thêm class filter-row -->
 <div class="filter-row">
-<!-- Select Status -->
+    <!-- Select Status --><i class="fa-solid fa-layer-group fa-2x"></i>
 <select name="rating">
-<option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALl Rating </option>       
+<option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALL RATING </option>       
 <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
 <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
 <option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
 <option value="4" ${param.rating == 4 ? 'selected' : ''}>4 </option>
 <option value="5" ${param.rating == 5 ? 'selected' : ''}>5 </option>
 </select>
+
 <!-- Bên cạnh có thể hiển thị preview -->
 
 <!-- Ô Search -->
@@ -304,7 +305,7 @@ placeholder="Search by customer name,email..."
 value="${search}"/>
 
 <!-- Nút Filter -->
-<button type="submit" class="btn btn-primary">Filter</button>
+<button  style="width:100px"type="submit" class="btn btn-primary">Filter   <i class="fa-solid fa-filter"></i></button>
 </div>
 </form>
 </div>
