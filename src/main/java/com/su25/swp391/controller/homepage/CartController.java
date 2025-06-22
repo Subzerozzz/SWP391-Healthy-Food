@@ -150,6 +150,7 @@ public class CartController extends HttpServlet {
             Integer subTotal = Integer.parseInt(request.getParameter("subTotal"));
             Integer totalPrice = Integer.parseInt(request.getParameter("totalPrice"));
             String couponCode = request.getParameter("couponCode");
+            Double discountAmount = request.getParameter("discountAmount") == "" ? 0 : Double.parseDouble(request.getParameter("discountAmount"));
 
             // Lay ra listCartItem
             List<CartItem> listCartItem = new ArrayList<>();
@@ -182,6 +183,7 @@ public class CartController extends HttpServlet {
             request.setAttribute("subTotal", subTotal);
             request.setAttribute("totalPrice", totalPrice);
             request.setAttribute("couponCode", couponCode);
+            request.setAttribute("discountAmount", discountAmount);
             request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -419,8 +421,9 @@ public class CartController extends HttpServlet {
             Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
             Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
 
-            // Lay ra coupon_code
+            // Lay ra coupon_code va discountAmount
             String couponCode = request.getParameter("couponCode");
+            Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
 
             // Lay ra created_at và updated_at
             Timestamp created_at = new Timestamp(System.currentTimeMillis());
@@ -463,20 +466,17 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            // if(account != null){
-            // Order newOrder = Order.builder()
-            // .user_id(account.getId())
-            // .status("pending")
-            // .total(totalPrice)
-            // .shipping_address(address)
-            // .payment_method(paymentMethod)
-            // .created_at(created_at)
-            // .updated_at(updated_at)
-            // .
-            // }
-            // else{
-            //
-            // }
+            switch (paymentMethod) {
+                case "cod":
+                    handleProcessCheckoutCOD(request, response);
+                    break;
+                case "vnpay":
+                    handleProcessCheckoutVNPay(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -556,7 +556,7 @@ public class CartController extends HttpServlet {
                     return;
                 }
                 //check xem subTotal có lon hon hoac bang min_purchase không
-                if(subTotal <= coupon.getMin_purchase()){
+                if (subTotal <= coupon.getMin_purchase()) {
                     request.setAttribute("couponNotActiveByNotEnoughPrice", true);
                     request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
                     return;
@@ -572,10 +572,9 @@ public class CartController extends HttpServlet {
                 //neu duoc di tiep
                 String discountType = coupon.getDiscount_type();
                 Double discountValue = null;
-                if(discountType == "percentage"){
+                if (discountType == "percentage") {
                     discountValue = (subTotal * coupon.getDiscount_value()) / 100;
-                }
-                else{
+                } else {
                     discountValue = coupon.getDiscount_value();
                 }
                 // tra ve JSP
@@ -587,6 +586,35 @@ public class CartController extends HttpServlet {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        List<CartItem> listCartItem = new ArrayList<>();
+        Order newOrder = new Order();
+        if (account != null) {
+            // Lay ra cartID theo accID
+            Cart cart = cartDao.findCartByAccountId(account.getId());
+            Integer cartId = cart.getId();
+            // Lấy ra tất cả cartItem theo cartId
+            listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
+        } else {
+            listCartItem = (List<CartItem>) session.getAttribute("cart");
+        }
+
+        //Tao 1 cai order
+        Integer accountId = account.getId();
+        // Lay ra subTotal và totalPrice
+        Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
+        Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+        
+
+        //Sau do tao cac orderItem cho order
+    }
+
+    private void handleProcessCheckoutVNPay(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

@@ -249,8 +249,9 @@
                                 <input type="hidden" name="action" value="checkout">
                                 <input type="hidden" name="subTotal" value="">
                                 <input type="hidden" name="totalPrice" value="">
-                               <a href="#" onclick="submitCheckout()" class="default-btn btn-bg-three">
-                                  Proceed To Checkout
+                                <input type="hidden" name="discountAmount" value="${not empty discountValue? discountValue : ''}">
+                                <a href="#" onclick="submitCheckout()" class="default-btn btn-bg-three">
+                                   Proceed To Checkout
                                 </a>
                               </div>
                             </div>

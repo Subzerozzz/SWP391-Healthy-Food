@@ -408,6 +408,7 @@
                         <input type="hidden" name="subTotal" value="${subTotal}">
                         <input type="hidden" name="totalPrice" value="${totalPrice}">
                         <input type="hidden" name="couponCode" value="${couponCode}">
+                        <input type="hidden" name="discountAmount" value="${discountAmount}">
                         </tfoot>
                       </table>
 
