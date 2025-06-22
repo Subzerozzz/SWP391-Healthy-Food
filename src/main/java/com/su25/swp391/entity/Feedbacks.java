@@ -23,8 +23,8 @@ import lombok.ToString;
 @Setter
 public class Feedbacks {
     private Integer id;
-    private Integer userId;
-    private Integer orderItemId;
+    private Integer user_id;
+    private Integer order_item_id;
     private String content;
     private Integer rating;
     private boolean isVisible;

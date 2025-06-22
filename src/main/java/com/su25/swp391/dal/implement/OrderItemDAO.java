@@ -114,12 +114,8 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
 
     @Override
     public OrderItem findById(Integer id) {
-        String sql = "SELECT oi.*, p.name as product_name, p.image as product_image "
-                + "FROM OrderItem oi "
-                + "JOIN products p ON oi.product_id = p.product_id "
-                + "WHERE oi.order_item_id = ?";
-
-        try {
+        String sql = "SELECT * FROM OrderItem WHERE id = ?";
+         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
