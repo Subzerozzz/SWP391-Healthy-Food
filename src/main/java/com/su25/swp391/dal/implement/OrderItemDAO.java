@@ -23,7 +23,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
         List<OrderItem> items = new ArrayList<>();
 
         String sql = "SELECT * "
-                + "FROM order_items  "
+                + "FROM OrderItem  "
                 + "WHERE order_id = ?";
 
         try {
@@ -53,7 +53,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
      * @return 
      */
 //    public boolean insert(OrderItem item) {
-//        String sql = "INSERT INTO order_items (order_id, product_id, quantity, price, created_at, updated_at) "
+//        String sql = "INSERT INTO OrderItem (order_id, product_id, quantity, price, created_at, updated_at) "
 //                + "VALUES (?, ?, ?, ?, NOW(), NOW())";
 //
 //        try {
@@ -112,7 +112,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
     @Override
     public OrderItem findById(Integer id) {
         String sql = "SELECT oi.*, p.name as product_name, p.image as product_image "
-                + "FROM order_items oi "
+                + "FROM OrderItem oi "
                 + "JOIN products p ON oi.product_id = p.product_id "
                 + "WHERE oi.order_item_id = ?";
 
@@ -136,7 +136,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
 
     @Override
     public int insert(OrderItem t) {
-     String sql = "INSERT INTO order_items (order_id, product_id, quantity, price, created_at, updated_at) "
+     String sql = "INSERT INTO OrderItem (order_id, product_id, quantity, price, created_at, updated_at) "
                 + "VALUES (?, ?, ?, ?, NOW(), NOW())";
 
         try {
