@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage-request.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search-request.css"/>
-
+   
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/fonts.css">
 
@@ -48,7 +48,7 @@
                               display:block
                           }
                           
-                          /*style for filter*/
+                          style for filter
                            .fixed-width-btn {
                 min-width: 120px;
                 text-align: center;
@@ -103,7 +103,7 @@
                 transform: translateX(2px);
             }
             
-            /* Responsive adjustments */
+/*             Responsive adjustments */
             @media (max-width: 768px) {
                 .view-btn {
                     padding: 6px 12px;
@@ -117,106 +117,237 @@
                 
                 
             }
-            /* Áp dụng cho hàng filter */
-.filter-row{
-    /* Flexbox để căn hàng ngang, cho phép wrap xuống dòng khi hẹp */
-    display:flex;
-    flex-wrap:wrap;
-    gap:1rem;                 /* khoảng cách giữa các ô */
+.filter-row {
+  display: grid;
+  grid-template-columns: 130px 200px 400px 120px;
+  gap: 25px;
+  align-items: center;
+  width: 100%;
 }
 
-/* Mỗi phần tử con (select, input, button) chung 1 style */
-.filter-row > *{
-    flex:1 1 220px;           /*  grow   shrink   basis  */
-    min-width:160px;          /* đừng nhỏ hơn 160 px */
-    font-size: 14px;
+/* Style chung cho input & select */
+.filter-row select,
+.filter-row input[type="text"] {
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Riêng nút Filter hơi nhỏ hơn ở desktop để trông cân đối */
-@media (min-width: 768px){    /* ≥ md */
-    .filter-row .btn{
-        flex:0 0 150px;       /* nút cố định ~150px */
-    }
-}
-.table-responsive {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-.table {
-    margin-bottom: 0;
-    font-size: 15px;
+/* Nút filter */
+.filter-row button {
+  height: 40px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #333;
-    vertical-align: middle;
+.filter-row button:hover {
+  background-color: #0056b3;
 }
 
-.table td {
-    vertical-align: middle;
-}
 
-/* Badge cho status */
-.badge {
+   .badge-modern {
+    padding: 0.4rem 0.9rem;
+    font-weight: 700;
     font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 500;
-    text-transform: capitalize;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease-in-out;
 }
 
-.bg-warning {
-    background-color: #ffc107 !important;
-    color: #212529;
+.badge-modern::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: rotate(45deg);
+    pointer-events: none;
 }
 
-.bg-info {
-    background-color: #17a2b8 !important;
-    color: white;
+.badge-modern:hover {
+    transform: scale(1.05);
 }
 
-.bg-success {
-    background-color: #28a745 !important;
-    color: white;
+.badge-pending {
+    background: linear-gradient(135deg, #ffea00, #ffd600); /* Vàng neon */
+    color: #000;
+}
+.badge-accepted {
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh biển sáng */
+    color: #fff;
+}
+.badge-completed {
+    background: linear-gradient(135deg, #00ff94, #00c853); /* Xanh lá tươi như bạc hà */
+    color: #fff;
+}
+.badge-rejected {
+    background: linear-gradient(135deg, #ff1744, #d50000); /* Đỏ neon */
+    color: #fff;
+}
+.bg-info-glow {
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh dương bóng loáng */
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4); /* Đổ bóng nhẹ */
+}
+/* ======= TABLE ========== */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px; /* spacing giữa các dòng cho hiện đại */
+  background-color: transparent;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.bg-danger {
-    background-color: #dc3545 !important;
-    color: white;
+.table thead {
+  background-color: transparent;
 }
 
-/* View button */
-.view-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    font-size: 14px;
-    background-color: #f1f3f5;
-    border-radius: 6px;
-    color: #333;
-    text-decoration: none;
-    transition: all 0.3s ease;
+.table thead th {
+  padding: 14px 18px;
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
+  white-space: nowrap;
 }
 
-.view-btn:hover {
-    background-color: #dbeafe;
-    color: #1d4ed8;
+.table tbody tr {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
-.view-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-.text-center {
-    text-align: center;
+.table tbody td {
+   padding: 8px 10px;
+  color: #000;
+  font-size: 14px;
+  border: none;
+  vertical-align: middle;
+  white-space: nowrap;
 }
+
+.table td:nth-child(2) {
+  white-space: normal;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.table td small {
+  display: block;
+  color: #000;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ===== COLUMN WIDTH TUNING ===== */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 60px;
+  text-align: center;
+}
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 220px;
+}
+.table th:nth-child(4),
+.table td:nth-child(4),
+.table th:nth-child(5),
+.table td:nth-child(5),
+.table th:nth-child(6),
+.table td:nth-child(6) {
+  text-align: center;
+}
+.table th:nth-child(7),
+.table td:nth-child(7),
+.table th:nth-child(8),
+.table td:nth-child(8) {
+  text-align: center;
+  width: 100px;
+}
+
+/* ======= BADGE ========== */
+.badge {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+/* Glowing style */
+.bg-info-glow {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4);
+}
+
+/* Modern badge status */
+.badge-modern {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Badge colors */
+.badge-pending {
+  background: linear-gradient(135deg, #ffeb3b, #ffc107);
+  color: #000;
+}
+
+.badge-accepted {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+}
+
+.badge-completed {
+  background: linear-gradient(135deg, #00e676, #1de9b6);
+  color: #fff;
+}
+
+.badge-rejected {
+  background: linear-gradient(135deg, #ff1744, #d50000);
+  color: #fff;
+}
+
+
+
                       </style>
 </head>
 
@@ -236,12 +367,13 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                 <jsp:include page="../common/dash-board-seller/section-menu-left.jsp"></jsp:include>
+             <jsp:include page="./../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../common/dash-board-seller/header-dashboard.jsp"></jsp:include>  
+                 <jsp:include page="./../common/headerDashboard.jsp"></jsp:include>
+                 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -271,8 +403,8 @@
                                 </div>
                                 <!-- order-list -->
                                 <div class="wg-box">
-                                    <div class="flex items-center justify-between gap10 flex-wrap">
-                                        <div class="wg-filter flex-grow">
+                                    <div class="">
+                                        <div class="">
                                          <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
                 <h6 class="fw-semibold mb-0">Order Management</h6>
@@ -286,7 +418,8 @@
       <!-- Thêm class filter-row -->
       <div class="filter-row">
         <!-- Select Status -->
-        <select class="form-select" name="status">
+        <select  style="height: 40px;font-size: 15px;"
+            class="form-select" name="status">
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
@@ -295,7 +428,8 @@
         </select>
 
         <!-- Select Payment Method -->
-        <select class="form-select" name="paymentMethod">
+        <select    style="height: 40px;font-size: 15px; "
+            class="form-select" name="paymentMethod">
           <option value="">All Payment Methods</option>
           <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
           <option value="Digital Wallet"   ${paymentMethod == 'Digital Wallet'   ? 'selected' : ''}>Digital Wallet</option>
@@ -328,8 +462,9 @@
                                     <th>Total</th>
                                     <th>Payment Method</th>
                                     <th>Status</th>
-                                    <th>Created Date</th>
+                                    <th>Coupon Code</th>
                                     <th>Actions</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -344,7 +479,7 @@
                                                         <c:when test="${not empty status || not empty search}">
                                                             No orders match your search criteria. Try adjusting your filters.
                                                             <br>
-                                                            <a href="${pageContext.request.contextPath}/admin/manage-order" class="btn btn-outline-primary mt-2">
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-order" class="btn btn-outline-primary mt-2">
                                                                 <i class="fas fa-times me-2"></i>Clear Filters
                                                             </a>
                                                         </c:when>
@@ -358,32 +493,51 @@
                                     </tr>
                                 </c:if>
                                     <c:forEach var="order" items="${orders}">
+                                        <c:set var="acc" value="${AccountMap[order.account_id]}"/>
                                         <tr>
-                                            <td>#${order.orderId}</td>
-                                            <td>
-                                                ${order.username}<br>
-                                                <small class="text-muted">${order.email}</small><br>
-                                                <small class="text-muted">${order.mobie}</small>
-                                            </td>
-                                            <td>${order.shippingAddress}</td>
+                                         
+                                            <td>${order.id}</td>
+                                               <c:choose>
+                                                   <c:when test="${not empty acc.user_name}">
+                                                       <td>${acc.user_name}<br></td>
+                                                     <td>  ${order.shipping_address} </td>
+                                                   </c:when>
+                                                   <c:otherwise>
+                                                       <td>${order.full_name}</td>
+                                                       <td>  ${order.shipping_address} </td>
+                                                   </c:otherwise>
+                                            </c:choose>
+                                            
+                                           
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
-                                                <span class="badge bg-info">
-                                                    ${order.paymentMethod}
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px"
+                                                      class="badge bg-info-glow">
+                                                    ${order.payment_method}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
+<!--                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
                                                                 order.status == 'accepted' ? 'bg-info' : 
                                                                 order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
                                                     ${order.status}
-                                                </span>
+                                                </span>-->
+                                                    <span style="display: flex;align-items: center;justify-content: center;height: 25px"
+                                                          class="badge-modern ${
+                                                          order.status == 'pending' ? 'badge-pending' :
+                                                              order.status == 'accepted' ? 'badge-accepted' :
+                                                              order.status == 'completed' ? 'badge-completed' :
+                                                              'badge-rejected'
+                                                          }">
+                                                        ${order.status}
+                                                    </span>
                                             </td>
-                                            <td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                           
+                                             <td>${order.coupon_code}</td>
                                             <td>
 
                                                 <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.orderId}"  title="View Detial">
+                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
                                                     </a></div>
 
@@ -395,45 +549,72 @@
                     </div>
 
                     <!-- Pagination -->
-                    <nav class="mt-24">
-                        <ul class="pagination justify-content-center">
-                            <c:if test="${currentPage > 1}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
+                       <div class="pagination-wrapper">
+                           <div class="text-tiny">Showing 10 entries</div>
 
-                            <c:forEach begin="1" end="${totalPages}" var="i">
-                                <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
-                                </li>
-                            </c:forEach>
+                           <!--   Start Pagination-->
+                           <ul class="pagination-wrapper">
 
-                            <c:if test="${currentPage < totalPages}">
-                                <li class="page-item">
-                                    <a class="page-link" href="${pageContext.request.contextPath}/admin/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </c:if>
-                        </ul>
-                    </nav>
+                               <li >
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=1&status=${status}&search=${search}"><i class="icon-chevron-left"></i></a>
+                               </li>
+                               <c:choose>
+                                   <c:when test="${currentPage <= totalPages - 2}">
+                                       <c:if test="${currentPage > 1}">
+                                           <li class="">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">${currentPage - 1}</a>
+                                           </li>
+                                       </c:if>
+                                       <li class="active">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage}&status=${status}&search=${search}">${currentPage}</a>
+                                       </li>
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">${currentPage + 1}</a>
+                                       </li>
+
+                                       <c:if test="${currentPage < totalPages - 2}">
+                                           <li>
+                                               <span>...</span>
+                                           </li>
+                                       </c:if>
+
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}">${totalPages}</a>
+                                       </li>
+                                   </c:when>
+
+                                   <c:otherwise>
+                                       <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                           <li class="${currentPage == i ? 'active' : ''}">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                           </li>
+                                       </c:forEach>
+                                   </c:otherwise>
+                               </c:choose>
+
+                               <li>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}"><i class="icon-chevron-right"></i></a>
+                               </li>
+                           </ul>
+                       </div>  
                 </div>
             </div>
         </div>
                                     </div>
+                
                                 </div>
                                 <!-- /order-list -->
+                      
                             </div>
                             <!-- /main-content-wrap -->
+                            
                         </div>
                         <!-- /main-content-wrap -->
-                        <!-- bottom-page -->
-                        <jsp:include page="../common/dash-board-seller/bottom-page.jsp"></jsp:include>
-                        <!-- /bottom-page -->
+                    
                     </div>
+               <jsp:include page="./../common/footer.jsp"></jsp:include>
                     <!-- /main-content -->
                 </div>
                 <!-- /section-content-right -->
@@ -441,6 +622,7 @@
             <!-- /layout-wrap -->
         </div>
         <!-- /#page -->
+    </div>
     </div>
     <!-- /#wrapper -->
  <!-- Toast Container -->
@@ -461,7 +643,7 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<script>
+    <script>
             // Function to show toast
             function showToast(message, type) {
                 const toastEl = document.getElementById('orderToast');

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @ToString
 @Builder
 @Data
@@ -20,8 +21,9 @@ import lombok.ToString;
 @Getter
 @Setter
 public class Request {
-    private Integer id;
-    private String result;
-    private Integer foodDraftId;
-    private String statusRequest;
+  private Integer id;
+  private String result;
+  private Integer foodDraftId;
+  private String statusRequest;
+
 }

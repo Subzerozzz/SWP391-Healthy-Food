@@ -8,21 +8,20 @@ import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Food;
-import com.su25.swp391.entity.Food_Draft;
+import com.su25.swp391.entity.FoodDraft;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.HashMap;
 import java.sql.Timestamp;
-/**
- *
- * @author Admin
- */
-public class FoodDAO extends DBContext implements I_DAO<Food>{
-    
+
+public class FoodDAO extends DBContext implements I_DAO<Food> {
+
     @Override
     public List<Food> findAll() {
         String sql = "select * from Food ";
@@ -43,6 +42,160 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
 
     }
 
+    @Override
+    public Food getFromResultSet(ResultSet resultSet) throws SQLException {
+        Food food = new Food();
+        food.setId(resultSet.getInt("id"));
+        food.setName(resultSet.getString("name"));
+        food.setDescription(resultSet.getString("description"));
+        food.setPrice(resultSet.getDouble("price"));
+        food.setImage_url(resultSet.getString("image_url"));
+        food.setStatus(resultSet.getString("status"));
+        food.setCategory_id(resultSet.getInt("category_id"));
+        food.setCreated_at(resultSet.getTimestamp("created_at"));
+        food.setUpdated_at(resultSet.getTimestamp("updated_at"));
+        food.setNutri_id(Integer.parseInt(resultSet.getString("nutri_id")));
+        food.setCalo(resultSet.getDouble("calo"));
+        return food;
+    }
+
+    public Food checkExistFoodName(String name) {
+        Food food = null;
+        String sql = "Select * From Food WHERE name = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            // set giá trị vào name
+            statement.setString(1, name);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                food = getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+        }finally{
+            closeResources();
+        }
+        return food;
+    }
+
+    public List<Food> findByCategoryId(Integer categoryId) {
+        List<Food> foodList = new ArrayList<>();
+        String sql = "SELECT * FROM Food WHERE category_id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryId);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                foodList.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            closeResources();
+        }
+        return foodList;
+    }
+
+    public List<Food> getFoodByName(String foodName) {
+        List<Food> listFood = null;
+        String sql = "SELECT * FROM Food"
+                + " WHERE name LIKE ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, "%" + foodName + "%");
+            resultSet = statement.executeQuery();
+            listFood = new ArrayList<>();
+            while (resultSet.next()) {
+                listFood.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            closeResources();
+        }
+        return listFood;
+    }
+
+    public List<Food> findRecordByPage(int i) {
+        List<Food> list = new ArrayList<>();
+        String sql = "SELECT *\n"
+                + "FROM Food\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?;";
+        // Tính số bản ghi cần bỏ qua
+        Integer recordOffset = (i - 1) * 10;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, recordOffset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            closeResources();
+        }
+        return list;
+    }
+
+    public List<Food> findRecordByPageForCategory(Integer categoryID, int i) {
+        List<Food> list = new ArrayList<>();
+        String sql = "SELECT *\n"
+                + "FROM Food\n"
+                + "WHERE category_id = ?\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?";
+        // Tính số bản ghi cần bỏ qua
+        Integer recordOffset = (i - 1) * 10;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, categoryID);
+            statement.setInt(2, recordOffset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            closeResources();
+        }
+        return list;
+    }
+
+    public List<Food> getRecordByPageForSearch(String foodName, int i) {
+        List<Food> list = new ArrayList<>();
+        String sql = "SELECT *\n"
+                + "FROM Food\n"
+                + "WHERE name LIKE ?\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?";
+        // Tính số bản ghi cần bỏ qua
+        Integer recordOffset = (i - 1) * 10;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, "%" + foodName + "%");
+            statement.setInt(2, recordOffset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }finally{
+            closeResources();
+        }
+        return list;
+    }
 
     @Override
     public Map<Integer, Food> findAllMap() {
@@ -63,7 +216,8 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
         return map;
     }
-     @Override
+
+    @Override
     public int insert(Food t) {
         String sql = "INSERT into Food(name,description,price,image_url,status,category_id,created_at,updated_at,nutri_id,calo)"
                 + " values(?,?,?,?,?,?,?,?,?,?) ";
@@ -93,7 +247,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         return -1;
 
     }
-    
+
     @Override
     public boolean update(Food t) {
         String sql = "UPDATE Food SET name = ? , description = ? , price = ? , image_url = ? ,"
@@ -141,32 +295,9 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
         return false;
     }
+    // Get Food by FoodDraft
 
-     
-  
-    
-    
-    @Override
-    public Food getFromResultSet(ResultSet resultSet) throws SQLException {
-        Food food = Food
-                .builder()
-                .id(resultSet.getInt("id"))
-                .name(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
-                .price(resultSet.getDouble("price"))
-                .image_url(resultSet.getString("image_url"))
-                .status(resultSet.getString("status"))
-                .category_id(resultSet.getInt("category_id"))
-                .created_at(resultSet.getTimestamp("created_at"))
-                .updated_at(resultSet.getTimestamp("updated_at"))
-                .nutri_id(resultSet.getInt("nutri_id"))
-                .calo(resultSet.getDouble("calo"))
-                .build();
-
-        return food;
-    }
-      // Get Food by FoodDraft
-     public Food getFromResultFood_Draft(Food_Draft f) {
+    public Food getFromResultFood_Draft(FoodDraft f) {
         return Food
                 .builder()
                 .id(f.getFood_id())
@@ -201,27 +332,10 @@ public class FoodDAO extends DBContext implements I_DAO<Food>{
         }
         return null;
     }
-
-
+    
+    
     public static void main(String[] args) {
-        FoodDAO dao = new FoodDAO();
-        //  Timestamp a = new Timestamp(02,02,2004,00,00,00);
-        Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
-
-        Food_Draft food = Food_Draft
-                .builder()
-                .name("ĐÂY")
-                .description("Oke la")
-                .price(20.0)
-                .image_url("")
-                .category_id(1)
-                .created_at(timestampNow)
-                .updated_at(timestampNow)
-                .nutri_id(1)
-                .build();
-      Food f = dao.findById(29);
-        System.out.println(f);
-        dao.insert(f);
+        System.out.println(new FoodDAO().findById(1));
     }
 
 }
