@@ -90,7 +90,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
       }
       /* Card styles */
       /* Tổng thể khối chi tiết */
-      .wg-order-detail {
+/*      .wg-order-detail {
         display: flex;
         flex-wrap: wrap;
         gap: 32px;
@@ -100,19 +100,19 @@ contentType="text/html" pageEncoding="UTF-8"%>
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
       }
 
-      /* Trái: Nội dung chính */
+       Trái: Nội dung chính 
       .wg-order-detail .left {
         flex: 2;
         min-width: 320px;
       }
 
-      /* Phải: Summary */
+       Phải: Summary 
       .wg-order-detail .right {
         flex: 1;
         min-width: 260px;
       }
 
-      /* Box */
+       Box 
       .wg-box {
         background: #f9fafb;
         border-radius: 12px;
@@ -120,7 +120,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
         margin-bottom: 20px;
       }
 
-      /* Tiêu đề lớn */
+       Tiêu đề lớn 
       .body-title {
         font-size: 18px;
         font-weight: 600;
@@ -128,26 +128,26 @@ contentType="text/html" pageEncoding="UTF-8"%>
         margin-bottom: 10px;
       }
 
-      /* Tiêu đề nhỏ */
+       Tiêu đề nhỏ 
       .body-title-2 {
         font-size: 16px;
         font-weight: 500;
-        color: #1f2937;
+        color: #000;
       }
 
-      /* Văn bản mô tả */
+       Văn bản mô tả 
       .body-text {
         font-size: 14px;
         color: #6b7280;
       }
 
-      /* Feedback content */
+       Feedback content 
       .wg-box .body-text {
         line-height: 1.6;
         white-space: pre-line;
       }
 
-      /* Image */
+       Image 
       .image img {
         width: 72px;
         height: 72px;
@@ -155,7 +155,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
         object-fit: cover;
       }
 
-      /* Item feedback */
+       Item feedback 
       .product-item {
         display: flex;
         align-items: center;
@@ -168,7 +168,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
         border-top: none;
       }
 
-      /* Tên, khách hàng, rating */
+       Tên, khách hàng, rating 
       .product-item .name {
         flex: 1;
         font-size: 14px;
@@ -180,13 +180,13 @@ contentType="text/html" pageEncoding="UTF-8"%>
         margin-bottom: 4px;
       }
 
-      /* Rating */
+       Rating 
       .fa-star {
         font-size: 16px;
         margin-right: 2px;
       }
 
-      /* Summary item */
+       Summary item 
       .summary-item {
         display: flex;
         justify-content: space-between;
@@ -194,7 +194,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
         font-size: 14px;
       }
 
-      /* Nút Back Feedback List */
+       Nút Back Feedback List 
       .tf-button {
         display: block;
         padding: 10px 16px;
@@ -210,7 +210,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
       .tf-button:hover {
         background-color: #2563eb;
       }
-      /* Căn giữa hàng item */
+       Căn giữa hàng item 
       .product-item {
         display: flex;
         align-items: center;
@@ -218,7 +218,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
         padding: 16px 0;
       }
 
-      /* Ảnh không bị lệch */
+       Ảnh không bị lệch 
       .product-item .image {
         flex-shrink: 0;
         width: 72px;
@@ -232,8 +232,93 @@ contentType="text/html" pageEncoding="UTF-8"%>
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 8px;
-      }
+        border-radius: 8px;*/
+   .summary-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.body-text {
+  color: black;
+  font-weight: 600;
+  min-width: 120px; /* Giúp các label thẳng hàng */
+}
+
+.body-title-2 {
+  color: black;
+  flex: 1; /* Chiếm phần còn lại */
+  word-break: break-word;
+}
+.feedback-card {
+  display: flex;
+  height: 75vh; /* Chiều cao phù hợp màn hình */
+  max-height: 80vh;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 20px;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* Bên trái: ảnh */
+.feedback-left {
+  flex: 0 0 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-image {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+/* Bên phải: nội dung */
+.feedback-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Grid nội dung chia đều */
+.feedback-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+}
+
+.feedback-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 4px;
+  font-size:16px;
+}
+
+.feedback-value,
+.feedback-text {
+  font-size: 16px;
+  color: #222;
+  line-height: 1.5;
+}
+
+/* Nếu content dài, chiếm cả 2 cột */
+.feedback-full {
+  grid-column: span 2;
+}
     </style>
   </head>
 
@@ -302,7 +387,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                     <!-- order-detail -->
                     <div class="wg-order-detail">
                       <div class="left flex-grow">
-                        <div class="wg-box mb-20">
+<!--                        <div class="wg-box mb-20">
                           <div class="wg-table table-order-detail">
                             <ul
                               class="table-title flex items-center justify-between gap20 mb-24"
@@ -311,6 +396,8 @@ contentType="text/html" pageEncoding="UTF-8"%>
                                 <div class="body-title">Item Detail</div>
                               </li>
                             </ul>
+                            <c:set var="account" value="${AccountMap[feedback.user_id]}"/>
+                            <c:set var="food" value="${FoodMap[feedback.order_item_id]}"/>
                             <ul class="flex flex-column">
                               <li class="product-item gap14">
                                 <div class="image">
@@ -327,10 +414,10 @@ contentType="text/html" pageEncoding="UTF-8"%>
                                       class="text-tiny mb-1"
                                       style="color: black"
                                     >
-                                      Food name
+                                      FOOD NAME
                                     </div>
-                                    <div style="color: black">
-                                      ${feedback.food.name}
+                                    <div style="color: #000">
+                                      ${food.name}
                                     </div>
                                   </div>
                                   <div class="name">
@@ -338,10 +425,10 @@ contentType="text/html" pageEncoding="UTF-8"%>
                                       class="text-tiny mb-1"
                                       style="color: black"
                                     >
-                                      Customer
+                                      CUSTOMER
                                     </div>
                                     <div class="body-title-2">
-                                      ${feedback.account.user_name}
+                                      ${account.user_name}
                                     </div>
                                   </div>
                                   <div class="name">
@@ -349,7 +436,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                                       class="text-tiny mb-1"
                                       style="color: black"
                                     >
-                                      Rating
+                                      RATING
                                     </div>
                                     <div class="body-title-2">
                                       <c:forEach
@@ -373,9 +460,46 @@ contentType="text/html" pageEncoding="UTF-8"%>
                               ${feedback.content}
                             </div>
                           </div>
-                        </div>
+                        </div>-->
+                        <div class="feedback-card">
+  <div class="feedback-left">
+    <img
+      class="feedback-image"
+      src="https://foodphoto.vn/wp-content/uploads/2023/09/chup-hinh-thuc-pham-2-550x550.jpeg"
+      alt="Food Image"
+    />
+  </div>
+
+  <div class="feedback-right">
+    <div class="feedback-grid">
+      <div class="feedback-item">
+        <div class="feedback-label">Food Name:</div>
+        <div class="feedback-value">${food.name}</div>
+      </div>
+
+      <div class="feedback-item">
+        <div class="feedback-label">Customer:</div>
+        <div class="feedback-value">${account.user_name}</div>
+      </div>
+
+      <div class="feedback-item">
+        <div class="feedback-label">Rating:</div>
+        <div class="feedback-value">
+          <c:forEach begin="1" end="${feedback.rating}">
+            <i class="fa-solid fa-star" style="color: gold;"></i>
+          </c:forEach>
+        </div>
+      </div>
+
+      <div class="feedback-item feedback-full">
+        <div class="feedback-label">Feedback:</div>
+        <div class="feedback-text">${feedback.content}</div>
+      </div>
+    </div>
+  </div>
+</div>
                       </div>
-                      <div class="right">
+<!--                      <div class="right">
                         <div class="wg-box mb-20 gap10">
                           <div class="body-title">Summary of Food</div>
                           <div class="summary-item">
@@ -383,7 +507,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                               Price:
                             </div>
                             <div class="body-title-2">
-                              ${feedback.food.price}
+                              ${food.price}
                             </div>
                           </div>
                           <div class="summary-item">
@@ -391,7 +515,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                               Calo:
                             </div>
                             <div class="body-title-2">
-                              ${feedback.food.calo}
+                              ${food.calo}
                             </div>
                           </div>
                           <div class="summary-item">
@@ -399,7 +523,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                               Description:
                             </div>
                             <div class="body-title-2">
-                              ${feedback.food.description}
+                              ${food.description}
                             </div>
                           </div>
 
@@ -422,7 +546,40 @@ contentType="text/html" pageEncoding="UTF-8"%>
                             >Back Feedback List</a
                           >
                         </div>
-                      </div>
+                      </div>-->
+                              <div class="right">
+  <div class="wg-box mb-20 gap10">
+    <div class="body-title">Summary of Food</div>
+
+    <div class="summary-item">
+      <span class="body-text">Price:</span>
+      <span class="body-title-2">${food.price}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="body-text">Calo:</span>
+      <span class="body-title-2">${food.calo}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="body-text">Description:</span>
+      <span class="body-title-2">${food.description}</span>
+    </div>
+
+    <div class="summary-item">
+      <span class="body-text">Created At:</span>
+      <span class="body-title-2 tf-color-1">
+        <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+      </span>
+    </div>
+  </div>
+
+  <div class="wg-box gap10">
+    <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/seller/manage-feedback">
+      Back Feedback List
+    </a>
+  </div>
+</div>
                     </div>
                     <!-- /order-detail -->
                   </div>

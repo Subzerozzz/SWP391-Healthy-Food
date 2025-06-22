@@ -28,14 +28,12 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
    // Get Feedback by Id Feedback
     @Override
     public Feedback findById(Integer id) {
-        String sql = "SELECT * from feedbacks where id = ?" ;
-               
+        String sql = "SELECT * from Feedback where id = ?";
+
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-      
             statement.setInt(1, id);
-
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return getFromResultSet(resultSet);
@@ -246,15 +244,14 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     }
      public int getTotalFilteredFeedback(String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM Feedback f "
-                + "JOIN Account a ON f.user_id = a.id "
-                + "WHERE f.is_visible = 1 ");
+                + "FROM Feedback "
+                + "WHERE is_visible = 1 ");
         List<Object> params = new ArrayList<>();
          if(status != null && status.contains("-1")){
             status = null;
         }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.rating = ? ");
+            sql.append("AND rating = ? ");
             params.add(status);
         }
        
