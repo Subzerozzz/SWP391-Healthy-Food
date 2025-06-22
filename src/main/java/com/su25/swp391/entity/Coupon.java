@@ -36,8 +36,9 @@ public class Coupon {
     private Date startDate;
     private Date endDate;
     private Integer usageLimit;
-    private int usageCount;
-    private boolean isActive;
+    private Integer usageCount;
+    private Integer perCustomerLimit;
+    private boolean active;
     private Date createdAt;
     private Date updatedAt;
 }

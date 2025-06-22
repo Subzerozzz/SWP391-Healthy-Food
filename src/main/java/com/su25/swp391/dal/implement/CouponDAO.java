@@ -9,6 +9,7 @@ import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Coupon;
 import java.math.BigDecimal;
 import java.sql.Connection;
+    import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,9 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public boolean update(Coupon coupon) {
-        String sql = "UPDATE Coupon SET code = ?, description = ?, discount_type = ?, discount_value = ?, min_purchase=?, max_discount=?,start_date=?,end_date=? WHERE id = ?";
+        String sql = "UPDATE Coupon SET code = ?, description = ?, discount_type = ?, "
+                + "discount_value = ?, min_purchase=?, max_discount=?,start_date=?,end_date=? "
+                + ",usage_limit=?,per_customer_limit=?,is_active=? WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -82,7 +85,10 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             statement.setBigDecimal(6, coupon.getMaxDiscount());
             statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
             statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-            statement.setInt(9, coupon.getId()); // thêm điều kiện WHERE id = ?
+            statement.setInt(9, coupon.getUsageLimit());
+            statement.setInt(10, coupon.getPerCustomerLimit());
+            statement.setBoolean(11, coupon.isActive());
+            statement.setInt(12, coupon.getId()); 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -92,7 +98,6 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
     }
-
     @Override
     public boolean delete(Coupon coupon) {
         String sql = "DELETE from Coupon WHERE id=? ";
@@ -111,39 +116,43 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     }
 
     @Override
-    public int insert(Coupon coupon) {
-        String sql = "INSERT INTO Coupon (code,description,discount_type,discount_value,min_purchase,max_discount,"
-                + "start_date, end_date,is_active)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, coupon.getCode());
-            statement.setString(2, coupon.getDescription());
-            statement.setString(3, coupon.getDiscountType());
-            statement.setBigDecimal(4, coupon.getDiscountValue()); // BỊ THIẾU TRONG CODE GỐC
-            statement.setBigDecimal(5, coupon.getMinPurchase());
-            statement.setBigDecimal(6, coupon.getMaxDiscount());
-            statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
-            statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-            statement.setBoolean(9, coupon.isActive()); // Thêm dòng này để insert giá trị is_active
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating coupon failed, no rows affected.");
-            }
-            resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            } else {
-                throw new SQLException("Creating coupon failed, no ID obtained.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error adding coupon: " + e.getMessage());
-            return -1;
-        } finally {
-            closeResources();
+   public int insert(Coupon coupon) {
+    String sql = "INSERT INTO Coupon (code,description,discount_type,discount_value,min_purchase,max_discount,"
+            + "start_date, end_date,is_active,usage_limit,per_customer_limit)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        statement.setString(1, coupon.getCode());
+        statement.setString(2, coupon.getDescription());
+        statement.setString(3, coupon.getDiscountType());
+        statement.setBigDecimal(4, coupon.getDiscountValue()); 
+        statement.setBigDecimal(5, coupon.getMinPurchase());
+        statement.setBigDecimal(6, coupon.getMaxDiscount());
+        statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
+        statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
+        statement.setBoolean(9, coupon.isActive());
+        // Xử lý null an toàn
+        statement.setObject(10, coupon.getUsageLimit(), java.sql.Types.INTEGER);
+        statement.setObject(11, coupon.getPerCustomerLimit(), java.sql.Types.INTEGER);
+
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating coupon failed, no rows affected.");
         }
-    }
+        resultSet = statement.getGeneratedKeys();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        } else {
+            throw new SQLException("Creating coupon failed, no ID obtained.");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error adding coupon: " + e.getMessage());
+        return -1;
+    } finally {
+        closeResources();
+    }   
+}
 
     @Override
     public Coupon getFromResultSet(ResultSet rs) throws SQLException {
@@ -160,6 +169,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         coupon.setUsageLimit(rs.getInt("usage_limit"));
         coupon.setUsageCount(rs.getInt("usage_count"));
         coupon.setActive(rs.getBoolean("is_active"));
+        coupon.setPerCustomerLimit(rs.getInt("per_customer_limit"));
         coupon.setCreatedAt(rs.getDate("created_at"));
         coupon.setUpdatedAt(rs.getDate("updated_at"));
         return coupon;

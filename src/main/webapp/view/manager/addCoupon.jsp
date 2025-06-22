@@ -95,6 +95,50 @@
                                 .is-invalid ~ .text-tiny {
                                     display: block;
                                 }
+                                .switch {
+                                    position: relative;
+                                    display: inline-block;
+                                    width: 44px;
+                                    height: 24px;
+                                }
+
+                                .switch input {
+                                    opacity: 0;
+                                    width: 0;
+                                    height: 0;
+                                }
+
+                                .slider.round {
+                                    position: absolute;
+                                    cursor: pointer;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    background-color: #ccc;
+                                    transition: 0.4s;
+                                    border-radius: 24px;
+                                }
+
+                                .slider.round:before {
+                                    position: absolute;
+                                    content: "";
+                                    height: 18px;
+                                    width: 18px;
+                                    left: 3px;
+                                    bottom: 3px;
+                                    background-color: white;
+                                    transition: 0.4s;
+                                    border-radius: 50%;
+                                }
+
+                                .switch input:checked + .slider.round {
+                                    background-color: #28a745;
+                                }
+
+                                .switch input:checked + .slider.round:before {
+                                    transform: translateX(20px);
+                                }
                                
                     </style>
 <body class="body">
@@ -181,7 +225,35 @@
                                                     value="${maxdiscount != null ? maxdiscount : ''}">
                                                  <div class="text-tiny">Maximum discount amount for percentage coupons (optional).</div>
                                          </fieldset>
-
+                                                    <!-- Usage Limit -->
+                                                    <fieldset class="usageLimit">
+                                                        <div class="body-title mb-10">Usage Limit</div>
+                                                        <input class="mb-10" type="number" min="0" step="1"
+                                                               placeholder="Enter usage limit"
+                                                               name="usageLimit"
+                                                               value="${usageLimit != null ? usageLimit : ''}">
+                                                            <div class="text-tiny">Maximum number of times this coupon can be used. Leave empty for unlimited.</div>
+                                                    </fieldset>
+                                                               <!-- Per Customer Limit -->
+                                                               <fieldset class="perCustomerLimit">
+                                                                   <div class="body-title mb-10">Per Customer Limit</div>
+                                                                   <input class="mb-10" type="number" min="0" step="1"
+                                                                          placeholder="Enter per customer limit"
+                                                                          name="percuslimit"
+                                                                          value="${percuslimit != null ? percuslimit : ''}">
+                                                                       <div class="text-tiny">Maximum number of times a customer can use this coupon. Leave empty for unlimited.</div>
+                                                               </fieldset>       
+                                                    <!-- Status -->
+                                                    <fieldset class="status">
+                                                        <div class="body-title mb-10">Status</div>
+                                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                                            <label class="switch">
+                                                                <input type="checkbox" name="isActive" ${isActive == null || isActive == 'on' ? 'checked' : ''}>
+                                                                    <span class="slider round"></span>
+                                                            </label>
+                                                            <span class="label">Active</span>
+                                                        </div>
+                                                    </fieldset>      
                                           <div class="cols gap10">
                                             <fieldset class="startDate">
                                                 <div class="body-title mb-10">Start Date <span class="tf-color-1">*</span></div>
