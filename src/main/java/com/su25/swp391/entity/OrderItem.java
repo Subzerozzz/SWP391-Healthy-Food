@@ -14,10 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author kieud
- */
 @ToString
 @Builder
 @Data
@@ -25,16 +21,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
+/**
+ *
+ * @author kieud
+ */
+public class OrderItem {
 
-public class OrderList {
-    
-    private int orderId;
-    private String foodName;
-    private String imageUrl;
-    private double foodPrice;
+    private int order_item_id;
+    private int order_id;
+    private int food_id;
     private int quantity;
-    private String paymentMethod;
-    private String status;
-    private int orderItemId;
-
+    private BigDecimal price;
+    private Timestamp created_at;
+    private Timestamp updated_at;
 }
