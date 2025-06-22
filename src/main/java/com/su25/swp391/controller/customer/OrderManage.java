@@ -17,19 +17,23 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order", "/order-list"})
+@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order"})
 public class OrderManage extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
     private final OrderDAO orderListDAO = new OrderDAO();
     private final OrderItemDAO orderDetailDAO = new OrderItemDAO();
     private final FoodDAO foodDAO = new FoodDAO();
+
+    private final Order order = new Order();
 
     private static final String ORDER_LIST = "view/customer/orderlist.jsp";
     private static final String ORDER_DETAILS = "view/customer/orderdetail.jsp";
@@ -40,7 +44,6 @@ public class OrderManage extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getServletPath();
 
-            
         switch (path) {
             case "/orderdetail":
                 showOrderDetail(request, response);
@@ -68,11 +71,11 @@ public class OrderManage extends HttpServlet {
             default:
                 break;
         }
-    }   
-
+    }
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String orderIdStr = request.getParameter("order_id");
 
         if (orderIdStr == null || orderIdStr.isEmpty()) {
@@ -112,7 +115,7 @@ public class OrderManage extends HttpServlet {
 
     private void searchDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-         String search = request.getParameter("status");
+        String search = request.getParameter("status");
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
 
@@ -155,11 +158,23 @@ public class OrderManage extends HttpServlet {
         }
     }
 
-    private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-         String pageParam = request.getParameter("page");
+    private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+        String username = (String) session.getAttribute("user_name");
+        String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
         int currentPage = 1;
         int pageSize = 10;
+
+        if (email == null && username == null) {
+            response.sendRedirect(HOME_PAGE);
+            return;
+        }
+
         try {
             if (pageParam != null && !pageParam.isEmpty()) {
                 currentPage = Integer.parseInt(pageParam);
@@ -181,48 +196,40 @@ public class OrderManage extends HttpServlet {
             currentPage = 1;
             pageSize = 10;
         }
-       
-        //lay ra danh sach cate
-        List<Order> orderList = orderListDAO.findAllWithPagination(currentPage, pageSize);
-        //tinh toan phan trang 
-        int totalOrder = orderListDAO.getTotalOrderCount();
-        int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
-        //thiet lap cac thuoc tinh cho jsp
-        request.setAttribute("orderList", orderList);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("pageSize", pageSize);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalOrder", totalOrder);
-        //tinh toan pham vi the hien
-        int startRecord = (currentPage - 1) * pageSize + 1;
-        int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
-        request.setAttribute("startRecord", startRecord);
-        request.setAttribute("endRecord", endRecord);
-        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+
+        Account acc = Account.builder()
+                .email(email)
+                .user_name(username)
+                .build();
+        Account accountFoundByEmail = accountDAO.findByEmail(acc);
+        Account accountFoundByUsername = accountDAO.findByUsername(acc);
+
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
+            int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
+            List<Order> orderList = orderListDAO.findOrdersByUserIdWithPagination(userId, currentPage, pageSize);
+            int totalOrder = orderListDAO.getTotalOrderCountByUserId(userId);
+            int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
+
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("orderList", orderList);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalOrder", totalOrder);
+
+            // Gán vào session để sử dụng khi quay lại
+            session.setAttribute("currentPage", currentPage);
+            session.setAttribute("pageSize", pageSize);
+
+            // Tính toán phạm vi hiển thị
+            int startRecord = (currentPage - 1) * pageSize + 1;
+            int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
+            request.setAttribute("startRecord", startRecord);
+            request.setAttribute("endRecord", endRecord);
+
+            request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+        } else {
+            response.sendRedirect(HOME_PAGE);
+        }
 
     }
-//        String indexParam = request.getParameter("index");
-//        int currentPage = 1;
-//        int pageSize = 10;
-//
-//        try {
-//            if (indexParam != null) {
-//                currentPage = Integer.parseInt(indexParam);
-//            }
-//        } catch (NumberFormatException e) {
-//            currentPage = 1;
-//        }
-//
-//        // Lấy danh sách đơn hàng phân trang
-//        List<Order> orderList = orderListDAO.findAllWithPagination(currentPage, pageSize);
-//        int totalOrders = orderListDAO.getTotalOrderCount();
-//        int totalPage = (int) Math.ceil((double) totalOrders / pageSize);
-//
-//        request.setAttribute("orderList", orderList);
-//        request.setAttribute("currentPage", currentPage);
-//        request.setAttribute("totalPage", totalPage);
-//
-//        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-//    }
 
 }

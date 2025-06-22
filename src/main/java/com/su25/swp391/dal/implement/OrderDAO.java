@@ -64,63 +64,62 @@ public class OrderDAO extends DBContext {
         return orderLists;
     }
 
-   public List<Order> searchOrderListByUserIdAndStatus(int userId, String status) {
-    List<Order> orderLists = new ArrayList<>();
-    String sql = "SELECT "
-            + "o.order_id, "
-            + "o.user_id, "
-            + "o.status, "
-            + "o.total, "
-            + "o.payment_method, "
-            + "o.created_at, "
-            + "o.updated_at, "
-            + "o.coupon_code, "
-            + "o.discount_amount, "
-            + "o.full_name, "
-            + "o.mobile, "
-            + "o.address, "
-            + "o.email, "
-            + "o.shipping_address "
-            + "FROM `Order` o "
-            + "WHERE o.user_id = ? AND o.status = ?";
+    public List<Order> searchOrderListByUserIdAndStatus(int userId, String status) {
+        List<Order> orderLists = new ArrayList<>();
+        String sql = "SELECT "
+                + "o.order_id, "
+                + "o.user_id, "
+                + "o.status, "
+                + "o.total, "
+                + "o.payment_method, "
+                + "o.created_at, "
+                + "o.updated_at, "
+                + "o.coupon_code, "
+                + "o.discount_amount, "
+                + "o.full_name, "
+                + "o.mobile, "
+                + "o.address, "
+                + "o.email, "
+                + "o.shipping_address "
+                + "FROM `Order` o "
+                + "WHERE o.user_id = ? AND o.status = ?";
 
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setInt(1, userId);
-        statement.setString(2, status);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            statement.setString(2, status);
 
-        resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
 
-        while (resultSet.next()) {
-            Order ol = new Order();
-            ol.setOrder_id(resultSet.getInt("order_id"));
-            ol.setUser_id(resultSet.getInt("user_id"));
-            ol.setStatus(resultSet.getString("status"));
-            ol.setTotal(resultSet.getBigDecimal("total"));
-            ol.setPayment_method(resultSet.getString("payment_method"));
-            ol.setCreated_at(resultSet.getTimestamp("created_at"));
-            ol.setUpdate_at(resultSet.getTimestamp("updated_at"));
-            ol.setCoupon_code(resultSet.getString("coupon_code"));
-            ol.setDiscount_amount(resultSet.getBigDecimal("discount_amount"));
-            ol.setFull_name(resultSet.getString("full_name"));
-            ol.setMobile(resultSet.getString("mobile"));
-            ol.setAddress(resultSet.getString("address"));
-            ol.setEmail(resultSet.getString("email"));
-            ol.setShipping_address(resultSet.getString("shipping_address"));
+            while (resultSet.next()) {
+                Order ol = new Order();
+                ol.setOrder_id(resultSet.getInt("order_id"));
+                ol.setUser_id(resultSet.getInt("user_id"));
+                ol.setStatus(resultSet.getString("status"));
+                ol.setTotal(resultSet.getBigDecimal("total"));
+                ol.setPayment_method(resultSet.getString("payment_method"));
+                ol.setCreated_at(resultSet.getTimestamp("created_at"));
+                ol.setUpdate_at(resultSet.getTimestamp("updated_at"));
+                ol.setCoupon_code(resultSet.getString("coupon_code"));
+                ol.setDiscount_amount(resultSet.getBigDecimal("discount_amount"));
+                ol.setFull_name(resultSet.getString("full_name"));
+                ol.setMobile(resultSet.getString("mobile"));
+                ol.setAddress(resultSet.getString("address"));
+                ol.setEmail(resultSet.getString("email"));
+                ol.setShipping_address(resultSet.getString("shipping_address"));
 
-            orderLists.add(ol);
+                orderLists.add(ol);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+        return orderLists;
     }
-
-    return orderLists;
-}
-
 
     public Order getFromResultSet(ResultSet resultSet) throws SQLException {
         return Order.builder()
@@ -141,45 +140,36 @@ public class OrderDAO extends DBContext {
                 .build();
     }
 
-    public int getTotalOrderCount() {
-        String sql = "SELECT COUNT(*) FROM `Order`";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
+    public int getTotalOrderCountByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM `Order` WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         } catch (Exception e) {
-            System.out.println("Error counting Order: " + e.getMessage());
-        } finally {
-            closeResources();
+            e.printStackTrace();
         }
         return 0;
     }
 
-    public List<Order> findAllWithPagination(int page, int pageSize) {
-        List<Order> orderlist = new ArrayList<>();
-        String sql = "SELECT * FROM `Order` ORDER BY order_id LIMIT ?, ?";
-
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, (page - 1) * pageSize);
-            statement.setInt(2, pageSize);
-
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                orderlist.add(getFromResultSet(resultSet));
+    public List<Order> findOrdersByUserIdWithPagination(int userId, int page, int pageSize) {
+        List<Order> list = new ArrayList<>();
+        String sql = "SELECT * FROM `Order` WHERE user_id = ? ORDER BY order_id DESC LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order order = getFromResultSet(rs);
+                list.add(order);
             }
         } catch (Exception e) {
-            System.out.println("Error finding Order with pagination: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            closeResources();
         }
-
-        return orderlist;
+        return list;
     }
 
     public Order getOrderById(int orderId) {
@@ -240,23 +230,13 @@ public class OrderDAO extends DBContext {
         return success;
     }
     
-   
-public static void main(String[] args) {
+    public static void main(String[] args) {
         OrderDAO dao = new OrderDAO();
+        
+        int userId = 1; // thay bằng user_id thực tế có trong bảng Order
+        int totalOrders = dao.getTotalOrderCountByUserId(userId);
 
-        int page = 1;
-        int pageSize = 10;
-
-        List<Order> orders = dao.findAllWithPagination(page, pageSize);
-
-        if (orders.isEmpty()) {
-            System.out.println("❌ Không có đơn hàng nào được tìm thấy.");
-        } else {
-            System.out.println("✅ Danh sách đơn hàng trang " + page + ":");
-            for (Order order : orders) {
-                System.out.println(order);
-            }
-        }
+        System.out.println("Tổng số đơn hàng của user_id = " + userId + " là: " + totalOrders);
     }
 
 }
