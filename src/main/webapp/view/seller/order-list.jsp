@@ -495,14 +495,31 @@
                                     <c:forEach var="order" items="${orders}">
                                         <c:set var="acc" value="${AccountMap[order.account_id]}"/>
                                         <tr>
+                                         
                                             <td>#${order.id}</td>
+                                               <c:choose>
+                                                   <c:when test="${not empty acc.user_name}">
+                                                       <td>
+                                                   ${acc.user_name}<br>
+                                                       </td>
+                                                   </c:when>
+                                                   <c:otherwise>
+                                                       <td>${order.full_name}</td>
+                                                   </c:otherwise>
+                                            </c:choose>
                                             
-                                            <td>
-                                               ${acc.user_name}<br>
-                                             </td>
-                                            <td>
-                                                ${order.shipping_address}
-                                            </td>
+                                             
+                                           
+                                                <c:choose>
+                                                    <c:when test="${not empty order.shipping_address}">
+                                                        <td>  ${order.shipping_address} </td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                   <td>    ${order.address} </td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                               
+                                           
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px"
