@@ -46,7 +46,7 @@ public class OrderApprovalDAO extends DBContext implements I_DAO<OrderApproval>{
         List<OrderApproval> approvals = new ArrayList<>();
 
         String sql = "SELECT * "
-                + "FROM order_approvals "
+                + "FROM OrderApproval "
                 + "WHERE order_id = ? "
                 + "ORDER BY approved_at DESC";
 

@@ -180,7 +180,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
 
             // Step 2: Update order status and timestamp
-            String updateSql = "UPDATE Order SET status = ?, updated_at = NOW() WHERE id = ?";
+            String updateSql = "UPDATE `Order` SET status = ?, updated_at = NOW() WHERE id = ?";
             statement = connection.prepareStatement(updateSql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
@@ -453,9 +453,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 //        System.out.println(l);
 //        System.out.println(Account.get(16));
 //    }
-    List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
-        System.out.println(l2);
-     List<Order> l = d.searchOrders("kien", "", "", 1, 10);
-        System.out.println(l);
+//    List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
+//        System.out.println(l2);
+//     List<Order> l = d.searchOrders("kien", "", "", 1, 10);
+//        System.out.println(l);
+     Boolean b = d.updateOrderStatus(63, "accepted", 21,"ac");
+        System.out.println(b);
+        
 }
 }
