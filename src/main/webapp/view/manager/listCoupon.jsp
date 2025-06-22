@@ -244,7 +244,7 @@
                                      border-radius: 12px;
                                      border: 1px solid #e2e8f0;
                                      transition: all 0.3s ease;
-                                     margin-top: -51px;
+                                     margin-top: 3px;
                                  }
 
                                  .form-search:hover {
@@ -309,7 +309,7 @@
                                  .search-box {
                                      display: flex;
                                      align-items: center;
-                                     transform: translateY(-46px);
+                                     transform: translateY(-19px);
                                      
                                  }
                                  .search-container {
