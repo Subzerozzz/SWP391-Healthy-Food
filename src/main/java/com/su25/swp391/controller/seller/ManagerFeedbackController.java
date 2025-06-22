@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -146,14 +147,17 @@ public class ManagerFeedbackController extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
         
         // get account
+         HashMap<Integer,Account> AccountMap = new HashMap<>();
          for (Feedbacks feedback : feedbacks) {
-              Account acc2 = accDAO.findById(feedback.getUserId());
-              feedback.setAccount(acc2);
-              OrderItem item = itemDAO.findById(feedback.getOrderItemId());
-              Food food = foodDAO.findById(item.getFood_id());
-             feedback.setFood(food);
-         }
-         
+              Account acc = accDAO.findById(feedback.getUser_id());
+              AccountMap.put(feedback.getUser_id(), acc);
+          }
+         HashMap<Integer,Food> FoodMap = new HashMap<>();
+         for (Feedbacks feedback : feedbacks) {
+             OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
+             Food food = foodDAO.findById(item.getFood_id());
+             FoodMap.put(feedback.getOrder_item_id(), food);
+          }
         
         // Set attributes
         request.setAttribute("currentPage", page);
@@ -161,15 +165,19 @@ public class ManagerFeedbackController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         request.setAttribute("feedbacks", feedbacks);
+        request.setAttribute("accountMap",AccountMap);
+        request.setAttribute("FoodMap", FoodMap);
+        PrintWriter o = response.getWriter();
+        o.print(feedbacks);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
         Feedbacks feedback = feedbackDAO.findById(feedbackId);
-        Account acc2 = accDAO.findById(feedback.getUserId());
+        Account acc2 = accDAO.findById(feedback.getUser_id());
         feedback.setAccount(acc2);
-        OrderItem item = itemDAO.findById(feedback.getOrderItemId());
+        OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
         Food food = foodDAO.findById(item.getFood_id());
         feedback.setFood(food);
         request.setAttribute("feedback", feedback);
@@ -204,9 +212,9 @@ public class ManagerFeedbackController extends HttpServlet {
             // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
             for (Feedbacks feedback : feedbacks) {
-              Account acc2 = accDAO.findById(feedback.getUserId());
+              Account acc2 = accDAO.findById(feedback.getUser_id());
               feedback.setAccount(acc2);
-              OrderItem item = itemDAO.findById(feedback.getOrderItemId());
+              OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
               Food food = foodDAO.findById(item.getFood_id());
              feedback.setFood(food);
          }

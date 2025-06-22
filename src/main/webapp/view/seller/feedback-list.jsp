@@ -326,10 +326,12 @@ value="${search}"/>
 <tbody>
         
     <c:forEach var="feedback" items="${feedbacks}">
+        <c:set var="account" value="${AccountMap[feedback.user_id]}"/>
+        <c:set var="food" value="${FoodMap[feedback.orderItem_id]}"/>
         <tr>
             <td>${feedback.id}</td>
-                <td>${feedback.account.user_name}</td>
-                <td>${feedback.food.name}</td>
+                <td>${account.user_name}</td>
+                <td>${food.name}</td>
             <td>
                     <c:forEach begin="1" end="${feedback.rating}">
                         <i class="fa-solid fa-star" style="color: gold;"></i>

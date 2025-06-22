@@ -15,6 +15,7 @@ import com.su25.swp391.entity.OrderItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,22 +118,20 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
         return new Feedbacks()
                 .builder()
                 .id(resultSet.getInt("id"))
-                .userId(resultSet.getInt("user_id"))
-                .orderItemId(resultSet.getInt("order_item_id"))
+                .user_id(resultSet.getInt("user_id"))
+                .order_item_id(resultSet.getInt("order_item_id"))
                 .content(resultSet.getString("content"))
                 .rating(this.resultSet.getInt("rating"))
                 .isVisible(resultSet.getBoolean("is_visible"))
                 .createdAt(resultSet.getTimestamp("created_at"))
                 .updatedAt(resultSet.getTimestamp("updated_at"))
-                .account(null)
-                .food(null)
                 .build();
      }
      public List<Feedbacks> searchFeedback(String search, String status, int page, int pageSize) {
         List<Feedbacks> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT f.*, a.user_name, a.email, a.mobie "
-                + "FROM feedbacks f "
-                + "JOIN account a ON f.user_id = a.id "
+                + "FROM Feedbacks f "
+                + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
 
@@ -174,8 +173,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 
     public int getTotalFeedbackResults(String search, String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM feedbacks f "
-                + "JOIN account a ON f.user_id = a.id "
+                + "FROM Feedback f "
+                + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
@@ -211,19 +210,19 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     
      public List<Feedbacks> findFeedbackWithFilters(String status,  int page, int pageSize) {
         List<Feedbacks> feedbacks = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT f.* "
-                + "FROM feedbacks f "
-                + "WHERE f.is_visible = 1  ");
+        StringBuilder sql = new StringBuilder("SELECT * "
+                + "FROM Feedback  "
+                + "WHERE is_visible = 1  ");
         List<Object> params = new ArrayList<>();
         if(status != null && status.contains("-1")){
             status = null;
         }
         if (status != null && !status.isEmpty()) {
-            sql.append("AND f.rating = ? ");
+            sql.append("AND rating = ? ");
             params.add(status);
         }
         
-        sql.append("ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
+        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
         params.add((page - 1) * pageSize);
 
@@ -247,8 +246,8 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
     }
      public int getTotalFilteredFeedback(String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM feedbacks f "
-                + "JOIN account a ON f.user_id = a.id "
+                + "FROM Feedback f "
+                + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE f.is_visible = 1 ");
         List<Object> params = new ArrayList<>();
          if(status != null && status.contains("-1")){
@@ -301,9 +300,25 @@ public class FeedbacksDAO extends DBContext implements I_DAO<Feedbacks> {
 //        System.out.println(feedbacks);
 //          Feedbacks fe = f.findById(1);
 //          System.out.println(fe);
-        Feedbacks fe = f.findById(1);
-       
-           System.out.println(f.update(fe));
+       AccountDAO accDAO = new AccountDAO();
+       OrderItemDAO itemDAO = new OrderItemDAO();
+        FoodDAO foodDAO = new FoodDAO();
+        List<Feedbacks> feedbacks = f.findFeedbackWithFilters("", 1, 2);
+        HashMap<Integer,Account> AccountMap = new HashMap<>();
+         for (Feedbacks feedback : feedbacks) {
+              Account acc = accDAO.findById(feedback.getUser_id());
+              AccountMap.put(feedback.getUser_id(), acc);
+          }
+         HashMap<Integer,Food> FoodMap = new HashMap<>();
+         for (Feedbacks feedback : feedbacks) {
+             OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
+             Food food = foodDAO.findById(item.getFood_id());
+             FoodMap.put(feedback.getOrder_item_id(), food);
+          }
+         System.out.println(feedbacks);
+         System.out.println(AccountMap);
+         System.out.println(FoodMap);
+         
     }
 
 }
