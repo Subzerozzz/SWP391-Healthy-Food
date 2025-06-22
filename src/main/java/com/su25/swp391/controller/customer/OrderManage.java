@@ -40,14 +40,12 @@ public class OrderManage extends HttpServlet {
             throws ServletException, IOException {
         String path = request.getServletPath();
 
+            
         switch (path) {
-            case "/orderlist":
-                showOrderList(request, response);
-                break;
             case "/orderdetail":
                 showOrderDetail(request, response);
                 break;
-            case "/order-list":
+            case "/orderlist":
                 orderPage(request, response);
                 break;
             default:
@@ -70,91 +68,8 @@ public class OrderManage extends HttpServlet {
             default:
                 break;
         }
-    }
+    }   
 
-//    private void showOrderList(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        String email = (String) session.getAttribute("email");
-//        String username = (String) session.getAttribute("user_name");
-//
-//        if (email == null) {
-//            response.sendRedirect(HOME_PAGE);
-//            return;
-//        }
-//
-//        Account acc = Account.builder()
-//                .email(email)
-//                .user_name(username)
-//                .build();
-//        Account accountFoundByEmail = accountDAO.findByEmail(acc);
-//        Account accountFoundByUsername = accountDAO.findByUsername(acc);
-//
-//        if (accountFoundByEmail != null) {
-//            int userId = accountFoundByEmail.getId();
-//            List<Order> orderList = orderListDAO.getOrderListByUserId(userId);
-//            request.setAttribute("orderList", orderList);
-//        } else if (accountFoundByUsername != null) {
-//            int userId = accountFoundByUsername.getId();
-//            List<Order> orderList = orderListDAO.getOrderListByUserId(userId);
-//            request.setAttribute("orderList", orderList);
-//        }
-//
-//        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-//    }
-    
-     private void showOrderList(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    HttpSession session = request.getSession();
-    String email = (String) session.getAttribute("email");
-    String username = (String) session.getAttribute("user_name");
-
-    if (email == null) {
-        response.sendRedirect(HOME_PAGE);
-        return;
-    }
-
-    Account acc = Account.builder()
-            .email(email)
-            .user_name(username)
-            .build();
-    Account accountFoundByEmail = accountDAO.findByEmail(acc);
-    Account accountFoundByUsername = accountDAO.findByUsername(acc);
-
-    int userId = -1;
-    if (accountFoundByEmail != null) {
-        userId = accountFoundByEmail.getId();
-        List<Order> orderList = orderListDAO.getOrderListByUserId(userId);
-    } else if (accountFoundByUsername != null) {
-        userId = accountFoundByUsername.getId();
-        List<Order> orderList = orderListDAO.getOrderListByUserId(userId);
-    }
-
-    if (userId != -1) {
-        // Get pagination parameters from request
-        int page = 1;
-        int pageSize = 10;
-
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        if (request.getParameter("pageSize") != null) {
-            pageSize = Integer.parseInt(request.getParameter("pageSize"));
-        }
-
-        // Get paginated order list
-        List<Order> orderList = orderListDAO.findAllWithPagination( page, pageSize);
-        int totalOrders = orderListDAO.getTotalOrderCount();
-        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-
-        request.setAttribute("orderList", orderList);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("pageSize", pageSize);
-    }
-
-    request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-}
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -241,33 +156,73 @@ public class OrderManage extends HttpServlet {
     }
 
     private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+         String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
         int currentPage = 1;
-        int pageSize = 5;
-
-        String pageParam = request.getParameter("page");
-        if (pageParam != null) {
-            try {
+        int pageSize = 10;
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
                 currentPage = Integer.parseInt(pageParam);
-                if (currentPage <= 0) {
+                if (currentPage < 1) {
                     currentPage = 1;
                 }
-            } catch (NumberFormatException e) {
-                currentPage = 1;
             }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
         }
-
-        // Gọi DAO để lấy danh sách đơn theo trang
-        OrderDAO orderDAO = new OrderDAO();
-        List<Order> orderList = orderDAO.findAllWithPagination(currentPage, pageSize);
-        int totalOrders = orderDAO.getTotalOrderCount();
-        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-
-        // Gửi sang JSP
+       
+        //lay ra danh sach cate
+        List<Order> orderList = orderListDAO.findAllWithPagination(currentPage, pageSize);
+        //tinh toan phan trang 
+        int totalOrder = orderListDAO.getTotalOrderCount();
+        int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
+        //thiet lap cac thuoc tinh cho jsp
         request.setAttribute("orderList", orderList);
         request.setAttribute("currentPage", currentPage);
+        request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalPages", totalPages);
-
+        request.setAttribute("totalOrder", totalOrder);
+        //tinh toan pham vi the hien
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
         request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+
     }
+//        String indexParam = request.getParameter("index");
+//        int currentPage = 1;
+//        int pageSize = 10;
+//
+//        try {
+//            if (indexParam != null) {
+//                currentPage = Integer.parseInt(indexParam);
+//            }
+//        } catch (NumberFormatException e) {
+//            currentPage = 1;
+//        }
+//
+//        // Lấy danh sách đơn hàng phân trang
+//        List<Order> orderList = orderListDAO.findAllWithPagination(currentPage, pageSize);
+//        int totalOrders = orderListDAO.getTotalOrderCount();
+//        int totalPage = (int) Math.ceil((double) totalOrders / pageSize);
+//
+//        request.setAttribute("orderList", orderList);
+//        request.setAttribute("currentPage", currentPage);
+//        request.setAttribute("totalPage", totalPage);
+//
+//        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+//    }
 
 }

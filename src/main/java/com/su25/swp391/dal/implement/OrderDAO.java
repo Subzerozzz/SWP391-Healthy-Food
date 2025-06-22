@@ -142,7 +142,7 @@ public class OrderDAO extends DBContext {
     }
 
     public int getTotalOrderCount() {
-        String sql = "SELECT COUNT(*) FROM Order";
+        String sql = "SELECT COUNT(*) FROM `Order`";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -160,7 +160,7 @@ public class OrderDAO extends DBContext {
 
     public List<Order> findAllWithPagination(int page, int pageSize) {
         List<Order> orderlist = new ArrayList<>();
-        String sql = "SELECT * FROM Order ORDER BY order_id LIMIT ?, ?";
+        String sql = "SELECT * FROM `Order` ORDER BY order_id LIMIT ?, ?";
 
         try {
             connection = getConnection();
@@ -239,6 +239,24 @@ public class OrderDAO extends DBContext {
 
         return success;
     }
+    
+   
+public static void main(String[] args) {
+        OrderDAO dao = new OrderDAO();
 
+        int page = 1;
+        int pageSize = 10;
+
+        List<Order> orders = dao.findAllWithPagination(page, pageSize);
+
+        if (orders.isEmpty()) {
+            System.out.println("❌ Không có đơn hàng nào được tìm thấy.");
+        } else {
+            System.out.println("✅ Danh sách đơn hàng trang " + page + ":");
+            for (Order order : orders) {
+                System.out.println(order);
+            }
+        }
+    }
 
 }
