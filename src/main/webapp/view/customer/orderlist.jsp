@@ -166,108 +166,112 @@
                                                                                                     </c:forEach>
                                                                                                 </ul>
                                                                                             </div>
-                                                                                            <div class="divider"></div>
                                                                                             <div class="flex items-center justify-between flex-wrap gap10">
                                                                                                 <div class="text-tiny">
-                                                                                                    Showing ${startRecord} to ${endRecord} of ${totalAccounts} entries
+                                                                                                    Showing ${startRecord} to ${endRecord} of ${totalOrder} entries
                                                                                                 </div>
-                                                                                                <!--phân trang--> 
-                                                                                                <c:if test="${totalPages > 1}">
+                                                                                                <div class="divider"></div>
+                                                                                                <div class="pagination">
                                                                                                     <ul class="wg-pagination">
+
                                                                                                         <!-- Nút Previous -->
-                                                                                                        <li>
-                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=1&pageSize=${pageSize}">
-                                                                                                                <i class="icon-chevron-left"></i>
-                                                                                                            </a>
-                                                                                                        </li>
+                                                                                                        <c:if test="${currentPage > 1}">
+                                                                                                            <li>
+                                                                                                                <a href="orderlist?page=${currentPage - 1}&pageSize=${pageSize}">
+                                                                                                                    <i class="icon-chevron-left"></i>
+                                                                                                                </a>
+                                                                                                            </li>
+                                                                                                        </c:if>
 
                                                                                                         <c:choose>
-                                                                                                            <c:when test="${currentPage <= totalPages - 2}">
+                                                                                                            <%-- Nếu tổng trang <= 7 thì hiển thị tất cả trang --%>
+                                                                                                            <c:when test="${totalPages <= 7}">
+                                                                                                                <c:forEach var="i" begin="1" end="${totalPages}">
+                                                                                                                    <li <c:if test="${i == currentPage}">class="active"</c:if>>
+                                                                                                                        <a href="orderlist?page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
+                                                                                                            </c:when>
+
+                                                                                                            <c:otherwise>
+                                                                                                                <%-- Hiển thị trang đầu nếu chưa đứng ở đầu --%>
                                                                                                                 <c:if test="${currentPage > 1}">
                                                                                                                     <li>
-                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage - 1}&pageSize=${pageSize}">
-                                                                                                                            ${currentPage - 1}
-                                                                                                                        </a>
+                                                                                                                        <a href="orderlist?page=1&pageSize=${pageSize}">1</a>
                                                                                                                     </li>
                                                                                                                 </c:if>
 
-                                                                                                                <li class="active">
-                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage}&pageSize=${pageSize}">
-                                                                                                                        ${currentPage}
-                                                                                                                    </a>
-                                                                                                                </li>
+                                                                                                                <%-- Hiển thị dấu ... nếu cách xa đầu --%>
+                                                                                                                <c:if test="${currentPage > 3}">
+                                                                                                                    <li><span>...</span></li>
+                                                                                                                    </c:if>
 
-                                                                                                                <li>
-                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
-                                                                                                                        ${currentPage + 1}
-                                                                                                                    </a>
-                                                                                                                </li>
+                                                                                                                <%-- Hiển thị 3 trang gần currentPage --%>
+                                                                                                                <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 1 : 1}" end="${currentPage < totalPages - 1 ? currentPage + 1 : totalPages}">
+                                                                                                                    <li <c:if test="${i == currentPage}">class="active"</c:if>>
+                                                                                                                        <a href="orderlist?page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
 
+                                                                                                                <%-- Hiển thị dấu ... nếu còn nhiều trang phía sau --%>
                                                                                                                 <c:if test="${currentPage < totalPages - 2}">
                                                                                                                     <li><span>...</span></li>
                                                                                                                     </c:if>
 
-                                                                                                                <li>
-                                                                                                                    <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
-                                                                                                                        ${totalPages}
-                                                                                                                    </a>
-                                                                                                                </li>
-                                                                                                            </c:when>
-
-                                                                                                            <c:otherwise>
-                                                                                                                <c:forEach begin="${totalPages - 2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
-                                                                                                                    <li class="${currentPage == i ? 'active' : ''}">
-                                                                                                                        <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${i}&pageSize=${pageSize}">
-                                                                                                                            ${i}
-                                                                                                                        </a>
+                                                                                                                <%-- Hiển thị trang cuối nếu chưa đứng ở cuối --%>
+                                                                                                                <c:if test="${currentPage < totalPages}">
+                                                                                                                    <li>
+                                                                                                                        <a href="orderlist?page=${totalPages}&pageSize=${pageSize}">${totalPages}</a>
                                                                                                                     </li>
-                                                                                                                </c:forEach>
+                                                                                                                </c:if>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
                                                                                                         <!-- Nút Next -->
-                                                                                                        <li>
-                                                                                                            <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${totalPages}&pageSize=${pageSize}">
-                                                                                                                <i class="icon-chevron-right"></i>
-                                                                                                            </a>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </c:if>
+                                                                                                        <c:if test="${currentPage < totalPages}">
+                                                                                                            <li>
+                                                                                                                <a href="orderlist?page=${currentPage + 1}&pageSize=${pageSize}">
+                                                                                                                    <i class="icon-chevron-right"></i>
+                                                                                                                </a>
+                                                                                                            </li>
+                                                                                                        </c:if>
 
+                                                                                                    </ul>
+
+                                                                                                </div>
                                                                                             </div>
+                                                                                            <!-- /order-list -->
                                                                                         </div>
-                                                                                        <!-- /order-list -->
+                                                                                        <!-- /main-content-wrap -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
+                                                                                    <!-- bottom-page -->
+                                                                                    <div class="bottom-page">
+                                                                                        <div class="body-text">Copyright © 2024 Remos. Design with</div>
+                                                                                        <i class="icon-heart"></i>
+                                                                                        <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
+                                                                                    </div>
+                                                                                    <!-- /bottom-page -->
                                                                                 </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                <div class="bottom-page">
-                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                    <i class="icon-heart"></i>
-                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                </div>
-                                                                                <!-- /bottom-page -->
+                                                                                <!-- /main-content -->
                                                                             </div>
-                                                                            <!-- /main-content -->
+                                                                            <!-- /section-content-right -->
                                                                         </div>
-                                                                        <!-- /section-content-right -->
+                                                                        <!-- /layout-wrap -->
                                                                     </div>
-                                                                    <!-- /layout-wrap -->
+                                                                    <!-- /#page -->
                                                                 </div>
-                                                                <!-- /#page -->
-                                                            </div>
-                                                            <!-- /#wrapper -->
+                                                                <!-- /#wrapper -->
 
-                                                            <!-- Javascript -->
+                                                                <!-- Javascript -->
 
-                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
                                                         </body>
 
 
