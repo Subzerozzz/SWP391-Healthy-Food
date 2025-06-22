@@ -7,6 +7,7 @@ package com.su25.swp391.controller.authen;
 import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
 import com.su25.swp391.utils.MD5PasswordEncoderUtils;
@@ -50,6 +51,7 @@ public class AuthenController extends HttpServlet {
     private static final String MYACCOUNT_PAGE = "view/authen/myaccount.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
+    CartDAO cartDAO = new CartDAO();
     EmailUtils emailotp = new EmailUtils();
 
     @Override
@@ -184,19 +186,18 @@ public class AuthenController extends HttpServlet {
         Account accountFoundByUsername = accountDAO.findByUsername(account);
 
         // Nếu email đã tồn tại
-        if (accountFoundByEmail != null || accountFoundByUsername != null) {
-            // Nếu username trùng với email
-            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
-                session.setAttribute("toastMessage", "Username already exists!");
-                session.setAttribute("toastType", "error");
-            } else {
-                // Nếu email đã tồn tại
-                session.setAttribute("toastMessage", "Email already exists!");
-                session.setAttribute("toastType", "error");
-            }
+        if (accountFoundByEmail != null && accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
+            // Trường hợp user_name trùng với user_name của account có email trùng
+            session.setAttribute("toastMessage", "Username already exists!");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+        } else if (accountFoundByEmail != null) {
+            // Trùng email
+            session.setAttribute("toastMessage", "Email already exists!");
+            session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
         } else {
-            // Nếu email chưa tồn tại
+            // Không trùng — tạo tài khoản
             String otp = EmailUtils.sendOTPMail(email);
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
@@ -205,8 +206,8 @@ public class AuthenController extends HttpServlet {
             session.setAttribute("password", password);
             session.setAttribute("otpType", "register");
             url = OTP_PAGE;
-
         }
+
         request.getRequestDispatcher(url).forward(request, response);
 
     }
@@ -243,6 +244,10 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("toastType", "error");
                 url = LOGIN_PAGE;
             } else {
+                boolean checkCart = cartDAO.hasCart(accFoundByUsernamePass.getId());
+                if (!checkCart) {
+                    cartDAO.createCart(accFoundByUsernamePass.getId());
+                }
                 session.setAttribute("email", usernameOrEmail);
                 session.setAttribute("password", password);
                 session.setAttribute("user_name", usernameOrEmail);
@@ -261,6 +266,7 @@ public class AuthenController extends HttpServlet {
 
     private void otpDoPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String url = null;
         //get ve OTP
         HttpSession session = request.getSession();
@@ -277,10 +283,13 @@ public class AuthenController extends HttpServlet {
         String otp6 = request.getParameter("otp6");
         String otpForm = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
         // so sanh OTP
+//  
         if (otp.equals(otpForm)) {
             if ("register".equals(otpType)) {
                 accountFoundByEmail.setPassword(MD5PasswordEncoderUtils.encodeMD5(accountFoundByEmail.getPassword()));
                 accountDAO.insert(accountFoundByEmail);
+                Account savedAccount = accountDAO.findByEmail(accountFoundByEmail);
+                cartDAO.createCart(savedAccount.getId());
                 url = HOME_PAGE;
             } else if ("forgot".equals(otpType)) {
                 url = NEWPASS_PAGE;

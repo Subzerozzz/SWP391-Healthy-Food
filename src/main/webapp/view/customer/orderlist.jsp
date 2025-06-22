@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -150,7 +151,9 @@
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                 <div class="body-text">#${order.order_id} </div>
                                                                                                                 <div class="body-text">${order.shipping_address} </div>
-                                                                                                                <div class="body-text">${order.total}VND</div>
+                                                                                                                <div class="body-text">
+                                                                                                                    <fmt:formatNumber value="${order.total}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
+                                                                                                                </div>
                                                                                                                 <div class="body-text">${order.created_at} </div>
                                                                                                                 <div class="body-text"><a>${order.payment_method}</a></div>
                                                                                                                 <div>
@@ -167,9 +170,6 @@
                                                                                                 </ul>
                                                                                             </div>
                                                                                             <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                <div class="text-tiny">
-                                                                                                    Showing ${startRecord} to ${endRecord} of ${totalOrder} entries
-                                                                                                </div>
                                                                                                 <div class="divider"></div>
                                                                                                 <div class="pagination">
                                                                                                     <ul class="wg-pagination">

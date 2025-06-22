@@ -8,7 +8,7 @@
     <!--<![endif]-->
     <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
-        
+
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -199,10 +199,10 @@
                                                                                                             <div class="body-title">Expected Date Of Delivery</div>
                                                                                                             <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
                                                                                                         </div>
-                                                                                                        <div class="wg-box gap10">
-                                                                                                            <a class="tf-button style-1 w-full" onclick="cancelOrder(${vm.order.order_id}, '${vm.order.status}')">Cancel</a>
-                                                                                                            <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back</a>
-                                                                                                        </div>
+                                                                                                         <a class="tf-button style-1 w-full" onclick="cancelOrder(${vm.order.order_id}, '${vm.order.status}')">Cancel</a>
+                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=1&pageSize=10" class="btn btn-secondary">
+                                                                                                            Back to My Orders
+                                                                                                        </a>
                                                                                                     </div>
                                                                                                 </c:if>
                                                                                                 <!-- Thông tin chi tiết -->
