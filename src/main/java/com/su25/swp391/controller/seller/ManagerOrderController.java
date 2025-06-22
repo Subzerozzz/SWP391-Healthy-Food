@@ -22,6 +22,8 @@ import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderApproval;
 import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.List;
@@ -165,10 +167,7 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("search", search);
         // Forword to the order list page
-//        PrintWriter o = response.getWriter();
-//        o.print(orders);
-//        o.print(AccountMap);
-       request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
 
     }
 
@@ -206,8 +205,6 @@ public class ManagerOrderController extends HttpServlet {
 
             // Get current status for message
             String oldStatus = order.getStatus();
-
-            // Log gỡ rối
             System.out.println("DEBUG: update order #" + orderId + " from '" + oldStatus + "' to '" + newStatus + "'");
 
             boolean update = orderDAO.updateOrderStatus(orderId, newStatus, 21, note);
@@ -236,6 +233,22 @@ public class ManagerOrderController extends HttpServlet {
             } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
 
+            }
+
+            // If Account_id == 0 => This is Guest so give a mail for order status
+            if (order.getAccount_id() == 0) {
+                String customerEmail = order.getEmail();
+                String customerName = order.getFull_name();
+                String subject = "Trạng thái Đơn hàng!";
+                String content = "<h3>Chào " + customerName + ",</h3>"
+                        + "<p>Đơn hàng của bạn đã được <strong>" + newStatus 
+                        + "<p>Cảm ơn bạn đã mua sắm tại Healthy Food Store!</p>"
+                        + "<br><em>Trân trọng,</em><br>Đội ngũ Hỗ trợ Khách hàng ";
+                try {
+                    EmailUtils.sendMail(customerEmail, subject, content);
+                } catch (MessagingException ex) {
+                    ex.printStackTrace(); // hoặc log lỗi
+                }
             }
             // Redirect to the order detail page
             response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
@@ -281,9 +294,6 @@ public class ManagerOrderController extends HttpServlet {
             request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
             //     Forward to the order detail page
-            // PrintWriter out = response.getWriter();
-            // out.print(order);
-
             request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");

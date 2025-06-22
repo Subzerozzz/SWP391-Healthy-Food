@@ -314,7 +314,9 @@ textarea.form-control {
                         <div class="card-header">
                             <h6 class="card-title mb-0">Customer Information</h6>
                         </div>
-                        <div class="card-body">
+                        <c:choose>
+                            <c:when test="${not empty account}">
+                                  <div class="card-body">
                             <div class="mb-3">
                                 <strong>Name:</strong> ${account.user_name}
                             </div>
@@ -329,6 +331,26 @@ textarea.form-control {
                                 ${order.shipping_address}
                             </div>
                         </div>
+                            </c:when>
+                            <c:otherwise>
+                               <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Name:</strong> ${order.full_name}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> ${order.email}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Mobile:</strong> ${order.mobile}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Shipping Address:</strong><br>
+                                ${order.address}
+                            </div>
+                        </div>  
+                            </c:otherwise>
+                        </c:choose>
+                      
                     </div>
                 </div>
                              <!-- Update Status -->

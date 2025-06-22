@@ -31,10 +31,11 @@ public class EmailUtils {
             }
         });
 
-        Message message = new MimeMessage(session);
+        MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(GlobalConfig.USERNAME_EMAIL));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
+        message.setSubject(subject, "UTF-8");
+        message.setHeader("Content-Type", "text/html; charset=UTF-8");
         message.setContent(content, "text/html; charset=UTF-8");
 
         Transport.send(message);
