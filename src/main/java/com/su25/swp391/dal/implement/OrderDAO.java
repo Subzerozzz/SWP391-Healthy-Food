@@ -43,7 +43,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                .discount_value(rs.getDouble("discount_value"))
                .full_name(rs.getString("full_name"))
                .mobile(rs.getString("mobile"))
-               .address(rs.getString("address"))
                .email(rs.getString("email"))
                .build();
          }

@@ -43,13 +43,14 @@ import java.util.HashMap;
  */
 @WebServlet(name = "ManagerOrderController", urlPatterns = { "/seller/manage-order" })
 public class ManagerOrderController extends HttpServlet {
-
+    // Declare properties for DAO 
     private OrderDAO orderDAO;
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
     private AccountDAO accDAO = new AccountDAO();
     private CouponDAO couponDAO;
     private FoodDAO foodDAO;
+    // Method in Servlet Container call only 1 time in lifecycle
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
@@ -65,11 +66,10 @@ public class ManagerOrderController extends HttpServlet {
             throws ServletException, IOException {
         // Get action from submit
         String action = request.getParameter("action");
-
+        // If action == null
         if (action == null) {
             action = "list";
         }
-
         try {
             switch (action) {
                 case "list":
@@ -145,6 +145,7 @@ public class ManagerOrderController extends HttpServlet {
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
             orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
+            // count order
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
@@ -154,9 +155,12 @@ public class ManagerOrderController extends HttpServlet {
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+        // AccountMap get key with account_id and value is Account find by account_id
         HashMap<Integer, Account> AccountMap = new HashMap<>();
         for (Order order : orders) {
+            // Find Account by id
             Account acc = accDAO.findById(order.getAccount_id());
+            //  key with account_id and value is Account find by account_id
             AccountMap.put(order.getAccount_id(), acc);
         }
         // Set attributes
