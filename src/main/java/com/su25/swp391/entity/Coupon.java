@@ -3,8 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.su25.swp391.entity;
-
-import java.sql.Timestamp;
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,20 +19,20 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-
-public class Order {
+public class Coupon {
     private Integer id;
-    private Integer account_id;
-    private String status;
-    private Double total;
-    private String shipping_address;
-    private String payment_method;
-    private Timestamp created_at;
-    private Timestamp updated_at;
-    private String coupon_code;
-    private Double discount_amount;
-    private String full_name;
-    private String mobile;
-    private String address;
-    private String email;
+    private String code;
+    private String description;
+    private String discount_type;
+    private Double discount_value;
+    private Double min_purchase;
+    private Double max_discount;
+    private Date start_date;
+    private Date end_date;
+    private Integer usage_limit;
+    private Integer usage_count;
+    private Integer is_active;
+    private Date created_at;
+    private Date updated_at;
+    private Integer per_customer_limit;
 }
