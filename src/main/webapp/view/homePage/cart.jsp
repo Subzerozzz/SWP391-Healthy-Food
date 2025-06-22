@@ -222,39 +222,39 @@
 
                       
                   <div class="row">
-                      <!--Coupon--> 
-                    <div class="col-lg-6">
-                      <div class="cart-calc">
-                        <div class="cart-wraps-form">
-                          <h3>Coupon</h3>
-                          <div name="couponCode" class="form-group">
-                            <input type="text" class="form-control" placeholder="Coupon Code">
-                          </div>
-                          <a href="#" class="default-btn btn-bg-three">
-                            Apply Coupon
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                      <!--Total-->
-                    <div class="col-lg-6">
-                      <div class="cart-totals">
-                        <h3>Cart Totals</h3>
-                        <ul>
-                          <li class="subTotal">Subtotal<span></span></li>
-                          <li class="coupon">Coupon <span>0</span></li>
-                          <li class="totalPrice">Total <span><b></b></span></li>
-                        </ul>
-                        <form action="${pageContext.request.contextPath}/cart" method="GET" id="formCheckout">
-                            <input type="hidden" name="action" value="checkout">
-                            <input type="hidden" name="subTotal" value="">
-                            <input type="hidden" name="totalPrice" value="">
-                        </form>
-                        <a href="#" onclick="submitCheckout()" class="default-btn btn-bg-three">
-                          Proceed To Checkout
-                        </a>
-                      </div>
-                    </div>
+                      <form action="${pageContext.request.contextPath}/cart" method="GET" id="formCheckout" class="row">  
+                          <!--Coupon--> 
+                            <div class="col-lg-6">
+                              <div class="cart-calc">
+                                <div class="cart-wraps-form">
+                                  <h3>Coupon</h3>
+                                  <div class="form-group">
+                                    <input name="couponCode" type="text" class="form-control" placeholder="Coupon Code" value="${not empty couponCode? couponCode : ''}">
+                                  </div>
+                                  <a href="#" onclick="submitCoupon()" class="default-btn btn-bg-three">
+                                    Apply Coupon
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                              <!--Total-->
+                            <div class="col-lg-6">
+                              <div class="cart-totals">
+                                <h3>Cart Totals</h3>
+                                <ul>
+                                  <li class="subTotal">Subtotal<span></span></li>
+                                  <li class="coupon">Coupon <span>${not empty discountValue? discountValue: 0}</span></li>
+                                  <li class="totalPrice">Total <span><b></b></span></li>
+                                </ul>
+                                <input type="hidden" name="action" value="checkout">
+                                <input type="hidden" name="subTotal" value="">
+                                <input type="hidden" name="totalPrice" value="">
+                               <a href="#" onclick="submitCheckout()" class="default-btn btn-bg-three">
+                                  Proceed To Checkout
+                                </a>
+                              </div>
+                            </div>
+                    </form>
                   </div>
               </div>
             </div>
@@ -305,44 +305,92 @@
                 form.appendChild(input);
                 form.submit();
             }
+            
+            const submitCheckout = () => {
+                const formCheckout = document.getElementById("formCheckout");
+                formCheckout.submit();
+            }
+            
+            const submitCoupon = () => {
+                const formCoupon = document.createElement('form');
+                formCoupon.method = "POST";
+                formCoupon.action = "${pageContext.request.contextPath}/cart"
+                
+                //Lấy couponCode,subTotal và totalPrice
+                const coupon = document.querySelector("input[name='couponCode']").value
+                const subTotal = document.querySelector("input[name='subTotal']").value
+                const totalPrice = document.querySelector("input[name='totalPrice']").value
+                
+                console.log("Coupon" + coupon)
+                console.log("Subtotal" + subTotal)
+                console.log("TotalPrice" + totalPrice)
+                
+                //input an cho action
+                const inputAction = document.createElement("input");
+                inputAction.type="hidden";
+                inputAction.name="action";
+                inputAction.value="coupon";
+                //input an cho couponCode
+                const inputCoupon = document.createElement("input");
+                inputCoupon.type="hidden";
+                inputCoupon.name="coupon";
+                inputCoupon.value=coupon;
+                //input an subTotal
+                const inputSubTotal = document.createElement("input");
+                inputSubTotal.type="hidden";
+                inputSubTotal.name="subTotal";
+                inputSubTotal.value=subTotal;
+                //input an totalPrice
+                const inputTotalPrice = document.createElement("input");
+                inputTotalPrice.type="hidden";
+                inputTotalPrice.name="totalPrice";
+                inputTotalPrice.value=totalPrice;
+                
+                formCoupon.appendChild(inputAction);
+                formCoupon.appendChild(inputCoupon);
+                formCoupon.appendChild(inputSubTotal);
+                formCoupon.appendChild(inputTotalPrice);
+                
+                document.body.appendChild(formCoupon)
+                formCoupon.submit();
+                
+            }
         </script>
         
         <script>
             document.addEventListener("DOMContentLoaded" , () => {
                 const listRow = document.querySelectorAll("tr[name='tr-food']")
-                let totalPrice = 0;
+                let subTotal = 0;
                 listRow.forEach(row => {
                     const totalRow = row.querySelector(".subtotal-amount")
                     const priceText = totalRow.textContent.trim()
                     const priceNumber = parseInt(priceText.replace(/[^\d]/g, ""));
-                    totalPrice += priceNumber;
+                    subTotal += priceNumber;
                 })
-                console.log(totalPrice)
                 //Lay ra the Subtotal
-                const subTotal = document.querySelector(".subTotal").querySelector("span")
-                subTotal.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                const subTotalSpan = document.querySelector(".subTotal").querySelector("span")
+                subTotalSpan.textContent = subTotal.toLocaleString("vi-VN") + " VNĐ"
                 //Lay ra the coupon
+                let coupon = document.querySelector(".coupon").querySelector("span").textContent
+                const couponNumber = parseInt(coupon);
                 
                 //Tinh toan total = subTotal - coupon
-                const total = document.querySelector(".totalPrice").querySelector("span b");
-                total.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                const totalPrice = subTotal - couponNumber;
+                console.log(totalPrice)
+                const totalPriceSpan = document.querySelector(".totalPrice").querySelector("span b");
+                totalPriceSpan.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
                 
                 //Lay ra input subTotal va totalPrice
                 const inputSubTotal = document.querySelector("input[name='subTotal']")
                 const inputTotalPrice = document.querySelector("input[name='totalPrice']")
-                inputSubTotal.value = totalPrice
+                inputSubTotal.value = subTotal
                 inputTotalPrice.value = totalPrice
             })
         </script>
         
-        <script>
-            const submitCheckout = () => {
-                const formCheckout = document.getElementById("formCheckout");
-                formCheckout.submit();
-            }
-        </script>
         
-        <!--Thong bao cart rong-->
+        
+        <!--Thong bao cart rong cho checkout-->
          <c:if test="${isEmptyListCartItem == true}">
             <script>
               document.addEventListener("DOMContentLoaded", function () {
@@ -356,7 +404,127 @@
               });
             </script>
           </c:if>
+            
+         <!--Thong bao coupon KHĐ do cart rong-->
+         <c:if test="${isEmptyListCartItemForCoupon == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Vui lòng thêm sản phẩm để áp dụng mã giảm giá !",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#E23F33"
+                    });
+              });
+            </script>
+          </c:if>
+            
+        <!--Thong bao coupon KHĐ do account khong ton tai--> 
+        <c:if test="${accountNotFound == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Vui lòng đăng ký để có thể sử dụng mã giảm giá!",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#E23F33"
+                    });
+              });
+            </script>
+          </c:if>
+        
+        <!--Thong bao coupon KHĐ do coupon khong ton tai-->
+        <c:if test="${couponNotFound == true}">
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                iziToast.error({
+                    title: "Thông báo",
+                    message: "Sai mã giảm giá!",
+                    position: 'topRight',
+                    timeout: 5000,
+                    backgroundColor:"#E23F33"
+                    });
+              });
+            </script>
+          </c:if>
+            
+        <!--Thong bao coupon KHĐ do active-->
+        <c:if test="${couponNotActive == true}">
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              iziToast.error({
+                  title: "Thông báo",
+                  message: "Mã giảm giá đã hết hiệu lực !",
+                  position: 'topRight',
+                  timeout: 5000,
+                  backgroundColor:"#E23F33"
+                  });
+            });
+          </script>
+        </c:if>
 
+        <!--Thong bao coupon KHĐ do het han-->
+        <c:if test="${couponNotActiveByDate == true}">
+         <script>
+           document.addEventListener("DOMContentLoaded", function () {
+             iziToast.error({
+                 title: "Thông báo",
+                 message: "Mã giảm giá đã hết thời hạn !",
+                 position: 'topRight',
+                 timeout: 5000,
+                 backgroundColor:"#E23F33"
+                 });
+           });
+         </script>
+       </c:if>
+
+        <!--Thong bao coupon KHĐ do het so luong-->
+        <c:if test="${couponNotActiveByLimit == true}">
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            iziToast.error({
+                title: "Thông báo",
+                message: "Số lượng mã giảm giá đã hết. Vui lòng dùng mã khác!",
+                position: 'topRight',
+                timeout: 5000,
+                backgroundColor:"#E23F33"
+                });
+          });
+        </script>
+      </c:if>
+
+        <!--Thong bao coupon KHĐ do het so lan su dung-->
+        <c:if test="${couponNotActiveByUsed == true}">
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            iziToast.error({
+                title: "Thông báo",
+                message: "Bạn đã hết số lần sử dụng mã này. Vui lòng dùng mã khác!",
+                position: 'topRight',
+                timeout: 5000,
+                backgroundColor:"#E23F33"
+                });
+          });
+        </script>
+      </c:if>
+        
+        <!--Thong bao coupon KHĐ do subTotal không đu-->
+        <c:if test="${couponNotActiveByNotEnoughPrice == true}">
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            iziToast.error({
+                title: "Thông báo",
+                message: "Tổng giá tiền của đơn hàng chưa đủ để áp dụng mã này!",
+                position: 'topRight',
+                timeout: 5000,
+                backgroundColor:"#E23F33"
+                });
+          });
+        </script>
+      </c:if>
+            
       </body>
 
       <!-- Mirrored from templates.hibootstrap.com/hilo/default/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:09 GMT -->
