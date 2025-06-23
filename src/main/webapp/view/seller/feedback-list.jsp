@@ -157,7 +157,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #f3f4f6; /* màu sáng */
+  background-color: #e1f0ff; /* màu sáng */
   display: flex;
   align-items: center;
   justify-content: center;

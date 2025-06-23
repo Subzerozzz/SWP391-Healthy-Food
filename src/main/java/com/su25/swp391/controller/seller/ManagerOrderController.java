@@ -196,8 +196,8 @@ public class ManagerOrderController extends HttpServlet {
             Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
             if (acc == null) {
-                // response.sendRedirect(request.getContextPath() + "/authen");
-                // return;
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
             }
 
             Order order = orderDAO.findById(orderId);
@@ -211,7 +211,7 @@ public class ManagerOrderController extends HttpServlet {
             String oldStatus = order.getStatus();
             System.out.println("DEBUG: update order #" + orderId + " from '" + oldStatus + "' to '" + newStatus + "'");
 
-            boolean update = orderDAO.updateOrderStatus(orderId, newStatus, 21, note);
+            boolean update = orderDAO.updateOrderStatus(orderId, newStatus, acc.getId(), note);
 
             if (update) {
                 // If order is being accepted
