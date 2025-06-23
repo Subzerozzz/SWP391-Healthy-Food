@@ -10,6 +10,8 @@ import com.su25.swp391.dal.implement.CartItemDAO;
 import com.su25.swp391.dal.implement.CouponDAO;
 import com.su25.swp391.dal.implement.CouponUsageDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.OrderDAO;
+import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Cart;
 import com.su25.swp391.entity.CartItem;
@@ -17,6 +19,7 @@ import com.su25.swp391.entity.Coupon;
 import com.su25.swp391.entity.CouponUsage;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderItem;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -44,6 +47,8 @@ public class CartController extends HttpServlet {
     FoodDAO foodDao = new FoodDAO();
     CouponDAO couponDao = new CouponDAO();
     CouponUsageDAO couponUsageDao = new CouponUsageDAO();
+    OrderDAO orderDao = new OrderDAO();
+    OrderItemDAO orderItemDao = new OrderItemDAO();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -423,6 +428,9 @@ public class CartController extends HttpServlet {
 
             // Lay ra coupon_code va discountAmount
             String couponCode = request.getParameter("couponCode");
+            if(couponCode == null || couponCode.isEmpty()){
+                couponCode = null;
+            }
             Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
 
             // Lay ra created_at và updated_at
@@ -462,13 +470,15 @@ public class CartController extends HttpServlet {
                 request.setAttribute("subTotal", subTotal);
                 request.setAttribute("totalPrice", totalPrice);
                 request.setAttribute("paymentMethod", paymentMethod);
+                request.setAttribute("formData", request.getParameterMap());
                 request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
                 return;
             }
 
             switch (paymentMethod) {
                 case "cod":
-                    handleProcessCheckoutCOD(request, response);
+                    handleProcessCheckoutCOD(request, response,totalPrice,address,email,created_at,updated_at,couponCode,
+                            discountAmount,fullName,phoneNumber);
                     break;
                 case "vnpay":
                     handleProcessCheckoutVNPay(request, response);
@@ -588,10 +598,12 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) {
+    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response,Double totalPrice, String address,String email,
+            Timestamp created_at, Timestamp updated_at,String couponCode, Double discountAmount,String fullName,String phoneNumber) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         List<CartItem> listCartItem = new ArrayList<>();
+
         Order newOrder = new Order();
         if (account != null) {
             // Lay ra cartID theo accID
@@ -599,18 +611,76 @@ public class CartController extends HttpServlet {
             Integer cartId = cart.getId();
             // Lấy ra tất cả cartItem theo cartId
             listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
+            newOrder = Order.builder()
+                    .account_id(account.getId())
+                    .status("pending")
+                    .total(totalPrice)
+                    .shipping_address(address)
+                    .payment_method("cod")
+                    .created_at(created_at)
+                    .updated_at(updated_at)
+                    .coupon_code(couponCode)
+                    .discount_amount(discountAmount)
+                    .email(email)
+                    .full_name(fullName)
+                    .mobile(phoneNumber)
+                    .build();
         } else {
             listCartItem = (List<CartItem>) session.getAttribute("cart");
+            newOrder = Order.builder()
+                    .account_id(null)
+                    .status("pending")
+                    .total(totalPrice)
+                    .shipping_address(address)
+                    .payment_method("cod")
+                    .created_at(created_at)
+                    .updated_at(updated_at)
+                    .coupon_code(couponCode)
+                    .discount_amount(discountAmount)
+                    .email(email)
+                    .full_name(fullName)
+                    .mobile(phoneNumber)
+                    .build();
         }
-
-        //Tao 1 cai order
-        Integer accountId = account.getId();
-        // Lay ra subTotal và totalPrice
-        Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
-        Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
         
-
+        Integer orderId = orderDao.insert(newOrder);
         //Sau do tao cac orderItem cho order
+        if(orderId > 0){
+            for(CartItem cartItem : listCartItem){
+                Integer foodId = cartItem.getFood_id();
+                Integer quantity = cartItem.getQuantity();
+                Double price = foodDao.findById(foodId).getPrice();
+                
+                OrderItem newOrderItem = OrderItem.builder()
+                        .order_id(orderId)
+                        .food_id(foodId)
+                        .quantity(quantity)
+                        .price(price)
+                        .created_at(created_at)
+                        .updated_at(updated_at)
+                        .build();
+               
+                orderItemDao.insert(newOrderItem);
+            }
+        }
+        //Đặt hàng xong thì xóa hết cartItem trong listCartItem
+        if(account != null){
+            for(CartItem cartItem : listCartItem){
+                cartItemDao.delete(cartItem);
+            }
+            //Sau do chuyen sang trang myOrder
+            // request.getRequestDispatcher("").forward(request, response);
+        }
+        else{
+            List<CartItem> listCartItem1 = new ArrayList<>();
+            session.setAttribute("cart", listCartItem1);
+            //Dùng email để gửi 
+            request.setAttribute("notificationForEmail", true);
+            request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
+        }
+        
+        
+ 
     }
 
     private void handleProcessCheckoutVNPay(HttpServletRequest request, HttpServletResponse response) {

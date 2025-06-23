@@ -524,6 +524,21 @@
                 });
           });
         </script>
+        </c:if>
+        
+        <!--Thong bao don hang da duoc gui qua email-->
+        <c:if test="${notificationForEmail == true}">
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            iziToast.error({
+                title: "Thông báo",
+                message: "Đơn hàng đã được gửi qua email. Vui lòng kiểm !",
+                position: 'topRight',
+                timeout: 5000,
+                backgroundColor:"#d4edda"
+                });
+          });
+        </script>
       </c:if>
             
       </body>
