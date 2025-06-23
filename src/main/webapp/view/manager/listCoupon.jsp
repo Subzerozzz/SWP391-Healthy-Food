@@ -832,22 +832,22 @@
                                     </div>
                          <div class="wg-table table-product-list">
                              <!-- Header -->
-                             <div class="table-header">
-                                 <div class="col">Code</div>
-                                 <div class="col">Coupon ID</div>
-                                 <div class="col">Description</div>
-                                 <div class="col">Discount_Type</div> 
-                                 <div class="col">Discount_Value(%)</div>
-                                 <div class="col">Min_Purchase(VNĐ)</div>
-                                 <div class="col">Status</div>
-                                 <div class="col">Per_Customer_Limit</div>
-                                 <div class="col">Start_date</div>
-                                 <div class="col">End_date</div>
-                                 <div class="col">Action</div>
+                             <div class="table-header" style="display:flex ; justify-content: space-between ;min-width: 1730px !important;" >
+                                 <div class="col table-header-coppon" >Code</div>
+                                 <div class="col table-header-coppon">Coupon ID</div>
+                                 <div class="col table-header-coppon">Description</div>
+                                 <div class="col table-header-coppon">Discount_Type</div> 
+                                 <div class="col table-header-coppon">Discount_Value(%)</div>
+                                 <div class="col table-header-coppon">Min_Purchase(VNĐ)</div>
+                                 <div class="col" style="display: flex; justify-content: center; text-align: center;" >Status</div>
+                                 <div class="col "style="display: flex; justify-content: center; text-align: center;">Per_Customer_Limit</div>
+                                 <div class="col table-header-coppon">Start_date</div>
+                                 <div class="col table-header-coppon">End_date</div>
+                                 <div class="col table-header-coppon" style="display: flex; justify-content: center; text-align: center">Action</div>
                              </div>
                              <!-- Data Rows -->
                              <c:forEach items="${coupons}" var="coupon">
-                                 <div class="table-row">
+                                 <div class="table-row" style="display:flex ; justify-content: space-between ;min-width: 1730px !important;">
                                      <div class="col">
                                          <div class="body-title-2">${coupon.code} </div>
                                      </div>
@@ -873,7 +873,7 @@
                                      <div class="col body-title_3">${coupon.discountValue}</div>
                                      <div class="col body-title_3">${coupon.minPurchase}</div>
                                      <div class="col body-title_3">
-                                         <div class="col">
+                                         <div class="col" >
                                              <c:choose>
                                                  <c:when test="${coupon.isactive==1}">
                                                      <span class="status-label status-active">ACTIVE</span>
@@ -884,10 +884,10 @@
                                              </c:choose>
                                          </div>
                                      </div>
-                                     <div class="col body-title_3">${coupon.perCustomerLimit}</div>
+                                     <div class="col body-title_3" style="display: flex; justify-content: center; text-align: center;">${coupon.perCustomerLimit}</div>
                                      <div class="col body-title_3">${coupon.startDate}</div>
                                      <div class="col body-title_3">${coupon.endDate}</div>
-                                     <div class="col actions">
+                                     <div class="col actions body-title_3">
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=view&id=${coupon.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=edit&id=${coupon.id}"> <i class="icon-edit-3"></i></a>
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=delete&id=${coupon.id}"><i class="icon-trash-2"></i></a>
