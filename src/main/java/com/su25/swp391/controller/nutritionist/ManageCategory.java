@@ -276,7 +276,7 @@ public class ManageCategory extends HttpServlet {
             boolean isSuccess = cateDao.insert(category) > 0;
             if (isSuccess) {
                 // Lưu message thành công vào session để hiển thị 1 lần
-                  request.getSession().setAttribute("isUpdate", true);
+                  request.getSession().setAttribute("isAdd", true);
                 // Redirect về trang quản lý tài khoản
                 response.sendRedirect(request.getContextPath() + "/manageCategory");
                 return;
