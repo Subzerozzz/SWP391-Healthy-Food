@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.GlobalUtils;
 import jakarta.servlet.ServletException;
@@ -76,9 +77,16 @@ public class LoginGoogleHandler extends HttpServlet {
 
             // Lấy lại thông tin user từ DB (dù là mới hay cũ)
             user = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
+            
+            CartDAO cartDAO = new CartDAO();
+            if (!cartDAO.hasCart(user.getId())) {
+                int cartId = cartDAO.createCart(user.getId());
+            } else {
+                user = userInDB;
+           }
 
             if (user == null) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
@@ -98,7 +106,7 @@ public class LoginGoogleHandler extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("home");
         }
     }
 

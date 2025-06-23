@@ -142,32 +142,42 @@ public class OrderDAO extends DBContext {
 
     public int getTotalOrderCountByUserId(int userId) {
         String sql = "SELECT COUNT(*) FROM `Order` WHERE user_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);  
+            statement.setInt(1, userId);
+            resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }finally{
+            
         }
         return 0;
     }
+        
 
     public List<Order> findOrdersByUserIdWithPagination(int userId, int page, int pageSize) {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT * FROM `Order` WHERE user_id = ? ORDER BY order_id DESC LIMIT ? OFFSET ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setInt(2, pageSize);
-            ps.setInt(3, (page - 1) * pageSize);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Order order = getFromResultSet(rs);
-                list.add(order);
-            }
+        try {   
+              int offset =(page-1) * pageSize;
+              connection = getConnection();
+              statement = connection.prepareStatement(sql);
+              statement.setInt(1,userId);
+              statement.setInt(2,pageSize);
+              statement.setInt(3, offset);
+              resultSet =  statement.executeQuery();
+              while(resultSet.next()){
+                  list.add(getFromResultSet(resultSet));
+              }
         } catch (Exception e) {
             e.printStackTrace();
+        }finally{
+            closeResources();
         }
         return list;
     }
@@ -210,7 +220,7 @@ public class OrderDAO extends DBContext {
     }
 
     public boolean updateOrderStatus(int orderId, String status) {
-        String sql = "UPDATE Order SET status = ? WHERE order_id = ?";
+        String sql = "UPDATE `Order` SET status = ? WHERE order_id = ?";
         boolean success = false;
         try {
             connection = getConnection();
@@ -229,7 +239,23 @@ public class OrderDAO extends DBContext {
 
         return success;
     }
-    
+    public List<Order> all(){
+        String sql = "Select * from `Order` where user_id = 1 ";
+        List<Order> l = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement= connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                l.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return l;
+    }
     public static void main(String[] args) {
         OrderDAO dao = new OrderDAO();
         
@@ -237,6 +263,12 @@ public class OrderDAO extends DBContext {
         int totalOrders = dao.getTotalOrderCountByUserId(userId);
 
         System.out.println("Tổng số đơn hàng của user_id = " + userId + " là: " + totalOrders);
+        List<Order> li = new ArrayList<>();
+        li = dao.findOrdersByUserIdWithPagination(1, 1, 10);
+        System.out.println(li);
+        List<Order> li2 = dao.all();
+        System.out.println(li2);
+        System.out.println(dao.getTotalOrderCountByUserId(1));
     }
 
 }

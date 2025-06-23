@@ -200,9 +200,7 @@
                                                                                                             <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
                                                                                                         </div>
                                                                                                          <a class="tf-button style-1 w-full" onclick="cancelOrder(${vm.order.order_id}, '${vm.order.status}')">Cancel</a>
-                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=1&pageSize=10" class="btn btn-secondary">
-                                                                                                            Back to My Orders
-                                                                                                        </a>
+                                                                                                         <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
                                                                                                     </div>
                                                                                                 </c:if>
                                                                                                 <!-- Thông tin chi tiết -->
