@@ -443,7 +443,7 @@
                value="${search}"/>
 
         <!-- Nút Filter -->
-        <button type="submit" class="btn btn-primary">Filter</button>
+        <button style="font-size:15px" type="submit" class="btn btn-primary">Filter <i class="fa-solid fa-filter "></i></button>
       </div>
     </form>
   </div>
