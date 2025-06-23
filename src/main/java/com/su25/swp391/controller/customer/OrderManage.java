@@ -7,7 +7,6 @@ import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.entity.Order;
-import com.su25.swp391.entity.Food;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,14 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order"})
 public class OrderManage extends HttpServlet {
@@ -75,7 +67,7 @@ public class OrderManage extends HttpServlet {
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        //lay tham so order id khi nguoi dung chon 
         String orderIdStr = request.getParameter("order_id");
 
         if (orderIdStr == null || orderIdStr.isEmpty()) {
@@ -84,25 +76,21 @@ public class OrderManage extends HttpServlet {
         }
 
         try {
+            //parse sang int
             int orderId = Integer.parseInt(orderIdStr);
-            List<OrderItem> orderDetails = orderDetailDAO.getOrderDetailByOrderId(orderId);
+            
+            //get ra list cac OI dua tren order id
+            List<OrderItem> orderItemList = orderDetailDAO.getOrderDetailByOrderId(orderId);
+            
+            request.setAttribute("orderItemList", orderItemList);
+            request.setAttribute("foodDAO", foodDAO);
+            request.setAttribute("orderListDAO", orderListDAO);
+            request.setAttribute("orderDetailDAO", orderDetailDAO);
+            
             Order order = orderListDAO.getOrderById(orderId);
-
-            if (orderDetails != null && !orderDetails.isEmpty() && order != null) {
-                List<OrderViewModel> viewModels = new ArrayList<>();
-
-                for (OrderItem item : orderDetails) {
-                    List<Food> foods = foodDAO.getFoodByFoodIdFromOrderItems(item.getFood_id());
-                    if (foods != null && !foods.isEmpty()) {
-                        Food food = foods.get(0);
-                        viewModels.add(new OrderViewModel(food, order, item));
-                    }
-                }
-                BigDecimal totalprice = orderDetailDAO.calculateSubtotal(orderDetails);
-                request.setAttribute("totalprice", totalprice);
-                request.setAttribute("orderViews", viewModels);
+            
+            if (order != null) {
                 request.setAttribute("order", order);
-
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
             } else {
                 response.sendRedirect(ORDER_LIST);
