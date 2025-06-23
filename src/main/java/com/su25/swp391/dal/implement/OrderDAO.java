@@ -1,6 +1,7 @@
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
+import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Order;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +10,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class OrderDAO extends DBContext {
+public class OrderDAO extends DBContext implements I_DAO<Order>{
 
     public List<Order> getOrderListByUserId(int userId) {
         List<Order> orderLists = new ArrayList<>();
@@ -269,6 +271,36 @@ public class OrderDAO extends DBContext {
         List<Order> li2 = dao.all();
         System.out.println(li2);
         System.out.println(dao.getTotalOrderCountByUserId(1));
+    }
+
+    @Override
+    public List<Order> findAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Map<Integer, Order> findAllMap() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean update(Order t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean delete(Order t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int insert(Order t) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Order findById(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

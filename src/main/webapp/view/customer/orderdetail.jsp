@@ -71,12 +71,7 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                            <c:forEach var="vm" items="${orderViews}" varStatus="status">
-                                                                                                <c:if test="${status.first}">
-                                                                                                    <h3>Order #${vm.order.order_id}</h3>
-                                                                                                </c:if>
-                                                                                                <!-- Thông tin chi tiết -->
-                                                                                            </c:forEach>
+                                                                                                <h3>Order #${order.order_id}</h3>
                                                                                             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                 <li>
                                                                                                     <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -110,165 +105,152 @@
 
                                                                                                         </ul>
                                                                                                         <ul class="flex flex-column">
-                                                                                                            <c:forEach var="vm" items="${orderViews}">
+                                                                                                            <c:forEach var="orderItem" items="${orderItemList}">
                                                                                                                 <li class="product-item gap14">
                                                                                                                     <div class="image no-bg">
-                                                                                                                        <img src="${vm.food.image_url}" alt="">
+                                                                                                                        <img src="${foodDAO.findById(orderItem.food_id).image_url}" alt="">
                                                                                                                     </div>
                                                                                                                     <div class="flex items-center justify-between gap40 flex-grow">
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Food name</div>
-                                                                                                                            <a href="product-list.html" class="body-title-2">${vm.food.name}</a>
+                                                                                                                            <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
                                                                                                                         </div>
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                            <div class="body-title-2">${vm.item.quantity}</div>
+                                                                                                                            <div class="body-title-2">${orderItem.quantity}</div>
                                                                                                                         </div>
                                                                                                                         <div class="name">
                                                                                                                             <div class="text-tiny mb-1">Price</div>
-                                                                                                                            <div class="body-title-2">${vm.food.price}</div>
+                                                                                                                            <div class="body-title-2">${foodDAO.findById(orderItem.food_id).price}VND</div>
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </li>
                                                                                                             </c:forEach>
-                                                                                                        </ul>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                                <div class="wg-box">
-                                                                                                    <div class="wg-table table-cart-totals">
-                                                                                                        <ul class="table-title flex mb-24">
-                                                                                                            <li>
-                                                                                                                <div class="body-title">Cart Totals</div>
-                                                                                                            </li>    
-                                                                                                            <li>
-                                                                                                                <div class="body-title">Price</div>
-                                                                                                            </li>    
-                                                                                                        </ul>
-                                                                                                        <c:forEach var="vm" items="${orderViews}" varStatus="status">
-                                                                                                            <c:if test="${status.first}">
-                                                                                                                <ul class="flex flex-column gap14">
-                                                                                                                    <li class="cart-totals-item">
-                                                                                                                        <span class="body-text">Subtotal:</span>
-                                                                                                                        <span class="body-title-2">${requestScope.totalprice}</span>
-                                                                                                                    </li>
-                                                                                                                    <li class="divider"></li>
-                                                                                                                    <li class="cart-totals-item">
-                                                                                                                        <span class="body-text">Shipping:</span>
-                                                                                                                        <span class="body-title-2">10%</span>
-                                                                                                                    </li>
+                                                                                                    <div class="wg-box">
+                                                                                                        <div class="wg-table table-cart-totals">
+                                                                                                            <ul class="table-title flex mb-24">
+                                                                                                                <li>
+                                                                                                                    <div class="body-title">Cart Totals</div>
+                                                                                                                </li>    
+                                                                                                                <li>
+                                                                                                                    <div class="body-title">Price</div>
+                                                                                                                </li>    
+                                                                                                            </ul>
+                                                                                                            <ul class="flex flex-column gap14">
+                                                                                                                <li class="cart-totals-item">
+                                                                                                                    <span class="body-text">Subtotal:</span>
+                                                                                                                    <span class="body-title-2"></span>
+                                                                                                                </li>
+                                                                                                                <li class="divider"></li>
+                                                                                                                <li class="cart-totals-item">
+                                                                                                                    <span class="body-text">Shipping:</span>
+                                                                                                                    <span class="body-title-2">10%</span>
+                                                                                                                </li>
 
-                                                                                                                    <li class="divider"></li>
-                                                                                                                    <li class="cart-totals-item">
-                                                                                                                        <span class="body-title">Total price:</span>
-                                                                                                                        <span class="body-title tf-color-1">${vm.order.total}</span>
-                                                                                                                    </li>
-                                                                                                                </ul>
-                                                                                                            </c:if>
-                                                                                                            <!-- Thông tin chi tiết -->
-                                                                                                        </c:forEach>
+                                                                                                                <li class="divider"></li>
+                                                                                                                <li class="cart-totals-item">
+                                                                                                                    <span class="body-title">Total price:</span>
+                                                                                                                    <span class="body-title tf-color-1">${order.total}VND</span>
+                                                                                                                </li>
+                                                                                                            </ul>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <c:forEach var="vm" items="${orderViews}" varStatus="status">
-                                                                                                <c:if test="${status.first}">
-                                                                                                    <div class="right">
-                                                                                                        <div class="wg-box mb-20 gap10">
-                                                                                                            <div class="body-title">Summary</div>
-                                                                                                            <div class="summary-item">
-                                                                                                                <div class="body-text">Order ID</div>
-                                                                                                                <div class="body-title-2">#${vm.order.order_id}</div>
-                                                                                                            </div>
-                                                                                                            <div class="summary-item">
-                                                                                                                <div class="body-text">Create At</div>
-                                                                                                                <div class="body-title-2">${vm.order.created_at}</div>
-                                                                                                            </div>
-                                                                                                            <div class="summary-item">
-                                                                                                                <div class="body-text">Total</div>
-                                                                                                                <div class="body-title-2 tf-color-1">${vm.order.total}</div>
-                                                                                                            </div>
+
+                                                                                                <div class="right">
+                                                                                                    <div class="wg-box mb-20 gap10">
+                                                                                                        <div class="body-title">Summary</div>
+                                                                                                        <div class="summary-item">
+                                                                                                            <div class="body-text">Order ID</div>
+                                                                                                            <div class="body-title-2">#${order.order_id}</div>
                                                                                                         </div>
-                                                                                                        <div class="wg-box mb-20 gap10">
-                                                                                                            <div class="body-title">Shipping Address</div>
-                                                                                                            <div class="body-text">${vm.order.shipping_address}</div>
+                                                                                                        <div class="summary-item">
+                                                                                                            <div class="body-text">Create At</div>
+                                                                                                            <div class="body-title-2">${order.created_at}</div>
                                                                                                         </div>
-                                                                                                        <div class="wg-box mb-20 gap10">
-                                                                                                            <div class="body-title">Payment Method</div>
-                                                                                                            <div class="body-text">${vm.order.payment_method}</div>
+                                                                                                        <div class="summary-item">
+                                                                                                            <div class="body-text">Total</div>
+                                                                                                            <div class="body-title-2 tf-color-1">${order.total}</div>
                                                                                                         </div>
-                                                                                                        <div class="wg-box gap10">
-                                                                                                            <div class="body-title">Expected Date Of Delivery</div>
-                                                                                                            <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
-                                                                                                        </div>
-                                                                                                         <a class="tf-button style-1 w-full" onclick="cancelOrder(${vm.order.order_id}, '${vm.order.status}')">Cancel</a>
-                                                                                                         <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
                                                                                                     </div>
-                                                                                                </c:if>
-                                                                                                <!-- Thông tin chi tiết -->
-                                                                                            </c:forEach>
+                                                                                                    <div class="wg-box mb-20 gap10">
+                                                                                                        <div class="body-title">Shipping Address</div>
+                                                                                                        <div class="body-text">${order.shipping_address}</div>
+                                                                                                    </div>
+                                                                                                    <div class="wg-box mb-20 gap10">
+                                                                                                        <div class="body-title">Payment Method</div>
+                                                                                                        <div class="body-text">${order.payment_method}</div>
+                                                                                                    </div>
+                                                                                                    <div class="wg-box gap10">
+                                                                                                        <div class="body-title">Expected Date Of Delivery</div>
+                                                                                                        <div class="body-title-2 tf-color-2">Your food will be delivered in about 1 hour. Please wait.</div>
+                                                                                                    </div>
+                                                                                                    <a class="tf-button style-1 w-full" onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel</a>
+                                                                                                    <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <!-- /order-detail -->
                                                                                         </div>
-                                                                                        <!-- /order-detail -->
+                                                                                        <!-- /main-content-wrap -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
+                                                                                    <!-- bottom-page -->
+                                                                                    <jsp:include page = "/view/common/nutritionist/footer.jsp"></jsp:include>
+                                                                                        <!--                                                                                
+                                                                                        <!-- /bottom-page -->
+                                                                                    </div>
+                                                                                    <!-- /main-content -->
                                                                                 </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                <!-- bottom-page -->
-                                                                                <div class="bottom-page">
-                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                    <i class="icon-heart"></i>
-                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                </div>
-                                                                                <!-- /bottom-page -->
+                                                                                <!-- /section-content-right -->
                                                                             </div>
-                                                                            <!-- /main-content -->
+                                                                            <!-- /layout-wrap -->
                                                                         </div>
-                                                                        <!-- /section-content-right -->
+                                                                        <!-- /#page -->
                                                                     </div>
-                                                                    <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                            </div>
-                                                            <!-- /#wrapper -->
+                                                                    <!-- /#wrapper -->
 
-                                                            <!-- Javascript -->
-                                                            <script>
-                                                                function cancelOrder(orderId, status) {
-                                                                    if (status.toLowerCase() !== 'pending') {
-                                                                        alert("Chỉ có thể hủy đơn hàng khi trạng thái là 'pending'");
-                                                                        return;
-                                                                    }
+                                                                    <!-- Javascript -->
+                                                                    <script>
+                                                                        function cancelOrder(orderId, status) {
+                                                                            if (status.toLowerCase() !== 'pending') {
+                                                                                alert("Chỉ có thể hủy đơn hàng khi trạng thái là 'pending'");
+                                                                                return;
+                                                                            }
 
-                                                                    if (!confirm("Bạn có chắc muốn hủy đơn hàng này không?"))
-                                                                        return;
+                                                                            if (!confirm("Bạn có chắc muốn hủy đơn hàng này không?"))
+                                                                                return;
 
-                                                                    fetch('cancel-order', {
-                                                                        method: 'POST',
-                                                                        headers: {
-                                                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                                                        },
-                                                                        body: 'orderId=' + orderId
-                                                                    })
-                                                                            .then(response => {
-                                                                                if (response.ok) {
-                                                                                    alert("Đơn hàng đã được hủy.");
-                                                                                    location.reload(); // reload để cập nhật UI
-                                                                                } else {
-                                                                                    alert("Không thể hủy đơn hàng. Đơn hàng có thể đã được xử lý.");
-                                                                                }
+                                                                            fetch('cancel-order', {
+                                                                                method: 'POST',
+                                                                                headers: {
+                                                                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                                                                },
+                                                                                body: 'orderId=' + orderId
                                                                             })
-                                                                            .catch(error => {
-                                                                                console.error("Lỗi:", error);
-                                                                                alert("Có lỗi xảy ra khi hủy đơn.");
-                                                                            });
-                                                                }
-                                                            </script>
+                                                                                    .then(response => {
+                                                                                        if (response.ok) {
+                                                                                            alert("Đơn hàng đã được hủy.");
+                                                                                            location.reload(); // reload để cập nhật UI
+                                                                                        } else {
+                                                                                            alert("Không thể hủy đơn hàng. Đơn hàng có thể đã được xử lý.");
+                                                                                        }
+                                                                                    })
+                                                                                    .catch(error => {
+                                                                                        console.error("Lỗi:", error);
+                                                                                        alert("Có lỗi xảy ra khi hủy đơn.");
+                                                                                    });
+                                                                        }
+                                                                    </script>
 
-                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                            <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
                                                         </body>
 
