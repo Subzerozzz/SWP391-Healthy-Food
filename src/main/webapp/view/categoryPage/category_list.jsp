@@ -331,6 +331,21 @@
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("isUpdate"); %>
                                                                                                                         </c:if>
+                                                                                                                        
+                                                                                                                         <c:if test="${sessionScope.isAdd == true}">
+                                                                                                                            <script>
+                                                                                                                                document.addEventListener("DOMContentLoaded", function () {
+                                                                                                                                    iziToast.success({
+                                                                                                                                        title: "Thông báo",
+                                                                                                                                        message: "Tài khoản đã được thêm thành công!",
+                                                                                                                                        position: 'topRight',
+                                                                                                                                        timeout: 5000,
+                                                                                                                                        backgroundColor: "#d4edda"
+                                                                                                                                    });
+                                                                                                                                });
+                                                                                                                            </script>
+                                                                                                                            <% session.removeAttribute("isAdd"); %>
+                                                                                                                        </c:if>
                                                                                                                         </body>
 
 
