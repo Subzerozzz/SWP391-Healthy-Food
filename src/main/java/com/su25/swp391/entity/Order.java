@@ -34,6 +34,5 @@ public class Order {
     private Double discount_amount;
     private String full_name;
     private String mobile;
-    private String address;
     private String email;
 }

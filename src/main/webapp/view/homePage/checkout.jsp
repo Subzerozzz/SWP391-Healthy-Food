@@ -190,7 +190,8 @@
                             <div class="col-lg-6">
                               <div class="form-group">
                                 <label>Full Name</label>
-                                <input name="fullName" type="text" class="form-control" placeholder=" Full Name">
+                                <input name="fullName" type="text" class="form-control" placeholder=" Full Name" 
+                                       value="${not empty formData ? fn:escapeXml(formData.fullName[0]) : ''}">
                               </div>
                             </div>
 
@@ -198,28 +199,31 @@
                               <div class="form-group">
                                 <label>User Name</label>
                                 <input name="userName" type="text" class="form-control"
-                                  placeholder=" User Name(không bắt buộc*)">
+                                       placeholder=" User Name(không bắt buộc*)">
                               </div>
                             </div>
 
                             <div class="col-lg-12">
                               <div class="form-group">
                                 <label>Email Address</label>
-                                <input name="email" type="email" class="form-control" placeholder=" Email Address">
+                                <input name="email" type="email" class="form-control" placeholder=" Email Address"
+                                       value="${not empty formData ? fn:escapeXml(formData.email[0]) : ''}">
                               </div>
                             </div>
 
                             <div class="col-lg-12">
                               <div class="form-group">
                                 <label>Phone Number</label>
-                                <input name="phoneNumber" type="text" class="form-control" placeholder=" Phone">
+                                <input name="phoneNumber" type="text" class="form-control" placeholder=" Phone"
+                                       value="${not empty formData ? fn:escapeXml(formData.phoneNumber[0]) : ''}">
                               </div>
                             </div>
 
                             <div class="col-lg-12">
                               <div class="form-group">
                                 <label>Address</label>
-                                <input name="address" type="text" class="form-control" placeholder=" Address">
+                                <input name="address" type="text" class="form-control" placeholder=" Address"
+                                       value="${not empty formData ? fn:escapeXml(formData.address[0]) : ''}">
                                 <span>Bạn có thể chỉnh sửa địa chị chi tiết nếu cần.</span>
                               </div>
                             </div>
