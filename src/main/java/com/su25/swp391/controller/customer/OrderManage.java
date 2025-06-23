@@ -159,9 +159,6 @@ public class OrderManage extends HttpServlet {
     }
 
     private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");

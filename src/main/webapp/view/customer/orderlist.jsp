@@ -172,70 +172,51 @@
                                                                                             <div class="flex items-center justify-between flex-wrap gap10">
                                                                                                 <div class="divider"></div>
                                                                                                 <div class="pagination">
+
                                                                                                     <ul class="wg-pagination">
 
-                                                                                                        <!-- Nút Previous -->
-                                                                                                        <c:if test="${currentPage > 1}">
-                                                                                                            <li>
-                                                                                                                <a href="orderlist?page=${currentPage - 1}&pageSize=${pageSize}">
-                                                                                                                    <i class="icon-chevron-left"></i>
-                                                                                                                </a>
-                                                                                                            </li>
-                                                                                                        </c:if>
-
+                                                                                                        <li>
+                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=1"><i class="icon-chevron-left"></i></a>
+                                                                                                        </li>
                                                                                                         <c:choose>
-                                                                                                            <%-- Nếu tổng trang <= 7 thì hiển thị tất cả trang --%>
-                                                                                                            <c:when test="${totalPages <= 7}">
-                                                                                                                <c:forEach var="i" begin="1" end="${totalPages}">
-                                                                                                                    <li <c:if test="${i == currentPage}">class="active"</c:if>>
-                                                                                                                        <a href="orderlist?page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                            <c:when test="${currentPage <= totalPages - 2}">
+                                                                                                                <c:if test="${currentPage > 1}">
+                                                                                                                    <li class="">
+                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage - 1}">${currentPage - 1}</a>
                                                                                                                     </li>
-                                                                                                                </c:forEach>
+                                                                                                                </c:if>
+                                                                                                                <li class="active">
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage}">${currentPage}</a>
+                                                                                                                </li>
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage + 1}">${currentPage + 1}</a>
+                                                                                                                </li>
+
+                                                                                                                <c:if test="${currentPage < totalPages - 2}">
+                                                                                                                    <li>
+                                                                                                                        <span>...</span>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}">${totalPages}</a>
+                                                                                                                </li>
                                                                                                             </c:when>
 
                                                                                                             <c:otherwise>
-                                                                                                                <%-- Hiển thị trang đầu nếu chưa đứng ở đầu --%>
-                                                                                                                <c:if test="${currentPage > 1}">
-                                                                                                                    <li>
-                                                                                                                        <a href="orderlist?page=1&pageSize=${pageSize}">1</a>
-                                                                                                                    </li>
-                                                                                                                </c:if>
-
-                                                                                                                <%-- Hiển thị dấu ... nếu cách xa đầu --%>
-                                                                                                                <c:if test="${currentPage > 3}">
-                                                                                                                    <li><span>...</span></li>
-                                                                                                                    </c:if>
-
-                                                                                                                <%-- Hiển thị 3 trang gần currentPage --%>
-                                                                                                                <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 1 : 1}" end="${currentPage < totalPages - 1 ? currentPage + 1 : totalPages}">
-                                                                                                                    <li <c:if test="${i == currentPage}">class="active"</c:if>>
-                                                                                                                        <a href="orderlist?page=${i}&pageSize=${pageSize}">${i}</a>
+                                                                                                                <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                                                                                                    <li class="${currentPage == i ? 'active' : ''}">
+                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${i}">${i}</a>
                                                                                                                     </li>
                                                                                                                 </c:forEach>
-
-                                                                                                                <%-- Hiển thị dấu ... nếu còn nhiều trang phía sau --%>
-                                                                                                                <c:if test="${currentPage < totalPages - 2}">
-                                                                                                                    <li><span>...</span></li>
-                                                                                                                    </c:if>
-
-                                                                                                                <%-- Hiển thị trang cuối nếu chưa đứng ở cuối --%>
-                                                                                                                <c:if test="${currentPage < totalPages}">
-                                                                                                                    <li>
-                                                                                                                        <a href="orderlist?page=${totalPages}&pageSize=${pageSize}">${totalPages}</a>
-                                                                                                                    </li>
-                                                                                                                </c:if>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
-                                                                                                        <!-- Nút Next -->
-                                                                                                        <c:if test="${currentPage < totalPages}">
-                                                                                                            <li>
-                                                                                                                <a href="orderlist?page=${currentPage + 1}&pageSize=${pageSize}">
-                                                                                                                    <i class="icon-chevron-right"></i>
-                                                                                                                </a>
-                                                                                                            </li>
-                                                                                                        </c:if>
-
+                                                                                                        <li>
+                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+                                                                                                        </li>
                                                                                                     </ul>
 
                                                                                                 </div>
@@ -245,16 +226,18 @@
                                                                                         <!-- /main-content-wrap -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
-                                                                                    <!-- bottom-page -->
-                                                                                    <div class="bottom-page">
-                                                                                        <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                                                                                        <i class="icon-heart"></i>
-                                                                                        <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                                                                                    </div>
-                                                                                    <!-- /bottom-page -->
+
                                                                                 </div>
                                                                                 <!-- /main-content -->
+                                                                                <!-- bottom-page -->
+                                                                                <div class="bottom-page">
+                                                                                    <div class="body-text">Copyright © 2024 Remos. Design with</div>
+                                                                                    <i class="icon-heart"></i>
+                                                                                    <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
+                                                                                </div>
+                                                                                <!-- /bottom-page -->
                                                                             </div>
+
                                                                             <!-- /section-content-right -->
                                                                         </div>
                                                                         <!-- /layout-wrap -->
