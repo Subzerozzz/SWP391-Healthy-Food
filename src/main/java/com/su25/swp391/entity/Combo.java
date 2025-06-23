@@ -4,10 +4,25 @@
  */
 package com.su25.swp391.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  *
  * @author Hang
  */
+@ToString
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Combo {
     private Integer comboId;
     private String name;
@@ -15,5 +30,6 @@ public class Combo {
     private Double originalPrice;
     private Double discountPrice;
     private String status;
-    
+
+   
 }
