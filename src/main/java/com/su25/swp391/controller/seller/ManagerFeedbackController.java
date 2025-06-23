@@ -119,7 +119,7 @@ public class ManagerFeedbackController extends HttpServlet {
         String search = request.getParameter("search");
         // Pagination
         int page = 1;
-        int pageSize = 2;
+        int pageSize = 10;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -208,7 +208,7 @@ public class ManagerFeedbackController extends HttpServlet {
         List<Feedback> feedbacks;
         int totalFeedback;
         int page = 1;
-        int pageSize = 2;
+        int pageSize = 10;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
