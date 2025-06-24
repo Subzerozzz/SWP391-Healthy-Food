@@ -4,6 +4,9 @@
  */
 package com.su25.swp391.controller.nutritionist;
 
+import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.entity.Combo;
+import com.su25.swp391.entity.ComboFoodDetails;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
@@ -19,9 +23,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "ManagerCombo", urlPatterns = {"/managerCombo"})
 public class ManagerCombo extends HttpServlet {
 
-    
-
- 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,6 +37,9 @@ public class ManagerCombo extends HttpServlet {
                 break;
             case "edit":
                 showEditForm(request, response);
+                break;
+            case "viewComboFoodDetail":
+                viewComboFoodDetail(request, response);
                 break;
             case "deactive":
                 deactiveCombo(request, response);
@@ -53,30 +57,29 @@ public class ManagerCombo extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String action = request.getParameter("action");
-       if(action ==null){
-           action = "list";
-       }
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
+        }
         switch (action) {
             case "add":
-                addCombo(request,response);
+                addCombo(request, response);
                 break;
-                  case "update":
-                updateCombo(request,response);
+            case "update":
+                updateCombo(request, response);
                 break;
             default:
                 listCombo(request, response);
         }
     }
 
-   
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
     private void active(HttpServletRequest request, HttpServletResponse response) {
-        
+
     }
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) {
@@ -91,8 +94,57 @@ public class ManagerCombo extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void listCombo(HttpServletRequest request, HttpServletResponse response) {
+    private void listCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //lay thông tin khi người dùng tìm kiếm
+        String serchFilter = request.getParameter("serch");
+        String statusFilter = request.getParameter("status");
         
+        //lấy tham số phan trang
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+        int currentPage = 1;
+        int pageSize = 10;
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
+        }
+        ComboDAO comboDao = new ComboDAO();
+        //lay ra danh sach combo 
+        List<Combo> combo = comboDao.findAllWithPagination(currentPage, pageSize);
+        //tinh phan trang
+        int totalCombo = comboDao.getTotalComboCount();
+        int totalPages = (int) Math.ceil((double) totalCombo / pageSize);
+        //set cac thuoc tinhs
+        request.setAttribute("listCombo", combo);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalCombo", totalCombo);
+        request.setAttribute("totalPages", totalPages);
+        
+        //tinh toan pham vi the hien
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalCombo);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+        request.getRequestDispatcher("/view/nutritionist/combo/listCombo.jsp").forward(request, response);
+
     }
 
     private void addCombo(HttpServletRequest request, HttpServletResponse response) {
@@ -101,6 +153,21 @@ public class ManagerCombo extends HttpServlet {
 
     private void updateCombo(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void viewComboFoodDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ComboDAO combodao = new ComboDAO();
+        //lay id của combo
+        int comboId = Integer.parseInt(request.getParameter("id"));
+        //lấy thông tin combo
+        Combo combo = combodao.findById(comboId);
+        //lấy danh sách trong mon ăn trong combo
+        List<ComboFoodDetails> foodDetails = combodao.getComboFoodDetails(comboId);
+
+        request.setAttribute("combo", combo);
+        request.setAttribute("foodDetails", foodDetails);
+        request.getRequestDispatcher("/view/nutritionist/combo/comboFoodDetail.jsp").forward(request, response);
+
     }
 
 }
