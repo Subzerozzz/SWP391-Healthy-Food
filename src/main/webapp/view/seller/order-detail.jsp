@@ -267,8 +267,9 @@ textarea.form-control {
             </div> 
                 
                                   <div class="row g-24" >
+                                      <div class="col-lg-5 col-md-12" style="display: flex;flex-direction:column;gap:15px">
                                  <!-- Order Information -->     
-                <div class="col-lg-4 col-md-12" style="height: 300px">
+                <div >
                     <div class="card">
                         <div class="card-header">
                             <h6 class="card-title mb-0">Order Information</h6>
@@ -309,7 +310,7 @@ textarea.form-control {
                     </div>
                 </div>
                             <!-- Customer Information -->
-                            <div class="col-lg-3 col-md-12" style="height: 300px">
+                            <div >
                     <div class="card">
                         <div class="card-header">
                             <h6 class="card-title mb-0">Customer Information</h6>
@@ -327,7 +328,7 @@ textarea.form-control {
                                 <strong>Mobile:</strong> ${account.mobile}
                             </div>
                             <div class="mb-3">
-                                <strong>Shipping Address:</strong><br>
+                                <strong>Shipping Address:</strong>
                                 ${order.shipping_address}
                             </div>
                         </div>
@@ -344,8 +345,7 @@ textarea.form-control {
                                 <strong>Mobile:</strong> ${order.mobile}
                             </div>
                             <div class="mb-3">
-                                <strong>Shipping Address:</strong><br>
-                                ${order.address}
+                                <strong>Shipping Address:</strong>${order.address}
                             </div>
                         </div>  
                             </c:otherwise>
@@ -353,8 +353,9 @@ textarea.form-control {
                       
                     </div>
                 </div>
+                            </div>
                              <!-- Update Status -->
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <h6 class="card-title mb-0">Status Information</h6>
