@@ -44,7 +44,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 .created_at(rs.getTimestamp("created_at"))
                 .updated_at(rs.getTimestamp("updated_at"))
                 .coupon_code(rs.getString("coupon_code"))
-                .discount_value(rs.getDouble("discount_value"))
+                .discount_amount(rs.getDouble("discount_amount"))
                 .full_name(rs.getString("full_name"))
                 .mobile(rs.getString("mobile"))
                 .email(rs.getString("email"))
@@ -480,8 +480,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // System.out.println(l2);
         // List<Order> l = d.searchOrders("kien", "", "", 1, 10);
         // System.out.println(l);
-        Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
-        System.out.println(b);
-
+      //  Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
+       // System.out.println(b);
+         List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
+         System.out.println(l);
     }
 }

@@ -32,7 +32,7 @@ public class Order {
     private Timestamp created_at;
     private Timestamp updated_at;
     private String coupon_code;
-    private Double discount_value;
+    private Double discount_amount;
     private String full_name;
     private String mobile;
     private String email;

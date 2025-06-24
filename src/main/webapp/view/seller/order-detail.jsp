@@ -299,10 +299,10 @@ textarea.form-control {
                                     <strong>Coupon Applied:</strong> ${order.coupon_code}
                                 </div>
                                 <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
+                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                                 </div>
 <!--                                <div class="mb-3">
-                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
+                                    <strong>Original Amount:</strong> <fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                                 </div>-->
                             </c:if>
                         </div>
@@ -460,10 +460,10 @@ textarea.form-control {
                                         <td><fmt:formatNumber value="${food.price*item.quantity}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                     </tr>
                                 </c:forEach>
-                                <c:if test="${not empty order.discount_value}">
+                                <c:if test="${not empty order.discount_amount}">
                                     <tr>
                                         <td colspan="4" class="text-end"><strong>Discount Amount:</strong></td>
-                                        <td><fmt:formatNumber value="${order.discount_value}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td><fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                     </tr>
                                 </c:if>
                                 <tr>
