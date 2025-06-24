@@ -140,7 +140,7 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                <h3>Account Detail</h3>
+                                                                                              
                                                                                                 <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                     <li>
                                                                                                         <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -149,18 +149,17 @@
                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <a href="#"><div class="text-tiny">User</div></a>
+                                                                                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">List Feedback</div></a>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="text-tiny">Account Detail:${param.id} </div>
+                                                                                                        <div class="text-tiny">Account Detail:${account.id} </div>
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        <!-- add-new-user -->
-                                                                                        <form class="add_account" action="${pageContext.request.contextPath}/manage-account?action=viewDetail" method="get">
+                                                                                      
                                                                                             <div class="wg-box">
                                                                                                 <div class="left">
                                                                                                     <h5 class="mb-4">Account Detail</h5>
@@ -251,14 +250,7 @@
                                                                                             <div class="bot">
                                                                                                 <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/manage-feedback'">Back</button>
                                                                                             </div>
-<!--                                                                                                <div class="item trash">
-                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
-                                                                                                        <button class="tf-button w180" type="submit">Delete</button>
-                                                                                                    </a>
-                                                                                                </div>-->
 
-                                                                                        </form>
-                                                                                        <!-- /add-new-user -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                 </div>

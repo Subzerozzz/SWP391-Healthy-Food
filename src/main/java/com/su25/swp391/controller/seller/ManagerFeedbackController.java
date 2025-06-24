@@ -262,8 +262,16 @@ public class ManagerFeedbackController extends HttpServlet {
         
     }
 
-    private void detailFood(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void detailFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         int food_id = Integer.parseInt(request.getParameter("food_id"));
+         Food food = foodDAO.findById(food_id);
+         Account nutri = accDAO.findById(food.getNutri_id());
+         request.setAttribute("foodD",food);
+         request.setAttribute("nutri", nutri);
+         request.setAttribute("accDAO", accDAO);
+         PrintWriter o = response.getWriter();
+         o.print(nutri);
+         request.getRequestDispatcher("/view/seller/view-feedback-food.jsp").forward(request, response);
     }
 
 }
