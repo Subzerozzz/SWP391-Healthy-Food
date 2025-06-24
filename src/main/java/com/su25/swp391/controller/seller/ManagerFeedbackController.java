@@ -183,23 +183,23 @@ public class ManagerFeedbackController extends HttpServlet {
 
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedback feedbacks = feedbackDAO.findById(feedbackId);
+        Feedback feedback = feedbackDAO.findById(feedbackId);
         // get account
         HashMap<Integer, Account> AccountMap = new HashMap<>();
-        Account acc = accDAO.findById(feedbacks.getUser_id());
-        AccountMap.put(feedbacks.getUser_id(), acc);
+        Account acc = accDAO.findById(feedback.getUser_id());
+        AccountMap.put(feedback.getUser_id(), acc);
 
         HashMap<Integer, Food> FoodMap = new HashMap<>();
 
-        OrderItem item = itemDAO.findById(feedbacks.getOrder_item_id());
+        OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
         Food food = foodDAO.findById(item.getFood_id());
-        FoodMap.put(feedbacks.getOrder_item_id(), food);
+        FoodMap.put(feedback.getOrder_item_id(), food);
 
-        request.setAttribute("feedback", feedbacks);
+        request.setAttribute("feedback", feedback);
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
         PrintWriter o = response.getWriter();
-        o.print(feedbacks);
+        o.print(feedback);
         o.print(AccountMap);
         o.print(FoodMap);
         request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
