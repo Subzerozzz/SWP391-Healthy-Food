@@ -276,7 +276,7 @@ main {
 /* Reject button - đỏ */
 .action-group .item.reject {
   color: #e74c3c;
-  border-color: #dc3545;
+  border-color: #eaf3fc;
 }
 
 .action-group .item.reject:hover {
@@ -421,7 +421,17 @@ main {
 <!-- Thêm class filter-row -->
 <div class="filter-row">
     <!-- Select Status --><i class="fa-solid fa-layer-group fa-2x"></i>
-<select name="rating">
+    <!--select by Food-->
+    <select name="selectFood">
+        <option value="-1" ${param.selectFood == '-1' ? 'selected' : ''}>All Foods</option> 
+        <c:forEach items="${lFood}" var="f">
+            <option value="${f}" ${param.selectFood == f ? 'selected':''}>${f}</option> 
+        </c:forEach>
+    </select>
+    
+    
+    <!--select by reating-->
+    <select name="rating">
 <option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALL RATING </option>       
 <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
 <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
@@ -498,9 +508,14 @@ value="${search}"/>
                       <a class="item view" href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail">
                           <i class="fa-solid fa-eye"></i>
                       </a>
-                      <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
+                      <c:choose>
+                          <c:when test="${feedback.visible}">
+                        <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
                           <i class="fa-solid fa-xmark"></i>
-                      </a>
+                        </a>
+                          </c:when>
+                      </c:choose>
+                      
                   </div>
               </td>
 

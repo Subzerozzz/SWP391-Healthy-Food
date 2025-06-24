@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.sql.Timestamp;
+import org.apache.poi.util.LocaleID;
 
 public class FoodDAO extends DBContext implements I_DAO<Food> {
 
@@ -44,19 +45,21 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
 
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
-        Food food = new Food();
-        food.setId(resultSet.getInt("id"));
-        food.setName(resultSet.getString("name"));
-        food.setDescription(resultSet.getString("description"));
-        food.setPrice(resultSet.getDouble("price"));
-        food.setImage_url(resultSet.getString("image_url"));
-        food.setStatus(resultSet.getString("status"));
-        food.setCategory_id(resultSet.getInt("category_id"));
-        food.setCreated_at(resultSet.getTimestamp("created_at"));
-        food.setUpdated_at(resultSet.getTimestamp("updated_at"));
-        food.setNutri_id(Integer.parseInt(resultSet.getString("nutri_id")));
-        food.setCalo(resultSet.getDouble("calo"));
-        return food;
+        return Food
+                .builder()
+                .id(resultSet.getInt("id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .price(resultSet.getDouble("price"))
+                .image_url(resultSet.getString("image_url"))
+                .status(resultSet.getString("status"))
+                .category_id(resultSet.getInt("category_id"))
+                .created_at(resultSet.getTimestamp("created_at"))
+                .updated_at(resultSet.getTimestamp("updated_at"))
+                .nutri_id(resultSet.getInt("nutri_id"))
+                .calo(resultSet.getDouble("calo"))
+                .build();
+        
     }
 
     public Food checkExistFoodName(String name) {
@@ -333,9 +336,27 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         return null;
     }
     
-    
+    public List<String> findFoodNameList(){
+        String sql = "Select DISTINCT name from Food";
+        List<String> lFood = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                lFood.add(resultSet.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return lFood;
+    }
     public static void main(String[] args) {
         System.out.println(new FoodDAO().findById(1));
+        List<String> f = new FoodDAO().findFoodNameList();
+        System.out.println(f);
     }
 
 }

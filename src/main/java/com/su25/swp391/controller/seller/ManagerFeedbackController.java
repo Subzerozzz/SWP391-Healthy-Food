@@ -118,11 +118,13 @@ public class ManagerFeedbackController extends HttpServlet {
     }// </editor-fold>
 
      private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get filter parameters  by Status
+         //Get parameter by Food Name
+        String selectFood = request.getParameter("selectFood");
+          // Get filter parameters  by Rating
         String status = request.getParameter("rating");
-
-        // Get search by name, id, email
+        // Get search by name, email
         String search = request.getParameter("search");
+       
         // Pagination
         int page = 1;
         int pageSize = 3;
@@ -165,19 +167,22 @@ public class ManagerFeedbackController extends HttpServlet {
             Food food = foodDAO.findById(item.getFood_id());
             FoodMap.put(feedback.getOrder_item_id(), food);
         }
-
+        List<String> lFood = foodDAO.findFoodNameList();
         // Set attributes
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
         request.setAttribute("search", search);
+        request.setAttribute("selectFood",selectFood);
         request.setAttribute("feedbacks", feedbacks);
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
+        request.setAttribute("lFood",lFood);
         PrintWriter o = response.getWriter();
         o.print(feedbacks);
         o.print(AccountMap);
         o.print(FoodMap);
+        o.print(lFood);
        request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
