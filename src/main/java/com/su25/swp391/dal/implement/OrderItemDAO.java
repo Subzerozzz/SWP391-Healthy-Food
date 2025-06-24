@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
 
-    public List<OrderItem> getOrderDetailByOrderId(int order_id) {
+    public List<OrderItem> findOrderItemsByOrderId(int order_id) {  //getOrderDetailByOrderId
         List<OrderItem> orderDetails = new ArrayList<>();
         String sql = "SELECT "
                 + "oi.order_item_id, "
@@ -57,17 +57,6 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
         return orderDetails;
     }
 
-    public BigDecimal calculateSubtotal(List<OrderItem> orderDetails) {
-        BigDecimal subtotal = BigDecimal.ZERO;
-
-        for (OrderItem od : orderDetails) {
-            BigDecimal itemTotal = od.getPrice()
-                    .multiply(BigDecimal.valueOf(od.getQuantity()));
-            subtotal = subtotal.add(itemTotal); // cộng dồn từng item
-        }
-
-        return subtotal;
-    }
 
     @Override
     public List<OrderItem> findAll() {
