@@ -76,12 +76,22 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 .build();
     }
 
-    public int getTotalOrderCountByUserId(int userId) {
+    public int getTotalOrderCountByUserIdAndStatus(int userId, String status) {
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
         String sql = "SELECT COUNT(*) FROM `Order` WHERE user_id = ?";
+        if (filterByStatus) {
+            sql += " AND status = ?";
+        }
+
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
+
             statement.setInt(1, userId);
+            if (filterByStatus) {
+                statement.setString(2, status);
+            }
+
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
@@ -90,21 +100,36 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-
+            closeResources();
         }
         return 0;
     }
 
-    public List<Order> findOrdersByUserIdWithPagination(int userId, int page, int pageSize) {
+    public List<Order> findOrdersByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT * FROM `Order` WHERE user_id = ? ORDER BY order_id DESC LIMIT ? OFFSET ?";
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+
+        String sql = "SELECT * FROM `Order` WHERE user_id = ?";
+        if (filterByStatus) {
+            sql += " AND status = ?";
+        }
+        sql += " ORDER BY order_id DESC LIMIT ? OFFSET ?";
+
         try {
             int offset = (page - 1) * pageSize;
             connection = getConnection();
             statement = connection.prepareStatement(sql);
+
             statement.setInt(1, userId);
-            statement.setInt(2, pageSize);
-            statement.setInt(3, offset);
+            int paramIndex = 2;
+
+            if (filterByStatus) {
+                statement.setString(paramIndex++, status);
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 list.add(getFromResultSet(resultSet));
@@ -117,7 +142,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return list;
     }
 
-    public Order getOrderById(int orderId) {
+    public Order findOrderById(int orderId) {
         Order order = null;
         String sql = "SELECT * FROM `Order` WHERE order_id = ?";
 
@@ -221,7 +246,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public Order findById(Integer id) {
-         return null; 
+        return null;
     }
 
+    
 }

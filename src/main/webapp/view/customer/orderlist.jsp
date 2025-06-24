@@ -48,6 +48,47 @@
                 background-color: #fff8e1;
                 color: #f9a825;
             }
+            .format-view {
+                white-space: nowrap;           /* Không xuống dòng */
+                overflow: hidden;              /* Ẩn phần vượt quá */
+                text-overflow: ellipsis;       /* Hiện dấu ba chấm */
+                max-width: 250px;              /* Đặt giới hạn chiều rộng phù hợp */
+                display: inline-block;         /* Đảm bảo phần tử có thể kiểm soát chiều rộng */
+                vertical-align: middle;        /* Cân chỉnh nếu cần */
+            }
+            .table-title {
+                display: flex;
+                justify-content: space-between; /* Hoặc: center, nếu bạn muốn cả dòng nằm giữa */
+                background-color: #f0f0f0;
+                padding: 10px;
+            }
+
+            .table-title li {
+                flex: 1; /* chia đều các cột */
+                text-align: center;
+            }
+
+            .table-title .body-title {
+                display: block;
+                font-weight: bold;
+            }
+            .payment-badge.VNPAY {
+                background-color: #e0f7fa;  
+                color: #00796b;             
+                padding: 4px 8px;           
+                border-radius: 6px;         
+                display: inline-block;      
+                font-weight: 500;
+                font-size: 14px;
+            }
+            .payment-badge.COD {
+                background-color: #ffe38f;  
+                color: #00796b;             
+                padding: 4px 8px;           
+                border-radius: 6px;         
+                display: inline-block;      
+                font-weight: 500;
+                font-size: 14px;
 
         </style>
         <!-- Basic Page Needs -->
@@ -105,57 +146,62 @@
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form class="form-search" action="search" method="post">
+                                                                                                        <form class="form-search" action="orderlist" method="get">
                                                                                                             <fieldset class="name">
                                                                                                                 <select name="status" required>
-                                                                                                                    <option value="">-- Filter by Status --</option>
-                                                                                                                    <option value="pending">Pending</option>
-                                                                                                                    <option value="accepted">Accepted</option>
-                                                                                                                    <option value="cancelled">Cancelled</option>
-                                                                                                                    <option value="completed">Completed</option>
-                                                                                                                </select>                                                                                                            </fieldset>
-                                                                                                            <div class="button-submit">
-                                                                                                                <button class="" type="submit"><i class="icon-search"></i></button>
-                                                                                                            </div>
-                                                                                                        </form>
-                                                                                                    </div>
+                                                                                                                    <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="pending"  ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
+                                                                                                                <option value="accepted"  ${param.status == 'accepted' ? 'selected' : ''}>Accepted</option>
+                                                                                                                <option value="cancelled"  ${param.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                                                                                <option value="completed"  ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
+                                                                                                            </select>                                                                                                            </fieldset>
+                                                                                                        <div class="button-submit">
+                                                                                                            <button class="" type="submit"><i class="icon-search"></i></button>
+                                                                                                        </div>
+
+                                                                                                    </form>
                                                                                                 </div>
-                                                                                                <div class="wg-table table-all-category">
-                                                                                                    <ul class="table-title">
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Order ID</div>
-                                                                                                        </li>    
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Ship Address</div>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Total</div>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Create At</div>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Payment Method</div>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Status</div>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <div class="body-title">Active</div>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                    <ul class="flex flex-column">
+                                                                                            </div>
+                                                                                            <div class="wg-table table-all-category">
+                                                                                                <ul class="table-title">
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Order ID</div>
+                                                                                                    </li>    
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Ship Address</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Coupon</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Total</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Create At</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Payment Method</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Status</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Active</div>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                                <ul class="flex flex-column">
 
                                                                                                     <c:forEach var="order" items="${orderList}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="body-text">#${order.order_id} </div>
-                                                                                                                <div class="body-text">${order.shipping_address} </div>
-                                                                                                                <div class="body-text">
+                                                                                                                <div class="body-text format-view column text-center">#${order.order_id} </div>
+                                                                                                                <div class="body-text format-view">${order.shipping_address} </div>
+                                                                                                                <div class="body-text format-view">${order.coupon_code} </div>
+                                                                                                                <div class="body-text format-view ">
                                                                                                                     <fmt:formatNumber value="${order.total}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
-                                                                                                                <div class="body-text">${order.created_at} </div>
-                                                                                                                <div class="body-text"><a>${order.payment_method}</a></div>
+                                                                                                                <div class="body-text format-view">${order.created_at} </div>
+                                                                                                                <div class="body-text format-view"><a class="payment-badge ${order.payment_method}">${order.payment_method}</a></div>
                                                                                                                 <div>
                                                                                                                     <div class="block-available ${order.status}"><a>${order.status}</a></div>
                                                                                                                 </div>
@@ -176,21 +222,21 @@
                                                                                                     <ul class="wg-pagination">
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=1"><i class="icon-chevron-left"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=1&status=${param.status}"><i class="icon-chevron-left"></i></a>
                                                                                                         </li>
                                                                                                         <c:choose>
                                                                                                             <c:when test="${currentPage <= totalPages - 2}">
                                                                                                                 <c:if test="${currentPage > 1}">
                                                                                                                     <li class="">
-                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage - 1}">${currentPage - 1}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage - 1}&status=${param.status}">${currentPage - 1}</a>
                                                                                                                     </li>
                                                                                                                 </c:if>
                                                                                                                 <li class="active">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage}">${currentPage}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage}&status=${param.status}">${currentPage}</a>
                                                                                                                 </li>
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage + 1}">${currentPage + 1}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage + 1}&status=${param.status}">${currentPage + 1}</a>
                                                                                                                 </li>
 
                                                                                                                 <c:if test="${currentPage < totalPages - 2}">
@@ -201,21 +247,21 @@
 
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}">${totalPages}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}&status=${param.status}">${totalPages}</a>
                                                                                                                 </li>
                                                                                                             </c:when>
 
                                                                                                             <c:otherwise>
                                                                                                                 <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                                                                                                     <li class="${currentPage == i ? 'active' : ''}">
-                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${i}">${i}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${i}&status=${param.status}">${i}</a>
                                                                                                                     </li>
                                                                                                                 </c:forEach>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}&status=${param.status}"><i class="icon-chevron-right"></i></a>
                                                                                                         </li>
                                                                                                     </ul>
 
@@ -231,20 +277,20 @@
                                                                                 <!-- /main-content -->
                                                                                 <!-- bottom-page -->
                                                                                 <jsp:include page = "/view/common/nutritionist/footer.jsp"></jsp:include>
-                                                                                <!-- /bottom-page -->
+                                                                                    <!-- /bottom-page -->
+                                                                                </div>
+
+                                                                                <!-- /section-content-right -->
                                                                             </div>
-
-                                                                            <!-- /section-content-right -->
+                                                                            <!-- /layout-wrap -->
                                                                         </div>
-                                                                        <!-- /layout-wrap -->
+                                                                        <!-- /#page -->
                                                                     </div>
-                                                                    <!-- /#page -->
-                                                                </div>
-                                                                <!-- /#wrapper -->
+                                                                    <!-- /#wrapper -->
 
-                                                                <!-- Javascript -->
+                                                                    <!-- Javascript -->
 
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
