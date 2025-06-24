@@ -394,105 +394,6 @@ public class CartController extends HttpServlet {
         showCart(request, response);
     }
 
-    private void checkoutOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            Map<String, String> errorMap = new HashMap<>();
-            PrintWriter out = response.getWriter();
-            // Lay ra fullName
-            String fullName = request.getParameter("fullName").trim();
-
-            if (fullName == null || fullName.isEmpty()) {
-                errorMap.put("fullName", "Tên không được để trống");
-            }
-            // Lay ra email
-            String email = request.getParameter("email").trim();
-            if (email == null || email.isEmpty()) {
-                errorMap.put("email", "Email không được để trống");
-            }
-            // Lay ra phoneNumber
-            String phoneNumber = request.getParameter("phoneNumber").trim();
-            if (phoneNumber == null || phoneNumber.isEmpty()) {
-                errorMap.put("phoneNumber", "Số điện thoại không được để trống");
-            }
-            // Lay ra address
-            String address = request.getParameter("address").trim();
-            if (address == null || address.isEmpty()) {
-                errorMap.put("address", "Địa chỉ không được để trống");
-            }
-            // Lay ra paymentMethod
-            String paymentMethod = request.getParameter("paymentMethod");
-
-            // Lat ra subTotal và totalPrice
-            Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
-            Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
-
-            // Lay ra coupon_code va discountAmount
-            String couponCode = request.getParameter("couponCode");
-            if(couponCode == null || couponCode.isEmpty()){
-                couponCode = null;
-            }
-            Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
-
-            // Lay ra created_at và updated_at
-            Timestamp created_at = new Timestamp(System.currentTimeMillis());
-            Timestamp updated_at = new Timestamp(System.currentTimeMillis());
-
-            // Lay listCartItem
-            HttpSession session = request.getSession();
-            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-            List<CartItem> listCartItem = new ArrayList<>();
-
-            if (account != null) {
-                // Lay ra cartID theo accID
-                Cart cart = cartDao.findCartByAccountId(account.getId());
-                Integer cartId = cart.getId();
-                // Lấy ra tất cả cartItem theo cartId
-                listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
-            } else {
-                listCartItem = (List<CartItem>) session.getAttribute("cart");
-                if (listCartItem == null) {
-                    listCartItem = new ArrayList<>();
-                }
-            }
-
-            // chuan bi foodMap cho JSP
-            Map<Integer, Food> foodMap = new HashMap<>();
-            for (CartItem item : listCartItem) {
-                Food food = foodDao.findById(item.getFood_id());
-                foodMap.put(item.getFood_id(), food);
-            }
-
-            // Check
-            if (!errorMap.isEmpty()) {
-                request.setAttribute("listCartItem", listCartItem);
-                request.setAttribute("foodMap", foodMap);
-                request.setAttribute("errors", errorMap);
-                request.setAttribute("subTotal", subTotal);
-                request.setAttribute("totalPrice", totalPrice);
-                request.setAttribute("paymentMethod", paymentMethod);
-                request.setAttribute("formData", request.getParameterMap());
-                request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
-                return;
-            }
-
-            switch (paymentMethod) {
-                case "cod":
-                    handleProcessCheckoutCOD(request, response,totalPrice,address,email,created_at,updated_at,couponCode,
-                            discountAmount,fullName,phoneNumber);
-                    break;
-                case "vnpay":
-                    handleProcessCheckoutVNPay(request, response);
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
     private void couponOrder(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -598,11 +499,137 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response,Double totalPrice, String address,String email,
-            Timestamp created_at, Timestamp updated_at,String couponCode, Double discountAmount,String fullName,String phoneNumber) throws ServletException, IOException {
+    /**
+     * lay ra cac du lieu can co trong 1 order Loi thi tra ve cart.jsp Khong thi
+     * tiep tuc voi hai nhanh la cod hoac Vnpay
+     */
+    private void checkoutOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Map<String, String> errorMap = new HashMap<>();
+            // Lay ra fullName
+            String fullName = request.getParameter("fullName").trim();
+
+            if (fullName == null || fullName.isEmpty()) {
+                errorMap.put("fullName", "Tên không được để trống");
+            }
+            // Lay ra email
+            String email = request.getParameter("email").trim();
+            if (email == null || email.isEmpty()) {
+                errorMap.put("email", "Email không được để trống");
+            }
+            // Lay ra phoneNumber
+            String phoneNumber = request.getParameter("phoneNumber").trim();
+            if (phoneNumber == null || phoneNumber.isEmpty()) {
+                errorMap.put("phoneNumber", "Số điện thoại không được để trống");
+            }
+            // Lay ra address
+            String address = request.getParameter("address").trim();
+            if (address == null || address.isEmpty()) {
+                errorMap.put("address", "Địa chỉ không được để trống");
+            }
+            // Lay ra paymentMethod
+            String paymentMethod = request.getParameter("paymentMethod");
+
+            // Lat ra subTotal và totalPrice
+            Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
+            Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+
+            // Lay ra coupon_code va discountAmount
+            String couponCode = request.getParameter("couponCode");
+            if (couponCode == null || couponCode.isEmpty()) {
+                couponCode = null;
+            }
+            Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
+
+            // Lay ra created_at và updated_at
+            Timestamp created_at = new Timestamp(System.currentTimeMillis());
+            Timestamp updated_at = new Timestamp(System.currentTimeMillis());
+
+            // Lay listCartItem
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+            List<CartItem> listCartItem = new ArrayList<>();
+
+            if (account != null) {
+                // Lay ra cartID theo accID
+                Cart cart = cartDao.findCartByAccountId(account.getId());
+                Integer cartId = cart.getId();
+                // Lấy ra tất cả cartItem theo cartId
+                listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
+            } else {
+                listCartItem = (List<CartItem>) session.getAttribute("cart");
+                if (listCartItem == null) {
+                    listCartItem = new ArrayList<>();
+                }
+            }
+
+            // chuan bi foodMap cho JSP
+            Map<Integer, Food> foodMap = new HashMap<>();
+            for (CartItem item : listCartItem) {
+                Food food = foodDao.findById(item.getFood_id());
+                foodMap.put(item.getFood_id(), food);
+            }
+
+            // Check
+            if (!errorMap.isEmpty()) {
+                request.setAttribute("listCartItem", listCartItem);
+                request.setAttribute("foodMap", foodMap);
+                request.setAttribute("errors", errorMap);
+                request.setAttribute("subTotal", subTotal);
+                request.setAttribute("totalPrice", totalPrice);
+                request.setAttribute("paymentMethod", paymentMethod);
+                request.setAttribute("formData", request.getParameterMap());
+                request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
+                return;
+            }
+
+            switch (paymentMethod) {
+                case "cod":
+                    handleProcessCheckoutCOD(request, response);
+                    break;
+                case "vnpay":
+                    handleProcessCheckoutVNPay(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         List<CartItem> listCartItem = new ArrayList<>();
+
+        // Lay ra fullName
+        String fullName = request.getParameter("fullName").trim();
+        // Lay ra email
+        String email = request.getParameter("email").trim();
+        // Lay ra phoneNumber
+        String phoneNumber = request.getParameter("phoneNumber").trim();
+        // Lay ra address
+        String address = request.getParameter("address").trim();
+        // Lay ra paymentMethod
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        // Lat ra subTotal và totalPrice
+        Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
+        Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+
+        // Lay ra coupon_code va discountAmount
+        String couponCode = request.getParameter("couponCode");
+        if (couponCode == null || couponCode.isEmpty()) {
+            couponCode = null;
+        }
+        Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
+
+        // Lay ra created_at và updated_at
+        Timestamp created_at = new Timestamp(System.currentTimeMillis());
+        Timestamp updated_at = new Timestamp(System.currentTimeMillis());
 
         Order newOrder = new Order();
         if (account != null) {
@@ -642,49 +669,84 @@ public class CartController extends HttpServlet {
                     .mobile(phoneNumber)
                     .build();
         }
-        
+
         Integer orderId = orderDao.insert(newOrder);
         //Sau do tao cac orderItem cho order
-        if(orderId > 0){
-            for(CartItem cartItem : listCartItem){
+        if (orderId > 0) {
+            for (CartItem cartItem : listCartItem) {
                 Integer foodId = cartItem.getFood_id();
                 Integer quantity = cartItem.getQuantity();
                 Double price = foodDao.findById(foodId).getPrice();
-                
+                Double priceTotal = price * quantity;
+
                 OrderItem newOrderItem = OrderItem.builder()
                         .order_id(orderId)
                         .food_id(foodId)
                         .quantity(quantity)
-                        .price(price)
+                        .price(priceTotal)
                         .created_at(created_at)
                         .updated_at(updated_at)
                         .build();
-               
-                orderItemDao.insert(newOrderItem);
+                System.out.println("Thêm order item \n");
+                System.out.println(orderItemDao.insert(newOrderItem));
             }
         }
         //Đặt hàng xong thì xóa hết cartItem trong listCartItem
-        if(account != null){
-            for(CartItem cartItem : listCartItem){
+        if (account != null) {
+            for (CartItem cartItem : listCartItem) {
                 cartItemDao.delete(cartItem);
             }
             //Sau do chuyen sang trang myOrder
             // request.getRequestDispatcher("").forward(request, response);
-        }
-        else{
+        } else {
             List<CartItem> listCartItem1 = new ArrayList<>();
             session.setAttribute("cart", listCartItem1);
             //Dùng email để gửi 
+            //Có đoạn code dùng hàm gửi về email
             request.setAttribute("notificationForEmail", true);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
-        
-        
- 
+
+        //Kiem tra xem có coupon khong thi giam so luong
+        if (couponCode != null) {
+            Coupon coupon = couponDao.findCouponByCouponCode(couponCode.trim());
+            coupon.setUsage_count(coupon.getUsage_count() + 1);
+            Date currentDate = new Date(System.currentTimeMillis());
+            coupon.setUpdated_at(currentDate);
+            couponDao.update(coupon);
+        }
+
     }
 
     private void handleProcessCheckoutVNPay(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        List<CartItem> listCartItem = new ArrayList<>();
+
+        // Lay ra fullName
+        String fullName = request.getParameter("fullName").trim();
+        // Lay ra email
+        String email = request.getParameter("email").trim();
+        // Lay ra phoneNumber
+        String phoneNumber = request.getParameter("phoneNumber").trim();
+        // Lay ra address
+        String address = request.getParameter("address").trim();
+        // Lay ra paymentMethod
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        // Lat ra subTotal và totalPrice
+        Double subTotal = Double.parseDouble(request.getParameter("subTotal"));
+        Double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+
+        // Lay ra coupon_code va discountAmount
+        String couponCode = request.getParameter("couponCode");
+        Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
+
+        // Lay ra created_at và updated_at
+        Timestamp created_at = new Timestamp(System.currentTimeMillis());
+        Timestamp updated_at = new Timestamp(System.currentTimeMillis());
+
+        Order newOrder = new Order();
     }
 
 }
