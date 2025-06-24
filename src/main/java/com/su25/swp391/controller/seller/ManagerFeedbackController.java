@@ -112,14 +112,14 @@ public class ManagerFeedbackController extends HttpServlet {
     }// </editor-fold>
 
      private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get filter parameters by Status
+        // Get filter parameters  by Status
         String status = request.getParameter("rating");
 
         // Get search by name, id, email
         String search = request.getParameter("search");
         // Pagination
         int page = 1;
-        int pageSize = 10;
+        int pageSize = 3;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));

@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -44,15 +45,15 @@
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
     <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
         <style>
-                               .box-logo{
-                                   height: 100px;
-                                   overflow: hidden
-                               }
-                               .logo{
-                                   max-width:100%;
-                                   height: 100%;
-                                   display:block
-                               }
+            .box-logo{
+                height: 100px;
+                overflow: hidden
+            }
+            .logo{
+                max-width:100%;
+                height: 100%;
+                display:block
+            }
                                 /* Card styles */
 /* Card layout */
 .card {
@@ -108,84 +109,105 @@
 }
 
 /* Table styles */
-.table {
+.feedback-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'Segoe UI', sans-serif;
   font-size: 14px;
+  table-layout: fixed;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.table th, .table td {
-  padding: 12px 16px;
-  text-align: left;
-  vertical-align: middle;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.table th {
-  background-color: #f8f9fa;
-  font-weight: bold;
+/* Header */
+.feedback-table thead th {
+  background: linear-gradient(to right, #f0f4f8, #e0e7ef);
   color: #333;
+  font-weight: 600;
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
 }
 
-.table-hover tbody tr:hover {
-  background-color: #f1f1f1;
+/* Body cells */
+.feedback-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Star rating icons */
-.table td i.fa-star {
-  margin-right: 2px;
-  font-size: 14px;
+/* Content cột xuống dòng */
+.feedback-table td:nth-child(4) {
+  white-space: normal;
+  word-break: break-word;
+  max-height: 4.5em;
+  line-height: 1.5em;
 }
 
-/* Action buttons */
-/* Căn giữa tiêu đề "Action" */
-.table th:nth-child(5),
-.table td:nth-child(5) {
-  text-align: center;
-}
+/* ===== Cố định chiều rộng hợp lý cho từng cột ===== */
+.feedback-table th:nth-child(1), td:nth-child(1) { width: 50px; }     /* ID */
+.feedback-table th:nth-child(2), td:nth-child(2) { width: 120px; }    /* Food */
+.feedback-table th:nth-child(3), td:nth-child(3) { width: 130px; }    /* Rating */
+.feedback-table th:nth-child(5), td:nth-child(5) { width: 150px; }    /* Customer */
+.feedback-table th:nth-child(6), td:nth-child(6) { width: 100px; text-align: center; }
+.feedback-table th:nth-child(7), td:nth-child(7) { width: 140px; }
+.feedback-table th:nth-child(8), td:nth-child(8) { width: 80px; text-align: center; }
 
-/* Action buttons - hiện đại hơn */
+/* Action */
 .action-group {
   display: flex;
-  gap: 20px;
   justify-content: center;
-  align-items: center;
+  gap: 10px;
 }
 
-/* Nút icon hiện đại */
 .action-group .item {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #e1f0ff; /* màu sáng */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #666;
+  transition: color 0.2s;
 }
 
 .action-group .item:hover {
-  transform: scale(1.05);
-  background-color: #e2e6ea;
+  color: #007bff;
 }
 
-/* Icon size & màu */
-.action-group .item i {
-  font-size: 16px;
+/* Rating */
+.fa-star {
+  color: #ffc107;
+  font-size: 14px;
+  margin-right: 2px;
 }
 
-/* Icon riêng biệt màu sắc */
-.action-group .eye i {
-  color: #0d6efd; /* xanh dương */
+/* Kiểu hiển thị badge status */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: inline-block;
+  font-weight: normal;
+  border: 1px solid transparent;
+  min-width: 80px;       /* ✅ Cố định chiều rộng */
+  text-align: center;     /* ✅ Căn giữa chữ */
 }
 
-.action-group .edit i {
-  color: #198754; /* xanh lá */
+/* Trạng thái Inactive */
+.status-badge.inactive {
+  background-color: #ffe5e5 !important;
+  color: #cc0000 !important;
+  border: 1px solid #cc0000 !important;
 }
 
-.action-group .trash i {
-  color: #dc3545; /* đỏ */
+/* Trạng thái Active */
+.status-badge.active {
+  background-color: #e5f7e5 !important;
+  color: #007700 !important;
+  border: 1px solid #007700 !important;
 }
 /* Optional: Make sure card doesn't overflow footer */
 body {
@@ -217,29 +239,121 @@ main {
   transition: color 0.2s ease;
   margin-left: 40%
 }
- /*css status*/
- .discount-type {
-     padding: 4px 10px;
-     border-radius: 12px;
-     font-size: 14px;
-     display: inline-block;
-     font-weight: normal;
- }
+/*css action*/
+.action-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 
- /* Chỉ style riêng */
- .discount-fixed {
-     background-color: #ffe5e5 !important;
-     color: #cc0000 !important;
-     border: 1px solid #cc0000 !important;
- }
+/* Style chung cho nút */
+.action-group .item {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
 
- .discount-percentage {
-     background-color: #e5f7e5 !important;
-     color: #007700 !important;
-     border: 1px solid #007700 !important;
- }
+/* View button - xanh */
+.action-group .item.view {
+  color: #4a90e2;
+  border-color: #eaf3fc;
+}
+
+.action-group .item.view:hover {
+  background-color: #e6f0ff;
+  color: #0a58ca;
+  border-color: #0a58ca;
+}
+
+/* Reject button - đỏ */
+.action-group .item.reject {
+  color: #e74c3c;
+  border-color: #dc3545;
+}
+
+.action-group .item.reject:hover {
+  background-color: #ffe6e9;
+  color: #bb2d3b;
+  border-color: #bb2d3b;
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Dòng "Showing 10 entries" */
+.pagination-wrapper .text-tiny {
+  font-size: 14px;
+  color: #888;
+}
+
+/* Phần ul chứa các trang */
+.pagination-wrapper ul {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mỗi item trong phân trang */
+.pagination-wrapper ul li a,
+.pagination-wrapper ul li span {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  border-radius: 50%;
+  color: #555;
+  background-color: #f1f1f1;
+  border: none;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Hover hiệu ứng */
+.pagination-wrapper ul li a:hover {
+  background-color: #e0e7ff;
+  color: #1d4ed8;
+}
+
+/* Nút hiện tại */
+.pagination-wrapper ul li.active a {
+  background-color: #001aff;
+  color: white;
+  font-weight: bold;
+}
+
+/* Dấu ... */
+.pagination-wrapper ul li span {
+  cursor: default;
+  background-color: transparent;
+  color: #aaa;
+  font-weight: bold;
+}
+
+/* Mũi tên trái/phải */
+.pagination-wrapper ul li a i {
+  font-size: 14px;
+}
+
         </style>
-</head>
+</head>   
 
 <body class="body">
 
@@ -329,135 +443,167 @@ value="${search}"/>
 </div>
 </form>
 </div>
-
-
-<div class="card-body">
-<div class="table-responsive">
-<table class="table table-hover">
-<thead>
-    <tr>
-        <th>ID</th>
-        <th>Food Name</th>
-        <th>Rating</th>
-        <th>Content</th>
-        <th>Customer Name</th>
-        <th>Status</th>
-        <th>Created_At</th>
-        <th>Action</th>
-    </tr>
-    
-</thead>
-<tbody>
-        
-    <c:forEach var="feedback" items="${feedbacks}">
-        <c:set var="account" value="${AccountMap[feedback.user_id]}"/>
-        <c:set var="food" value="${FoodMap[feedback.order_item_id]}"/>
+                <div class="card-body">
+  <div class="table-responsive">
+    <table class="table table-hover feedback-table">
+      <thead>
         <tr>
+          <th>ID</th>
+          <th>Food</th>
+          <th>Rating</th>
+          <th>Content</th>
+          <th>Customer Name</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <c:forEach var="feedback" items="${feedbacks}">
+          <c:set var="account" value="${AccountMap[feedback.user_id]}" />
+          <c:set var="food" value="${FoodMap[feedback.order_item_id]}" />
+          <tr>
             <td>${feedback.id}</td>
             <td>${food.name}</td>
-             <td>
-               <c:forEach begin="1" end="${feedback.rating}">
-               <i class="fa-solid fa-star" style="color: gold;"></i>
-               </c:forEach>
-             </td>
-             <td>${feedback.content}</td>
+            <td>
+                <c:forEach begin="1" end="${feedback.rating}">
+                    <i class="fa-solid fa-star"></i>
+                </c:forEach>
+            </td>
+            <td class="content-cell">
+              <c:choose>
+                <c:when test="${fn:length(feedback.content) > 100}">
+                  ${fn:substring(feedback.content, 0, 100)}...
+                </c:when>
+                <c:otherwise>
+                  ${feedback.content}
+                </c:otherwise>
+              </c:choose>
+            </td>
             <td>${account.user_name}</td>
-            <td class="discount-type discount-fixed  discount-percentage">${feedback.visible?"Active":"Inactive"}</td>
-            <td>  <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" /></td>
-            <td> 
-              <div  class="action-group">
-                <div class="item eye">
-                    <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
-                        <i class="icon-eye"></i>
-                    </a></div> 
-                <div class="item trash">
-                    <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden"
-                        onclick="handleReject(event)">
-                        <i class="fa-solid fa-xmark"></i>
-                    </a>         
-                </div>    
+            <td>
+                <span class="status-badge ${feedback.visible ? 'active' : 'inactive'}">
+                    ${feedback.visible ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td>
+              <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" />
+            </td>
+                <td>
+                  <div class="action-group">
+                      <a class="item view" href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail">
+                          <i class="fa-solid fa-eye"></i>
+                      </a>
+                      <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
+                          <i class="fa-solid fa-xmark"></i>
+                      </a>
+                  </div>
+              </td>
 
-            </div>
-        </td>
-        </tr>
-    </c:forEach>
-    
-</tbody>
-</table>
-</div>
+          </tr>
+        </c:forEach>
+      </tbody>
+    </table>
+  </div>
+<!--                       <div class="pagination-wrapper">
+                           <div class="text-tiny">Showing 10 entries</div>
+
+                              Start Pagination
+                           <ul class="pagination-wrapper">
+
+                               <li >
+                                   <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
+                               </li>
+                               <c:choose>
+                                   <c:when test="${currentPage <= totalPages - 2}">
+                                       <c:if test="${currentPage > 1}">
+                                           <li class="">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
+                                           </li>
+                                       </c:if>
+                                       <li class="active">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
+                                       </li>
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}">${currentPage + 1}</a>
+                                       </li>
+
+                                       <c:if test="${currentPage < totalPages - 2}">
+                                           <li>
+                                               <span>...</span>
+                                           </li>
+                                       </c:if>
+
+
+                                       <li class="">
+                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
+                                       </li>
+                                   </c:when>
+
+                                   <c:otherwise>
+                                       <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                           <li class="${currentPage == i ? 'active' : ''}">
+                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
+                                           </li>
+                                       </c:forEach>
+                                   </c:otherwise>
+                               </c:choose>
+
+                               <li>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+                               </li>
+                           </ul>
+                       </div>  -->
 <div class="flex items-center justify-between flex-wrap gap10">
 <div class="text-tiny">Showing 10 entries</div>
 <ul class="wg-pagination">
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1&rating=${rating}&search=${search}"><i class="icon-chevron-left"></i></a>
 </li>
 <c:choose>
     <c:when test="${currentPage <= totalPages - 2}">
         <c:if test="${currentPage > 1}">
                 <li class="">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}&rating=${rating}&search=${search}">${currentPage - 1}</a>
             </li>
         </c:if>
         <li class="active">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}&rating=${rating}&search=${search}">${currentPage}</a>
         </li>
-        
+
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback&page=${currentPage + 1}">${currentPage + 1}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}&rating=${rating}&search=${search}">${currentPage + 1}</a>
         </li>
-        
+
         <c:if test="${currentPage < totalPages - 2}">
             <li>
                 <span>...</span>
             </li>
         </c:if>
-        
-        
+
+
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}">${totalPages}</a>
         </li>
     </c:when>
-    
+
     <c:otherwise>
         <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
             <li class="${currentPage == i ? 'active' : ''}">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}&rating=${rating}&search=${search}">${i}</a>
             </li>
         </c:forEach>
     </c:otherwise>
 </c:choose>
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}"><i class="icon-chevron-right"></i></a>
 </li>
 </ul>
 
 </div>
-<c:if test="${empty feedbacks}">
-<tr>
-    <td colspan="8" class="text-center">
-        <div class="py-4">
-            <i class="fas fa-search fs-1 text-muted mb-3"></i>
-            <h5>No feedback found</h5>
-            <p class="text-muted">
-                <c:choose>
-                    <c:when test="${not empty status || not empty search}">
-                        No feedback match your search criteria. Try adjusting your filters.
-                        <br>
-                        <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2">
-                            <i class="fas fa-times me-2"></i>Clear Filters
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        There are no orders in the system yet.
-                    </c:otherwise>
-                </c:choose>
-            </p>
-        </div>
-    </td>
-</tr>
-    </c:if>      
 </div>
 
 </div>
