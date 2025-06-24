@@ -185,22 +185,6 @@
     transform: scale(1.05);
 }
 
-.badge-pending {
-    background: linear-gradient(135deg, #ffea00, #ffd600); /* Vàng neon */
-    color: #000;
-}
-.badge-accepted {
-    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh biển sáng */
-    color: #fff;
-}
-.badge-completed {
-    background: linear-gradient(135deg, #00ff94, #00c853); /* Xanh lá tươi như bạc hà */
-    color: #fff;
-}
-.badge-rejected {
-    background: linear-gradient(135deg, #ff1744, #d50000); /* Đỏ neon */
-    color: #fff;
-}
 .bg-info-glow {
     background: linear-gradient(135deg, #00c6ff, #0072ff); /* Xanh dương bóng loáng */
     color: #fff;
@@ -325,27 +309,25 @@
   letter-spacing: 0.5px;
 }
 
-/* Badge colors */
 .badge-pending {
-  background: linear-gradient(135deg, #ffeb3b, #ffc107);
-  color: #000;
+    background-color: #FFF8E1; /* vàng nhạt */
+    color: #8D6E63;
 }
 
 .badge-accepted {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  color: #fff;
+    background-color: #E3F2FD; /* xanh biển nhạt */
+    color: #1565C0;
 }
 
 .badge-completed {
-  background: linear-gradient(135deg, #00e676, #1de9b6);
-  color: #fff;
+    background-color: #E8F5E9; /* xanh lá rất nhạt */
+    color: #2E7D32;
 }
 
 .badge-rejected {
-  background: linear-gradient(135deg, #ff1744, #d50000);
-  color: #fff;
+    background-color: #FFEBEE; /* đỏ nhạt */
+    color: #C62828;
 }
-
 
 
                       </style>
@@ -432,9 +414,8 @@
             class="form-select" name="paymentMethod">
           <option value="">All Payment Methods</option>
           <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
-          <option value="Digital Wallet"   ${paymentMethod == 'Digital Wallet'   ? 'selected' : ''}>Digital Wallet</option>
-          <option value="Bank Transfer"    ${paymentMethod == 'Bank Transfer'    ? 'selected' : ''}>Bank Transfer</option>
-        </select>
+          <option value="VN Pay"   ${paymentMethod == 'VN Pay'   ? 'selected' : ''}>VN Pay</option>
+         </select>
 
         <!-- Ô Search -->
         <input type="text" class="form-control"
@@ -497,16 +478,22 @@
                                         <tr>
                                          
                                             <td>${order.id}</td>
-                                               <c:choose>
-                                                   <c:when test="${not empty acc.user_name}">
-                                                       <td>${acc.user_name}<br></td>
-                                                     <td>  ${order.shipping_address} </td>
-                                                   </c:when>
-                                                   <c:otherwise>
-                                                       <td>${order.full_name}</td>
-                                                       <td>  ${order.shipping_address} </td>
-                                                   </c:otherwise>
-                                            </c:choose>
+                                             
+                                            <td >
+                                                <c:choose>
+                                                    <c:when test="${not empty acc.user_name}">
+                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.user_name}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i> ${order.full_name}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+
+                                            <td>
+                                                ${order.shipping_address}
+                                            </td>
+
                                             
                                            
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
@@ -517,14 +504,9 @@
                                                 </span>
                                             </td>
                                             <td>
-<!--                                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
-                                                                order.status == 'accepted' ? 'bg-info' : 
-                                                                order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                    ${order.status}
-                                                </span>-->
-                                                    <span style="display: flex;align-items: center;justify-content: center;height: 25px"
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px"
                                                           class="badge-modern ${
-                                                          order.status == 'pending' ? 'badge-pending' :
+                                                              order.status == 'pending' ? 'badge-pending' :
                                                               order.status == 'accepted' ? 'badge-accepted' :
                                                               order.status == 'completed' ? 'badge-completed' :
                                                               'badge-rejected'

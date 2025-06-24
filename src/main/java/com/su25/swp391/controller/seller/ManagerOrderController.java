@@ -169,6 +169,7 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("status", status);
+        request.setAttribute("paymentMethod",paymentMethod);
         request.setAttribute("search", search);
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);

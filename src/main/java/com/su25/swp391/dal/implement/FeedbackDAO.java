@@ -29,7 +29,6 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     @Override
     public Feedback findById(Integer id) {
         String sql = "SELECT * from Feedback WHERE id = ?";
-
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -130,7 +129,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         StringBuilder sql = new StringBuilder("SELECT * "
                 + "FROM Feedback f "
                 + "JOIN Account a ON f.user_id = a.id "
-                + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? ) ");
+                + "WHERE  (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -173,7 +172,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM Feedback f "
                 + "JOIN Account a ON f.user_id = a.id "
-                + "WHERE f.is_visible = 1 AND (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
 
         String searchPattern = "%" + search.trim() + "%";
@@ -210,7 +209,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         List<Feedback> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * "
                 + "FROM Feedback  "
-                + "WHERE is_visible = 1  ");
+                + "WHERE 1 = 1  ");
         List<Object> params = new ArrayList<>();
         if(status != null && status.contains("-1")){
             status = null;
@@ -245,7 +244,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
      public int getTotalFilteredFeedback(String status) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM Feedback "
-                + "WHERE is_visible = 1 ");
+                + "WHERE 1 = 1 ");
         List<Object> params = new ArrayList<>();
          if(status != null && status.contains("-1")){
             status = null;

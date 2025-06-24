@@ -217,7 +217,27 @@ main {
   transition: color 0.2s ease;
   margin-left: 40%
 }
+ /*css status*/
+ .discount-type {
+     padding: 4px 10px;
+     border-radius: 12px;
+     font-size: 14px;
+     display: inline-block;
+     font-weight: normal;
+ }
 
+ /* Chỉ style riêng */
+ .discount-fixed {
+     background-color: #ffe5e5 !important;
+     color: #cc0000 !important;
+     border: 1px solid #cc0000 !important;
+ }
+
+ .discount-percentage {
+     background-color: #e5f7e5 !important;
+     color: #007700 !important;
+     border: 1px solid #007700 !important;
+ }
         </style>
 </head>
 
@@ -317,9 +337,12 @@ value="${search}"/>
 <thead>
     <tr>
         <th>ID</th>
-        <th>Customer</th>
-        <th>Food</th>
+        <th>Food Name</th>
         <th>Rating</th>
+        <th>Content</th>
+        <th>Customer Name</th>
+        <th>Status</th>
+        <th>Created_At</th>
         <th>Action</th>
     </tr>
     
@@ -331,15 +354,18 @@ value="${search}"/>
         <c:set var="food" value="${FoodMap[feedback.order_item_id]}"/>
         <tr>
             <td>${feedback.id}</td>
-                <td>${account.user_name}</td>
-                <td>${food.name}</td>
-            <td>
-                    <c:forEach begin="1" end="${feedback.rating}">
-                        <i class="fa-solid fa-star" style="color: gold;"></i>
-                    </c:forEach>
-                </td>
-            <td>  
-            <div  class="action-group">
+            <td>${food.name}</td>
+             <td>
+               <c:forEach begin="1" end="${feedback.rating}">
+               <i class="fa-solid fa-star" style="color: gold;"></i>
+               </c:forEach>
+             </td>
+             <td>${feedback.content}</td>
+            <td>${account.user_name}</td>
+            <td class="discount-type discount-fixed  discount-percentage">${feedback.visible?"Active":"Inactive"}</td>
+            <td>  <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" /></td>
+            <td> 
+              <div  class="action-group">
                 <div class="item eye">
                     <a href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail" >
                         <i class="icon-eye"></i>
