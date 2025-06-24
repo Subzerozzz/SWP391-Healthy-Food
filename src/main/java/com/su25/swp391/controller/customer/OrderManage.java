@@ -61,9 +61,9 @@ public class OrderManage extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
-            case "/search":
-                searchDoPost(request, response);
-                break;
+//            case "/search":
+//                searchDoPost(request, response);
+//                break;
             case "/cancel-order":
                 cancerOrderDoPost(request, response);
                 break;
@@ -110,7 +110,7 @@ public class OrderManage extends HttpServlet {
             request.setAttribute("subtotal", subtotal); // đưa xuống JSP
             
 
-            Order order = orderListDAO.getOrderById(orderId);
+            Order order = orderListDAO.findOrderById(orderId);
 
             if (order != null) {
                 request.setAttribute("order", order);
@@ -125,39 +125,65 @@ public class OrderManage extends HttpServlet {
     
     }
 
-    private void searchDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String search = request.getParameter("status");
-        String email = (String) session.getAttribute("email");
-        String username = (String) session.getAttribute("user_name");
-        
-
-        if (email == null) {
-            response.sendRedirect(HOME_PAGE);
-            return;
-        }
-
-        Account acc = Account.builder().email(email).build();
-        Account accountFoundByEmail = accountDAO.findByEmail(acc);
-        Account accountFoundByUsername = accountDAO.findByUsername(acc);
-
-        if (accountFoundByEmail != null) {
-            int userId = accountFoundByEmail.getId();
-            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
-            request.setAttribute("orderList", orderList);
-        } else if (accountFoundByUsername != null) {
-            int userId = accountFoundByUsername.getId();
-            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
-            request.setAttribute("orderList", orderList);
-        }
-
-        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-    }
+//    private void searchDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        HttpSession session = request.getSession();
+//        String search = request.getParameter("status");
+//        String email = (String) session.getAttribute("email");
+//        String username = (String) session.getAttribute("user_name");
+//        String pageParam = request.getParameter("page");
+//        String pageSizeParam = request.getParameter("pageSize");
+//        int currentPage = 1;
+//        int pageSize = 10;
+//        
+//
+//        if (email == null) {
+//            response.sendRedirect(HOME_PAGE);
+//            return;
+//        }
+//        
+//        try {
+//            if (pageParam != null && !pageParam.isEmpty()) {
+//                currentPage = Integer.parseInt(pageParam);
+//                if (currentPage < 1) {
+//                    currentPage = 1;
+//                }
+//            }
+//            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+//                pageSize = Integer.parseInt(pageSizeParam);
+//                if (pageSize < 5) {
+//                    pageSize = 5;
+//                }
+//                if (pageSize > 50) {
+//                    pageSize = 50;
+//                }
+//
+//            }
+//        } catch (NumberFormatException e) {
+//            currentPage = 1;
+//            pageSize = 10;
+//        }
+//
+//        Account acc = Account.builder().email(email).build();
+//        Account accountFoundByEmail = accountDAO.findByEmail(acc);
+//        Account accountFoundByUsername = accountDAO.findByUsername(acc);
+//
+//        if (accountFoundByEmail != null) {
+//            int userId = accountFoundByEmail.getId();
+//            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
+//            request.setAttribute("orderList", orderList);
+//        } else if (accountFoundByUsername != null) {
+//            int userId = accountFoundByUsername.getId();
+//            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
+//            request.setAttribute("orderList", orderList);
+//        }
+//
+//        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+//    }
 
     private void cancerOrderDoPost(HttpServletRequest request, HttpServletResponse response) {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-        Order order = orderListDAO.getOrderById(orderId);
+        Order order = orderListDAO.findOrderById(orderId);
         if (!"pending".equalsIgnoreCase(order.getStatus())) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
             return;
@@ -173,6 +199,7 @@ public class OrderManage extends HttpServlet {
 
     private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String search = request.getParameter("status");
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
         String pageParam = request.getParameter("page");
@@ -216,8 +243,8 @@ public class OrderManage extends HttpServlet {
 
         if (accountFoundByEmail != null || accountFoundByUsername != null) {
             int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
-            List<Order> orderList = orderListDAO.findOrdersByUserIdWithPagination(userId, currentPage, pageSize);
-            int totalOrder = orderListDAO.getTotalOrderCountByUserId(userId);
+            List<Order> orderList = orderListDAO.findOrdersByUserIdAndStatusWithPagination(userId, search, currentPage, pageSize);
+            int totalOrder = orderListDAO.getTotalOrderCountByUserIdAndStatus(userId, search);
             int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
 
             // Thiết lập các thuộc tính cho JSP
