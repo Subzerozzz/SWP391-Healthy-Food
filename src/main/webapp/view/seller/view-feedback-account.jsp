@@ -170,7 +170,7 @@
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>Id_User:</label>
-                                                                                                            <span>${param.id}</span>
+                                                                                                            <span>${account.id}</span>
                                                                                                         </div>
 
                                                                                                     </fieldset>
@@ -239,7 +239,7 @@
                                                                                                     </fieldset>
 
                                                                                                     <fieldset class="name mb-24">
-                                                                                                        <div class="body-title mb-10">Status: <span>${account.status ? 'Active' : 'Deactive'}</span></div>
+                                                                                                        <div class="body-title mb-10">Status: <span>${account.status == 'active'? 'Active' : 'Deactive'}</span></div>
 
                                                                                                     </fieldset>
 
@@ -249,7 +249,7 @@
 
 
                                                                                             <div class="bot">
-                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/manage-account'">Back</button>
+                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/manage-feedback'">Back</button>
                                                                                             </div>
 <!--                                                                                                <div class="item trash">
                                                                                                     <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >

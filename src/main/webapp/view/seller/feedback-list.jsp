@@ -464,7 +464,9 @@ value="${search}"/>
           <c:set var="food" value="${FoodMap[feedback.order_item_id]}" />
           <tr>
             <td>${feedback.id}</td>
-            <td>${food.name}</td>
+            <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=food&food_id=${food.id}">
+                ${food.name}
+            </a></td>
             <td>
                 <c:forEach begin="1" end="${feedback.rating}">
                     <i class="fa-solid fa-star"></i>
@@ -480,7 +482,9 @@ value="${search}"/>
                 </c:otherwise>
               </c:choose>
             </td>
-            <td>${account.user_name}</td>
+                <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=account&account_id=${account.id}">
+                        ${account.user_name}
+                    </a></td>
             <td>
                 <span class="status-badge ${feedback.visible ? 'active' : 'inactive'}">
                     ${feedback.visible ? 'Active' : 'Inactive'}

@@ -71,6 +71,12 @@ public class ManagerFeedbackController extends HttpServlet {
                 case "update":
                     hiddenFeedback(request, response);
                     break;
+                case "account":
+                    detailAccount(request, response);
+                    break;
+                case "food":
+                    detailFood(request, response);
+                    break;
                 default:
                     listFeedbacks(request, response);
             }
@@ -246,6 +252,18 @@ public class ManagerFeedbackController extends HttpServlet {
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
+    }
+
+    private void detailAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int account_id = Integer.parseInt(request.getParameter("account_id"));
+        Account acc = accDAO.findById(account_id);
+        request.setAttribute("account",acc);
+        request.getRequestDispatcher("/view/seller/view-feedback-account.jsp").forward(request, response);
+        
+    }
+
+    private void detailFood(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
