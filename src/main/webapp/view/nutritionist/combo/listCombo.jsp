@@ -4,7 +4,9 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
     <!--<![endif]-->
-
+ <!--link izitoatMess-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
     <!-- Mirrored from themesflat.co/html/remos/product-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->
     <head>
@@ -162,10 +164,14 @@
                                                                                                                     <div class="item edit">
                                                                                                                         <i class="icon-edit-3"></i>
                                                                                                                     </div>
-                                                                                                                    <div class="item trash">
-                                                                                                                        <i class="icon-trash-2"></i>
-                                                                                                                    </div>
                                                                                                                     
+                                                                                                                    <label class="switch"
+                                                                                                                           title="${cb.status eq 'active' ? 'inactive' : 'active'}">
+                                                                                                                        <input type="checkbox"
+                                                                                                                               <c:if test='${cb.status eq "active"}'>checked</c:if>
+                                                                                                                               onchange="location.href = '${pageContext.request.contextPath}/managerCombo?action=${cb.status eq 'active' ? 'inactive' : 'active'}&comboId=${cb.comboId}'" />
+                                                                                                                        <span class="slider"></span>
+                                                                                                                    </label>
                                                                                                                 </div>
                                                                                                             </div>
 
@@ -265,6 +271,19 @@
                                                             <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                            <c:if test="${not empty sessionScope.toastMessage}">
+                                                                <script>
+                                                                iziToast.${sessionScope.toastType}({
+                                                                title: '${sessionScope.toastType == "success" ? "Thành công" : "Thành Công"}',
+                                                                message: '${sessionScope.toastMessage}',
+                                                                position: 'topRight',
+                                                                timeout: 3000,
+                                                                color: '${sessionScope.toastType == "success" ? "green" : "red"}'
+                                                                                 });
+                                                                </script>
+                                                                <c:remove var="toastMessage" scope="session"/>
+                                                                <c:remove var="toastType" scope="session"/>
+                                                            </c:if>
                                                             <style>
                                                                 .status.inactive.highlight {
                                                                     font-size: 16px;     /* t?ng kích th??c */

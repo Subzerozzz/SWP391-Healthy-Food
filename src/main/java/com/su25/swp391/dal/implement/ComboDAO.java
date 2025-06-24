@@ -212,16 +212,7 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         return combo;
     }
 
-    public Food getFromResultSetFood(ResultSet resultSet) throws SQLException {
-        Food food = new Food();
-        food.setId(resultSet.getInt("id"));
-        food.setName(resultSet.getString("name"));
-        food.setDescription(resultSet.getString("description"));
-        food.setPrice(resultSet.getDouble("price"));
-        food.setImage_url(resultSet.getString("image_url"));
-        food.setCalo(resultSet.getDouble("calo"));
-        return food;
-    }
+  
 
     @Override
     public Combo findById(Integer id) {
@@ -288,5 +279,35 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
     return foodDetails;
 }
-
+        public boolean activatCombo(int comboId) {
+        String sql = "UPDATE Combo SET status = 'active' WHERE comboId=?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, comboId);
+            int affectedRow = statement.executeUpdate();
+            return affectedRow > 0;
+        } catch (Exception e) {
+            System.out.println("Error activating combo:" + e.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+        
+public boolean deactivateAccount(int comboId) {
+        String sql = "UPDATE Combo SET status = 'inactive' WHERE comboId=?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, comboId);
+            int affectedRow = statement.executeUpdate();
+            return affectedRow > 0;
+        } catch (Exception e) {
+            System.out.println("Error inactive combo:" + e.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
 }
