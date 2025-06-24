@@ -685,7 +685,7 @@
                                          min-height: 56px;
                                          padding: 16px 10px;
                                          border-bottom: 1px solid #e9ecef;
-                                         min-width: 1200px; /* đảm bảo không vỡ layout khi nhiều cột */
+                                         min-width: 1730px; 
                                      }
 
                                      .table-header .col:nth-child(1),
@@ -829,7 +829,7 @@
                                     </div>
                          <div class="wg-table table-product-list">
                              <!-- Header -->
-                             <div class="table-header" >
+                             <div class="table-header" style="display: flex; justify-content: center; min-width: 1730px !important;">
                                  <div class="col" >Code</div>
                                  <div class="col">Coupon ID</div>
                                  <div class="col">Description</div>
@@ -844,7 +844,7 @@
                              </div>
                              <!-- Data Rows -->
                              <c:forEach items="${coupons}" var="coupon">
-                                 <div class="table-row" style="display:flex ; justify-content: space-between;">
+                                 <div class="table-row" style="display: flex; justify-content: center; min-width: 1730px !important;">
                                      <div class="col">
                                          <div class="body-title-2">${coupon.code} </div>
                                      </div>
