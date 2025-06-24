@@ -1,6 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib
-uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <%@ page
-contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -193,16 +193,12 @@ contentType="text/html" pageEncoding="UTF-8"%>
           </div>
           <!-- /preload -->
           <!-- section-menu-left -->
-          <jsp:include
-            page="../common/dash-board-seller/section-menu-left.jsp"
-          ></jsp:include>
+         <jsp:include page = "../common/sidebar.jsp"></jsp:include>
           <!-- /section-menu-left -->
           <!-- section-content-right -->
           <div class="section-content-right">
             <!-- header-dashboard -->
-            <jsp:include
-              page="../common/dash-board-seller/header-dashboard.jsp"
-            ></jsp:include>
+           <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
             <!-- /header-dashboard -->
             <!-- main-content -->
             <div class="main-content">
@@ -212,17 +208,17 @@ contentType="text/html" pageEncoding="UTF-8"%>
                 <div class="main-content-wrap">
                   <!-- order-detail -->
                   <div class="main-content-wrap">
-                    <div
-                      class="flex items-center flex-wrap justify-between gap20 mb-27"
-                    >
-                      <ul
-                        class="breadcrumbs flex items-center flex-wrap justify-start gap10"
-                      >
-                        <li>
-                          <a
-                            href="${pageContext.request.contextPath}/seller/manage-feedback"
-                            ><div class="text-tiny">Feedback</div></a
-                          >
+                    <div class="flex items-center flex-wrap justify-between gap20 mb-27"s >
+                        <c:set var="account" value="${AccountMap[feedback.user_id]}"/>
+                     <c:set var="food" value="${FoodMap[feedback.order_item_id]}"/>
+                      <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                       
+                          <li>
+                          
+                            <a href="${pageContext.request.contextPath}/seller/manage-feedback">
+                            <div class="text-tiny">Feedback</div>
+                            </a>
+                         
                         </li>
                         <li>
                           <i class="icon-chevron-right"></i>
@@ -242,7 +238,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                     </div>
                     <!-- order-detail -->
                     <div class="wg-order-detail">
-                      <div class="left flex-grow">
+                        <div class="left flex-grow" style="width:50%">
 
                         <div class="feedback-card">
   <div class="feedback-left">
@@ -256,22 +252,24 @@ contentType="text/html" pageEncoding="UTF-8"%>
   <div class="feedback-right">
     <div class="feedback-grid">
       <div class="feedback-item">
-        <div class="feedback-label">Food Name:</div>
-        <div class="feedback-value">${food.name}</div>
+        <div class="feedback-label">Food Name:  ${food.name}</div>
+       
       </div>
 
       <div class="feedback-item">
-        <div class="feedback-label">Customer:</div>
-        <div class="feedback-value">${account.user_name}</div>
+        <div class="feedback-label">Customer: ${account.user_name}</div>
+      
       </div>
 
       <div class="feedback-item">
-        <div class="feedback-label">Rating:</div>
+          <div class="feedback-label" style="display:flex;justify-content: start;align-items: center;gap:8px">
+              Rating: 
         <div class="feedback-value">
           <c:forEach begin="1" end="${feedback.rating}">
             <i class="fa-solid fa-star" style="color: gold;"></i>
           </c:forEach>
         </div>
+       </div>
       </div>
 
       <div class="feedback-item feedback-full">
@@ -289,7 +287,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
 
     <div class="summary-item">
       <span class="body-text">Price:</span>
-      <span class="body-title-2">${food.price}</span>
+      <span class="body-title-2"><fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</span>
     </div>
 
     <div class="summary-item">
@@ -316,6 +314,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
     </a>
   </div>
 </div>
+      
                     </div>
                     <!-- /order-detail -->
                   </div>
@@ -393,13 +392,12 @@ contentType="text/html" pageEncoding="UTF-8"%>
 
                 <!-- /order-detail -->
               </div>
+       <jsp:include page="../common/footer.jsp"></jsp:include>
               <!-- /main-content-wrap -->
             </div>
             <!-- /main-content-wrap -->
             <!-- bottom-page -->
-            <jsp:include
-              page="../common/dash-board-seller/bottom-page.jsp"
-            ></jsp:include>
+          
             <!-- /bottom-page -->
           </div>
           <!-- /main-content -->

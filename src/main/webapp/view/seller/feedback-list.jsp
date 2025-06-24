@@ -509,56 +509,7 @@ value="${search}"/>
       </tbody>
     </table>
   </div>
-<!--                       <div class="pagination-wrapper">
-                           <div class="text-tiny">Showing 10 entries</div>
 
-                              Start Pagination
-                           <ul class="pagination-wrapper">
-
-                               <li >
-                                   <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1"><i class="icon-chevron-left"></i></a>
-                               </li>
-                               <c:choose>
-                                   <c:when test="${currentPage <= totalPages - 2}">
-                                       <c:if test="${currentPage > 1}">
-                                           <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}">${currentPage - 1}</a>
-                                           </li>
-                                       </c:if>
-                                       <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}">${currentPage}</a>
-                                       </li>
-
-                                       <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}">${currentPage + 1}</a>
-                                       </li>
-
-                                       <c:if test="${currentPage < totalPages - 2}">
-                                           <li>
-                                               <span>...</span>
-                                           </li>
-                                       </c:if>
-
-
-                                       <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}">${totalPages}</a>
-                                       </li>
-                                   </c:when>
-
-                                   <c:otherwise>
-                                       <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
-                                           <li class="${currentPage == i ? 'active' : ''}">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}">${i}</a>
-                                           </li>
-                                       </c:forEach>
-                                   </c:otherwise>
-                               </c:choose>
-
-                               <li>
-                                   <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}"><i class="icon-chevron-right"></i></a>
-                               </li>
-                           </ul>
-                       </div>  -->
 <div class="flex items-center justify-between flex-wrap gap10">
 <div class="text-tiny">Showing 10 entries</div>
 <ul class="wg-pagination">
