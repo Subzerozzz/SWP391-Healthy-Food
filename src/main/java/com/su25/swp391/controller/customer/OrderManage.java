@@ -5,6 +5,7 @@ import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.entity.Order;
 import jakarta.servlet.ServletException;
@@ -15,7 +16,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order"})
 public class OrderManage extends HttpServlet {
@@ -78,27 +85,44 @@ public class OrderManage extends HttpServlet {
         try {
             //parse sang int
             int orderId = Integer.parseInt(orderIdStr);
-            
+
             //get ra list cac OI dua tren order id
-            List<OrderItem> orderItemList = orderDetailDAO.getOrderDetailByOrderId(orderId);
-            
+            List<OrderItem> orderItemList = orderDetailDAO.findOrderItemsByOrderId(orderId);
+
             request.setAttribute("orderItemList", orderItemList);
             request.setAttribute("foodDAO", foodDAO);
-            request.setAttribute("orderListDAO", orderListDAO);
-            request.setAttribute("orderDetailDAO", orderDetailDAO);
+
+            // Tạo Map<Integer, Food> từ danh sách food_id có trong orderItemList
+            Set<Integer> foodIds = orderItemList.stream()
+                    .map(OrderItem::getFood_id)
+                    .collect(Collectors.toSet());
+
+            Map<Integer, Food> foodMap = new HashMap<>();
+            for (Integer foodId : foodIds) {
+                Food food = foodDAO.findById(foodId);
+                if (food != null) {
+                    foodMap.put(foodId, food);
+                }
+            }
+
+            //  Gọi hàm tính subtotal
+            BigDecimal subtotal = calculateSubtotal(orderItemList, foodMap);
+            request.setAttribute("subtotal", subtotal); // đưa xuống JSP
             
+
             Order order = orderListDAO.getOrderById(orderId);
-            
+
             if (order != null) {
                 request.setAttribute("order", order);
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
             } else {
-                response.sendRedirect(ORDER_LIST);
+             //   response.sendRedirect(ORDER_LIST);
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect(HOME_PAGE);
         }
+    
     }
 
     private void searchDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,6 +130,7 @@ public class OrderManage extends HttpServlet {
         String search = request.getParameter("status");
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
+        
 
         if (email == null) {
             response.sendRedirect(HOME_PAGE);
@@ -215,6 +240,21 @@ public class OrderManage extends HttpServlet {
             response.sendRedirect(HOME_PAGE);
         }
 
+    }
+
+    public BigDecimal calculateSubtotal(List<OrderItem> orderDetails, Map<Integer, Food> foodMap) {
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (OrderItem od : orderDetails) {
+            Food food = foodMap.get(od.getFood_id());
+            if (food != null && food.getPrice() != null) {
+                BigDecimal foodPrice = BigDecimal.valueOf(food.getPrice()); // convert từ Double
+                BigDecimal itemTotal = foodPrice.multiply(BigDecimal.valueOf(od.getQuantity()));
+                subtotal = subtotal.add(itemTotal);
+            }
+        }
+
+        return subtotal;
     }
 
 }
