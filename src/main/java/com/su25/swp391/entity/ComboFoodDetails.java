@@ -23,11 +23,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Combo {
-    private Integer comboId;
-    private String name;
-    private String description;
-    private Double originalPrice;
-    private Double discountPrice;
-    private String status;
+public class ComboFoodDetails {
+    private Food food;
+    private Integer quantityInCombo;
 }
