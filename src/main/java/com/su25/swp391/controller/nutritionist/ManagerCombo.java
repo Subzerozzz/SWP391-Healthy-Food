@@ -5,8 +5,10 @@
 package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.entity.Combo;
 import com.su25.swp391.entity.ComboFoodDetails;
+import com.su25.swp391.entity.Food;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -41,7 +43,7 @@ public class ManagerCombo extends HttpServlet {
             case "viewComboFoodDetail":
                 viewComboFoodDetail(request, response);
                 break;
-            case "deactive":
+            case "inactive":
                 deactiveCombo(request, response);
                 break;
             case "active":
@@ -78,8 +80,32 @@ public class ManagerCombo extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void active(HttpServletRequest request, HttpServletResponse response) {
+    private void active(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String comboIdStr = request.getParameter("comboId");
+        //kieemr tra xem id co null hay ko
+        if (comboIdStr != null && !comboIdStr.isEmpty()) {
+            int comboId = Integer.parseInt(comboIdStr);
+            ComboDAO comboDao = new ComboDAO();
+            boolean isActive = comboDao.activatCombo(comboId);
+            if (isActive) {
+                //lấy lại côm sau khi kich hoạt
+                Combo combo = comboDao.findById(comboId);
+                if (combo != null) {
+                    request.getSession().setAttribute("toastMessage", "Combo đã được khôi phục");
+                     request.getSession().setAttribute("toastType", "success");
+                } else {
+                    request.getSession().setAttribute("toastMessage", "Không tìm thấy combo để thể kích hoạt");
+                    request.getSession().setAttribute("toastType", "error");
 
+                }
+
+            } else {
+                request.getSession().setAttribute("toastMessage", "Kích hoạt combo thất bại. Vui lòng thử lại.");
+                request.getSession().setAttribute("toastType", "error");
+                
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/managerCombo");
     }
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) {
@@ -90,15 +116,38 @@ public class ManagerCombo extends HttpServlet {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private void deactiveCombo(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void deactiveCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String comboIdStr = request.getParameter("comboId");
+        //kieemr tra xem id co null hay ko
+        if (comboIdStr != null && !comboIdStr.isEmpty()) {
+            int comboId = Integer.parseInt(comboIdStr);
+            ComboDAO comboDao = new ComboDAO();
+            boolean isDeactive = comboDao.deactivateAccount(comboId);
+            if (isDeactive) {
+                //lấy lại côm sau khi kich hoạt
+                Combo combo = comboDao.findById(comboId);
+                if (combo != null) {
+                    request.getSession().setAttribute("toastMessage", "Combo đã Deactive");
+                    request.getSession().setAttribute("toastType", "success");
+                } else {
+                    request.getSession().setAttribute("toastMessage", "Không tìm thấy combo ");
+                    request.getSession().setAttribute("toastType", "error");
+
+                }
+
+            } else {
+                request.getSession().setAttribute("toastMessage", "Deactive combo thất bại. Vui lòng thử lại.");
+                request.getSession().setAttribute("toastType", "error");
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/managerCombo");
     }
 
     private void listCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //lay thông tin khi người dùng tìm kiếm
         String serchFilter = request.getParameter("serch");
         String statusFilter = request.getParameter("status");
-        
+
         //lấy tham số phan trang
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
@@ -137,7 +186,7 @@ public class ManagerCombo extends HttpServlet {
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("totalCombo", totalCombo);
         request.setAttribute("totalPages", totalPages);
-        
+
         //tinh toan pham vi the hien
         int startRecord = (currentPage - 1) * pageSize + 1;
         int endRecord = Math.min(startRecord + pageSize - 1, totalCombo);
@@ -147,8 +196,11 @@ public class ManagerCombo extends HttpServlet {
 
     }
 
-    private void addCombo(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void addCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        FoodDAO foodDao = new FoodDAO();
+        List<Food> listFood = foodDao.findAll();
+        request.setAttribute("listFood", listFood);
+request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
     }
 
     private void updateCombo(HttpServletRequest request, HttpServletResponse response) {
