@@ -451,6 +451,7 @@
                                     <th>Payment Method</th>
                                     <th>Status</th>
                                     <th>Coupon Code</th>
+                                    <th>Paid Status</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -505,13 +506,13 @@
                                            
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
-                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px"
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px ;border:solid #007bff"
                                                       class="badge bg-info-glow">
                                                     ${order.payment_method}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px"
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
                                                               order.status == 'pending' ? 'badge-pending' :
                                                               order.status == 'accepted' ? 'badge-accepted' :
@@ -523,6 +524,14 @@
                                             </td>
                                            
                                              <td>${order.coupon_code}</td>
+                                            <td>
+                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d"
+                                                          class="badge-modern ${
+                                                              order.payment_status == 0 ? 'badge-pending' :'badge-completed'
+                                                           }">
+                                                        ${order.payment_status == 0 ? 'Unpaid' : 'Paid'}
+                                                    </span>
+                                            </td>
                                             <td>
 
                                                 <div class="item eye">
