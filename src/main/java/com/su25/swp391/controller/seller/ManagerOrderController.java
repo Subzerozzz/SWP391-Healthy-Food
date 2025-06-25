@@ -180,6 +180,7 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("status", status);
         request.setAttribute("paymentMethod",paymentMethod);
         request.setAttribute("search", search);
+        request.setAttribute("paymentStatus", paymentStatus);
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
 

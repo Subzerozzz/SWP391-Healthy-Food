@@ -83,7 +83,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentMethod);
         }
         // Add payment status filter if provied
-        if(paymentStatus >-0 && paymentStatus <= 1){
+        if(paymentStatus >=0 && paymentStatus <= 1){
             sql.append("AND payment_status = ? ");
             params.add(paymentStatus);
         }
@@ -492,7 +492,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // System.out.println(l);
       //  Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
        // System.out.println(b);
-         List<Order> l = d.findOrdersWithFilters("", "", -1, 1, 10);
+         List<Order> l = d.findOrdersWithFilters("", "", 0, 1, 10);
          System.out.println(l);
          System.out.println(d.getTotalFilteredOrders("", "", 0));
     }
