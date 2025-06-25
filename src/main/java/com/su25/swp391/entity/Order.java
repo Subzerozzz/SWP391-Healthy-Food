@@ -35,4 +35,5 @@ public class Order {
     private String full_name;
     private String mobile;
     private String email;
+    private Integer payment_status;
 }
