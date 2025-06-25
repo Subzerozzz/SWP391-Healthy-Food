@@ -236,15 +236,18 @@
                                                                        <div class="text-tiny">Maximum number of times a customer can use this coupon. Leave empty for unlimited.</div>
                                                                </fieldset>       
                                                     <!-- Status -->
-                                                    <<fieldset class="status">
+                                                    <fieldset class="status">
                                                         <div class="body-title mb-10">Status</div>
                                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <!-- Hidden input để gửi giá trị 0 nếu checkbox không được chọn -->
-                                                            <input type="hidden" name="isActive" value="0" />
+                                                            <!-- Hidden input dùng để submit giá trị 0, sẽ được cập nhật bằng JS -->
+                                                            <input type="hidden" id="isActiveHidden" name="isActive" 
+                                                                   value="${coupon.isactive == 1 ? '1' : '0'}" />
 
                                                             <label class="switch">
-                                                                <input type="checkbox" name="isActive" value="1"
-                                                                       <c:if test="${coupon.isactive==1}">checked</c:if> />
+                                                                <!-- Checkbox KHÔNG có name để tránh gửi trùng name -->
+                                                                <input type="checkbox" id="isActiveCheckbox"
+                                                                       <c:if test="${coupon.isactive == 1}">checked</c:if>
+                                                                       onchange="document.getElementById('isActiveHidden').value = this.checked ? '1' : '0'" />
                                                                 <span class="slider round"></span>
                                                             </label>
                                                             <span class="label">Active</span>

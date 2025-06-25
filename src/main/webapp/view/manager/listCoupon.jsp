@@ -839,8 +839,8 @@
                                  <div class="col">Status</div>
                                  <div class="col">Per_Customer_Limit</div>
                                  <div class="col">Start_date</div>
-                                 <div class="col">End_date</div>
-                                 <div class="col">Action</div>
+                                 <div class="col" style="text-align: center !important;">End_date</div>
+                                 <div class="col" style="text-align: center !important;padding-left:60px">Action</div>
                              </div>
                              <!-- Data Rows -->
                              <c:forEach items="${coupons}" var="coupon">
