@@ -7,6 +7,7 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,7 +27,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     @Override
     public List<Order> findAll() {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT * FROM Order";
+        String sql = "SELECT * FROM `Order`";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -50,9 +51,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public boolean update(Order order) {
-        String sql = "UPDATE Order SET account_id=?, status=?, total=?, shipping_address=?, "
+        String sql = "UPDATE `Order` SET account_id=?, status=?, total=?, shipping_address=?, "
                 + "payment_method=?, updated_at=?, coupon_code=?, full_name=?, mobile=?, email=?, "
-                + "discount_amount=? WHERE id=?";
+                + "discount_amount=?, payment_status =? WHERE id=?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -67,7 +68,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(9, order.getMobile());
             statement.setString(10, order.getEmail());
             statement.setDouble(11, order.getDiscount_amount());
-            statement.setInt(12, order.getId());
+            statement.setInt(12,order.getPayment_status());
+            statement.setInt(13, order.getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -80,7 +82,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public boolean delete(Order order) {
-        String sql = "DELETE FROM Order WHERE id = ?";
+        String sql = "DELETE FROM `Order` WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -97,8 +99,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     @Override
     public int insert(Order order) {
         String sql = "INSERT INTO `Order` (account_id, status, total, shipping_address, payment_method, created_at"
-                + ",updated_at, coupon_code, full_name, mobile, email, discount_amount) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + ",updated_at, coupon_code, full_name, mobile, email, discount_amount,payment_status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -117,7 +119,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(9, order.getFull_name());
             statement.setString(10, order.getMobile());
             statement.setString(11, order.getEmail());
-            statement.setDouble(12, order.getDiscount_amount());
+            statement.setInt(12,order.getPayment_status());
+            statement.setDouble(13, order.getDiscount_amount());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -153,6 +156,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         order.setFull_name(rs.getString("full_name"));
         order.setMobile(rs.getString("mobile"));
         order.setEmail(rs.getString("email"));
+        order.setPayment_status(rs.getInt("payment_status"));
         order.setDiscount_amount(rs.getDouble("discount_amount"));
         return order;
     }
@@ -160,7 +164,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     @Override
     public Order findById(Integer id) {
         Order order = null;
-        String sql = "SELECT * FROM Order WHERE id = ?";
+        String sql = "SELECT * FROM `Order` WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -178,26 +182,9 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     public static void main(String[] args) {
-        // Tạo một đối tượng Order mới
-        Order order = new Order();
-        order.setAccount_id(null); // Giả sử account_id = 1
-        order.setStatus("Pending");
-        order.setTotal(500000.0);
-        order.setShipping_address("123 Lê Lợi, Hà Nội");
-        order.setPayment_method("COD");
-        order.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        order.setUpdated_at(new Timestamp(System.currentTimeMillis()));
-        order.setCoupon_code("aaa");
-        order.setFull_name("Nguyễn Văn A");
-        order.setMobile("0987654321");
-        order.setEmail("nguyenvana@example.com");
-        order.setDiscount_amount(50000.0);
-
-        // Gọi DAO để insert
-        OrderDAO orderDAO = new OrderDAO(); // Giả sử bạn đã có class này
-        int orderId = orderDAO.insert(order);
-        System.out.println(orderId);
+        System.out.println(new OrderDAO().findById(30));
 
     }
+
 
 }

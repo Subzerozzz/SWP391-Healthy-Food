@@ -78,6 +78,9 @@ public class CartController extends HttpServlet {
             case "checkout":
                 showCheckout(request, response);
                 break;
+            case "checkoutVNPay":
+                handleVNPayReturn(request, response);
+                break;
             default:
                 throw new AssertionError();
         }
@@ -643,7 +646,7 @@ public class CartController extends HttpServlet {
                     .status("pending")
                     .total(totalPrice)
                     .shipping_address(address)
-                    .payment_method("cod")
+                    .payment_method(GlobalConfig.PAYMENT_METHOD_COD)
                     .created_at(created_at)
                     .updated_at(updated_at)
                     .coupon_code(couponCode)
@@ -651,6 +654,7 @@ public class CartController extends HttpServlet {
                     .email(email)
                     .full_name(fullName)
                     .mobile(phoneNumber)
+                    .payment_status(0)
                     .build();
         } else {
             listCartItem = (List<CartItem>) session.getAttribute("cart");
@@ -659,7 +663,7 @@ public class CartController extends HttpServlet {
                     .status("pending")
                     .total(totalPrice)
                     .shipping_address(address)
-                    .payment_method("cod")
+                    .payment_method(GlobalConfig.PAYMENT_METHOD_COD)
                     .created_at(created_at)
                     .updated_at(updated_at)
                     .coupon_code(couponCode)
@@ -667,6 +671,7 @@ public class CartController extends HttpServlet {
                     .email(email)
                     .full_name(fullName)
                     .mobile(phoneNumber)
+                    .payment_status(0)
                     .build();
         }
 
@@ -687,7 +692,6 @@ public class CartController extends HttpServlet {
                         .created_at(created_at)
                         .updated_at(updated_at)
                         .build();
-                System.out.println("Thêm order item \n");
                 System.out.println(orderItemDao.insert(newOrderItem));
             }
         }
@@ -718,11 +722,9 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleProcessCheckoutVNPay(HttpServletRequest request, HttpServletResponse response) {
+    private void handleProcessCheckoutVNPay(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-        List<CartItem> listCartItem = new ArrayList<>();
-
         // Lay ra fullName
         String fullName = request.getParameter("fullName").trim();
         // Lay ra email
@@ -740,13 +742,190 @@ public class CartController extends HttpServlet {
 
         // Lay ra coupon_code va discountAmount
         String couponCode = request.getParameter("couponCode");
+        if (couponCode == null || couponCode.isEmpty()) {
+            couponCode = null;
+        }
         Double discountAmount = Double.parseDouble(request.getParameter("discountAmount"));
 
         // Lay ra created_at và updated_at
         Timestamp created_at = new Timestamp(System.currentTimeMillis());
         Timestamp updated_at = new Timestamp(System.currentTimeMillis());
 
+        List<CartItem> listCartItem = new ArrayList<>();
         Order newOrder = new Order();
+        if (account != null) {
+            // Lay ra cartID theo accID
+            Cart cart = cartDao.findCartByAccountId(account.getId());
+            Integer cartId = cart.getId();
+            // Lấy ra tất cả cartItem theo cartId
+            listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
+            newOrder = Order.builder()
+                    .account_id(account.getId())
+                    .status("pending")
+                    .total(totalPrice)
+                    .shipping_address(address)
+                    .payment_method(GlobalConfig.PAYMENT_METHOD_COD)
+                    .created_at(created_at)
+                    .updated_at(updated_at)
+                    .coupon_code(couponCode)
+                    .discount_amount(discountAmount)
+                    .email(email)
+                    .full_name(fullName)
+                    .mobile(phoneNumber)
+                    .payment_status(0)
+                    .build();
+        } else {
+            listCartItem = (List<CartItem>) session.getAttribute("cart");
+            newOrder = Order.builder()
+                    .account_id(null)
+                    .status("pending")
+                    .total(totalPrice)
+                    .shipping_address(address)
+                    .payment_method(GlobalConfig.PAYMENT_METHOD_VNPAY)
+                    .created_at(created_at)
+                    .updated_at(updated_at)
+                    .coupon_code(couponCode)
+                    .discount_amount(discountAmount)
+                    .email(email)
+                    .full_name(fullName)
+                    .mobile(phoneNumber)
+                    .payment_status(0)
+                    .build();
+        }
+
+        Integer orderId = orderDao.insert(newOrder);
+        //Sau do tao cac orderItem cho order
+        if (orderId > 0) {
+            for (CartItem cartItem : listCartItem) {
+                Integer foodId = cartItem.getFood_id();
+                Integer quantity = cartItem.getQuantity();
+                Double price = foodDao.findById(foodId).getPrice();
+                Double priceTotal = price * quantity;
+
+                OrderItem newOrderItem = OrderItem.builder()
+                        .order_id(orderId)
+                        .food_id(foodId)
+                        .quantity(quantity)
+                        .price(priceTotal)
+                        .created_at(created_at)
+                        .updated_at(updated_at)
+                        .build();
+                System.out.println(orderItemDao.insert(newOrderItem));
+            }
+        }
+
+        //Đặt hàng xong thì xóa hết cartItem trong listCartItem
+        if (account != null) {
+            for (CartItem cartItem : listCartItem) {
+                cartItemDao.delete(cartItem);
+            }
+        } else {
+            List<CartItem> listCartItem1 = new ArrayList<>();
+            session.setAttribute("cart", listCartItem1);
+        }
+
+        //Chuyen huong nguoi dung sang giao dien thanh toan tich hop VNPay
+        response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + totalPrice + "&orderId=" + orderId);
+    }
+
+    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String responseCode = request.getParameter("vnp_ResponseCode");
+        String transactionStatus = request.getParameter("vnp_TransactionStatus");
+        //kiem tra trang thai don hang thanh cong chua
+        //thanh cong thi tao voi trang thai la da thanh toan
+        //khong thi tao voi trang thai la chua thanh toan
+
+        if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
+            handleOrderWithVNPaySuccess(request, response);
+        } else if ("24".equals(responseCode) && "02".equals(transactionStatus)) {
+            handleOrderWithVNPayCancel(request, response);
+        } else {
+            handleOrderWithVNPayFailed(request, response);
+        }
+
+    }
+
+    private void handleOrderWithVNPaySuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        String orderIdStr = request.getParameter("vnp_TxnRef");
+        Integer orderId = Integer.parseInt(orderIdStr);
+        //Update don hang voi payment_status là 1
+        Order order = orderDao.findById(orderId);
+        order.setPayment_status(1);
+        orderDao.update(order);
+
+        if (account != null) {
+            //Chuyen ve trang myOrder
+            //O day chuyen tam ve home de check
+            response.sendRedirect("home");
+        } else {
+            response.sendRedirect("home");
+        }
+    }
+
+    private void handleOrderWithVNPayCancel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        //Xóa đi đơn hàng kèm các OrderItem trong DB
+        String orderIdStr = request.getParameter("vnp_TxnRef");
+        Integer orderId = Integer.parseInt(orderIdStr);
+        Order order = orderDao.findById(orderId);
+        //Xoa listOrderItem truoc + tao lai cartItem dua tren OrdeITem
+        List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+        
+
+        if (account != null) {
+            Integer cartId = cartDao.findCartByAccountId(account.getId()).getId();
+            for (OrderItem orderItem : listOrderItem) {
+                CartItem newCartItem = CartItem.builder()
+                        .cart_id(cartId)
+                        .food_id(orderItem.getFood_id())
+                        .quantity(orderItem.getQuantity())
+                        .created_at(orderItem.getCreated_at())
+                        .updated_at(orderItem.getUpdated_at())
+                        .build();
+                cartItemDao.insert(newCartItem);
+                orderItemDao.delete(orderItem);
+            }
+            orderDao.delete(order);
+            
+        } else {
+            List<CartItem> listCartItem = new ArrayList<>();
+            for (OrderItem orderItem : listOrderItem) {
+                CartItem newCartItem = CartItem.builder()
+                        .food_id(orderItem.getFood_id())
+                        .quantity(orderItem.getQuantity())
+                        .created_at(orderItem.getCreated_at())
+                        .updated_at(orderItem.getUpdated_at())
+                        .build();
+                listCartItem.add(newCartItem);
+                session.setAttribute("cart", listCartItem);
+                orderItemDao.delete(orderItem);
+            }
+            orderDao.delete(order);
+        }
+        showCart(request, response);
+
+    }
+
+    private void handleOrderWithVNPayFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        String orderIdStr = request.getParameter("vnp_TxnRef");
+        Integer orderId = Integer.parseInt(orderIdStr);
+        //Update don hang voi payment_status là 0
+        Order order = orderDao.findById(orderId);
+        order.setPayment_status(0);
+        orderDao.update(order);
+
+        if (account != null) {
+            //Chuyen ve trang myOrder
+            //O day chuyen tam ve home de check
+            response.sendRedirect("home");
+        } else {
+            response.sendRedirect("home");
+        }
     }
 
 }

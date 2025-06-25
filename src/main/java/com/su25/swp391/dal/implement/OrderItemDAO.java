@@ -119,9 +119,35 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
     }
 
     @Override
-    public OrderItem getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public OrderItem getFromResultSet(ResultSet rs) throws SQLException {
+        OrderItem item = new OrderItem();
+        item.setId(rs.getInt("id"));
+        item.setOrder_id(rs.getInt("order_id"));
+        item.setFood_id(rs.getInt("food_id"));
+        item.setQuantity(rs.getInt("quantity"));
+        item.setPrice(rs.getDouble("price"));
+        item.setCreated_at(rs.getTimestamp("created_at"));
+        item.setUpdated_at(rs.getTimestamp("updated_at"));
+        return item;
+    }
+
+    public List<OrderItem> findAllOrderItemByOrderID(Integer id) {
+        List<OrderItem> list = new ArrayList<>();
+        String sql = "Select * From OrderItem WHERE order_id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
     }
 
     @Override
@@ -142,6 +168,12 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
             closeResources();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        for (OrderItem o : new OrderItemDAO().findAllOrderItemByOrderID(41)) {
+            System.out.println(o);
+        }
     }
 
 }
