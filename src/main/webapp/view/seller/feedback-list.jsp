@@ -469,6 +469,31 @@ value="${search}"/>
         </tr>
       </thead>
       <tbody>
+          <c:if test="${empty feedbacks}">
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            <div class="py-4" ">
+                                                <i class="fas fa-search fs-1 text-muted mb-3"></i>
+                                                <h5>No feedback found</h5>
+                                                <p class="text-muted">
+                                                    <c:choose>
+                                                        <c:when test="${not empty status || not empty search}">
+                                                            No Feedback match your search criteria. Try adjusting your filters.
+                                                            <br>
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2"
+                                                               style="margin-right:150px">
+                                                                <i class="fas fa-times me-2"></i>Clear Filters
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            There are no feedback in the system yet.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:if>
         <c:forEach var="feedback" items="${feedbacks}">
           <c:set var="account" value="${AccountMap[feedback.user_id]}" />
           <c:set var="food" value="${FoodMap[feedback.order_item_id]}" />
