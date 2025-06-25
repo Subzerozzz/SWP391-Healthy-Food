@@ -61,9 +61,6 @@ public class OrderManage extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
-//            case "/search":
-//                searchDoPost(request, response);
-//                break;
             case "/cancel-order":
                 cancerOrderDoPost(request, response);
                 break;
@@ -125,61 +122,6 @@ public class OrderManage extends HttpServlet {
     
     }
 
-//    private void searchDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        String search = request.getParameter("status");
-//        String email = (String) session.getAttribute("email");
-//        String username = (String) session.getAttribute("user_name");
-//        String pageParam = request.getParameter("page");
-//        String pageSizeParam = request.getParameter("pageSize");
-//        int currentPage = 1;
-//        int pageSize = 10;
-//        
-//
-//        if (email == null) {
-//            response.sendRedirect(HOME_PAGE);
-//            return;
-//        }
-//        
-//        try {
-//            if (pageParam != null && !pageParam.isEmpty()) {
-//                currentPage = Integer.parseInt(pageParam);
-//                if (currentPage < 1) {
-//                    currentPage = 1;
-//                }
-//            }
-//            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
-//                pageSize = Integer.parseInt(pageSizeParam);
-//                if (pageSize < 5) {
-//                    pageSize = 5;
-//                }
-//                if (pageSize > 50) {
-//                    pageSize = 50;
-//                }
-//
-//            }
-//        } catch (NumberFormatException e) {
-//            currentPage = 1;
-//            pageSize = 10;
-//        }
-//
-//        Account acc = Account.builder().email(email).build();
-//        Account accountFoundByEmail = accountDAO.findByEmail(acc);
-//        Account accountFoundByUsername = accountDAO.findByUsername(acc);
-//
-//        if (accountFoundByEmail != null) {
-//            int userId = accountFoundByEmail.getId();
-//            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
-//            request.setAttribute("orderList", orderList);
-//        } else if (accountFoundByUsername != null) {
-//            int userId = accountFoundByUsername.getId();
-//            List<Order> orderList = orderListDAO.searchOrderListByUserIdAndStatus(userId, search);
-//            request.setAttribute("orderList", orderList);
-//        }
-//
-//        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-//    }
-
     private void cancerOrderDoPost(HttpServletRequest request, HttpServletResponse response) {
         int orderId = Integer.parseInt(request.getParameter("orderId"));
 
@@ -199,6 +141,7 @@ public class OrderManage extends HttpServlet {
 
     private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        
         String search = request.getParameter("status");
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
@@ -206,19 +149,23 @@ public class OrderManage extends HttpServlet {
         String pageSizeParam = request.getParameter("pageSize");
         int currentPage = 1;
         int pageSize = 10;
-
+        
+        //check tài khoản rỗng
         if (email == null && username == null) {
             response.sendRedirect(HOME_PAGE);
             return;
         }
-
+        
+        // phân trang
         try {
+            // khi page == null. Gán giá trị mặc định là 1
             if (pageParam != null && !pageParam.isEmpty()) {
                 currentPage = Integer.parseInt(pageParam);
                 if (currentPage < 1) {
                     currentPage = 1;
                 }
             }
+            // page size đã mặc định cho web chỉ xuất hiện 10 sản phẩm
             if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
                 pageSize = Integer.parseInt(pageSizeParam);
                 if (pageSize < 5) {
@@ -233,18 +180,26 @@ public class OrderManage extends HttpServlet {
             currentPage = 1;
             pageSize = 10;
         }
-
+        
+        // tạo Account chứa các thuộc tính email, user_name trong bảng account
         Account acc = Account.builder()
                 .email(email)
                 .user_name(username)
                 .build();
+        
+        //Dùng hàm DAO để tìm kiếm tai khoản đó có trong database hay k?
         Account accountFoundByEmail = accountDAO.findByEmail(acc);
         Account accountFoundByUsername = accountDAO.findByUsername(acc);
-
+        
+        // nếu tồn tại 1 trong 2 điều kiện thì lập tức if đc thực thi
         if (accountFoundByEmail != null || accountFoundByUsername != null) {
+            // nếu k tìm thấy id account bằng email sẽ chuyển qua tìm kiếm id account bằng user_name để gán giá trị cho biến userId
             int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
+            // list chứa các order của 1 account cụ thể (Id account), search để có thể phân trang khi filter
             List<Order> orderList = orderListDAO.findOrdersByUserIdAndStatusWithPagination(userId, search, currentPage, pageSize);
+            // đếm số order của 1 người dùng cụ thể (account id), search để có thể phân trang khi filter
             int totalOrder = orderListDAO.getTotalOrderCountByUserIdAndStatus(userId, search);
+            // lấy tổng số lượng order chia cho kích thức trang (10) để biết tổng số trang
             int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
 
             // Thiết lập các thuộc tính cho JSP
@@ -261,7 +216,8 @@ public class OrderManage extends HttpServlet {
             int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
             request.setAttribute("startRecord", startRecord);
             request.setAttribute("endRecord", endRecord);
-
+            
+            // thực hiện xong hàm if sẽ trả về trang order list
             request.getRequestDispatcher(ORDER_LIST).forward(request, response);
         } else {
             response.sendRedirect(HOME_PAGE);
