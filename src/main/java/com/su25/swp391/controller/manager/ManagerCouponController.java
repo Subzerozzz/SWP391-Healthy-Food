@@ -263,7 +263,10 @@ public class ManagerCouponController extends HttpServlet {
             String discounType = request.getParameter("discountype");
             BigDecimal discountValue = new BigDecimal(request.getParameter("discountvalue"));
             BigDecimal minPurchase = new BigDecimal(request.getParameter("minpurchase"));
-            BigDecimal maxDiscount = new BigDecimal(request.getParameter("maxdiscount"));
+            String maxDiscountStr = request.getParameter("maxdiscount");
+            BigDecimal maxDiscount = (maxDiscountStr != null && !maxDiscountStr.isEmpty())
+                    ? new BigDecimal(maxDiscountStr)
+                    : BigDecimal.ZERO; // hoặc null tùy logic hệ thống
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
             String usageLimitStr = request.getParameter("usageLimit");
