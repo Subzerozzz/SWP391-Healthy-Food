@@ -48,6 +48,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 .full_name(rs.getString("full_name"))
                 .mobile(rs.getString("mobile"))
                 .email(rs.getString("email"))
+                .payment_status(rs.getInt("payment_status"))
                 .build();
     }
 
@@ -63,7 +64,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      * @param pageSize      The number of results to return per page
      * @return List of filtered and paginated Order objects
      */
-    public List<Order> findOrdersWithFilters(String status, String paymentMethod, int page, int pageSize) {
+    public List<Order> findOrdersWithFilters(String status, String paymentMethod,int paymentStatus, int page, int pageSize) {
         List<Order> Order = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
@@ -80,6 +81,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
             sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
+        }
+        // Add payment status filter if provied
+        if(paymentStatus >-0 && paymentStatus <= 1){
+            sql.append("AND payment_status = ? ");
+            params.add(paymentStatus);
         }
         // Append sorting and pagination
         sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
@@ -121,7 +127,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      * @return Total number of matching Order, or 0 if none found or in case of
      *         error
      */
-    public int getTotalFilteredOrders(String status, String paymentMethod) {
+    public int getTotalFilteredOrders(String status, String paymentMethod,int paymentStatus) {
         // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM `Order`  "
@@ -137,7 +143,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             sql.append("AND payment_method = ? ");
             params.add(paymentMethod);
         }
-
+        // Add payment status filter if provied
+        if(paymentStatus >=0 && paymentStatus <= 1){
+            sql.append("AND payment_status = ? ");
+            params.add(paymentStatus);
+        }
         try {
             // Prepare and execute query
             connection = getConnection();
@@ -482,7 +492,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // System.out.println(l);
       //  Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
        // System.out.println(b);
-         List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
+         List<Order> l = d.findOrdersWithFilters("", "", -1, 1, 10);
          System.out.println(l);
+         System.out.println(d.getTotalFilteredOrders("", "", 0));
     }
 }

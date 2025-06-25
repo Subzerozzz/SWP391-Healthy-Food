@@ -224,42 +224,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return 0;
     }
     
-//     public List<Feedback> findFeedbackWithFilters(String rating,  int page, int pageSize) {
-//        List<Feedback> feedbacks = new ArrayList<>();
-//        StringBuilder sql = new StringBuilder("SELECT * "
-//                + "FROM Feedback  "
-//                + "WHERE 1 = 1  ");
-//        List<Object> params = new ArrayList<>();
-//        if(rating != null && rating.contains("-1")){
-//            rating = null;
-//        }
-//        if (rating != null && !rating.isEmpty()) {
-//            sql.append("AND rating = ? ");
-//            params.add(rating);
-//        }
-//        
-//        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
-//        params.add(pageSize);
-//        params.add((page - 1) * pageSize);
-//
-//        try {
-//            connection = getConnection();
-//            statement = connection.prepareStatement(sql.toString());
-//            for (int i = 0; i < params.size(); i++) {
-//                statement.setObject(i + 1, params.get(i));
-//            }
-//
-//            resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                feedbacks.add(getFromResultSet(resultSet));
-//            }
-//        } catch (SQLException ex) {
-//            System.out.println("Error finding filtered orders: " + ex.getMessage());
-//        } finally {
-//
-//        }
-//        return feedbacks;
-//    }
+
       public List<Feedback> findFeedbackWithFilters(String rating, String foodName, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
          StringBuilder sql = new StringBuilder("SELECT f.* "
@@ -351,37 +316,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     }
     return 0;
 }
-//     public int getTotalFilteredFeedback(String rating) {
-//        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-//                + "FROM Feedback "
-//                + "WHERE 1 = 1 ");
-//        List<Object> params = new ArrayList<>();
-//         if(rating != null && rating.contains("-1")){
-//            rating = null;
-//        }
-//        if (rating != null && !rating.isEmpty()) {
-//            sql.append("AND rating = ? ");
-//            params.add(rating);
-//        }
-//       
-//        try {
-//            connection = getConnection();
-//            statement = connection.prepareStatement(sql.toString());
-//            for (int i = 0; i < params.size(); i++) {
-//                statement.setObject(i + 1, params.get(i));
-//            }
-//
-//            resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                return resultSet.getInt(1);
-//            }
-//        } catch (SQLException ex) {
-//            System.out.println("Error counting filtered orders: " + ex.getMessage());
-//        } finally {
-//            closeResources();
-//        }
-//        return 0;
-//    }
+
 
     public static void main(String[] args) {
         FeedbackDAO f = new FeedbackDAO();

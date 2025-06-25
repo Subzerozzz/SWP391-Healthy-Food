@@ -122,8 +122,17 @@ public class ManagerOrderController extends HttpServlet {
         String status = request.getParameter("status");
         // Filter by paymentMethod
         String paymentMethod = request.getParameter("paymentMethod");
+        // Filter by payment Status : Paid or Unpaid
+        String paymentStatusParam = request.getParameter("paymentStatus");
+        int paymentStatus = -1;
+        if(paymentStatusParam != null && !paymentStatusParam.isEmpty()){
+            paymentStatus = Integer.parseInt(paymentStatusParam);
+        }else{
+            paymentStatus = -1;
+        }
         // Get search by name, id, email
         String search = request.getParameter("search");
+        
         // Pagination
         int page = 1;
         int pageSize = 10;
@@ -149,9 +158,9 @@ public class ManagerOrderController extends HttpServlet {
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
-            orders = orderDAO.findOrdersWithFilters(status, paymentMethod, page, pageSize);
+            orders = orderDAO.findOrdersWithFilters(status, paymentMethod,paymentStatus , page, pageSize);
             // count order
-            totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod);
+            totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod, paymentStatus);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
