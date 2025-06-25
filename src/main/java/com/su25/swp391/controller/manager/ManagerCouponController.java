@@ -273,7 +273,7 @@ public class ManagerCouponController extends HttpServlet {
             Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
                     ? Integer.parseInt(percustomerlimitStr) : null;
             String isActiveStr = request.getParameter("isActive");
-            int isActive = (isActiveStr != null) ? 1 : 0;
+           int isActive = Integer.parseInt(isActiveStr);
             Date date1 = null;
             try {
                 if (dateStr1 != null && !dateStr1.isEmpty()) {
@@ -323,6 +323,7 @@ public class ManagerCouponController extends HttpServlet {
                     .endDate(date2)
                     .build();
             CouponDAO couponDao = new CouponDAO();
+            
             boolean isSuccses = couponDao.insert(newCoupon) > 0;
             if (isSuccses) {
                 HttpSession session = request.getSession();
@@ -361,7 +362,7 @@ public class ManagerCouponController extends HttpServlet {
             Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
                     ? Integer.parseInt(percustomerlimitStr) : null;
             String isActiveStr = request.getParameter("isActive");
-            int isActive = (isActiveStr != null) ? 1 : 0;
+            int isActive = Integer.parseInt(isActiveStr);
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
             Date date1 = null;
