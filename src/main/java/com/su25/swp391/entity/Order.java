@@ -42,5 +42,6 @@ public class Order {
     private String address;
     private String email;
     private String shipping_address;
+    private int payment_status;
 
 }

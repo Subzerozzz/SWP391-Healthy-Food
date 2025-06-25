@@ -31,7 +31,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 + "o.mobile, "
                 + "o.address, "
                 + "o.email, "
-                + "o.shipping_address "
+                + "o.shipping_address, "
+                + "o.payment_status "
                 + "FROM `Order` o "
                 + "WHERE o.user_id = ? AND o.status = ?";
 
@@ -73,6 +74,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 .address(resultSet.getString("address"))
                 .email(resultSet.getString("email"))
                 .shipping_address(resultSet.getString("shipping_address"))
+                .payment_status(resultSet.getInt("payment_status"))
                 .build();
     }
 
@@ -168,6 +170,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 order.setAddress(resultSet.getString("address"));
                 order.setEmail(resultSet.getString("email"));
                 order.setShipping_address(resultSet.getString("shipping_address"));
+                order.setPayment_status(resultSet.getInt("payment_status"));
             }
         } catch (Exception e) {
             System.out.println("Error finding order by ID: " + e.getMessage());

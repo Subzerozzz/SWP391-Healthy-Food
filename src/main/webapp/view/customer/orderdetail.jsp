@@ -9,6 +9,39 @@
     <!--<![endif]-->
     <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
+        <style>
+            .order-items-container {
+                max-height: 300px; /* Chiều cao tối đa tương ứng với khoảng 4 item */
+                overflow-y: auto;
+                padding-right: 8px; /* Tránh thanh cuộn che nội dung */
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+            }
+
+            /* Scrollbar - Chrome, Safari, Edge */
+            .order-items-container::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .order-items-container::-webkit-scrollbar-thumb {
+                background-color: #ccc;
+                border-radius: 4px;
+            }
+
+            .order-items-container::-webkit-scrollbar-thumb:hover {
+                background-color: #999;
+            }
+
+            /* Scrollbar - Firefox */
+            .order-items-container {
+                scrollbar-width: thin;
+                scrollbar-color: #ccc transparent;
+            }
+        </style>
+
+
+
+
 
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
@@ -109,31 +142,33 @@
                                                                                                             </li>    
 
                                                                                                         </ul>
-                                                                                                        <ul class="flex flex-column">
-                                                                                                            <c:forEach var="orderItem" items="${orderItemList}">
-                                                                                                                <li class="product-item gap14">
-                                                                                                                    <div class="image no-bg">
-                                                                                                                        <img src="${foodDAO.findById(orderItem.food_id).image_url}" alt="">
-                                                                                                                    </div>
-                                                                                                                    <div class="flex items-center justify-between gap40 flex-grow">
-                                                                                                                        <div class="name">
-                                                                                                                            <div class="text-tiny mb-1">Food name</div>
-                                                                                                                            <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
+                                                                                                        <div class="order-items-container">
+                                                                                                            <ul class="flex flex-column">
+                                                                                                                <c:forEach var="orderItem" items="${orderItemList}">
+                                                                                                                    <li class="product-item gap14">
+                                                                                                                        <div class="image no-bg">
+                                                                                                                            <img src="${foodDAO.findById(orderItem.food_id).image_url}" alt="">
                                                                                                                         </div>
-                                                                                                                        <div class="name">
-                                                                                                                            <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                            <div class="body-title-2">${orderItem.quantity}</div>
-                                                                                                                        </div>
-                                                                                                                        <div class="name">
-                                                                                                                            <div class="text-tiny mb-1">Price</div>
-                                                                                                                            <div class="body-title-2">
-                                                                                                                                <fmt:formatNumber value="${foodDAO.findById(orderItem.food_id).price}" type="number" groupingUsed="true" /> VND
+                                                                                                                        <div class="flex items-center justify-between gap40 flex-grow">
+                                                                                                                            <div class="name">
+                                                                                                                                <div class="text-tiny mb-1">Food name</div>
+                                                                                                                                <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
+                                                                                                                            </div>
+                                                                                                                            <div class="name">
+                                                                                                                                <div class="text-tiny mb-1">Quantity</div>
+                                                                                                                                <div class="body-title-2">${orderItem.quantity}</div>
+                                                                                                                            </div>
+                                                                                                                            <div class="name">
+                                                                                                                                <div class="text-tiny mb-1">Price</div>
+                                                                                                                                <div class="body-title-2">
+                                                                                                                                    <fmt:formatNumber value="${foodDAO.findById(orderItem.food_id).price}" type="number" groupingUsed="true" /> VND
+                                                                                                                                </div>
                                                                                                                             </div>
                                                                                                                         </div>
-                                                                                                                    </div>
-                                                                                                                </li>
-                                                                                                            </c:forEach>
-                                                                                                        </ul>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
+                                                                                                            </ul>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="wg-box">
@@ -160,11 +195,24 @@
                                                                                                                         <span class="body-text">Coupon</span>
                                                                                                                         <span class="body-title-2">${order.coupon_code}</span>
                                                                                                                     </li>
+                                                                                                                    <li class="divider"></li>
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-text">Payment Status</span>
+                                                                                                                        <span class="body-title-2">
+                                                                                                                            <c:choose>
+                                                                                                                                <c:when test="${order.payment_status == 0}"><i style="color: red">Chưa thanh toán</i></c:when>
+                                                                                                                                <c:when test="${order.payment_status == 1}"><i style="color: green">Đã thanh toán</i></c:when>
+                                                                                                                                <c:otherwise>Không xác định</c:otherwise>
+                                                                                                                            </c:choose>
+                                                                                                                        </span>
+                                                                                                                    </li>
 
                                                                                                                     <li class="divider"></li>
                                                                                                                     <li class="cart-totals-item">
                                                                                                                         <span class="body-title">Total price:</span>
-                                                                                                                        <span class="body-title tf-color-1">${order.total}</span>
+                                                                                                                        <span class="body-title tf-color-1">
+                                                                                                                            <fmt:formatNumber value="${order.total}" type="number" groupingUsed="true"/> VND
+                                                                                                                        </span>
                                                                                                                     </li>
                                                                                                                 </ul>
                                                                                                             </c:if>
@@ -184,11 +232,15 @@
                                                                                                             </div>
                                                                                                             <div class="summary-item">
                                                                                                                 <div class="body-text">Create At</div>
-                                                                                                                <div class="body-title-2">${order.created_at}</div>
+                                                                                                                <div class="body-title-2">
+                                                                                                                    <fmt:formatDate value="${order.created_at}" pattern="dd-MM-yyyy HH:mm:ss" />
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                             <div class="summary-item">
                                                                                                                 <div class="body-text">Total</div>
-                                                                                                                <div class="body-title-2 tf-color-1">${order.total}</div>
+                                                                                                                <div class="body-title-2 tf-color-1">
+                                                                                                                    <fmt:formatNumber value="${order.total}" type="number" groupingUsed="true"/> VND
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div class="wg-box mb-20 gap10">
@@ -197,7 +249,18 @@
                                                                                                         </div>
                                                                                                         <div class="wg-box mb-20 gap10">
                                                                                                             <div class="body-title">Payment Method</div>
-                                                                                                            <div class="body-text">${order.payment_method}</div>
+                                                                                                            <div class="body-text">${order.payment_method} -  <c:choose>
+                                                                                                                    <c:when test="${order.payment_status == 0}">
+                                                                                                                        <span class="">Chưa thanh toán</span>
+                                                                                                                    </c:when>
+                                                                                                                    <c:when test="${order.payment_status == 1}">
+                                                                                                                        <span class="">Đã thanh toán</span>
+                                                                                                                    </c:when>
+                                                                                                                    <c:otherwise>
+                                                                                                                        <span class="">Không xác định</span>
+                                                                                                                    </c:otherwise>
+                                                                                                                </c:choose> 
+                                                                                                            </div>
                                                                                                         </div>
                                                                                                         <div class="wg-box gap10">
                                                                                                             <div class="body-title">Expected Date Of Delivery</div>
@@ -219,7 +282,10 @@
                                                                                                                 </c:otherwise>
                                                                                                             </c:choose>
                                                                                                         </div>
-                                                                                                        <a style="    margin-bottom: 13px;    margin-top: 15px;" class="tf-button style-1 w-full" onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel</a>
+                                                                                                        <c:if test="${order.payment_method == 'VNPAY' and order.payment_status == 0}">
+                                                                                                            <a class="tf-button style-1 w-full" href="#" style="    margin-bottom: 20px;    margin-top: 20px";>Thanh toán ngay</a>
+                                                                                                        </c:if>
+                                                                                                        <a style="    margin-bottom: 20px;    " class="tf-button style-1 w-full" onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel</a>
                                                                                                         <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
                                                                                                     </div>
                                                                                                 </c:if>
