@@ -439,7 +439,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
           System.out.println(feedbacks);
            System.out.println(AccountMap);
         System.out.println(FoodMap);
-        System.out.println(f.getTotalFilteredFeedback("", foodName));
+   //     System.out.println(f.getTotalFilteredFeedback("", foodName));
 //          System.out.println(feedbacks);
 //          System.out.println(AccountMap);
 //          System.out.println(FoodMap);

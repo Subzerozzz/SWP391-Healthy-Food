@@ -147,9 +147,9 @@
 
 /* Grid nội dung chia đều */
 .feedback-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 32px;
+   display: flex;
+  flex-direction: column;
+  gap: 20px; /* Khoảng cách giữa các dòng */
 }
 
 .feedback-item {
@@ -257,11 +257,6 @@
       </div>
 
       <div class="feedback-item">
-        <div class="feedback-label">Customer: ${account.user_name}</div>
-      
-      </div>
-
-      <div class="feedback-item">
           <div class="feedback-label" style="display:flex;justify-content: start;align-items: center;gap:8px">
               Rating: 
         <div class="feedback-value">
@@ -271,6 +266,10 @@
         </div>
        </div>
       </div>
+       
+        <div class="feedback-item">
+        <div class="feedback-label">Customer: ${account.user_name}</div>
+       </div>
 
       <div class="feedback-item feedback-full">
         <div class="feedback-label">Feedback:</div>

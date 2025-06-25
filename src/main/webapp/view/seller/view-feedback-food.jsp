@@ -69,7 +69,7 @@
                   .product-info {
                     flex: 1;
                     min-width: 300px;
-                  }
+                   }
 
                   .product-title {
                     font-size: 28px;
@@ -82,6 +82,7 @@
                     font-size: 15px;
                     color: #000;
                     margin-bottom: 20px;
+                    font-weight:500;
                   }
 
                   .price {
@@ -90,8 +91,8 @@
 
                   .price .current {
                     font-size: 20px;
-                    font-weight: 600;
-                    color: #27ae60;
+                    font-weight: 50;
+                    color: #000;
                   }
 
                   .description {
@@ -154,7 +155,7 @@
                                 <img src="${food.image_url}" alt="${foodD.name}">
                               </div>
                               <div class="product-info">
-                                <h2 class="product-title">${foodD.name}</h2>
+                                  <h2 class="product-title" style="font-weight:500">Food Name: ${foodD.name}</h2>
                                 <h3 class="product-date">Created at: <fmt:formatDate value="${foodD.created_at}" pattern="dd/MM/yyyy HH:mm" /></h3>
 
                                 <div class="price">
@@ -162,7 +163,7 @@
                                 </div>
 
                                 <p class="description">
-                                  ${foodD.description}
+                                  Description: ${foodD.description}
                                 </p>
                                 <p class="description">
                                   Number of Calories: ${foodD.calo}
