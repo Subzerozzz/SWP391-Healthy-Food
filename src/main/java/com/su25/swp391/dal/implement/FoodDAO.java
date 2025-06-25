@@ -41,7 +41,24 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         return list;
 
     }
+ public List<Food> findAllFoodActive() {
+        String sql = "select * from Food  where status = 'active'";
+        List<Food> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
 
+    }
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
         Food food = new Food();
