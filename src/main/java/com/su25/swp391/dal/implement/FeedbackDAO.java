@@ -118,13 +118,13 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 .user_id(resultSet.getInt("user_id"))
                 .order_item_id(resultSet.getInt("order_item_id"))
                 .content(resultSet.getString("content"))
-                .rating(this.resultSet.getInt("rating"))
+                .rating(resultSet.getInt("rating"))
                 .isVisible(resultSet.getBoolean("is_visible"))
                 .createdAt(resultSet.getTimestamp("created_at"))
                 .updatedAt(resultSet.getTimestamp("updated_at"))
                 .build();
      }
-     public List<Feedback> searchFeedback(String search, String status,String foodName, int page, int pageSize) {
+     public List<Feedback> searchFeedback(String search, String rating,String foodName, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT f.* "
                 + "FROM Feedback f "
@@ -138,16 +138,19 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         params.add(searchPattern);
         params.add(searchPattern);
 //        params.add(search);
-        if(status != null && status.contains("-1")){
-            status = null;
+        if(rating != null && rating.contains("-1")){
+            rating = null;
         }
-        if (status != null && !status.isEmpty()) {
+        if (rating != null && !rating.isEmpty()) {
             sql.append("AND f.rating = ? ");
-            params.add(status);
+            params.add(rating);
+        }
+        if(foodName != null && foodName.contains("-1")){
+        foodName = null;
         }
         if (foodName != null && !foodName.isEmpty()) {
         sql.append("AND fo.name LIKE ? ");
-        params.add("%" + foodName + "%");
+        params.add( foodName );
     }
         
 
@@ -174,7 +177,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return feedbacks;
     }
 
-    public int getTotalFeedbackResults(String search, String status,String foodName) {
+    public int getTotalFeedbackResults(String search, String rating,String foodName) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM Feedback f "
                 + "JOIN OrderItem oi ON f.order_item_id = oi.id "
@@ -187,17 +190,20 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         params.add(searchPattern);
         params.add(searchPattern);
         params.add(search);
-        if(status != null && status.contains("-1")){
-            status = null;
+        if(rating != null && rating.contains("-1")){
+            rating = null;
         }
-        if (status != null && !status.isEmpty()) {
+        if (rating != null && !rating.isEmpty()) {
             sql.append("AND f.rating = ? ");
-            params.add(status);
+            params.add(rating);
         }
         // Lọc theo tên món ăn
+        if(foodName != null && foodName.contains("-1")){
+        foodName = null;
+        }
         if (foodName != null && !foodName.isEmpty()) {
             sql.append("AND fo.name LIKE ? ");
-            params.add("%" + foodName + "%");
+            params.add(foodName);
         }
        try {
             connection = getConnection();
@@ -218,18 +224,18 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return 0;
     }
     
-//     public List<Feedback> findFeedbackWithFilters(String status,  int page, int pageSize) {
+//     public List<Feedback> findFeedbackWithFilters(String rating,  int page, int pageSize) {
 //        List<Feedback> feedbacks = new ArrayList<>();
 //        StringBuilder sql = new StringBuilder("SELECT * "
 //                + "FROM Feedback  "
 //                + "WHERE 1 = 1  ");
 //        List<Object> params = new ArrayList<>();
-//        if(status != null && status.contains("-1")){
-//            status = null;
+//        if(rating != null && rating.contains("-1")){
+//            rating = null;
 //        }
-//        if (status != null && !status.isEmpty()) {
+//        if (rating != null && !rating.isEmpty()) {
 //            sql.append("AND rating = ? ");
-//            params.add(status);
+//            params.add(rating);
 //        }
 //        
 //        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
@@ -254,7 +260,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 //        }
 //        return feedbacks;
 //    }
-      public List<Feedback> findFeedbackWithFilters(String status, String foodName, int page, int pageSize) {
+      public List<Feedback> findFeedbackWithFilters(String rating, String foodName, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
          StringBuilder sql = new StringBuilder("SELECT f.* "
         + "FROM Feedback f "
@@ -263,17 +269,19 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         + "WHERE 1=1 ");
 
     List<Object> params = new ArrayList<>();
-
+    if(foodName != null && foodName.contains("-1")){
+        foodName = null;
+    }
     if (foodName != null && !foodName.isEmpty()) {
         sql.append("AND fo.name LIKE ? ");
-        params.add("%" + foodName + "%");
+        params.add(foodName);
     }
-    if(status != null && status.contains("-1")){
-          status = null;
+    if(rating != null && rating.contains("-1")){
+          rating = null;
        }
-    if (status != null && !status.isEmpty()) {
+    if (rating != null && !rating.isEmpty()) {
         sql.append("AND f.rating = ? ");
-        params.add(status);
+        params.add(rating);
     }
         
         sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
@@ -299,7 +307,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return feedbacks;
     }
       
-      public int getTotalFilteredFeedback(String status, String foodName) {
+      public int getTotalFilteredFeedback(String rating, String foodName) {
     StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
         + "FROM Feedback f "
         + "JOIN OrderItem oi ON f.order_item_id = oi.id "
@@ -307,17 +315,21 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         + "WHERE 1 = 1 ");
     
     List<Object> params = new ArrayList<>();
-
-    // Lọc theo status (rating)
-    if (status != null && !status.equals("-1") && !status.isEmpty()) {
+    if(rating != null && rating.contains("-1")){
+          rating = null;
+       }
+    // Lọc theo rating (rating)
+    if (rating != null && !rating.equals("-1") && !rating.isEmpty()) {
         sql.append("AND f.rating = ? ");
-        params.add(status);
+        params.add(rating);
     }
-
+    if(foodName != null && foodName.contains("-1")){
+        foodName = null;
+    }
     // Lọc theo tên món ăn
     if (foodName != null && !foodName.isEmpty()) {
         sql.append("AND fo.name LIKE ? ");
-        params.add("%" + foodName + "%");
+        params.add(foodName);
     }
 
     try {
@@ -339,17 +351,17 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     }
     return 0;
 }
-//     public int getTotalFilteredFeedback(String status) {
+//     public int getTotalFilteredFeedback(String rating) {
 //        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
 //                + "FROM Feedback "
 //                + "WHERE 1 = 1 ");
 //        List<Object> params = new ArrayList<>();
-//         if(status != null && status.contains("-1")){
-//            status = null;
+//         if(rating != null && rating.contains("-1")){
+//            rating = null;
 //        }
-//        if (status != null && !status.isEmpty()) {
+//        if (rating != null && !rating.isEmpty()) {
 //            sql.append("AND rating = ? ");
-//            params.add(status);
+//            params.add(rating);
 //        }
 //       
 //        try {
@@ -397,8 +409,23 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
        AccountDAO accDAO = new AccountDAO();
        OrderItemDAO itemDAO = new OrderItemDAO();
         FoodDAO foodDAO = new FoodDAO();
-        List<Feedback> feedbacks = f.findFeedbackWithFilters("-1", "Chim",1, 2);
-        HashMap<Integer,Account> AccountMap = new HashMap<>();
+      List<Feedback> feedbacks = f.findFeedbackWithFilters("1", "-1",1, 2);
+//        HashMap<Integer,Account> AccountMap = new HashMap<>();
+//         for (Feedback feedback : feedbacks) {
+//              Account acc = accDAO.findById(feedback.getUser_id());
+//              AccountMap.put(feedback.getUser_id(), acc);
+//          }
+//         HashMap<Integer,Food> FoodMap = new HashMap<>();
+//         for (Feedback feedback : feedbacks) {
+//             OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
+//             Food food = foodDAO.findById(item.getFood_id());
+//             FoodMap.put(feedback.getOrder_item_id(), food);
+//          }
+//         System.out.println(feedbacks);
+//         System.out.println(AccountMap);
+//         System.out.println(FoodMap);
+      //    List<Feedback> feedbacks = f.searchFeedback("", "1","Ga", 1, 10);
+           HashMap<Integer,Account> AccountMap = new HashMap<>();
          for (Feedback feedback : feedbacks) {
               Account acc = accDAO.findById(feedback.getUser_id());
               AccountMap.put(feedback.getUser_id(), acc);
@@ -409,11 +436,10 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
              Food food = foodDAO.findById(item.getFood_id());
              FoodMap.put(feedback.getOrder_item_id(), food);
           }
-//         System.out.println(feedbacks);
-//         System.out.println(AccountMap);
-//         System.out.println(FoodMap);
-          List<Feedback> listF = f.searchFeedback("Phong", "","Ga", 1, 10);
-          System.out.println(listF);
+          System.out.println(feedbacks);
+           System.out.println(AccountMap);
+        System.out.println(FoodMap);
+        System.out.println(f.getTotalFilteredFeedback("", foodName));
 //          System.out.println(feedbacks);
 //          System.out.println(AccountMap);
 //          System.out.println(FoodMap);

@@ -121,13 +121,13 @@ public class ManagerFeedbackController extends HttpServlet {
          //Get parameter by Food Name
         String selectFood = request.getParameter("selectFood");
           // Get filter parameters  by Rating
-        String status = request.getParameter("rating");
+        String rating = request.getParameter("rating");
         // Get search by name, email
         String search = request.getParameter("search");
        
         // Pagination
         int page = 1;
-        int pageSize = 3;
+        int pageSize = 10;
         try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -142,14 +142,14 @@ public class ManagerFeedbackController extends HttpServlet {
         int totalFeedback;
 
         if (search != null && !search.trim().isEmpty()) {
-            // If there's a search term, use search with payment method and status
-            feedbacks = feedbackDAO.searchFeedback(search, status,selectFood, page, pageSize);
-            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, status,selectFood);
+            // If there's a search term, use search with payment method and rating
+            feedbacks = feedbackDAO.searchFeedback(search, rating,selectFood, page, pageSize);
+            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, rating,selectFood);
         } else {
             // If no search, use filters
-            feedbacks = feedbackDAO.findFeedbackWithFilters(status,selectFood, page, pageSize);
+            feedbacks = feedbackDAO.findFeedbackWithFilters(rating,selectFood, page, pageSize);
             // count order
-            totalFeedback = feedbackDAO.getTotalFilteredFeedback(status,selectFood);
+            totalFeedback = feedbackDAO.getTotalFilteredFeedback(rating,selectFood);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
@@ -171,7 +171,7 @@ public class ManagerFeedbackController extends HttpServlet {
         // Set attributes
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
-        request.setAttribute("status", status);
+        request.setAttribute("rating", rating);
         request.setAttribute("search", search);
         request.setAttribute("selectFood",selectFood);
         request.setAttribute("feedbacks", feedbacks);
@@ -183,7 +183,7 @@ public class ManagerFeedbackController extends HttpServlet {
         o.print(AccountMap);
         o.print(FoodMap);
         o.print(lFood);
-        o.print(status);
+        o.print(rating);
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 

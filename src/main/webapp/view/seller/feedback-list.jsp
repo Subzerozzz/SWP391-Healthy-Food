@@ -555,21 +555,21 @@ value="${search}"/>
 <ul class="wg-pagination">
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1&rating=${rating}&search=${search}"><i class="icon-chevron-left"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1&rating=${rating}&search=${search}&selectFood=${selectFood}"><i class="icon-chevron-left"></i></a>
 </li>
 <c:choose>
     <c:when test="${currentPage <= totalPages - 2}">
         <c:if test="${currentPage > 1}">
                 <li class="">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}&rating=${rating}&search=${search}">${currentPage - 1}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage - 1}</a>
             </li>
         </c:if>
         <li class="active">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}&rating=${rating}&search=${search}">${currentPage}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage}</a>
         </li>
 
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}&rating=${rating}&search=${search}">${currentPage + 1}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage + 1}</a>
         </li>
 
         <c:if test="${currentPage < totalPages - 2}">
@@ -580,21 +580,21 @@ value="${search}"/>
 
 
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}">${totalPages}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}">${totalPages}</a>
         </li>
     </c:when>
 
     <c:otherwise>
         <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
             <li class="${currentPage == i ? 'active' : ''}">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}&rating=${rating}&search=${search}">${i}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}&rating=${rating}&search=${search}&selectFood=${selectFood}">${i}</a>
             </li>
         </c:forEach>
     </c:otherwise>
 </c:choose>
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}"><i class="icon-chevron-right"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}"><i class="icon-chevron-right"></i></a>
 </li>
 </ul>
 
