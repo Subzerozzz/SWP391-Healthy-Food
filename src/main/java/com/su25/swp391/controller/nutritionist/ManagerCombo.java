@@ -5,8 +5,10 @@
 package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.dal.implement.ComboFoodDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.entity.Combo;
+import com.su25.swp391.entity.ComboFood;
 import com.su25.swp391.entity.ComboFoodDetails;
 import com.su25.swp391.entity.Food;
 import java.io.IOException;
@@ -16,7 +18,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -92,7 +98,7 @@ public class ManagerCombo extends HttpServlet {
                 Combo combo = comboDao.findById(comboId);
                 if (combo != null) {
                     request.getSession().setAttribute("toastMessage", "Combo đã được khôi phục");
-                     request.getSession().setAttribute("toastType", "success");
+                    request.getSession().setAttribute("toastType", "success");
                 } else {
                     request.getSession().setAttribute("toastMessage", "Không tìm thấy combo để thể kích hoạt");
                     request.getSession().setAttribute("toastType", "error");
@@ -102,14 +108,35 @@ public class ManagerCombo extends HttpServlet {
             } else {
                 request.getSession().setAttribute("toastMessage", "Kích hoạt combo thất bại. Vui lòng thử lại.");
                 request.getSession().setAttribute("toastType", "error");
-                
+
             }
         }
         response.sendRedirect(request.getContextPath() + "/managerCombo");
     }
 
-    private void showAddForm(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //lấy danh sách all các food
+        FoodDAO foodDao = new FoodDAO();
+        List<Food> foods = foodDao.findAllFoodActive();
+        //chuyển đổi food từ list<food> java sang json
+        StringBuilder foodJson = new StringBuilder("[");
+        for (int i = 0; i < foods.size(); i++) {
+            //lay food theo i 
+            Food food = foods.get(i);
+            foodJson.append("{")
+                    .append("\"id\":").append(food.getId()).append(",")
+                    .append("\"name\":\"").append(food.getName()).append(",")
+                    .append("\"price\":\"").append(food.getPrice()).append(",")
+                    .append("\"calo\":").append(food.getCalo())
+                    .append("}");
+            if (i < foods.size() - 1) {
+                foodJson.append(",");
+            }
+        }
+        foodJson.append("]");
+        request.setAttribute("foodJson", foodJson.toString());
+        request.setAttribute("foods", foods);
+        request.getRequestDispatcher("/view/nutritionist/combo/addCombo_1.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
@@ -197,10 +224,60 @@ public class ManagerCombo extends HttpServlet {
     }
 
     private void addCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        FoodDAO foodDao = new FoodDAO();
-        List<Food> listFood = foodDao.findAll();
-        request.setAttribute("listFood", listFood);
-request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
+        try {
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String status = request.getParameter("status");
+            double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
+            //laays gia tri chuoi tu tham so foodID
+            String foodIdStr = request.getParameter("foodId");
+            String quantitiesStr = request.getParameter("quantities");
+            //kiem tra foodStr cos null hay khoong roi neu co thi cach nhau bang dau ,
+            String[] foodIds = foodIdStr != null ? foodIdStr.split(",") : null;
+            String[] quantities = quantitiesStr != null ? quantitiesStr.split(",") : null;
+            Map<String,String> errors =validateComboData(name, discountPrice, quantities, foodIds, null);
+            if(!errors.isEmpty()){
+                //xet loi
+                request.getSession().setAttribute("errors", errors);
+                //giuw lai cac truong neu truong nao sai thi mat
+                request.getSession().setAttribute("formData", request.getParameterMap());
+                response.sendRedirect(request.getContextPath()+"/managerCombo?action=add");
+                return;
+            }
+            FoodDAO fooddao = new FoodDAO();
+            
+            Double originalPrice = calculateOriginalPrice(foodIds, quantities, fooddao);
+            //tao doi tuong combo moi
+            Combo newCombo = Combo.builder()
+                            .name(name)
+                            .description(description)
+                            .originalPrice(originalPrice)
+                            .discountPrice(discountPrice)
+                            .status(status)
+                            .build();
+            ComboDAO comboDao = new ComboDAO();
+            int comboId = comboDao.insert(newCombo);
+            //kieem tra xem combo ddax dc tao thanh cong
+            if(comboId > 0){
+                ComboFoodDAO  combofoodDao = new ComboFoodDAO();
+                for (int i = 0; i < foodIds.length; i++) {
+                    int foodId = Integer.parseInt(foodIds[i]);
+                    int quantity = Integer.parseInt(quantities[i]);
+                    combofoodDao.insert(ComboFood.builder().comboId(comboId).foodId(foodId).quantityInCombo(quantity).build());
+                }
+                 request.getSession().setAttribute("toastMessage", "Combo created successfully");
+            request.getSession().setAttribute("toastType", "success");
+            
+            }else{
+                 request.getSession().setAttribute("toastMessage", "Combo created Faill");
+            request.getSession().setAttribute("toastType", "error");
+            }
+           
+        } catch (Exception e) {
+             request.getSession().setAttribute("toastMessage", "Error:"+e.getMessage());
+            request.getSession().setAttribute("toastType", "error"); 
+        }
+        response.sendRedirect(request.getContentType()+"/managerCombo");
     }
 
     private void updateCombo(HttpServletRequest request, HttpServletResponse response) {
@@ -222,4 +299,66 @@ request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(re
 
     }
 
+    private Map<String, String> validateComboData(String name, Double discountPrice, String[] quantities, String[] foodId, Integer comboId) {
+        Map<String, String> errors = new HashMap<>();
+
+        //validate name
+        if (name == null || name.trim().isEmpty()) {
+            errors.put("name", "Tên combo không được để null");
+        } else if (!name.matches("^[a-zA-Z0-9_ ]+$")) {
+            errors.put("name", "combo không được chưa kí tự đặc biệt");
+        }
+        //validate food
+        if (foodId == null || foodId.length == 0) {
+            errors.put("foodId", "You must select at least one product for the combo");
+        }
+        //validate quantity
+        if (quantities != null) {
+            for (int i = 0; i < quantities.length; i++) {
+                try {
+                    int quantity = Integer.parseInt(quantities[i]);
+                    if (quantity <= 0) {
+                        errors.put("quantity_" + i, "Quantity must be greater than 0");
+                    }
+                } catch (NumberFormatException e) {
+                    errors.put("quantity_" + i, "Invalid quantity");
+                }
+            }
+        }
+        // Validate discount price (must be less than original price)
+        if (discountPrice != null && foodId != null && quantities != null) {
+            FoodDAO foodDAO = new FoodDAO();
+            double originalPrice = calculateOriginalPrice(foodId, quantities, foodDAO);
+
+            if (discountPrice >= originalPrice) {
+                errors.put("discount_price", "Discount price must be less than original price");
+            }
+        }
+
+        // Add validation for duplicate products
+        if (foodId != null) {
+            Set<String> uniqueFood = new HashSet<>();
+            for (int i = 0; i < foodId.length; i++) {
+                if (!uniqueFood.add(foodId[i])) {
+                    errors.put("duplicate_product", "Duplicate products are not allowed in a combo");
+                    break;
+                }
+            }
+        }
+
+        return errors;
+    }
+//caculate the originalPrice combo base on select
+    private Double calculateOriginalPrice(String[] foodIds, String[] quantities, FoodDAO foodDAO) {
+        double originalPrice = 0;
+        for (int i = 0; i < foodIds.length; i++) {
+            int foodId = Integer.parseInt(foodIds[i]);
+            int quantity = Integer.parseInt(quantities[i]);
+            Food food = foodDAO.findById(foodId);
+            if(food!= null){
+                originalPrice += food.getPrice().doubleValue()* quantity;
+            }
+        }
+        return originalPrice;
+    }
 }
