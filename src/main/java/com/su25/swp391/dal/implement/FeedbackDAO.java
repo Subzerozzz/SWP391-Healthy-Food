@@ -124,10 +124,12 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 .updatedAt(resultSet.getTimestamp("updated_at"))
                 .build();
      }
-     public List<Feedback> searchFeedback(String search, String status, int page, int pageSize) {
+     public List<Feedback> searchFeedback(String search, String status,String foodName, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * "
+        StringBuilder sql = new StringBuilder("SELECT f.* "
                 + "FROM Feedback f "
+                + "JOIN OrderItem oi ON f.order_item_id = oi.id "
+                + "JOIN Food fo ON oi.food_id = fo.id "
                 + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE  (a.user_name LIKE ? OR a.email LIKE ? ) ");
         List<Object> params = new ArrayList<>();
@@ -143,6 +145,10 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
             sql.append("AND f.rating = ? ");
             params.add(status);
         }
+        if (foodName != null && !foodName.isEmpty()) {
+        sql.append("AND fo.name LIKE ? ");
+        params.add("%" + foodName + "%");
+    }
         
 
         sql.append(" ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
@@ -168,9 +174,11 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return feedbacks;
     }
 
-    public int getTotalFeedbackResults(String search, String status) {
+    public int getTotalFeedbackResults(String search, String status,String foodName) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM Feedback f "
+                + "JOIN OrderItem oi ON f.order_item_id = oi.id "
+                + "JOIN Food fo ON oi.food_id = fo.id "
                 + "JOIN Account a ON f.user_id = a.id "
                 + "WHERE (a.user_name LIKE ? OR a.email LIKE ? OR CAST(o.order_id AS CHAR) = ?) ");
         List<Object> params = new ArrayList<>();
@@ -185,6 +193,11 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         if (status != null && !status.isEmpty()) {
             sql.append("AND f.rating = ? ");
             params.add(status);
+        }
+        // Lọc theo tên món ăn
+        if (foodName != null && !foodName.isEmpty()) {
+            sql.append("AND fo.name LIKE ? ");
+            params.add("%" + foodName + "%");
         }
        try {
             connection = getConnection();
@@ -205,19 +218,63 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return 0;
     }
     
-     public List<Feedback> findFeedbackWithFilters(String status,  int page, int pageSize) {
+//     public List<Feedback> findFeedbackWithFilters(String status,  int page, int pageSize) {
+//        List<Feedback> feedbacks = new ArrayList<>();
+//        StringBuilder sql = new StringBuilder("SELECT * "
+//                + "FROM Feedback  "
+//                + "WHERE 1 = 1  ");
+//        List<Object> params = new ArrayList<>();
+//        if(status != null && status.contains("-1")){
+//            status = null;
+//        }
+//        if (status != null && !status.isEmpty()) {
+//            sql.append("AND rating = ? ");
+//            params.add(status);
+//        }
+//        
+//        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+//        params.add(pageSize);
+//        params.add((page - 1) * pageSize);
+//
+//        try {
+//            connection = getConnection();
+//            statement = connection.prepareStatement(sql.toString());
+//            for (int i = 0; i < params.size(); i++) {
+//                statement.setObject(i + 1, params.get(i));
+//            }
+//
+//            resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                feedbacks.add(getFromResultSet(resultSet));
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error finding filtered orders: " + ex.getMessage());
+//        } finally {
+//
+//        }
+//        return feedbacks;
+//    }
+      public List<Feedback> findFeedbackWithFilters(String status, String foodName, int page, int pageSize) {
         List<Feedback> feedbacks = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * "
-                + "FROM Feedback  "
-                + "WHERE 1 = 1  ");
-        List<Object> params = new ArrayList<>();
-        if(status != null && status.contains("-1")){
-            status = null;
-        }
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND rating = ? ");
-            params.add(status);
-        }
+         StringBuilder sql = new StringBuilder("SELECT f.* "
+        + "FROM Feedback f "
+        + "JOIN OrderItem oi ON f.order_item_id = oi.id "
+        + "JOIN Food fo ON oi.food_id = fo.id "
+        + "WHERE 1=1 ");
+
+    List<Object> params = new ArrayList<>();
+
+    if (foodName != null && !foodName.isEmpty()) {
+        sql.append("AND fo.name LIKE ? ");
+        params.add("%" + foodName + "%");
+    }
+    if(status != null && status.contains("-1")){
+          status = null;
+       }
+    if (status != null && !status.isEmpty()) {
+        sql.append("AND f.rating = ? ");
+        params.add(status);
+    }
         
         sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
         params.add(pageSize);
@@ -241,37 +298,78 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         }
         return feedbacks;
     }
-     public int getTotalFilteredFeedback(String status) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
-                + "FROM Feedback "
-                + "WHERE 1 = 1 ");
-        List<Object> params = new ArrayList<>();
-         if(status != null && status.contains("-1")){
-            status = null;
-        }
-        if (status != null && !status.isEmpty()) {
-            sql.append("AND rating = ? ");
-            params.add(status);
-        }
-       
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
+      
+      public int getTotalFilteredFeedback(String status, String foodName) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
+        + "FROM Feedback f "
+        + "JOIN OrderItem oi ON f.order_item_id = oi.id "
+        + "JOIN Food fo ON oi.food_id = fo.id "
+        + "WHERE 1 = 1 ");
+    
+    List<Object> params = new ArrayList<>();
 
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error counting filtered orders: " + ex.getMessage());
-        } finally {
-            closeResources();
-        }
-        return 0;
+    // Lọc theo status (rating)
+    if (status != null && !status.equals("-1") && !status.isEmpty()) {
+        sql.append("AND f.rating = ? ");
+        params.add(status);
     }
+
+    // Lọc theo tên món ăn
+    if (foodName != null && !foodName.isEmpty()) {
+        sql.append("AND fo.name LIKE ? ");
+        params.add("%" + foodName + "%");
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error counting filtered feedback: " + ex.getMessage());
+    } finally {
+        closeResources();
+    }
+    return 0;
+}
+//     public int getTotalFilteredFeedback(String status) {
+//        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
+//                + "FROM Feedback "
+//                + "WHERE 1 = 1 ");
+//        List<Object> params = new ArrayList<>();
+//         if(status != null && status.contains("-1")){
+//            status = null;
+//        }
+//        if (status != null && !status.isEmpty()) {
+//            sql.append("AND rating = ? ");
+//            params.add(status);
+//        }
+//       
+//        try {
+//            connection = getConnection();
+//            statement = connection.prepareStatement(sql.toString());
+//            for (int i = 0; i < params.size(); i++) {
+//                statement.setObject(i + 1, params.get(i));
+//            }
+//
+//            resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                return resultSet.getInt(1);
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error counting filtered orders: " + ex.getMessage());
+//        } finally {
+//            closeResources();
+//        }
+//        return 0;
+//    }
 
     public static void main(String[] args) {
         FeedbackDAO f = new FeedbackDAO();
@@ -299,7 +397,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
        AccountDAO accDAO = new AccountDAO();
        OrderItemDAO itemDAO = new OrderItemDAO();
         FoodDAO foodDAO = new FoodDAO();
-        List<Feedback> feedbacks = f.findFeedbackWithFilters("", 1, 2);
+        List<Feedback> feedbacks = f.findFeedbackWithFilters("-1", "Chim",1, 2);
         HashMap<Integer,Account> AccountMap = new HashMap<>();
          for (Feedback feedback : feedbacks) {
               Account acc = accDAO.findById(feedback.getUser_id());
@@ -314,9 +412,12 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 //         System.out.println(feedbacks);
 //         System.out.println(AccountMap);
 //         System.out.println(FoodMap);
-          List<Feedback> listF = f.searchFeedback("Phong", "", 1, 10);
+          List<Feedback> listF = f.searchFeedback("Phong", "","Ga", 1, 10);
           System.out.println(listF);
-                  
+//          System.out.println(feedbacks);
+//          System.out.println(AccountMap);
+//          System.out.println(FoodMap);
+//                  
     }
 
 }

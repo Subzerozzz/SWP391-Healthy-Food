@@ -143,13 +143,13 @@ public class ManagerFeedbackController extends HttpServlet {
 
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
-            feedbacks = feedbackDAO.searchFeedback(search, status, page, pageSize);
-            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, status);
+            feedbacks = feedbackDAO.searchFeedback(search, status,selectFood, page, pageSize);
+            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, status,selectFood);
         } else {
             // If no search, use filters
-            feedbacks = feedbackDAO.findFeedbackWithFilters(status, page, pageSize);
+            feedbacks = feedbackDAO.findFeedbackWithFilters(status,selectFood, page, pageSize);
             // count order
-            totalFeedback = feedbackDAO.getTotalFilteredFeedback(status);
+            totalFeedback = feedbackDAO.getTotalFilteredFeedback(status,selectFood);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
@@ -183,7 +183,8 @@ public class ManagerFeedbackController extends HttpServlet {
         o.print(AccountMap);
         o.print(FoodMap);
         o.print(lFood);
-       request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
+        o.print(status);
+        request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
 
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -232,9 +233,9 @@ public class ManagerFeedbackController extends HttpServlet {
         }// Get orders with filters
 
         // If no search, use filters
-        feedbacks = feedbackDAO.findFeedbackWithFilters(null, page, pageSize);
+        feedbacks = feedbackDAO.findFeedbackWithFilters(null,null, page, pageSize);
         // count order
-        totalFeedback = feedbackDAO.getTotalFilteredFeedback(null);
+        totalFeedback = feedbackDAO.getTotalFilteredFeedback(null,null);
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
         // get Account
