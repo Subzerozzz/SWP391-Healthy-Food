@@ -420,9 +420,9 @@ main {
 <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="GET">
 <!-- Thêm class filter-row -->
 <div class="filter-row">
-    <!-- Select Status --><i class="fa-solid fa-layer-group fa-2x"></i>
+    <!-- Select Status -->
     <!--select by Food-->
-    <select name="selectFood">
+    <select name="selectFood"  class="form-select">
         <option value="-1" ${param.selectFood == '-1' ? 'selected' : ''}>All Foods</option> 
         <c:forEach items="${lFood}" var="f">
             <option value="${f}" ${param.selectFood == f ? 'selected':''}>${f}</option> 
@@ -431,7 +431,7 @@ main {
     
     
     <!--select by reating-->
-    <select name="rating">
+    <select name="rating"  class="form-select">
 <option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALL RATING </option>       
 <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
 <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>

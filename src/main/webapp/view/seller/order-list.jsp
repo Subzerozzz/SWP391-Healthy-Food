@@ -119,7 +119,7 @@
             }
 .filter-row {
   display: grid;
-  grid-template-columns: 130px 200px 400px 120px;
+  grid-template-columns: 150px 200px 160px 1fr 120px; /* 5 cột */
   gap: 25px;
   align-items: center;
   width: 100%;
@@ -416,7 +416,14 @@
           <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
           <option value="VN Pay"   ${paymentMethod == 'VN Pay'   ? 'selected' : ''}>VN Pay</option>
          </select>
-
+        
+          <!--select payment Status-->
+          <select name="paymentStatus"  class="form-select">
+              <option value="-1" >Payment Status</option>
+              <option value="1" ${paymentStatus == 1 ? 'selected' : ''}>Paid</option>
+              <option value="0" ${paymentStatus == 0 ? 'selected' : ''}>Unpaid</option>
+          </select>
+         
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
