@@ -209,16 +209,16 @@
                                                                                                         <div class="body-title">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Create At</div>
+                                                                                                        <div class="body-title" style="padding-left:4vh">Create At</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title">Payment Method</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Status</div>
+                                                                                                        <div class="body-title" style="padding-left:7vh">Status</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Active</div>
+                                                                                                        <div class="body-title" style="padding-left:6vh">Active</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
@@ -250,7 +250,7 @@
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view"><a class="payment-badge ${order.payment_method}">${order.payment_method}</a></div>
                                                                                                                 <div>
-                                                                                                                    <div class="block-available ${order.status}"><a>${order.status}</a></div>
+                                                                                                                    <div class="block-available ${order.status}" ><a>${order.status}</a></div>
                                                                                                                 </div>
                                                                                                                 <div class="list-icon-function ">
                                                                                                                     <a href="${pageContext.request.contextPath}/orderdetail?order_id=${order.order_id}" class="item eye">

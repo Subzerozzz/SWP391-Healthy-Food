@@ -283,9 +283,9 @@
                                                                                                             </c:choose>
                                                                                                         </div>
                                                                                                         <c:if test="${order.payment_method == 'VNPAY' and order.payment_status == 0}">
-                                                                                                            <a class="tf-button style-1 w-full" href="#" style="    margin-bottom: 20px;    margin-top: 20px";>Thanh toán ngay</a>
+                                                                                                            <a class="tf-button style-1 w-full" href="#" style="    margin-bottom: 10px;    margin-top: 20px">Thanh toán ngay</a>
                                                                                                         </c:if>
-                                                                                                        <a style="    margin-bottom: 20px;    " class="tf-button style-1 w-full" onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel</a>
+                                                                                                        <a style=" margin-top: 10px;    margin-bottom: 20px;    " class="tf-button style-1 w-full" onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel Order</a>
                                                                                                         <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
                                                                                                     </div>
                                                                                                 </c:if>
