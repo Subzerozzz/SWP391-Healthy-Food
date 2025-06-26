@@ -375,5 +375,50 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return false;
     }
-  
+    public List<Coupon> getAllActiveCoupons() {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon WHERE is_active = 1 AND end_date >= ? AND start_date <= ? ORDER BY start_date DESC";
+        
+        try (Connection con = connection; 
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
+            ps.setTimestamp(1, currentTime); // Check end_date
+            ps.setTimestamp(2, currentTime); // Check start_date
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    coupons.add(getFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return coupons;
+    }
+    public List<Coupon> searchCoupons(String keyword) {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon WHERE (code LIKE ? OR description LIKE ?) " +
+                     "AND is_active = 1 AND end_date >= ? AND start_date <= ?";
+
+        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
+            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ps.setTimestamp(3, currentTime); // Check end_date
+            ps.setTimestamp(4, currentTime); // Check start_date
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    coupons.add(getFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coupons;
+    }
+    
 }
