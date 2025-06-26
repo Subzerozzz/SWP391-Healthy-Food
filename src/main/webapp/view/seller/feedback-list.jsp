@@ -686,6 +686,17 @@ value="${search}"/>
                 session.removeAttribute("isSuccess");
             %>
           </c:if>
+            <c:if test="${sessionScope.isError == true}">
+    <script>
+        iziToast.error({
+            title: "Error",
+            message: "An error occurred while processing your request.",
+            position: 'topRight',
+            timeout: 5000
+        });
+    </script>
+    <% session.removeAttribute("isError"); %>
+</c:if>
  <script>
      function handleReject(event) {
     event.preventDefault();

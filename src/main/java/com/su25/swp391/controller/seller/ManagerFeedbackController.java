@@ -212,52 +212,21 @@ public class ManagerFeedbackController extends HttpServlet {
     }
 
     private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedback feedbackHiden = feedbackDAO.findById(feedbackId);
-        feedbackDAO.update(feedbackHiden);
         HttpSession session = request.getSession();
-        session.setAttribute("isSuccess", true);
-        List<Feedback> feedbacks;
-        int totalFeedback;
-        int page = 1;
-        int pageSize = 10;
-        try {
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                if (page < 1) {
-                    page = 1;
-                }
-            }
-        } catch (NumberFormatException e) {
-            // Keep default value
-        }// Get orders with filters
-
-        // If no search, use filters
-        feedbacks = feedbackDAO.findFeedbackWithFilters(null,null, page, pageSize);
-        // count order
-        totalFeedback = feedbackDAO.getTotalFilteredFeedback(null,null);
-        // Number of page can have
-        int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
-        // get Account
-        HashMap<Integer, Account> AccountMap = new HashMap<>();
-        for (Feedback feedback : feedbacks) {
-            Account acc = accDAO.findById(feedback.getUser_id());
-            AccountMap.put(feedback.getUser_id(), acc);
+        int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
+        Feedback feedbackHidden = feedbackDAO.findById(feedbackId);
+        if(feedbackHidden == null){
+          session.setAttribute("isError", true);
+          response.sendRedirect(request.getContextPath()+"/seller/manage-feedback");
+          return;
         }
-        // get Food
-        HashMap<Integer, Food> FoodMap = new HashMap<>();
-        for (Feedback feedback : feedbacks) {
-            OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
-            Food food = foodDAO.findById(item.getFood_id());
-            FoodMap.put(feedback.getOrder_item_id(), food);
+        boolean isUpdateSuccess = feedbackDAO.update(feedbackHidden);
+        if(isUpdateSuccess){
+           session.setAttribute("isSuccess", true);
+        }else{
+           session.setAttribute("isError", true); 
         }
-        // Set attributes
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("feedbacks", feedbacks);
-        request.setAttribute("AccountMap", AccountMap);
-        request.setAttribute("FoodMap", FoodMap);
-        request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath()+"/seller/manage-feedback");
     }
 
     private void detailAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
