@@ -36,13 +36,10 @@ import java.util.UUID;
  */
 @WebServlet(name = "ManagerCouponController", urlPatterns = {"/ManagerCoupon"})
 public class ManagerCouponController extends HttpServlet {
-
     private CouponDAO couponDAO;
-
     public void init() {
         couponDAO = new CouponDAO();
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -86,12 +83,10 @@ public class ManagerCouponController extends HttpServlet {
                 break;
         }
     }
-
     private void showAddDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/manager/addCoupon.jsp");
         dispatcher.forward(request, response);
     }
-
     private void listCouponDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String indexPage = request.getParameter("index");
         if (indexPage == null) {
@@ -110,7 +105,6 @@ public class ManagerCouponController extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/manager/listCoupon.jsp");
         dispatcher.forward(request, response);
     }
-
     private void showEditDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Coupon coupon = couponDAO.findById(id);
@@ -132,7 +126,6 @@ public class ManagerCouponController extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/manager/viewdetailCoupon.jsp");
         dispatcher.forward(request, response);
     }
-
     private void deleteCouponDoGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Coupon coupon = couponDAO.findById(id);
@@ -154,7 +147,6 @@ public class ManagerCouponController extends HttpServlet {
 
         response.sendRedirect(request.getContextPath() + "/ManagerCoupon");
     }
-
     private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String searchKeyword = request.getParameter("search");
         String indexStr = request.getParameter("index");
@@ -185,10 +177,8 @@ public class ManagerCouponController extends HttpServlet {
         request.setAttribute("totalPage", totalPage);
         request.getRequestDispatcher("/view/manager/listCoupon.jsp").forward(request, response);
     }
-
     private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String discountType = request.getParameter("discounttype"); // lấy đúng tham số discounttype (trùng với JSP)
-    
+    String discountType = request.getParameter("discounttype"); // lấy đúng tham số discounttype (trùng với JSP)    
     // Lấy tham số phân trang
     String pageParam = request.getParameter("index");
     String pageSizeParam = request.getParameter("pageSize");
@@ -215,12 +205,10 @@ public class ManagerCouponController extends HttpServlet {
         currentPage = 1;
         pageSize = 10;
     }
-
     // Gọi DAO lọc và đếm tổng bản ghi
     List<Coupon> filteredCoupon = couponDAO.filterCouponWithPagination(discountType, currentPage, pageSize);
     int totalCoupons = couponDAO.getTotalCouponCountWithFilter(discountType);
     int totalPages = (int) Math.ceil((double) totalCoupons / pageSize);
-
     // Đưa dữ liệu vào request để JSP hiển thị
     request.setAttribute("coupons", filteredCoupon);
     request.setAttribute("currentPage", currentPage);
@@ -228,17 +216,14 @@ public class ManagerCouponController extends HttpServlet {
     request.setAttribute("pageSize", pageSize);
     request.setAttribute("totalCoupons", totalCoupons);
     request.setAttribute("discounttype", discountType); // giữ giá trị filter cho JSP
-
     // Tính chỉ số bản ghi hiển thị (ví dụ: 11-20)
     int startRecord = (currentPage - 1) * pageSize + 1;
     int endRecord = Math.min(startRecord + pageSize - 1, totalCoupons);
     request.setAttribute("startRecord", startRecord);
     request.setAttribute("endRecord", endRecord);
-
     // Forward tới trang JSP hiển thị danh sách coupons
     request.getRequestDispatcher("/view/manager/listCoupon.jsp").forward(request, response);
 }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -255,7 +240,6 @@ public class ManagerCouponController extends HttpServlet {
                 break;
         }
     }
-
     private void couponCreateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String code = request.getParameter("code");
@@ -325,8 +309,7 @@ public class ManagerCouponController extends HttpServlet {
                     .startDate(date1)
                     .endDate(date2)
                     .build();
-            CouponDAO couponDao = new CouponDAO();
-            
+            CouponDAO couponDao = new CouponDAO();            
             boolean isSuccses = couponDao.insert(newCoupon) > 0;
             if (isSuccses) {
                 HttpSession session = request.getSession();
@@ -348,7 +331,6 @@ public class ManagerCouponController extends HttpServlet {
             request.getRequestDispatcher("/view/manager/addCoupon.jsp").forward(request, response);
         }
     }
-
     private void couponUpdateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -431,13 +413,11 @@ public class ManagerCouponController extends HttpServlet {
             return;
         }
     }
-
     private Map<String, String> validateCouponData(String code, String description, String discountType,
             BigDecimal discountValue, BigDecimal minPurchase, BigDecimal maxDiscount,
             Integer usageLimit, Integer perCustomerLimit, Integer id) {
 
         Map<String, String> errors = new HashMap<>();
-
         // Validate code
         if (code == null || code.trim().isEmpty()) {
             errors.put("code", "Coupon code is required");
@@ -451,50 +431,42 @@ public class ManagerCouponController extends HttpServlet {
                 errors.put("code", "Coupon code already exists");
             }
         }
-
         // Validate description
         if (description == null || description.trim().isEmpty()) {
             errors.put("description", "Description is required");
         } else if (description.length() > 255) {
             errors.put("description", "Description must be less than 255 characters");
         }
-
         // Validate discount type
         if (discountType == null || (!discountType.equals("percentage") && !discountType.equals("fixed"))) {
             errors.put("discountType", "Discount type must be either 'percentage' or 'fixed'");
         }
-
         // Validate discount value
         if (discountValue == null) {
             errors.put("discountValue", "Discount value is required");
         } else if (discountValue.compareTo(BigDecimal.ZERO) < 0) {
             errors.put("discountValue", "Discount value must be greater than or equal to 0");
         }
-
         // Validate min purchase
         if (minPurchase == null) {
             errors.put("minPurchase", "Minimum purchase amount is required");
         } else if (minPurchase.compareTo(BigDecimal.ZERO) < 0) {
             errors.put("minPurchase", "Minimum purchase must be greater than or equal to 0");
         }
-
         // Validate max discount
         if (maxDiscount == null) {
             errors.put("maxDiscount", "Maximum discount value is required");
         } else if (maxDiscount.compareTo(BigDecimal.ZERO) < 0) {
             errors.put("maxDiscount", "Maximum discount must be greater than or equal to 0");
         }
-
         // Validate usage limit
         if (usageLimit != null && usageLimit < 0) {
             errors.put("usageLimit", "Usage limit must be greater than or equal to 0");
         }
-
         // Validate per-customer limit
         if (perCustomerLimit != null && perCustomerLimit < 0) {
             errors.put("perCustomerLimit", "Per-customer limit must be greater than or equal to 0");
         }
-
         // Optional: Validate isActive
         // (Usually not needed, but add if you need some logic like must be true for specific conditions)
         return errors;

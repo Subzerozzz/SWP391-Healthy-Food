@@ -73,6 +73,12 @@
                                     <div class="text">Blog</div>
                                 </a>
                             </li>
+                             <li class="menu-item">
+                                <a href="${pageContext.request.contextPath}/ManagerCoupon" class="menu-item-button">
+                                    <div class="icon"><i class="icon-layers"></i></div>
+                                    <div class="text">Coupon</div>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
