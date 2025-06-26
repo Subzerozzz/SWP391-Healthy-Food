@@ -158,7 +158,7 @@
 .feedback-table th:nth-child(5), td:nth-child(5) { width: 150px; }    /* Customer */
 .feedback-table th:nth-child(6), td:nth-child(6) { width: 100px; text-align: center; }
 .feedback-table th:nth-child(7), td:nth-child(7) { width: 140px; }
-.feedback-table th:nth-child(8), td:nth-child(8) { width: 80px; text-align: center; }
+.feedback-table th:nth-child(8), td:nth-child(8) { width: 100px; text-align: center; }
 
 /* Action */
 .action-group {
@@ -351,7 +351,51 @@ main {
 .pagination-wrapper ul li a i {
   font-size: 14px;
 }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  vertical-align: middle;
+}
 
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
         </style>
 </head>   
 
@@ -499,9 +543,18 @@ value="${search}"/>
           <c:set var="food" value="${FoodMap[feedback.order_item_id]}" />
           <tr>
             <td>${feedback.id}</td>
-            <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=food&food_id=${food.id}">
+<!--            <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=food&food_id=${food.id}">
                 ${food.name}
-            </a></td>
+            </a></td>-->
+                <td>
+                    <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
+                        <input type="hidden" name="action" value="food" />
+                        <input type="hidden" name="food_id" value="${food.id}" />
+                        <button type="submit" style="all: unset; color: blue; text-decoration: underline; cursor: pointer;">
+                            ${food.name}
+                        </button>
+                    </form>
+                </td>
             <td>
                 <c:forEach begin="1" end="${feedback.rating}">
                     <i class="fa-solid fa-star"></i>
@@ -517,9 +570,18 @@ value="${search}"/>
                 </c:otherwise>
               </c:choose>
             </td>
-                <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=account&account_id=${account.id}">
+<!--                <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=account&account_id=${account.id}">
                         ${account.user_name}
-                    </a></td>
+                    </a></td>-->
+                        <td>
+                            <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
+                                <input type="hidden" name="action" value="account" />
+                                <input type="hidden" name="account_id" value="${account.id}" />
+                                <button type="submit" style="all:unset; color:blue; text-decoration:underline; cursor:pointer;">
+                                    ${account.user_name}
+                                </button>
+                            </form>
+                        </td>
             <td>
                 <span class="status-badge ${feedback.visible ? 'active' : 'inactive'}">
                     ${feedback.visible ? 'Active' : 'Inactive'}
@@ -530,15 +592,20 @@ value="${search}"/>
             </td>
                 <td>
                   <div class="action-group">
-                      <a class="item view" href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail">
+                      <a  class="item view" href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail">
                           <i class="fa-solid fa-eye"></i>
                       </a>
                       <c:choose>
                           <c:when test="${feedback.visible}">
-                        <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
+<!--                        <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
                           <i class="fa-solid fa-xmark"></i>
-                        </a>
-                          </c:when>
+                        </a>-->
+
+  <label class="switch">
+  <input type="checkbox" onchange="handleReject(event, 1)" checked>
+  <span class="slider"></span>
+</label>
+                   </c:when>
                       </c:choose>
                       
                   </div>
@@ -629,7 +696,7 @@ value="${search}"/>
                 </div>
             </div>
         </div>
-
+    
     
     <!-- /order-detail -->
 </div>
@@ -697,7 +764,7 @@ value="${search}"/>
     </script>
     <% session.removeAttribute("isError"); %>
 </c:if>
- <script>
+<!-- <script>
      function handleReject(event) {
     event.preventDefault();
 
@@ -725,8 +792,33 @@ value="${search}"/>
         }
     });
 }
- </script>
+ </script>-->
+<script>
+    function handleReject(event, feedbackId) {
+  const checkbox = event.target;
+  event.preventDefault();
 
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'This feedback will be hidden.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Hide',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = `${window.location.pathname}?action=hidden&feedbackId=${feedbackId}`;
+    } else {
+      checkbox.checked = true; // rollback nếu cancel
+    }
+  });
+}
+
+</script>
+<script>
+    document.getElementById("myForm").submit();
+</script>
 </body>
 
 </html>
