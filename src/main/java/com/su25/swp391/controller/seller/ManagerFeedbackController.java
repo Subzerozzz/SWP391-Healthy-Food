@@ -214,7 +214,7 @@ public class ManagerFeedbackController extends HttpServlet {
     private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedback feedbackHidden = feedbackDAO.findById(feedbackId);
+        Feedback feedbackHidden = feedbackDAO.findById(feedbackId); 
         if(feedbackHidden == null){
           session.setAttribute("isError", true);
           response.sendRedirect(request.getContextPath()+"/seller/manage-feedback");
