@@ -34,6 +34,7 @@ public class ManagerFeedbackController extends HttpServlet {
     private FeedbackDAO feedbackDAO;
     private AccountDAO accDAO;
     private FoodDAO foodDAO;
+
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
@@ -94,19 +95,16 @@ public class ManagerFeedbackController extends HttpServlet {
                     listFeedbacks(request, response);
             }
         } catch (Exception ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+   
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
+
      /**
      * Get a list Feedback by sort and filter without search if search == null and empty
      * Get total number feedback by sort and filter without search if search == null and empty
@@ -119,7 +117,7 @@ public class ManagerFeedbackController extends HttpServlet {
      * Get FoodMap by food_id in table OrderItem , get OrderItem by order_item_in in table feedback
      * Get list Food Name by table Food 
      */
-     private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // get Parameter sort by id
         String sort = request.getParameter("sort");
         // Pagination
