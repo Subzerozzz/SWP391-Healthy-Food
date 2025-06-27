@@ -1493,7 +1493,7 @@ Inner Banner Area
   overflow: hidden;
   position: relative;
   z-index: 1;
-  transform: translateY(-50px);
+  
 }
 .inner-banner-area::before {
   content: "";
