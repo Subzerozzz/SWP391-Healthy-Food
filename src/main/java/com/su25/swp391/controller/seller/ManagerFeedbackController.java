@@ -124,7 +124,8 @@ public class ManagerFeedbackController extends HttpServlet {
         String rating = request.getParameter("rating");
         // Get search by name, email
         String search = request.getParameter("search");
-       
+       // get Parameter sort by id 
+        String sort = request.getParameter("sort");
         // Pagination
         int page = 1;
         int pageSize = 10;
@@ -143,11 +144,11 @@ public class ManagerFeedbackController extends HttpServlet {
 
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and rating
-            feedbacks = feedbackDAO.searchFeedback(search, rating,selectFood, page, pageSize);
+            feedbacks = feedbackDAO.searchFeedback(search, rating,selectFood, sort, page, pageSize);
             totalFeedback = feedbackDAO.getTotalFeedbackResults(search, rating,selectFood);
         } else {
             // If no search, use filters
-            feedbacks = feedbackDAO.findFeedbackWithFilters(rating,selectFood, page, pageSize);
+            feedbacks = feedbackDAO.findFeedbackWithFilters(rating,selectFood,sort, page, pageSize);
             // count order
             totalFeedback = feedbackDAO.getTotalFilteredFeedback(rating,selectFood);
         }
@@ -173,11 +174,13 @@ public class ManagerFeedbackController extends HttpServlet {
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("rating", rating);
         request.setAttribute("search", search);
+        request.setAttribute("sort",sort);
         request.setAttribute("selectFood",selectFood);
         request.setAttribute("feedbacks", feedbacks);
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
         request.setAttribute("lFood",lFood);
+        
         PrintWriter o = response.getWriter();
         o.print(feedbacks);
         o.print(AccountMap);

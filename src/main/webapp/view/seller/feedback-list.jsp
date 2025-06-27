@@ -152,7 +152,7 @@
 }
 
 /* ===== Cố định chiều rộng hợp lý cho từng cột ===== */
-.feedback-table th:nth-child(1), td:nth-child(1) { width: 50px; }     /* ID */
+.feedback-table th:nth-child(1), td:nth-child(1) { width: 70px; }     /* ID */
 .feedback-table th:nth-child(2), td:nth-child(2) { width: 120px; }    /* Food */
 .feedback-table th:nth-child(3), td:nth-child(3) { width: 130px; }    /* Rating */
 .feedback-table th:nth-child(5), td:nth-child(5) { width: 150px; }    /* Customer */
@@ -462,12 +462,20 @@ input:checked + .slider::before {
 <div class="card mt-24">
 <div class="card-header">
 <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="GET">
+   
+    
 <!-- Thêm class filter-row -->
 <div class="filter-row">
+     <!--Sort by id-->
+     <select style="width:100px" name="sort"  class="form-select">
+        <option value="" ${param.sort == '' ? 'selected' : ''}>Sort ID</option> 
+        <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Increase</option>
+        <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Decrease</option>
+    </select>
     <!-- Select Status -->
     <!--select by Food-->
     <select name="selectFood"  class="form-select">
-        <option value="-1" ${param.selectFood == '-1' ? 'selected' : ''}>All Foods</option> 
+        <option value="" ${param.selectFood == '-1' ? 'selected' : ''}>All Foods</option> 
         <c:forEach items="${lFood}" var="f">
             <option value="${f}" ${param.selectFood == f ? 'selected':''}>${f}</option> 
         </c:forEach>
@@ -476,7 +484,7 @@ input:checked + .slider::before {
     
     <!--select by reating-->
     <select name="rating"  class="form-select">
-<option value="-1" ${param.rating == -1 ? 'selected' : ''}>ALL RATING </option>       
+<option value="" ${param.rating == '' ? 'selected' : ''}>ALL RATING </option>       
 <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
 <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
 <option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
@@ -502,7 +510,9 @@ value="${search}"/>
     <table class="table table-hover feedback-table">
       <thead>
         <tr>
-          <th>ID</th>
+         <th>
+         ID
+         </th>
           <th>Food</th>
           <th>Rating</th>
           <th>Content</th>
@@ -543,14 +553,11 @@ value="${search}"/>
           <c:set var="food" value="${FoodMap[feedback.order_item_id]}" />
           <tr>
             <td>${feedback.id}</td>
-<!--            <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=food&food_id=${food.id}">
-                ${food.name}
-            </a></td>-->
-                <td>
+   <td>
                     <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
                         <input type="hidden" name="action" value="food" />
                         <input type="hidden" name="food_id" value="${food.id}" />
-                        <button type="submit" style="all: unset; color: blue; text-decoration: underline; cursor: pointer;">
+                        <button type="submit" style="all: unset; color: blue; text-decoration: none; cursor: pointer;">
                             ${food.name}
                         </button>
                     </form>
@@ -570,14 +577,11 @@ value="${search}"/>
                 </c:otherwise>
               </c:choose>
             </td>
-<!--                <td><a href="${pageContext.request.contextPath}/seller/manage-feedback?action=account&account_id=${account.id}">
-                        ${account.user_name}
-                    </a></td>-->
                         <td>
                             <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
                                 <input type="hidden" name="action" value="account" />
                                 <input type="hidden" name="account_id" value="${account.id}" />
-                                <button type="submit" style="all:unset; color:blue; text-decoration:underline; cursor:pointer;">
+                                <button type="submit" style="all:unset; color:blue; text-decoration:none; cursor:pointer;">
                                     ${account.user_name}
                                 </button>
                             </form>
@@ -597,9 +601,7 @@ value="${search}"/>
                       </a>
                       <c:choose>
                           <c:when test="${feedback.visible}">
-<!--                        <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
-                          <i class="fa-solid fa-xmark"></i>
-                        </a>-->
+
                            <label class="switch">
                                   <input type="checkbox" onChange="handleReject(event, ${feedback.id})" checked>
                                       <span class="slider"></span>
@@ -621,21 +623,21 @@ value="${search}"/>
 <ul class="wg-pagination">
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1&rating=${rating}&search=${search}&selectFood=${selectFood}"><i class="icon-chevron-left"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=1&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}"><i class="icon-chevron-left"></i></a>
 </li>
 <c:choose>
     <c:when test="${currentPage <= totalPages - 2}">
         <c:if test="${currentPage > 1}">
                 <li class="">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage - 1}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage - 1}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}">${currentPage - 1}</a>
             </li>
         </c:if>
         <li class="active">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}">${currentPage}</a>
         </li>
 
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}&rating=${rating}&search=${search}&selectFood=${selectFood}">${currentPage + 1}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${currentPage + 1}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}">${currentPage + 1}</a>
         </li>
 
         <c:if test="${currentPage < totalPages - 2}">
@@ -646,21 +648,21 @@ value="${search}"/>
 
 
         <li class="">
-            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}">${totalPages}</a>
+            <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}">${totalPages}</a>
         </li>
     </c:when>
 
     <c:otherwise>
         <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
             <li class="${currentPage == i ? 'active' : ''}">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}&rating=${rating}&search=${search}&selectFood=${selectFood}">${i}</a>
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${i}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}">${i}</a>
             </li>
         </c:forEach>
     </c:otherwise>
 </c:choose>
 
 <li>
-<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}"><i class="icon-chevron-right"></i></a>
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?page=${totalPages}&rating=${rating}&search=${search}&selectFood=${selectFood}&sort=${sort}"><i class="icon-chevron-right"></i></a>
 </li>
 </ul>
 
