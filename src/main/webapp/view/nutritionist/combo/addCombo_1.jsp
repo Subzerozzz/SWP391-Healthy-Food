@@ -10,6 +10,7 @@
 
     <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
     <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -77,7 +78,7 @@
                                                                                                     </div>
                                                                                                     <div class="card">
                                                                                                         <div class="card-body p-24">
-                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=add" method="post" enctype="multipart/form-data">
+                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=add" method="post" >
                                                                                                             <c:if test="${not empty sessionScope.errors}">
                                                                                                                 <div class="alert alert-danger">
                                                                                                                     <ul class="mb-0">
@@ -121,13 +122,13 @@
                                                                                                             <!-- Product Selection Section -->
                                                                                                             <div class="card border-info mt-4 mb-4">
                                                                                                                 <div class="card-header bg-info text-white">
-                                                                                                                    <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Products for Combo</h6>
+                                                                                                                    <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Food for Combo</h6>
                                                                                                                 </div>
                                                                                                                 <div class="card-body">
-                                                                                                                    <div class="product-selection-container">
-                                                                                                                        <div class="product-selection-row row mb-3">
+                                                                                                                    <div class="food-selection-container">
+                                                                                                                        <div class="food-selection-row row mb-3">
                                                                                                                             <div class="col-md-8">
-                                                                                                                                <select class="form-control product-select" required>
+                                                                                                                                <select class="form-control food-select" required>
                                                                                                                                     <option value="">Choose a food</option>
                                                                                                                                     <c:forEach items="${foods}" var="food">
                                                                                                                                         <option value="${food.id}" data-price="${food.price}">
@@ -137,10 +138,10 @@
                                                                                                                                 </select>
                                                                                                                             </div>
                                                                                                                             <div class="col-md-2">
-                                                                                                                                <input type="number" class="form-control product-quantity" value="1" min="1" required>
+                                                                                                                                <input type="number" class="form-control food-quantity" value="1" min="1" required>
                                                                                                                             </div>
                                                                                                                             <div class="col-md-2">
-                                                                                                                                <button type="button" class="btn btn-danger remove-product" disabled>
+                                                                                                                                <button type="button" class="btn btn-danger remove-food" disabled>
                                                                                                                                     <i class="fas fa-trash"></i>
                                                                                                                                 </button>
                                                                                                                             </div>
@@ -149,7 +150,7 @@
 
                                                                                                                     <div class="row mt-3">
                                                                                                                         <div class="col-12">
-                                                                                                                            <button type="button" class="btn btn-success add-product">
+                                                                                                                            <button type="button" class="btn btn-success add-food">
                                                                                                                                 <i class="fas fa-plus"></i> Add Food
                                                                                                                             </button>
                                                                                                                         </div>
@@ -158,103 +159,124 @@
                                                                                                             </div>
 
                                                                                                             <!-- Hidden inputs for form submission -->
-                                                                                                            <input type="hidden" id="foodIdInput" name="foodId">
-                                                                                                                <input type="hidden" id="quantitieInput" name="quantities">
-
-                                                                                                                    <!-- Price Summary -->
-                                                                                                                    <div class="row mt-4">
-                                                                                                                        <div class="col-md-6 offset-md-6">
-                                                                                                                            <div class="table-responsive">
-                                                                                                                                <table class="table table-bordered mb-0">
-                                                                                                                                    <tr>
-                                                                                                                                        <th>Original Total Price:</th>
-                                                                                                                                        <td>
-                                                                                                                                            <span id="original-price-display">0</span>đ
-                                                                                                                                            <input type="hidden" id="originalPrice" name="originalPrice" value="0">
-                                                                                                                                        </td>
-                                                                                                                                    </tr>
-                                                                                                                                    <tr>
-                                                                                                                                        <th>Discounted Price: <span class="text-danger">*</span></th>
-                                                                                                                                        <td>
-                                                                                                                                            <input type="number" class="form-control" id="discountPrice"
-                                                                                                                                                   name="discountPrice" min="0" required>
-                                                                                                                                        </td>
-                                                                                                                                    </tr>
-                                                                                                                                    <tr>
-                                                                                                                                        <th>Savings:</th>
-                                                                                                                                        <td><span id="savings-display">0</span>đ</td>
-                                                                                                                                    </tr>
-                                                                                                                                </table>
+                                                                                                            <input type="hidden" id="foodIdsInput" name="foodIds">
+                                                                                                                <input type="hidden" id="quantitiesInput" name="quantities">
+                                                                                                                    <input type="hidden" id="originalPrice" name="originalPrice" value="0">    
+                                                                                                                        <!-- Price Summary -->
+                                                                                                                        <div class="row mt-4">
+                                                                                                                            <div class="col-md-6 offset-md-6">
+                                                                                                                                <div class="table-responsive">
+                                                                                                                                    <table class="table table-bordered mb-0">
+                                                                                                                                        <tr>
+                                                                                                                                            <th>Original Total Price:</th>
+                                                                                                                                            <td>
+                                                                                                                                                <span id="original-price-display">0</span>đ
+                                                                                                                                                <input type="hidden" id="originalPrice" name="originalPrice" value="0">
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr>
+                                                                                                                                            <th>Discounted Price: <span class="text-danger">*</span></th>
+                                                                                                                                            <td>
+                                                                                                                                                <input type="number" class="form-control" id="discountPrice"
+                                                                                                                                                       name="discountPrice" min="0" required>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr>
+                                                                                                                                            <th>Savings:</th>
+                                                                                                                                            <td><span id="savings-display">0</span>đ</td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </div>
                                                                                                                             </div>
                                                                                                                         </div>
-                                                                                                                    </div>
 
-                                                                                                                    <!-- Add Submit Button -->
-                                                                                                                    <div class="row mt-4">
-                                                                                                                        <div class="col-12 text-end">
-                                                                                                                            <button type="submit" class="btn btn-primary">
-                                                                                                                                <i class="fas fa-save me-2"></i>Create Combo
-                                                                                                                            </button>
-                                                                                                                            <a href="${pageContext.request.contextPath}/managerCombo" class="btn btn-secondary ms-2">
-                                                                                                                                <i class="fas fa-times me-2"></i>Cancel
-                                                                                                                            </a>
+                                                                                                                        <!-- Add Submit Button -->
+                                                                                                                        <div class="row mt-4">
+                                                                                                                            <div class="col-12 text-end">
+                                                                                                                                <button type="submit" class="btn btn-primary">
+                                                                                                                                    <i class="fas fa-save me-2"></i>Create Combo
+                                                                                                                                </button>
+                                                                                                                                <a href="${pageContext.request.contextPath}/managerCombo" class="btn btn-secondary ms-2">
+                                                                                                                                    <i class="fas fa-times me-2"></i>Cancel
+                                                                                                                                </a>
+                                                                                                                            </div>
                                                                                                                         </div>
-                                                                                                                    </div>
-                                                                                                                    </form>
-                                                                                                                                
-<!-- Combo Product Manager -->
-        <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var comboForm = document.getElementById('comboForm');
-            if(comboForm) {
-                comboForm.addEventListener('submit', function(e) {
-                    var nameInput = document.getElementById('name');
-                    var nameValue = nameInput.value;
-                    var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
-                    if(!regex.test(nameValue)) {
-                        alert('Combo name cannot contain special characters!');
-                        nameInput.focus();
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-            }
-        });
-        </script>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </section>
-                                                                                                                    </div>
-                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                    <!-- bottom-page -->
-                                                                                                                    
-                                                                                                                    <!-- /bottom-page -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /main-content -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /section-content-right -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /layout-wrap -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /#page -->
-                                                                                                                    </div>
-                                                                                                                    <!-- /#wrapper -->
+                                                                                                                        </form>
 
-                                                                                                                    <!-- Javascript -->
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                                                                    <script src="${pageContext.request.contextPath}/js/main.js"></script>
-                                                                                                                    
-                                                                                                                    </body>
+                                                                                                                        <!-- Combo Product Manager -->
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
+                                                                                                                        <script>
+                                                                                                                            document.addEventListener('DOMContentLoaded', function () {
+                                                                                                                                // Validate form name
+                                                                                                                                var comboForm = document.getElementById('comboForm');
+                                                                                                                                if (comboForm) {
+                                                                                                                                    comboForm.addEventListener('submit', function (e) {
+                                                                                                                                        var nameInput = document.getElementById('name');
+                                                                                                                                        var nameValue = nameInput.value;
+                                                                                                                                        var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
+                                                                                                                                        if (!regex.test(nameValue)) {
+                                                                                                                                            alert('Combo name cannot contain special characters!');
+                                                                                                                                            nameInput.focus();
+                                                                                                                                            e.preventDefault();
+                                                                                                                                            return false;
+                                                                                                                                        }
+                                                                                                                                    });
+                                                                                                                                }
 
+                                                                                                                                // Handle add food
+                                                                                                                                const addFoodBtn = document.querySelector('.add-food');
+                                                                                                                                console.log("Add food Button:", addFoodBtn);
 
-                                                                                                                    <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
-                                                                                                                    </html>
+                                                                                                                                if (addFoodBtn) {
+                                                                                                                                    addFoodBtn.addEventListener('click', function () {
+                                                                                                                                        console.log('Add food clicked');
+                                                                                                                                        // Thêm logic thêm dòng sản phẩm ở đây
+                                                                                                                                    });
+                                                                                                                                } else {
+                                                                                                                                    console.warn("Add food button not found!");
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                        </script>
+                                                                                                                        </div>
+                                                                                                                        </div>
+                                                                                                                        </div>
+                                                                                                                        </section>
+                                                                                                                        </div>
+                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                        <!-- bottom-page -->
+
+                                                                                                                        <!-- /bottom-page -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /main-content -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /section-content-right -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /layout-wrap -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /#page -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /#wrapper -->
+
+                                                                                                                        <!-- Javascript -->
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
+                                                                                                                        <!-- jQuery -->
+                                                                                                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                                                                                                                        <!-- Gọi sau khi jQuery + Select2 sẵn -->
+
+                                                                                                                        </body>
+                                                                                                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                        
+                                                                                                                        <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+                                                                                                                        </html>

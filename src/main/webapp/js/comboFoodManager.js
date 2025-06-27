@@ -1,114 +1,232 @@
-// comboProductManager.js sau khi chỉnh thêm console log hỗ trợ debug
-
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize the form
+    initComboForm();
+    
+    // Initialize the first food row
+    initFirstFoodRow();
+    
+    // Set up event listeners
+    setupEventListeners();
+});
 
-    // Initialize Select2 for all product selects
-    initializeSelect2();
-
-    // Handle adding new product
-    const addProductBtn = document.querySelector('.add-product');
-    console.log('Add Product Button:', addProductBtn);
-
-    if (addProductBtn) {
-        addProductBtn.addEventListener('click', function () {
-            console.log('Add Product button clicked');
-            addNewProductRow();
+function initComboForm() {
+    const comboForm = document.getElementById('comboForm');
+    if (comboForm) {
+        comboForm.addEventListener('submit', function (e) {
+            // Validate combo name
+            const nameInput = document.getElementById('name');
+            const nameValue = nameInput.value.trim();
+            const nameRegex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
+            
+            if (!nameRegex.test(nameValue)) {
+                alert('Combo name cannot contain special characters!');
+                nameInput.focus();
+                e.preventDefault();
+                return false;
+            }
+            
+            // Validate at least one food is selected
+            if (!validateAtLeastOneFood()) {
+                alert('Please select at least one food item for the combo');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Validate discount price
+            if (!validateDiscountPrice()) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Update hidden inputs before submission
+            updateHiddenInputs();
         });
-    } else {
-        console.error('Add Product button not found!');
     }
+    
+    // Initialize discount price validation
+    const discountPriceInput = document.getElementById('discountPrice');
+    if (discountPriceInput) {
+        discountPriceInput.addEventListener('change', updateSavings);
+        discountPriceInput.addEventListener('input', updateSavings);
+    }
+}
 
-    // Handle product removal
-    document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-product') || e.target.closest('.remove-product')) {
-            console.log('Remove Product clicked');
-            const button = e.target.classList.contains('remove-product') ? e.target : e.target.closest('.remove-product');
+function initFirstFoodRow() {
+    const firstRow = document.querySelector('.food-selection-row');
+    if (firstRow) {
+        const removeBtn = firstRow.querySelector('.remove-food');
+        if (removeBtn) removeBtn.disabled = true;
+    }
+}
+
+function setupEventListeners() {
+    // Add food button
+    const addFoodBtn = document.querySelector('.add-food');
+    if (addFoodBtn) {
+        addFoodBtn.addEventListener('click', addNewFoodRow);
+    }
+    
+    // Delegated event listeners for dynamic elements
+    document.addEventListener('click', function(e) {
+        // Remove food button
+        if (e.target.closest('.remove-food')) {
+            const button = e.target.closest('.remove-food');
             if (!button.disabled) {
-                removeProductRow(button);
-            } else {
-                console.warn('Remove button is disabled');
+                removeFoodRow(button);
             }
         }
     });
-
-    // Update price when product or quantity changes
-    document.addEventListener('change', function (e) {
-        if (e.target.classList.contains('product-select') || e.target.classList.contains('product-quantity')) {
-            console.log('Product or quantity changed:', e.target.value);
+    
+    // Handle changes in food selection or quantity
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('food-select') || 
+            e.target.classList.contains('food-quantity')) {
             updateTotalPrice();
         }
     });
-});
-
-function initializeSelect2() {
-
-    const selects = $('.product-select');
-
-    // selects.select2({
-    //     theme: 'bootstrap4',
-    //     placeholder: 'Choose a product',
-    //     allowClear: true
-    // });
 }
 
-function addNewProductRow() {
-    console.log('Adding new product row');
-    const container = document.querySelector('.product-selection-container');
-    console.log('Container:', container);
-
-    if (!container) {
-        console.error('No .product-selection-container found!');
-        return;
-    }
-
-    const firstRow = container.querySelector('.product-selection-row');
-    console.log('First row:', firstRow);
-
-    if (!firstRow) {
-        console.error('No .product-selection-row found inside container!');
-        return;
-    }
-
+function addNewFoodRow() {
+    const container = document.querySelector('.food-selection-container');
+    if (!container) return;
+    
+    // Get the first row as template
+    const firstRow = container.querySelector('.food-selection-row');
+    if (!firstRow) return;
+    
+    // Clone the row
     const newRow = firstRow.cloneNode(true);
-    console.log('Cloned new row:', newRow);
-
+    
     // Reset values
-    const select = newRow.querySelector('.product-select');
-    if (!select) {
-        console.error('No .product-select found in the new row!');
-        return;
-    }
-
-    select.value = '';
-    select.innerHTML = firstRow.querySelector('.product-select').innerHTML;
-
-    const quantityInput = newRow.querySelector('.product-quantity');
-    if (!quantityInput) {
-        console.error('No .product-quantity found in the new row!');
-        return;
-    }
-
-    quantityInput.value = 1;
-
-    const removeButton = newRow.querySelector('.remove-product');
-    if (removeButton) {
-        removeButton.disabled = false;
-    } else {
-        console.error('No .remove-product button found in the new row!');
-    }
-
+    const select = newRow.querySelector('.food-select');
+    const quantityInput = newRow.querySelector('.food-quantity');
+    const removeButton = newRow.querySelector('.remove-food');
+    
+    if (select) select.value = '';
+    if (quantityInput) quantityInput.value = 1;
+    if (removeButton) removeButton.disabled = false;
+    
     // Add to container
     container.appendChild(newRow);
-    console.log('New row added to container');
-
-    // Reinitialize Select2 for the new select
-    console.log('Reinitializing Select2 for the new select');
-    $(select).select2({
-        theme: 'bootstrap4',
-        placeholder: 'Choose a product',
-        allowClear: true
-    });
-
-    updateTotalPrice();
+    
+    // Initialize Select2 if needed
+    if (select && typeof $.fn.select2 === 'function') {
+        $(select).select2({
+            theme: 'bootstrap4',
+            placeholder: 'Choose a food',
+            allowClear: true
+        });
+    }
+    
+    // Enable remove buttons if needed
+    updateRemoveButtons();
 }
 
+function removeFoodRow(button) {
+    const row = button.closest('.food-selection-row');
+    if (row) {
+        row.remove();
+        updateTotalPrice();
+        updateRemoveButtons();
+    }
+}
+
+function updateTotalPrice() {
+    let totalPrice = 0;
+    const rows = document.querySelectorAll('.food-selection-row');
+    
+    rows.forEach(row => {
+        const select = row.querySelector('.food-select');
+        const quantityInput = row.querySelector('.food-quantity');
+        
+        if (select && select.value && quantityInput) {
+            const selectedOption = select.options[select.selectedIndex];
+            const price = parseFloat(selectedOption.dataset.price) || 0;
+            const quantity = parseInt(quantityInput.value) || 0;
+            
+            totalPrice += price * quantity;
+        }
+    });
+    
+    // Update display and hidden input
+    const priceDisplay = document.getElementById('original-price-display');
+    const priceInput = document.getElementById('originalPrice');
+    
+    if (priceDisplay) {
+        priceDisplay.textContent = totalPrice.toLocaleString('vi-VN');
+    }
+    
+    if (priceInput) {
+        priceInput.value = totalPrice;
+    }
+    
+    // Update savings
+    updateSavings();
+}
+
+function updateSavings() {
+    const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+    const discountPrice = parseFloat(document.getElementById('discountPrice').value) || 0;
+    const savings = originalPrice - discountPrice;
+    
+    const savingsDisplay = document.getElementById('savings-display');
+    if (savingsDisplay) {
+        savingsDisplay.textContent = savings >= 0 ? savings.toLocaleString('vi-VN') : '0';
+    }
+}
+
+function validateAtLeastOneFood() {
+    const rows = document.querySelectorAll('.food-selection-row');
+    for (let row of rows) {
+        const select = row.querySelector('.food-select');
+        if (select && select.value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function validateDiscountPrice() {
+    const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+    const discountPrice = parseFloat(document.getElementById('discountPrice').value) || 0;
+    
+    if (discountPrice <= 0) {
+        alert('Discount price must be greater than 0');
+        return false;
+    }
+    
+    if (discountPrice >= originalPrice) {
+        alert('Discount price must be less than original price');
+        return false;
+    }
+    
+    return true;
+}
+
+function updateHiddenInputs() {
+    const foodIds = [];
+    const quantities = [];
+    
+    document.querySelectorAll('.food-selection-row').forEach(row => {
+        const select = row.querySelector('.food-select');
+        const quantityInput = row.querySelector('.food-quantity');
+        
+        if (select && select.value && quantityInput) {
+            foodIds.push(select.value);
+            quantities.push(quantityInput.value);
+        }
+    });
+    
+    document.getElementById('foodIdInput').value = foodIds.join(',');
+    document.getElementById('quantitiesInput').value = quantities.join(',');
+}
+
+function updateRemoveButtons() {
+    const rows = document.querySelectorAll('.food-selection-row');
+    rows.forEach((row, index) => {
+        const removeBtn = row.querySelector('.remove-food');
+        if (removeBtn) {
+            removeBtn.disabled = rows.length <= 1;
+        }
+    });
+}
