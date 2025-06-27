@@ -37,7 +37,7 @@
     <!-- Font -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
     <!-- Icon -->
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
 
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="images/favicon.png">

@@ -1,123 +1,128 @@
-<%-- 
-    Document   : viewCoupon
-    Created on : Jun 15, 2025
-    Author     : Predator
---%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<html lang="zxx">
+    
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
 <head>
-    <!-- Basic Page Needs -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!-- Required Meta Tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Theme Style -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animate.min_1.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/animation.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap-select.min.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style_1.css">
+        <!--=== Link of CSS Files ===--> 
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/flaticon.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/boxicons.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/owl.theme.default.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nice-select.min.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/meanmenu.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/theme-dark.css">
 
-    <!-- Font -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/font/fonts.css">
-    <!-- Icon -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/icon/style.css">
+        <!--=== Title & Favicon ===-->
+        <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
+        <style>
+            .coupon-card {
+                border: 2px dashed #ffcc99;
+                padding: 20px;
+                margin-bottom: 30px;
+                border-radius: 8px;
+                background-color: #fff;
+                transition: all 0.3s ease;
+                overflow-wrap: break-word;   /* Ngắt từ dài */
+                word-wrap: break-word;
+                word-break: break-word;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
 
-    <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon" href="images/favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
+            .coupon-card:hover {
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
 
-    <style>
-        .coupon-card {
-            border: 2px dashed #ffcc99;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            background-color: #fff;
-            transition: all 0.3s ease;
-        }
+            .coupon-header {
+                border-bottom: 1px solid #eee;
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
 
-        .coupon-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
+            .coupon-code {
+                font-size: 24px;
+                font-weight: bold;
+                color: #80b435;
+                letter-spacing: 2px;
+                word-wrap: break-word;
+                word-break: break-word;
+                white-space: normal;
+            }
 
-        .coupon-header {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
+            .coupon-description {
+                color: #666;
+                margin: 10px 0;
+                min-height: 60px;
+                font-size: 15px;
+                overflow-wrap: break-word;
+                word-break: break-word;
+                white-space: normal;
+                max-height: 150px;         /* Nếu mô tả quá dài, sẽ scroll */
+                overflow-y: auto;
+            }
 
-        .coupon-code {
-            font-size: 24px;
-            font-weight: bold;
-            color: #80b435;
-            letter-spacing: 2px;
+            .coupon-details {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+                font-size: 14px;
+                color: #888;
+            }
 
-            word-wrap: break-word;   /* Cho phép xuống dòng nếu từ dài quá */
-            word-break: break-all;   /* Bắt buộc xuống dòng nếu quá dài */
-            white-space: normal;     /* Cho phép xuống dòng (mặc định là nowrap) */
-        }
+            .coupon-value {
+                font-size: 20px;
+                color: #e83e8c;
+                font-weight: bold;
+            }
 
-        .coupon-description {
-            color: #666;
-            margin: 10px 0;
-            min-height: 60px;
-            font-size: 15px; /* 👈 tăng kích thước chữ lên một chút */
-        }
+            .coupon-dates {
+                font-size: 12px;
+                color: #999;
+                margin-top: 10px;
+            }
 
-        .coupon-details {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #888;
-        }
+            .coupon-usage {
+                background-color: #f8f9fa;
+                padding: 8px;
+                border-radius: 4px;
+                margin-top: 10px;
+                font-size: 13px;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
 
-        .coupon-value {
-            font-size: 20px;
-            color: #e83e8c;
-            font-weight: bold;
-        }
+            .coupon-search {
+                margin-bottom: 30px;
+            }
 
-        .coupon-dates {
-            font-size: 12px;
-            color: #999;
-            margin-top: 10px;
-        }
+            .coupon-search .form-control {
+                border-radius: 4px 0 0 4px;
+                height: 45px;
+            }
 
-        .coupon-usage {
-            background-color: #f8f9fa;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 10px;
-            font-size: 13px;
-        }
+            .coupon-search .btn {
+                border-radius: 0 4px 4px 0;
+                background-color: #80b435;
+                color: white;
+                border-color: #80b435;
+            }
 
-        .coupon-search {
-            margin-bottom: 30px;
-        }
-
-        .coupon-search .form-control {
-            border-radius: 4px 0 0 4px;
-            height: 45px;
-        }
-
-        .coupon-search .btn {
-            border-radius: 0 4px 4px 0;
-            background-color: #80b435;
-            color: white;
-            border-color: #80b435;
-        }
-
-        .coupon-search .btn:hover {
-            background-color: #6a9a2d;
-            border-color: #6a9a2d;
-        }
-
+            .coupon-search .btn:hover {
+                background-color: #6a9a2d;
+                border-color: #6a9a2d;
+            }
         .pagination {
             margin-top: 30px;
             justify-content: center;
@@ -263,41 +268,56 @@
             .footer-wrap .bottom-page a:hover {
                 text-decoration: underline;
             }
-
+            .inner-banner-area {
+                background-color: #F2F1F7;
+                overflow: hidden;
+                position: relative;
+                z-index: 1;
+                transform: translateY(-50px) !important;
+}
     </style>
 
-    <title>View Coupon </title>
-</head>
-
-<body class="body">
-<div id="wrapper">
-    <div id="page" class="">
-        <div class="layout-wrap">
-            <!-- preload -->
-            <div id="preload" class="preload-container">
-                <div class="preloading">
-                    <span></span>
+    </head>
+    <body>
+        <!-- Pre Loader -->
+        <div class="preloader">
+            <div class="d-table">
+                <div class="d-table-cell">
+                    <img src="${pageContext.request.contextPath}/images/preloder-img.png" alt="Images">
+                    <h2>Hilo</h2>
                 </div>
             </div>
-            <!-- /preload -->
+        </div>
+        <!-- End Pre Loader -->
 
-            <!-- section-menu-left -->
-            <jsp:include page="../common/manager/sidebar.jsp"></jsp:include>
-            <!-- /section-menu-left -->
+        <!-- Start Navbar Area -->
+        <jsp:include page="../common/homePage/header.jsp"></jsp:include>    
+        <!-- End Navbar Area -->
+        <!-- Inner Banner Area -->
+         <!-- Inner Banner Area -->
+        <div class="inner-banner-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 col-md-5">
+                        <div class="inner-content">
+                            <h2>Coupon</h2>
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li>Coupon</li>
+                            </ul>
+                        </div>
+                    </div>
 
-            <!-- section-content-right -->
-            <div class="section-content-right">
-                <!-- header-dashboard -->
-                <jsp:include page="../common/manager/headerDashboard.jsp"></jsp:include> 
-                <!-- /header-dashboard -->
-                <!-- main-content -->
-                <div class="main-content">
-                    <div class="main-content-inner">
-                        <div class="main-content-wrap">
-                            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                <h3>Coupon</h3>
-                            </div>
-
+                    <div class="col-lg-7 col-md-7">
+                        <div class="inner-img">
+                            <img src="${pageContext.request.contextPath}/images/inner-banner/inner-banner6.png" alt="Images">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Inner Banner Area End -->
+        <!-- main-content -->
                             <div class="coupon-area white-bg pt-0 pb-0 mb-70">
                                 <div class="container">
                                     <div class="row">
@@ -435,23 +455,26 @@
                         </div> <!-- .main-content-wrap -->
                     </div> <!-- .main-content-inner -->
                 </div> <!-- .main-content -->
+        <!-- Product Area End -->
 
-                <div class="footer-wrap">
-                    <jsp:include page="../common/manager/footer.jsp"></jsp:include>
-                </div>
-            </div> <!-- .section-content-right -->
+        <!-- Footer Area -->
+        <jsp:include page="../common/homePage/footer.jsp"></jsp:include>
+        <!-- Footer Area End -->
 
-        </div> <!-- .layout-wrap -->
-    </div> <!-- #page -->
-</div> <!-- #wrapper -->
+        <!--=== Link of JS Files ===-->
+        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/jquery.nice-select.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/wow.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/meanmenu.js"></script>
+        <script src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/jquery.ajaxchimp.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/form-validator.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/contact-form-script.js"></script>
+        <script src="${pageContext.request.contextPath}/js/mixitup.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/custom.js"></script>
+    </body>
 
-<!-- Javascript -->
-<script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-<script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-<script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-<script src="${pageContext.request.contextPath}/js/main.js"></script>
-</body>
+<!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-left-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:15:18 GMT -->
 </html>
