@@ -105,7 +105,6 @@ public class OrderManage extends HttpServlet {
             //  Gọi hàm tính subtotal
             BigDecimal subtotal = calculateSubtotal(orderItemList, foodMap);
             request.setAttribute("subtotal", subtotal); // đưa xuống JSP
-            
 
             Order order = orderListDAO.findOrderById(orderId);
 
@@ -113,13 +112,13 @@ public class OrderManage extends HttpServlet {
                 request.setAttribute("order", order);
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
             } else {
-             //   response.sendRedirect(ORDER_LIST);
+                //   response.sendRedirect(ORDER_LIST);
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect(HOME_PAGE);
         }
-    
+
     }
 
     private void cancerOrderDoPost(HttpServletRequest request, HttpServletResponse response) {
@@ -141,7 +140,7 @@ public class OrderManage extends HttpServlet {
 
     private void orderPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         String search = request.getParameter("status");
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
@@ -149,13 +148,13 @@ public class OrderManage extends HttpServlet {
         String pageSizeParam = request.getParameter("pageSize");
         int currentPage = 1;
         int pageSize = 10;
-        
+
         //check tài khoản rỗng
         if (email == null && username == null) {
             response.sendRedirect(HOME_PAGE);
             return;
         }
-        
+
         // phân trang
         try {
             // khi page == null. Gán giá trị mặc định là 1
@@ -180,17 +179,17 @@ public class OrderManage extends HttpServlet {
             currentPage = 1;
             pageSize = 10;
         }
-        
+
         // tạo Account chứa các thuộc tính email, user_name trong bảng account
         Account acc = Account.builder()
                 .email(email)
                 .user_name(username)
                 .build();
-        
+
         //Dùng hàm DAO để tìm kiếm tai khoản đó có trong database hay k?
         Account accountFoundByEmail = accountDAO.findByEmail(acc);
         Account accountFoundByUsername = accountDAO.findByUsername(acc);
-        
+
         // nếu tồn tại 1 trong 2 điều kiện thì lập tức if đc thực thi
         if (accountFoundByEmail != null || accountFoundByUsername != null) {
             // nếu k tìm thấy id account bằng email sẽ chuyển qua tìm kiếm id account bằng user_name để gán giá trị cho biến userId
@@ -216,7 +215,7 @@ public class OrderManage extends HttpServlet {
             int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
             request.setAttribute("startRecord", startRecord);
             request.setAttribute("endRecord", endRecord);
-            
+
             // thực hiện xong hàm if sẽ trả về trang order list
             request.getRequestDispatcher(ORDER_LIST).forward(request, response);
         } else {

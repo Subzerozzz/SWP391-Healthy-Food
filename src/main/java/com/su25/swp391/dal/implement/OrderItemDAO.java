@@ -37,14 +37,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                OrderItem od = new OrderItem();
-                od.setOrder_item_id(resultSet.getInt("order_item_id"));
-                od.setOrder_id(resultSet.getInt("order_id"));
-                od.setFood_id(resultSet.getInt("food_id"));
-                od.setQuantity(resultSet.getInt("quantity"));
-                od.setPrice(resultSet.getBigDecimal("price"));
-                od.setCreated_at(resultSet.getTimestamp("created_at"));
-                od.setUpdated_at(resultSet.getTimestamp("updated_at"));
+                OrderItem od = getFromResultSet(resultSet);
                 orderDetails.add(od);
             }
 
@@ -53,7 +46,6 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
         } finally {
             closeResources();
         }
-
         return orderDetails;
     }
 
@@ -85,8 +77,16 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem>{
 
     @Override
     public OrderItem getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    return OrderItem.builder()
+            .order_item_id(resultSet.getInt("order_item_id"))
+            .order_id(resultSet.getInt("order_id"))
+            .food_id(resultSet.getInt("food_id"))
+            .quantity(resultSet.getInt("quantity"))
+            .price(resultSet.getBigDecimal("price"))
+            .created_at(resultSet.getTimestamp("created_at"))
+            .updated_at(resultSet.getTimestamp("updated_at"))
+            .build();
+}
 
     @Override
     public OrderItem findById(Integer id) {
