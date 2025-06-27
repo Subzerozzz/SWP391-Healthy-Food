@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package com.su25.swp391.controller.seller;
-
-import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.FeedbackDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
@@ -14,7 +12,6 @@ import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Feedback;
 import com.su25.swp391.entity.Food;
-import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,10 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- *
- * @author Admin
- */
+
 @WebServlet(name = "ManagerFeedbackController", urlPatterns = {"/seller/manage-feedback"})
 public class ManagerFeedbackController extends HttpServlet {
 
@@ -55,7 +49,7 @@ public class ManagerFeedbackController extends HttpServlet {
             throws ServletException, IOException {
         // Get action from submit
         String action = request.getParameter("action");
-
+        // if action = null assign list
         if (action == null) {
             action = "list";
         }
@@ -82,8 +76,6 @@ public class ManagerFeedbackController extends HttpServlet {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-//            session.setAttribute("errorMessage", "Đã xảy ra lỗi: " + ex.getMessage());
-            response.sendRedirect(request.getContextPath() + "/feedbackControl");
         }
     }
 
@@ -102,8 +94,7 @@ public class ManagerFeedbackController extends HttpServlet {
                     listFeedbacks(request, response);
             }
         } catch (Exception ex) {
-//            session.setAttribute("errorMessage", "Đã xảy ra lỗi: " + ex.getMessage());
-//            response.sendRedirect(request.getContextPath() + "/feedbackControl");
+           ex.printStackTrace();
         }
     }
 
@@ -116,17 +107,29 @@ public class ManagerFeedbackController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+     /**
+     * Get a list Feedback by sort and filter without search if search == null and empty
+     * Get total number feedback by sort and filter without search if search == null and empty
+     * Get a list Feedback by sort and filter and search if search != null and !empty
+     * Get  total number feedback by sort and filter and search if search != null and !empty
+     * Pagination with default page = 1 and page-size = 10
+     * Set list Feedback for feedback-list
+     * Set attribute: selectFood, rating, search, sort 
+     * Get AccountMap by user_id in table feedback
+     * Get FoodMap by food_id in table OrderItem , get OrderItem by order_item_in in table feedback
+     * Get list Food Name by table Food 
+     */
      private void listFeedbacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         //Get parameter by Food Name
+        // get Parameter sort by id
+        String sort = request.getParameter("sort");
+        // Pagination
+        //Get parameter by Food Name
         String selectFood = request.getParameter("selectFood");
-          // Get filter parameters  by Rating
+        // Get filter parameters  by Rating
         String rating = request.getParameter("rating");
         // Get search by name, email
         String search = request.getParameter("search");
-       // get Parameter sort by id 
-        String sort = request.getParameter("sort");
-        // Pagination
+
         int page = 1;
         int pageSize = 10;
         try {
@@ -138,118 +141,145 @@ public class ManagerFeedbackController extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             // Keep default value
-        }// Get orders with filters
+        }
+        // Create a feedback list default
         List<Feedback> feedbacks;
+        // Create a total feedback default
         int totalFeedback;
-
+        // check value input of search
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and rating
-            feedbacks = feedbackDAO.searchFeedback(search, rating,selectFood, sort, page, pageSize);
-            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, rating,selectFood);
+            feedbacks = feedbackDAO.searchFeedback(search, rating, selectFood, sort, page, pageSize);
+            totalFeedback = feedbackDAO.getTotalFeedbackResults(search, rating, selectFood);
         } else {
             // If no search, use filters
-            feedbacks = feedbackDAO.findFeedbackWithFilters(rating,selectFood,sort, page, pageSize);
-            // count order
-            totalFeedback = feedbackDAO.getTotalFilteredFeedback(rating,selectFood);
+            feedbacks = feedbackDAO.findFeedbackWithFilters(rating, selectFood, sort, page, pageSize);
+            // count feedback
+            totalFeedback = feedbackDAO.getTotalFilteredFeedback(rating, selectFood);
         }
         // Number of page can have
         int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
 
-        // get Account
+        // get Account by user_id in table feedback
         HashMap<Integer, Account> AccountMap = new HashMap<>();
         for (Feedback feedback : feedbacks) {
+            //Account by user_id in table feedback
             Account acc = accDAO.findById(feedback.getUser_id());
             AccountMap.put(feedback.getUser_id(), acc);
         }
-        // get Food
+        // get Food by food_id in table OrderItem
         HashMap<Integer, Food> FoodMap = new HashMap<>();
         for (Feedback feedback : feedbacks) {
+            // Get OrderItem by order_item_id in table Feedback
             OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
             Food food = foodDAO.findById(item.getFood_id());
             FoodMap.put(feedback.getOrder_item_id(), food);
         }
+        // get list Food Name in table Food
         List<String> lFood = foodDAO.findFoodNameList();
         // Set attributes
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("rating", rating);
         request.setAttribute("search", search);
-        request.setAttribute("sort",sort);
-        request.setAttribute("selectFood",selectFood);
+        request.setAttribute("sort", sort);
+        request.setAttribute("selectFood", selectFood);
         request.setAttribute("feedbacks", feedbacks);
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
-        request.setAttribute("lFood",lFood);
-        
-        PrintWriter o = response.getWriter();
-        o.print(feedbacks);
-        o.print(AccountMap);
-        o.print(FoodMap);
-        o.print(lFood);
-        o.print(rating);
+        request.setAttribute("lFood", lFood);
+        // Redirect to feedback-list.jsp
         request.getRequestDispatcher("/view/seller/feedback-list.jsp").forward(request, response);
     }
-
+    /**
+     * Get Detail of Feedback by id feedback
+     * Get AccountMap by user_id in table feedback
+     * Get FoodMap by food_id in table OrderItem , get OrderItem by order_item_in in table feedback
+    **/
     private void viewDetailFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get id feedback parameter
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
+        // Find feedback by feedbackId
         Feedback feedback = feedbackDAO.findById(feedbackId);
-        // get account
         HashMap<Integer, Account> AccountMap = new HashMap<>();
+        //Find Account by user_id in table feedback
         Account acc = accDAO.findById(feedback.getUser_id());
         AccountMap.put(feedback.getUser_id(), acc);
-
+        // get Food by food_id in table OrderItem
         HashMap<Integer, Food> FoodMap = new HashMap<>();
-
+        // Find OrderItem by order_item_id in table Feedback
         OrderItem item = itemDAO.findById(feedback.getOrder_item_id());
+        // Find Food by food_id in table OrderItem
         Food food = foodDAO.findById(item.getFood_id());
         FoodMap.put(feedback.getOrder_item_id(), food);
-
         request.setAttribute("feedback", feedback);
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("FoodMap", FoodMap);
-        PrintWriter o = response.getWriter();
-        o.print(feedback);
-        o.print(AccountMap);
-        o.print(FoodMap);
+        // Redirect to feedback-detail.jsp
         request.getRequestDispatcher("/view/seller/feedback-detail.jsp").forward(request, response);
     }
-
+    /**
+     * get feebbackId parameter and parse to int
+     * Find feedback by feedbackID
+     * Update is_visible
+    **/
     private void hiddenFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // declare HttpSession
         HttpSession session = request.getSession();
+        // get feebbackId parameter and parse to int
         int feedbackId = Integer.parseInt(request.getParameter("feedbackId"));
-        Feedback feedbackHidden = feedbackDAO.findById(feedbackId); 
-        if(feedbackHidden == null){
-          session.setAttribute("isError", true);
-          response.sendRedirect(request.getContextPath()+"/seller/manage-feedback");
-          return;
+        // Find feedback by feedbackID
+        Feedback feedbackHidden = feedbackDAO.findById(feedbackId);
+        // check feedback not exist and back to feedback list with notification error
+        if (feedbackHidden == null) {
+            session.setAttribute("isError", true);
+            response.sendRedirect(request.getContextPath() + "/seller/manage-feedback");
+            return;
         }
+        // Have  feedback and update is_visible make hidden feedback
         boolean isUpdateSuccess = feedbackDAO.update(feedbackHidden);
-        if(isUpdateSuccess){
-           session.setAttribute("isSuccess", true);
-        }else{
-           session.setAttribute("isError", true); 
+        // Check update success give notification
+        if (isUpdateSuccess) {
+            session.setAttribute("isSuccess", true);
+        } else {
+            // Check update not success give notification
+            session.setAttribute("isError", true);
         }
-        response.sendRedirect(request.getContextPath()+"/seller/manage-feedback");
+        // Redirect to list feedback
+        response.sendRedirect(request.getContextPath() + "/seller/manage-feedback");
     }
-
+    /**
+     * get account_id parameter and parse to int
+     * Find Account by account_id
+     * set Attribute account 
+    **/
     private void detailAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // get account_id parameter and parse to int
         int account_id = Integer.parseInt(request.getParameter("account_id"));
+        // Find Account by account_id
         Account acc = accDAO.findById(account_id);
-        request.setAttribute("account",acc);
+        request.setAttribute("account", acc);
+        // Redirect to view-feedback-account.jsp
         request.getRequestDispatcher("/view/seller/view-feedback-account.jsp").forward(request, response);
-        
-    }
 
+    }
+    /**
+     * get account_id parameter and parse to int
+     * Find Account by account_id
+     * set Attribute account 
+    **/
     private void detailFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         int food_id = Integer.parseInt(request.getParameter("food_id"));
-         Food food = foodDAO.findById(food_id);
-         Account nutri = accDAO.findById(food.getNutri_id());
-         request.setAttribute("foodD",food);
-         request.setAttribute("nutri", nutri);
-         request.setAttribute("accDAO", accDAO);
-         PrintWriter o = response.getWriter();
-         o.print(nutri);
-         request.getRequestDispatcher("/view/seller/view-feedback-food.jsp").forward(request, response);
+        // get food_id parameter and parse to int
+        int food_id = Integer.parseInt(request.getParameter("food_id"));
+        // Find Food by food_id
+        Food food = foodDAO.findById(food_id);
+        // get Account with role nutri in table Food by nutri_id
+        Account nutri = accDAO.findById(food.getNutri_id());
+        request.setAttribute("foodD", food);
+        request.setAttribute("nutri", nutri);
+        request.setAttribute("accDAO", accDAO);
+        // Redirect to view-feedback-food.jsp
+        request.getRequestDispatcher("/view/seller/view-feedback-food.jsp").forward(request, response);
     }
 
 }
