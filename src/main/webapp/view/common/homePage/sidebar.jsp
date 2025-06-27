@@ -49,6 +49,14 @@
                                     <div class="text">Order List</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="${pageContext.request.contextPath}/feedback" class="">
+                                    <div class="icon">
+                                        <i class="icon-settings"></i>
+                                    </div>
+                                    <div class="text">Feedback List</div>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -62,12 +62,13 @@ public class LoginGoogleHandler extends HttpServlet {
             }
 
             Account user = GlobalUtils.convertToAccount(userGoogleDto);
-            
 
             // Check user tồn tại chưa
             Account userInDB = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
 
             if (userInDB == null) {
+                user.setRole("customer");
+                user.setStatus("active");
                 int insertResult = userDao.insert(user);
                 if (insertResult == -1) {
                     response.sendRedirect("home"); // hoặc thông báo lỗi hợp lý
@@ -77,13 +78,13 @@ public class LoginGoogleHandler extends HttpServlet {
 
             // Lấy lại thông tin user từ DB (dù là mới hay cũ)
             user = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
-            
+
             CartDAO cartDAO = new CartDAO();
             if (!cartDAO.hasCart(user.getId())) {
                 int cartId = cartDAO.createCart(user.getId());
             } else {
                 user = userInDB;
-           }
+            }
 
             if (user == null) {
                 response.sendRedirect("home");
@@ -93,6 +94,9 @@ public class LoginGoogleHandler extends HttpServlet {
             // Tạo session và cookie
             HttpSession session = request.getSession();
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, user);
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("user_name", user.getUser_name());
+            session.setAttribute("account_id", user.getId());
             session.setMaxInactiveInterval(60 * 60 * 24);
 
             Cookie u = new Cookie("userC", user.getEmail());

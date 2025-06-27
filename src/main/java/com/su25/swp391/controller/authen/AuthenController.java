@@ -186,7 +186,7 @@ public class AuthenController extends HttpServlet {
         Account accountFoundByUsername = accountDAO.findByUsername(account);
 
         // Nếu email đã tồn tại
-        if (accountFoundByEmail != null && accountFoundByEmail.getUser_name().equalsIgnoreCase(user_name)) {
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
             // Trường hợp user_name trùng với user_name của account có email trùng
             session.setAttribute("toastMessage", "Username already exists!");
             session.setAttribute("toastType", "error");
@@ -532,6 +532,9 @@ public class AuthenController extends HttpServlet {
         Account accountFoundByEmail = accountDAO.findByEmail(account);
 
         if (accountFoundByEmail != null) {
+            // tránh để sau khi update, database sẽ xóa role và active
+            account.setRole(accountFoundByEmail.getRole());
+            account.setStatus(accountFoundByEmail.getStatus());
             accountDAO.update(account);
             Account newAccount = accountDAO.findByEmail(account);
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
