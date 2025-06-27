@@ -591,7 +591,7 @@ value="${search}"/>
               <fmt:formatDate value="${feedback.createdAt}" pattern="dd/MM/yyyy HH:mm" />
             </td>
                 <td>
-                  <div class="action-group">
+                  <div class="action-group" style="display:flex;justify-content:start">
                       <a  class="item view" href="${pageContext.request.contextPath}/seller/manage-feedback?action=view&feedbackId=${feedback.id}" title="View Detail">
                           <i class="fa-solid fa-eye"></i>
                       </a>
@@ -600,11 +600,10 @@ value="${search}"/>
 <!--                        <a class="item reject" href="${pageContext.request.contextPath}/seller/manage-feedback?action=update&feedbackId=${feedback.id}" title="Hidden" onclick="handleReject(event)">
                           <i class="fa-solid fa-xmark"></i>
                         </a>-->
-
-  <label class="switch">
-  <input type="checkbox" onchange="handleReject(event, 1)" checked>
-  <span class="slider"></span>
-</label>
+                           <label class="switch">
+                                  <input type="checkbox" onChange="handleReject(event, ${feedback.id})" checked>
+                                      <span class="slider"></span>
+                              </label>
                    </c:when>
                       </c:choose>
                       
@@ -794,27 +793,34 @@ value="${search}"/>
 }
  </script>-->
 <script>
-    function handleReject(event, feedbackId) {
-  const checkbox = event.target;
-  event.preventDefault();
-
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'This feedback will be hidden.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Hide',
-    cancelButtonText: 'Cancel',
-    reverseButtons: true
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = `${window.location.pathname}?action=hidden&feedbackId=${feedbackId}`;
-    } else {
+   function handleReject(event, feedbackId) {
+     event.preventDefault();
+     const checkbox = event.target;
+     Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Hidden',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: true,
+        customClass: {
+            popup: 'custom-swal-popup',
+            title: 'custom-swal-title',
+            confirmButton: 'custom-swal-confirm',
+            cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.setItem('showRejectToast', 'true');
+          window.location.href = window.location.pathname + '?action=update&feedbackId=' + feedbackId;
+        }else {
       checkbox.checked = true; // rollback nếu cancel
     }
-  });
+    });
+    
 }
-
 </script>
 <script>
     document.getElementById("myForm").submit();
