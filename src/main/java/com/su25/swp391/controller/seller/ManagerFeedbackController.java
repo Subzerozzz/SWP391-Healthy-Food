@@ -336,6 +336,7 @@ public class ManagerFeedbackController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
+            
             // get food_id parameter and parse to int
             int food_id = Integer.parseInt(request.getParameter("food_id"));
             // Find Food by food_id
