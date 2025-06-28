@@ -117,9 +117,19 @@ public class ManagerOrderController extends HttpServlet {
         }
     }
 
-    // View All Lists Orders
+    // View Orders List
     private void listOrders(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        try{
+        // Get the seller account from session
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+        // Check if the seller is logged in
+        if (account == null) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
         // Get sort parameter
         String sort = request.getParameter("sort");
         // Get filter parameters by Status
@@ -188,34 +198,53 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("paymentStatus", paymentStatus);
         // Forword to the order list page
         request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
-
+        } catch (NumberFormatException e) {
+            // Handle invalid order ID format
+            request.setAttribute("errorMessage", "Invalid order ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
     }
 
-    // Update status
+    /**
+     * Handles updating the status of a specific order.
+     *
+     * - Validates input parameters. - Updates the order status in the database.
+     * - Records the seller's approval note. - Sends an email notification to
+     * guest customers (if applicable). - Sets success or error messages for
+     * user feedback.
+     *
+     * @param request The HttpServletRequest containing client request data.
+     * @param response The HttpServletResponse used to redirect or respond.
+     */
     private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Get orderId by update
+            // Get the orderId from request parameter
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            // Get new Status
+
+            // Get the new status from request
             String newStatus = request.getParameter("newStatus");
-            // Get note of seller for order
+
+            // Get seller's note from request
             String note = request.getParameter("note");
 
-            // Validate input status
+            // Validate that the new status is not empty
             if (newStatus == null || newStatus.trim().isEmpty()) {
                 request.getSession().setAttribute("errorMessage", "Status cannot be empty");
                 response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
                 return;
             }
-            // Get seller ID from Session
+
+            // Get the seller account from session
             HttpSession session = request.getSession();
             Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
+            // Check if the seller is logged in
             if (acc == null) {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
 
+            // Retrieve the order from the database
             Order order = orderDAO.findById(orderId);
             if (order == null) {
                 session.setAttribute("errorMessage", "Order not found");
@@ -223,16 +252,17 @@ public class ManagerOrderController extends HttpServlet {
                 return;
             }
 
-            // Get current status for message
+            // Store the old status for logging
             String oldStatus = order.getStatus();
             System.out.println("DEBUG: update order #" + orderId + " from '" + oldStatus + "' to '" + newStatus + "'");
 
+            // Update the order status
             boolean update = orderDAO.updateOrderStatus(orderId, newStatus, acc.getId(), note);
 
             if (update) {
-                // If order is being accepted
+                // If the order was just accepted, show success message
                 if ("accepted".equals(newStatus) && !"accepted".equals(oldStatus)) {
-                    String statusText = "";
+                    String statusText = newStatus;
                     switch (newStatus) {
                         case "accepted":
                             statusText = "accepted";
@@ -249,100 +279,159 @@ public class ManagerOrderController extends HttpServlet {
                     session.setAttribute("successMessage",
                             "Order #" + orderId + " has been " + statusText + " successfully.");
                 }
-
             } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
-
             }
 
-            // If Account_id == 0 => This is Guest so give a mail for order status
+            // If this is a guest order (account_id = 0), send an email notification
             if (order.getAccount_id() == 0) {
                 String customerEmail = order.getEmail();
                 String customerName = order.getFull_name();
-                String subject = "Trạng thái Đơn hàng!";
-                String content = "<h3>Chào " + customerName + ",</h3>"
-                        + "<p>Đơn hàng của bạn đã được <strong>" + newStatus 
-                        + "<p>Cảm ơn bạn đã mua sắm tại Healthy Food Store!</p>"
-                        + "<br><em>Trân trọng,</em><br>Đội ngũ Hỗ trợ Khách hàng ";
+                String subject = "Order Status Update";
+                String content = "<h3>Hello " + customerName + ",</h3>"
+                        + "<p>Your order has been <strong>" + newStatus + "</strong>.</p>"
+                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
+                        + "<br><em>Best regards,</em><br>Customer Support Team";
                 try {
                     EmailUtils.sendMail(customerEmail, subject, content);
                 } catch (MessagingException ex) {
-                    ex.printStackTrace(); // hoặc log lỗi
+                    ex.printStackTrace(); // Consider replacing with logger
                 }
             }
-            // Redirect to the order detail page
+
+            // Redirect to the order update detail page
             response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=viewUpdate&id=" + orderId);
         } catch (Exception e) {
+            // Handle unexpected exceptions
+            e.printStackTrace(); // Consider replacing with logger
         }
     }
 
-    // View Order Detail
+    /**
+     * Handles displaying the detailed information of a specific order.
+     * This method: - Retrieves the order by its ID from the request parameter.
+     * - Loads the related account and order items. - Maps food details for each
+     * order item. - Forwards the data to the order detail JSP page for
+     * rendering. - Handles invalid or missing order cases.
+     * @param request The HttpServletRequest containing client request data
+     * @param response The HttpServletResponse for sending the response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws SQLException if a database access error occurs
+     */
     private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-
         try {
-            // Get orderId by order parameter
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+            // Get orderId from the "id" request parameter
             int orderId = Integer.parseInt(request.getParameter("id"));
-            // get order findById of orderId
+
+            // Retrieve the order by its ID
             Order order = orderDAO.findById(orderId);
+
+            // If the order does not exist, forward to error page
+            if (order == null) {
+                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
+                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+                return;
+            }
+
+            // Retrieve the account associated with the order
             Account acc = accDAO.findById(order.getAccount_id());
 
+            // Retrieve the list of items in the order
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
+
+            // Map food details for each order item
             HashMap<Integer, Food> OrderItemMap = new HashMap<>();
             for (OrderItem orderItem : orderItems) {
                 Food food = foodDAO.findById(orderItem.getFood_id());
                 OrderItemMap.put(orderItem.getFood_id(), food);
             }
 
-             // check existing order
-            if (order == null) {
-                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
-                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
-                return;
-            }
+            // Set attributes for JSP rendering
             request.setAttribute("order", order);
             request.setAttribute("account", acc);
             request.setAttribute("OrderItems", orderItems);
             request.setAttribute("OrderItemMap", OrderItemMap);
-             //     Forward to the order detail page
+
+            // Forward to the order detail JSP page
             request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
+            // Handle invalid order ID format
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
-
     }
-
+    /**
+     * Handles displaying the update status page for a specific order.
+     *
+     * This method: - Retrieves the order based on the ID provided in the
+     * request. - Loads related approval records and their associated accounts.
+     * - Passes the data to the JSP page for rendering the update interface. -
+     * Handles cases where the order ID is invalid or the order is not found.
+     *
+     * @param request The HttpServletRequest object containing client request
+     * data.
+     * @param response The HttpServletResponse object for sending the response
+     * to the client.
+     * @throws ServletException if a servlet-specific error occurs.
+     * @throws IOException if an I/O error occurs.
+     */
     private void viewUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         try {
-            // Get orderId by order parameter
+        try {
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+            // Get orderId from the "id" request parameter
             int orderId = Integer.parseInt(request.getParameter("id"));
-            // get order findById of orderId
+
+            // Retrieve the order by its ID
             Order order = orderDAO.findById(orderId);
-            // get list approvals of seller
-            // check existing order
+
+            // If the order does not exist, forward to error page
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
+
+            // Retrieve approval records related to this order
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+
+            // Map each approver's account information
             HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
             for (OrderApproval orderApproval : approvals) {
                 Account accApproval = accDAO.findById(orderApproval.getApproved_by());
                 OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
             }
+
+            // Set attributes for JSP rendering
             request.setAttribute("order", order);
             request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
-            // Forward to the order detail page
+
+            // Forward to the update order status JSP page
             request.getRequestDispatcher("/view/seller/update-order-status.jsp").forward(request, response);
         } catch (Exception e) {
+            // Handle invalid order ID format or unexpected errors
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
-            
-      
     }
 
 }
