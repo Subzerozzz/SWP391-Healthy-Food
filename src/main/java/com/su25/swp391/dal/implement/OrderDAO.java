@@ -155,22 +155,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                order = new Order();
-                order.setOrder_id(resultSet.getInt("order_id"));
-                order.setUser_id(resultSet.getInt("user_id"));
-                order.setStatus(resultSet.getString("status"));
-                order.setTotal(resultSet.getBigDecimal("total"));
-                order.setPayment_method(resultSet.getString("payment_method"));
-                order.setCreated_at(resultSet.getTimestamp("created_at"));
-                order.setUpdate_at(resultSet.getTimestamp("updated_at"));
-                order.setCoupon_code(resultSet.getString("coupon_code"));
-                order.setDiscount_amount(resultSet.getBigDecimal("discount_amount"));
-                order.setFull_name(resultSet.getString("full_name"));
-                order.setMobile(resultSet.getString("mobile"));
-                order.setAddress(resultSet.getString("address"));
-                order.setEmail(resultSet.getString("email"));
-                order.setShipping_address(resultSet.getString("shipping_address"));
-                order.setPayment_status(resultSet.getInt("payment_status"));
+                order = getFromResultSet(resultSet);
             }
         } catch (Exception e) {
             System.out.println("Error finding order by ID: " + e.getMessage());
