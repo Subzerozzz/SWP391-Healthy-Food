@@ -139,8 +139,72 @@ public class ManagerCombo extends HttpServlet {
         request.getRequestDispatcher("/view/nutritionist/combo/addCombo_1.jsp").forward(request, response);
     }
 
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //lấy id combo cần edit
+        String comboIdStr = request.getParameter("comboId");
+        //kieem tra xem id co ton tại không
+        if (comboIdStr != null && !comboIdStr.isEmpty()) {
+            int comboId = Integer.parseInt(comboIdStr);
+            //lay du lieu combo
+            ComboDAO comboDao = new ComboDAO();
+            Combo combo = comboDao.findById(comboId);
+
+            if (combo != null) {
+                //lay food trong combo
+                ComboFoodDAO comboFoodDao = new ComboFoodDAO();
+                List<ComboFood> comboFood = (List<ComboFood>) comboFoodDao.findById(comboId);
+                //lay nhung food voiws trang thái active của nhưng cái đã chon trong combo
+                FoodDAO foodDao = new FoodDAO();
+                List<Food> allFoods = foodDao.findAllFoodActive();
+
+                //chueyn đôi food thành json cho js
+                StringBuilder foodsJson = new StringBuilder("[");
+                for (int i = 0; i < allFoods.size(); i++) {
+                    Food food = allFoods.get(i);
+                    foodsJson.append("{")
+                            .append("\"id\":").append(food.getId()).append(",")
+                            .append("\"name\":\"").append(food.getName()).append(",")
+                            .append("\"price\":\"").append(food.getPrice()).append(",")
+                            .append("\"calo\":").append(food.getCalo())
+                            .append("}");
+                    if (i < allFoods.size() - 1) {
+                        foodsJson.append(",");
+                    }
+                }
+                foodsJson.append("]");
+
+                //Convert selected products to JSON for JavaScript
+                StringBuilder selectedFoodsJson = new StringBuilder("[");
+                for (int i = 0; i < comboFood.size(); i++) {
+                    ComboFood cbfood = comboFood.get(i);
+                    //lay tung food  theo comboid
+                    Food food = foodDao.findById(cbfood.getFoodId());
+                    if (food != null) {
+                        selectedFoodsJson.append("{")
+                                .append("\"id\":").append(food.getId()).append(",")
+                                .append("\"name\":\"").append(food.getName()).append(",")
+                                .append("\"price\":\"").append(food.getPrice()).append(",")
+                                .append("\"quantity\":").append(food.getCalo())
+                                .append("}");
+                        if( i <comboFood.size() -1){
+                            selectedFoodsJson.append("]");
+                        }
+                    }
+                    //set attributes for jsp 
+                    request.setAttribute("combo", combo);
+                    request.setAttribute("comboFood", comboFood);
+                    request.setAttribute("allFoods", allFoods);
+                    request.setAttribute("foodJson", foodsJson);
+                    request.setAttribute("selectedFoodJson", selectedFoodsJson);
+                    
+                    request.getRequestDispatcher("/view/nutritionist/combo/editCombo.jsp");
+                    return;
+                }
+               
+            }
+        }
+         // If combo not found or ID not provided, redirect to list
+                response.sendRedirect(request.getContextPath()+ "/view/nutritionist/combo/listCombo.jsp");
     }
 
     private void deactiveCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
