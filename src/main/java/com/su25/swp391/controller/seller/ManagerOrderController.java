@@ -78,7 +78,9 @@ public class ManagerOrderController extends HttpServlet {
                 case "view":
                     viewOrderDetail(request, response);
                     break;
-
+                case "viewUpdate":
+                    viewUpdate(request, response);
+                    break;
                 default:
                     listOrders(request, response);
                     break;
@@ -269,7 +271,7 @@ public class ManagerOrderController extends HttpServlet {
                 }
             }
             // Redirect to the order detail page
-            response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=view&id=" + orderId);
+            response.sendRedirect(request.getContextPath() + "/seller/manage-order?action=viewUpdate&id=" + orderId);
         } catch (Exception e) {
         }
     }
@@ -292,14 +294,7 @@ public class ManagerOrderController extends HttpServlet {
                 OrderItemMap.put(orderItem.getFood_id(), food);
             }
 
-            // get list approvals of seller
-            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
-            for (OrderApproval orderApproval : approvals) {
-                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
-                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
-            }
-            // check existing order
+             // check existing order
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
@@ -309,15 +304,45 @@ public class ManagerOrderController extends HttpServlet {
             request.setAttribute("account", acc);
             request.setAttribute("OrderItems", orderItems);
             request.setAttribute("OrderItemMap", OrderItemMap);
-            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
-            request.setAttribute("approvals", approvals);
-            //     Forward to the order detail page
+             //     Forward to the order detail page
             request.getRequestDispatcher("/view/seller/order-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
 
+    }
+
+    private void viewUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         try {
+            // Get orderId by order parameter
+            int orderId = Integer.parseInt(request.getParameter("id"));
+            // get order findById of orderId
+            Order order = orderDAO.findById(orderId);
+            // get list approvals of seller
+            // check existing order
+            if (order == null) {
+                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
+                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+                return;
+            }
+            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
+            for (OrderApproval orderApproval : approvals) {
+                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
+                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+            }
+            request.setAttribute("order", order);
+            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
+            request.setAttribute("approvals", approvals);
+            // Forward to the order detail page
+            request.getRequestDispatcher("/view/seller/update-order-status.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Invalid order ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+            
+      
     }
 
 }

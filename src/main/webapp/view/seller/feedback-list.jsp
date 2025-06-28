@@ -453,7 +453,7 @@
                                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                                     </li>
                                                                                                                     <li>
-                                                                                                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">Feedbacks</div></a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">Feedback Management</div></a>
                                                                                                                 </li>
                                                                                                                 <li>
                                                                                                                     <i class="icon-chevron-right"></i>
@@ -461,12 +461,8 @@
                                                                                                                 <li>
                                                                                                                     <a href="#"><div class="text-tiny">FeedBack List</div></a>
                                                                                                                 </li>
-                                                                                                                <li>
-                                                                                                                    <i class="icon-chevron-right"></i>
-                                                                                                                </li>
-                                                                                                                <li>
-                                                                                                                    <div class="text-tiny">Feedback </div>
-                                                                                                                </li>
+                                                                                                                
+                                                                                                               
                                                                                                             </ul>
                                                                                                         </div>
                                                                                                         <!-- order-detail -->
@@ -501,11 +497,11 @@
                                                                                                                                 <!--select by reating-->
                                                                                                                                 <select name="rating"  class="form-select">
                                                                                                                                     <option value="" ${param.rating == '' ? 'selected' : ''}>ALL RATING </option>       
-                                                                                                                                    <option value="1" ${param.rating == 1 ? 'selected' : ''}>1 </option> 
-                                                                                                                                    <option value="2" ${param.rating == 2 ? 'selected' : ''}>2 </option>
-                                                                                                                                    <option value="3" ${param.rating == 3 ? 'selected' : ''}>3 </option>
-                                                                                                                                    <option value="4" ${param.rating == 4 ? 'selected' : ''}>4 </option>
-                                                                                                                                    <option value="5" ${param.rating == 5 ? 'selected' : ''}>5 </option>
+                                                                                                                                    <option value="1" ${param.rating == 1 ? 'selected' : ''}><span>⭐</span></option> 
+                                                                                                                                    <option value="2" ${param.rating == 2 ? 'selected' : ''}><span>⭐⭐</span></option>
+                                                                                                                                    <option value="3" ${param.rating == 3 ? 'selected' : ''}><span>⭐⭐⭐</span></option>
+                                                                                                                                    <option value="4" ${param.rating == 4 ? 'selected' : ''}><span>⭐⭐⭐⭐</span></option>
+                                                                                                                                    <option value="5" ${param.rating == 5 ? 'selected' : ''}><span>⭐⭐⭐⭐⭐</span></option>
                                                                                                                                 </select>
 
                                                                                                                                 <!-- Bên cạnh có thể hiển thị preview -->
