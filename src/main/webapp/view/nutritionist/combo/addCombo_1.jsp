@@ -101,9 +101,9 @@
                                                                                                             <div class="row g-3">
                                                                                                                 <div class="col-md-6">
                                                                                                                     <label for="name" class="form-label">Combo Name <span class="text-danger">*</span></label>
-                                                                                                                    <input type="text" class="form-control" id="name" name="name"
+                                                                                                                    <input type="text" class="form-control" id="name" name="comboName"
                                                                                                                            placeholder="Enter combo name" required
-                                                                                                                           value="${param.name != null ? param.name : ''}">
+                                                                                                                           value="${param.comboName != null ? param.comboName : ''}">
                                                                                                                 </div>
                                                                                                                 <div class="col-md-6">
                                                                                                                     <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
@@ -159,8 +159,8 @@
                                                                                                             </div>
 
                                                                                                             <!-- Hidden inputs for form submission -->
-                                                                                                            <input type="hidden" id="foodIdsInput" name="foodIds">
-                                                                                                                <input type="hidden" id="quantitiesInput" name="quantities">
+                                                                                                            <input type="hidden" id="foodIdsInput" name="foodId"  value = "">
+                                                                                                                <input type="hidden" id="quantitiesInput" name="quantities" value = "">
                                                                                                                     <input type="hidden" id="originalPrice" name="originalPrice" value="0">    
                                                                                                                         <!-- Price Summary -->
                                                                                                                         <div class="row mt-4">
@@ -220,6 +220,26 @@
                                                                                                                                             e.preventDefault();
                                                                                                                                             return false;
                                                                                                                                         }
+
+                                                                                                                                        //ĐỔ DỮ LIỆU vào input hidden trước khi submit
+                                                                                                                                        const foodSelects = document.querySelectorAll(".food-select");
+                                                                                                                                        const quantityInputs = document.querySelectorAll(".food-quantity");
+
+                                                                                                                                        const foodIds = [];
+                                                                                                                                        const quantities = [];
+
+                                                                                                                                        foodSelects.forEach((select, index) => {
+                                                                                                                                            const foodId = select.value;
+                                                                                                                                            const quantity = quantityInputs[index].value;
+
+                                                                                                                                            if (foodId && quantity) {
+                                                                                                                                                foodIds.push(foodId);
+                                                                                                                                                quantities.push(quantity);
+                                                                                                                                            }
+                                                                                                                                        });
+
+                                                                                                                                        document.getElementById("foodIdsInput").value = foodIds.join(",");
+                                                                                                                                        document.getElementById("quantitiesInput").value = quantities.join(",");
                                                                                                                                     });
                                                                                                                                 }
 
@@ -230,12 +250,13 @@
                                                                                                                                 if (addFoodBtn) {
                                                                                                                                     addFoodBtn.addEventListener('click', function () {
                                                                                                                                         console.log('Add food clicked');
-                                                                                                                                        // Thêm logic thêm dòng sản phẩm ở đây
+                                                                                                                                        // Bạn cần bổ sung code clone dòng chọn món tại đây
                                                                                                                                     });
                                                                                                                                 } else {
                                                                                                                                     console.warn("Add food button not found!");
                                                                                                                                 }
                                                                                                                             });
+
                                                                                                                         </script>
                                                                                                                         </div>
                                                                                                                         </div>
@@ -277,6 +298,6 @@
                                                                                                                         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
                                                                                                                         <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
                                                                                                                         <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                        
+
                                                                                                                         <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
                                                                                                                         </html>

@@ -25,7 +25,7 @@ import lombok.ToString;
 @Setter
 public class Combo {
     private Integer comboId;
-    private String name;
+    private String comboName;
     private String description;
     private Double originalPrice;
     private Double discountPrice;
