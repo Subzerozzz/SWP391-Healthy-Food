@@ -119,7 +119,7 @@
             }
 .filter-row {
   display: grid;
-  grid-template-columns: 150px 200px 160px 1fr 120px; /* 5 cột */
+  grid-template-columns: 100px 120px 200px 160px 1fr 80px; /* 6 cột */
   gap: 25px;
   align-items: center;
   width: 100%;
@@ -399,7 +399,13 @@
     <form action="${pageContext.request.contextPath}/seller/manage-order" method="GET">
       <!-- Thêm class filter-row -->
       <div class="filter-row">
-        <!-- Select Status -->
+          <!--Sort by id-->
+          <select style="width:100px" name="sort"  class="form-select">
+              <option value="" ${param.sort == '' ? 'selected' : ''}>Sort ID</option> 
+              <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Increase</option>
+              <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Decrease</option>
+          </select> 
+          <!-- Select Status -->
         <select  style="height: 40px;font-size: 15px;"
             class="form-select" name="status">
           <option value="">All Status</option>
@@ -537,8 +543,12 @@
                                                 <div class="item eye">
                                                     <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
-                                                    </a></div>
+                                               </a></div>
+                                                    <div class="item edit" style="margin-right: 10px !important">
 
+                                                        <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}" title="Update Status"><i
+                                                                class="icon-edit-3"></i></a>
+                                                    </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -554,21 +564,21 @@
                            <ul class="pagination-wrapper">
 
                                <li >
-                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=1&status=${status}&search=${search}"><i class="icon-chevron-left"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=1&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
                                </li>
                                <c:choose>
                                    <c:when test="${currentPage <= totalPages - 2}">
                                        <c:if test="${currentPage > 1}">
                                            <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}">${currentPage - 1}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
                                            </li>
                                        </c:if>
                                        <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage}&status=${status}&search=${search}">${currentPage}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
                                        </li>
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}">${currentPage + 1}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
                                        </li>
 
                                        <c:if test="${currentPage < totalPages - 2}">
@@ -579,21 +589,21 @@
 
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}">${totalPages}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${totalPages}</a>
                                        </li>
                                    </c:when>
 
                                    <c:otherwise>
                                        <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                            <li class="${currentPage == i ? 'active' : ''}">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}">${i}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}&sort=${sort}">${i}</a>
                                            </li>
                                        </c:forEach>
                                    </c:otherwise>
                                </c:choose>
 
                                <li>
-                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}"><i class="icon-chevron-right"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
                                </li>
                            </ul>
                        </div>  

@@ -118,6 +118,8 @@ public class ManagerOrderController extends HttpServlet {
     // View All Lists Orders
     private void listOrders(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Get sort parameter
+        String sort = request.getParameter("sort");
         // Get filter parameters by Status
         String status = request.getParameter("status");
         // Filter by paymentMethod
@@ -153,12 +155,12 @@ public class ManagerOrderController extends HttpServlet {
 
         if (search != null && !search.trim().isEmpty()) {
             // If there's a search term, use search with payment method and status
-            orders = orderDAO.searchOrders(search, status, paymentMethod, page, pageSize);
+            orders = orderDAO.searchOrders(sort, search, status, paymentMethod, page, pageSize);
             // count order
             totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
         } else {
             // If no search, use filters
-            orders = orderDAO.findOrdersWithFilters(status, paymentMethod,paymentStatus , page, pageSize);
+            orders = orderDAO.findOrdersWithFilters(sort, status, paymentMethod,paymentStatus , page, pageSize);
             // count order
             totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod, paymentStatus);
         }
@@ -177,6 +179,7 @@ public class ManagerOrderController extends HttpServlet {
         request.setAttribute("AccountMap", AccountMap);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("sort", sort);
         request.setAttribute("status", status);
         request.setAttribute("paymentMethod",paymentMethod);
         request.setAttribute("search", search);
