@@ -32,7 +32,7 @@ public class Feedback {
     private int user_id;
     private int order_item_id;
     private String content;
-    private int rating;
+    private String rating;
     private boolean is_visible;
     private Timestamp created_at;
     private Timestamp update_at;

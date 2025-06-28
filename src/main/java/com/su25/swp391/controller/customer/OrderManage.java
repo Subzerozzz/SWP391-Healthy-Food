@@ -71,6 +71,7 @@ public class OrderManage extends HttpServlet {
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         //lay tham so order id khi nguoi dung chon 
         String orderIdStr = request.getParameter("order_id");
 
@@ -110,6 +111,7 @@ public class OrderManage extends HttpServlet {
 
             if (order != null) {
                 request.setAttribute("order", order);
+                session.setAttribute("orderIdStr", orderIdStr);
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
             } else {
                 //   response.sendRedirect(ORDER_LIST);

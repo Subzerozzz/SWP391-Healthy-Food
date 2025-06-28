@@ -10,6 +10,7 @@ import com.su25.swp391.entity.Feedback;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,77 @@ import java.util.Map;
  * @author kieud
  */
 public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
+
+    public int getTotalFeedbackCountByUserIdAndRating(int userId, String rating) {
+        boolean filterByRating = rating != null
+                && !rating.trim().isEmpty()
+                && !rating.equalsIgnoreCase("all");
+
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE user_id = ?";
+        if (filterByRating) {
+            sql += " AND rating = ?";
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            if (filterByRating) {
+                statement.setInt(2, Integer.parseInt(rating));
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+    public List<Feedback> feedbackByUserIdAndRatingWithPagination(int userId, String rating, int page, int pageSize) {
+        List<Feedback> list = new ArrayList<>();
+        boolean filterByRating = rating != null
+                && !rating.trim().isEmpty()
+                && !rating.equalsIgnoreCase("all");
+
+        String sql = "SELECT * FROM Feedback WHERE user_id = ?";
+        if (filterByRating) {
+            sql += " AND rating = ?";
+        }
+        sql += " ORDER BY id DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByRating) {
+                statement.setInt(paramIndex++, Integer.parseInt(rating));
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
 
     @Override
     public List<Feedback> findAll() {
@@ -39,7 +111,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
             statement = connection.prepareStatement(sql);
 
             statement.setString(1, t.getContent());
-            statement.setInt(2, t.getRating());
+            statement.setString(2, t.getRating());
             statement.setBoolean(3, t.is_visible());
             statement.setInt(4, t.getId()); // assuming 'id' maps to t.getId()
 
@@ -83,7 +155,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
             statement.setInt(1, t.getUser_id());
             statement.setInt(2, t.getOrder_item_id());
             statement.setString(3, t.getContent());
-            statement.setInt(4, t.getRating());
+            statement.setString(4, t.getRating());
             statement.setBoolean(5, t.is_visible());
 
             int affectedRows = statement.executeUpdate();
@@ -103,12 +175,22 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 
     @Override
     public Feedback getFromResultSet(ResultSet resultSet) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Feedback feedback = new Feedback();
+        feedback.setId(resultSet.getInt("id")); // Giả định tên cột trong DB là id
+        feedback.setUser_id(resultSet.getInt("user_id"));
+        feedback.setOrder_item_id(resultSet.getInt("order_item_id"));
+        feedback.setContent(resultSet.getString("content"));
+        feedback.setRating(resultSet.getString("rating"));
+        feedback.set_visible(resultSet.getBoolean("is_visible"));
+        feedback.setCreated_at(resultSet.getTimestamp("created_at"));
+        feedback.setUpdate_at(resultSet.getTimestamp("updated_at"));
+        return feedback;
     }
 
     @Override
     public Feedback findById(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
 
 }

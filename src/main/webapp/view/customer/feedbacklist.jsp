@@ -1,10 +1,9 @@
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>--%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -76,32 +75,32 @@
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                                                                                 <h3>Feedback List</h3>
                                                                                             </div>
-                                                                                            <!-- order-list -->
+                                                                                            <!-- feedback-list -->
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
                                                                                                         <form class="form-search">
                                                                                                             <fieldset class="name">
                                                                                                                 <select name="rating" required>
-                                                                                                                    <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Rating --</option>
-                                                                                                                <option value="5"  ${param.status == '5' ? 'selected' : ''}>5</option>
-                                                                                                                <option value="4"  ${param.status == '4' ? 'selected' : ''}>4</option>
-                                                                                                                <option value="3"  ${param.status == '3' ? 'selected' : ''}>3</option>
-                                                                                                                <option value="2"  ${param.status == '2' ? 'selected' : ''}>2</option>
-                                                                                                                <option value="1"  ${param.status == '1' ? 'selected' : ''}>1</option>
+                                                                                                                    <option value="all" ${param.rating == 'all' ? 'selected' : ''}>-- All Rating --</option>
+                                                                                                                <option value="5"  ${param.rating == '5' ? 'selected' : ''}>5</option>
+                                                                                                                <option value="4"  ${param.rating == '4' ? 'selected' : ''}>4</option>
+                                                                                                                <option value="3"  ${param.rating == '3' ? 'selected' : ''}>3</option>
+                                                                                                                <option value="2"  ${param.rating == '2' ? 'selected' : ''}>2</option>
+                                                                                                                <option value="1"  ${param.rating == '1' ? 'selected' : ''}>1</option>
                                                                                                             </select>                                                                                                         </fieldset>
                                                                                                         <div class="button-submit">
                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
                                                                                                         </div>
                                                                                                     </form>
                                                                                                 </div>
-                                                                                                <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all order</a>
+                                                                                                <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all feedback</a>
                                                                                             </div>
                                                                                             <div class="wg-table table-all-category">
                                                                                                 <ul class="table-title flex gap20 mb-14">
-                                                                                                        
+
                                                                                                     <li>
-                                                                                                        <div class="body-title">Order ID</div>
+                                                                                                        <div class="body-title">ID</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title">Updated At</div>
@@ -109,347 +108,88 @@
                                                                                                     <li>
                                                                                                         <div class="body-title">Content</div>
                                                                                                     </li>
-                                                                                                    
+
                                                                                                     <li>
                                                                                                         <div class="body-title">Action</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/51.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
+
+
+                                                                                                    <c:forEach var="feedback" items="${feedbacklist}">
+                                                                                                        <li class="product-item gap14">
+                                                                                                            <div class="flex items-center justify-between gap20 flex-grow">
+                                                                                                                <div class="body-text format-view">#${feedback.id} </div>
+                                                                                                                <div class="body-text format-view">
+                                                                                                                    <fmt:formatDate value="${feedback.created_at}" pattern="dd-MM-yyyy HH:mm:ss" />
                                                                                                                 </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
+                                                                                                                <div class="body-text format-view">${feedback.content} </div>
+                                                                                                                <div class="list-icon-function ">
+                                                                                                                    <a href="${pageContext.request.contextPath}/feedbackdetail?id=${feedback.id}" class="item eye">
+                                                                                                                        <i class="icon-eye"></i>
+                                                                                                                    </a>
                                                                                                                 </div>
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/52.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-pending">Pending</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/53.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/54.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/55.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-not-available">Cancel</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/56.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-not-available">Cancel</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/57.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/58.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/59.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                    <li class="product-item gap14">
-                                                                                                        <div class="image no-bg">
-                                                                                                            <img src="images/products/60.png" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                            <div class="name">
-                                                                                                                <a href="product-list.html" class="body-title-2">Kristin Watson</a>
-                                                                                                            </div>
-                                                                                                            <div class="body-text">#7712309</div>
-                                                                                                            <div class="body-text">$1,452.500</div>
-                                                                                                            <div class="body-text">1,638</div>
-                                                                                                            <div class="body-text">20</div>
-                                                                                                            <div>
-                                                                                                                <div class="block-available">Success</div>
-                                                                                                            </div>
-                                                                                                            <div>
-                                                                                                                <div class="block-tracking">Tracking</div>
-                                                                                                            </div>
-                                                                                                            <div class="list-icon-function">
-                                                                                                                <div class="item eye">
-                                                                                                                    <i class="icon-eye"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item edit">
-                                                                                                                    <i class="icon-edit-3"></i>
-                                                                                                                </div>
-                                                                                                                <div class="item trash">
-                                                                                                                    <i class="icon-trash-2"></i>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </li>
+                                                                                                        </li>
+                                                                                                    </c:forEach>
+
                                                                                                 </ul>
                                                                                             </div>
                                                                                             <div class="divider"></div>
                                                                                             <div class="flex items-center justify-between flex-wrap gap10">
-                                                                                                <div class="text-tiny">Showing 10 entries</div>
-                                                                                                <ul class="wg-pagination">
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-left"></i></a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">1</a>
-                                                                                                    </li>
-                                                                                                    <li class="active">
-                                                                                                        <a href="#">2</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#">3</a>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <a href="#"><i class="icon-chevron-right"></i></a>
-                                                                                                    </li>
-                                                                                                </ul>
+                                                                                                <div class="divider"></div>
+                                                                                                <div class="pagination">
+
+                                                                                                    <ul class="wg-pagination">
+
+                                                                                                        <li>
+                                                                                                            <a href="${pageContext.request.contextPath}/feedback?page=1&rating=${param.rating}"><i class="icon-chevron-left"></i></a>
+                                                                                                        </li>
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${currentPage <= totalPages - 2}">
+                                                                                                                <c:if test="${currentPage > 1}">
+                                                                                                                    <li class="">
+                                                                                                                        <a href="${pageContext.request.contextPath}/feedback?page=${currentPage - 1}&rating=${param.rating}">${currentPage - 1}</a>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+                                                                                                                <li class="active">
+                                                                                                                    <a href="${pageContext.request.contextPath}/feedback?page=${currentPage}&rating=${param.rating}">${currentPage}</a>
+                                                                                                                </li>
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/feedback?page=${currentPage + 1}&rating=${param.rating}">${currentPage + 1}</a>
+                                                                                                                </li>
+
+                                                                                                                <c:if test="${currentPage < totalPages - 2}">
+                                                                                                                    <li>
+                                                                                                                        <span>...</span>
+                                                                                                                    </li>
+                                                                                                                </c:if>
+
+
+                                                                                                                <li class="">
+                                                                                                                    <a href="${pageContext.request.contextPath}/feedback?page=${totalPages}&rating=${param.rating}">${totalPages}</a>
+                                                                                                                </li>
+                                                                                                            </c:when>
+
+                                                                                                            <c:otherwise>
+                                                                                                                <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
+                                                                                                                    <li class="${currentPage == i ? 'active' : ''}">
+                                                                                                                        <a href="${pageContext.request.contextPath}/feedback?page=${i}&rating=${param.rating}">${i}</a>
+                                                                                                                    </li>
+                                                                                                                </c:forEach>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
+                                                                                                        <li>
+                                                                                                            <a href="${pageContext.request.contextPath}/feedback?page=${totalPages}&rating=${param.rating}"><i class="icon-chevron-right"></i></a>
+                                                                                                        </li>
+                                                                                                    </ul>
+
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <!-- /order-list -->
+                                                                                        <!-- /feedback-list -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                 </div>
@@ -469,7 +209,7 @@
                                                                 <!-- /#wrapper -->
 
                                                                 <!-- Javascript -->
-                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
