@@ -1,3 +1,4 @@
+
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
@@ -140,9 +141,9 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getFull_name());
-            //statement.setString(2, t.getEmail());
-            //statement.setString(3, t.getUser_name());
-            //statement.setString(4, t.getRole());
+            // statement.setString(2, t.getEmail());
+            // statement.setString(3, t.getUser_name());
+            // statement.setString(4, t.getRole());
             statement.setString(2, t.getStatus());
             statement.setString(3, t.getMobile());
             statement.setString(4, t.getGender());
@@ -198,7 +199,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return list;
     }
 
-    //dem so luong account trong db
+    // dem so luong account trong db
     public int getTotalAccount() {
         String sql = "select count(*) from Account + WHERE role != 'admin'";
         try {
@@ -278,7 +279,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement.setString(9, t.getMobile());
             statement.setString(10, t.getGender());
 
-            //Lấy khóa chính được tạo tự động sau khi insert
+            // Lấy khóa chính được tạo tự động sau khi insert
             int affectedRow = statement.executeUpdate();
             if (affectedRow > 0) {
                 resultSet = statement.getGeneratedKeys();
@@ -394,7 +395,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return 0;
     }
 
-    //tim kiem theo ten nguoi dung nhap vao
+    // tim kiem theo ten nguoi dung nhap vao
     public List<Account> searchAccountsByNameOrEmail(String keyword) {
         List<Account> accounts = new ArrayList<>();
         String sql = "SELECT * FROM Account WHERE full_name LIKE ? OR email LIKE ? OR address LIKE ?";
@@ -418,7 +419,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     public boolean isEmailExists(String email) {
-        String sql = "SELECT COUNT(*) FROM Account WHERE email = ?";
+        String sql = "SELECT COUNT (*) FROM Account WHERE email = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -515,7 +516,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return 0;
     }
 
-      public boolean activateAccount(int accountId) {
+    public boolean activateAccount(int accountId) {
         String sql = "UPDATE Account SET Status = 'active' WHERE id=?";
         try {
             connection = getConnection();
@@ -547,7 +548,4 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(new AccountDAO().isEmailExists("nguyenduyntn112004@gmail.com"));
-    }
 }

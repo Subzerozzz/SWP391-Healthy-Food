@@ -5,6 +5,7 @@
 package com.su25.swp391.entity;
 
 import java.sql.Timestamp;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,18 +21,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Food {
-  private Integer id;
-  private String name;
-  private String description;
-  private Double price;
-  private String image_url;
-  private String status;
-  private Integer category_id;
-  private Timestamp created_at;
-  private Timestamp updated_at;
-  private Integer nutri_id;
-  private Double calo;
-
-  
+public class OrderApproval {
+    private Integer id;
+    private Integer order_id;
+    private Integer approved_by;
+    private Timestamp approved_at;
+    private String statusBefore;
+    private String statusAfter;
+    private String note;
 }

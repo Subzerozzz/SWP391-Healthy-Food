@@ -107,11 +107,22 @@
                     </a>
                   </li>
                 </c:if>   
-                    
+                <c:if test="${sessionScope.account.role eq 'seller'}">
+                    <li class="menu-item">
+                        <a href="${pageContext.request.contextPath}/seller/manage-order" class="menu-item-button">
+                            <div class="icon"><i class="icon-layers"></i></div>
+                            <div class="text">View Order</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="menu-item-button">
+                            <div class="icon"><i class="icon-layers"></i></div>
+                            <div class="text">View Feedback</div>
+                        </a>
+                    </li>
+                </c:if> 
             </ul>
             
-            
-          
         </div>
       </div>
 
