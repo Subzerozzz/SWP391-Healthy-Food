@@ -259,8 +259,16 @@ public class ManagerCouponController extends HttpServlet {
             String percustomerlimitStr=request.getParameter("percuslimit");
             Integer percustomerlimit=(percustomerlimitStr!=null && !percustomerlimitStr.isEmpty())
                     ? Integer.parseInt(percustomerlimitStr) : null;
-            String isActiveStr = request.getParameter("isActive");
-           int isActive = Integer.parseInt(isActiveStr);
+            String[] isActiveValues = request.getParameterValues("isActive");
+            int isActive = 0; // mặc định là Inactive
+            if (isActiveValues != null) {
+                for (String val : isActiveValues) {
+                    if ("1".equals(val)) {
+                        isActive = 1; // Nếu có bất kỳ giá trị nào là 1, thì là Active
+                        break;
+                    }
+                }
+            }
             Date date1 = null;
             try {
                 if (dateStr1 != null && !dateStr1.isEmpty()) {

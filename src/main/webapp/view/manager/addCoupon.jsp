@@ -247,15 +247,13 @@
                                                     <fieldset class="status">
                                                         <div class="body-title mb-10">Status</div>
                                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <!-- hidden để luôn gửi giá trị 0 nếu không checked -->
+                                                            <!-- Hidden input đảm bảo gửi isActive=0 nếu checkbox không được tick -->
                                                             <input type="hidden" name="isActive" value="0" />
 
                                                             <label class="switch">
-                                                                <input type="checkbox" name="isActive" value="1" 
-                                                                       <c:choose>
-                                                                           <c:when test="${empty coupon || coupon.isactive == 1}">checked</c:when>
-                                                                       </c:choose> />
-                                                                       <span class="slider round"></span>
+                                                                <input type="checkbox" name="isActive" value="1"
+                                                                       <c:if test="${empty coupon || coupon.isactive == 1}">checked</c:if> />
+                                                                <span class="slider round"></span>
                                                             </label>
                                                             <span class="label">Active</span>
                                                         </div>
