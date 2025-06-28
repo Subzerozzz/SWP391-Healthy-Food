@@ -373,7 +373,7 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Order</div></a>
+                                            <a href="#"><div class="text-tiny">Order Management</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -388,11 +388,7 @@
                                     <div class="">
                                         <div class="">
                                          <div class="dashboard-main-body">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-                <h6 class="fw-semibold mb-0">Order Management</h6>
-                
-            </div>
-
+            
             <!-- Filter Section -->
            <div class="card mb-24">
   <div class="card-body p-24">
@@ -546,7 +542,7 @@
                                                </a></div>
                                                     <div class="item edit" style="margin-right: 10px !important">
 
-                                                        <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}" title="Update Status"><i
+                                                        <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" title="Update Status"><i
                                                                 class="icon-edit-3"></i></a>
                                                     </div>
                                             </td>
