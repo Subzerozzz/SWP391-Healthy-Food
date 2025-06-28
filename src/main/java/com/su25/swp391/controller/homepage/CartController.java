@@ -873,7 +873,6 @@ public class CartController extends HttpServlet {
         Order order = orderDao.findById(orderId);
         //Xoa listOrderItem truoc + tao lai cartItem dua tren OrdeITem
         List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
-        
 
         if (account != null) {
             Integer cartId = cartDao.findCartByAccountId(account.getId()).getId();
@@ -889,7 +888,7 @@ public class CartController extends HttpServlet {
                 orderItemDao.delete(orderItem);
             }
             orderDao.delete(order);
-            
+
         } else {
             List<CartItem> listCartItem = new ArrayList<>();
             for (OrderItem orderItem : listOrderItem) {
