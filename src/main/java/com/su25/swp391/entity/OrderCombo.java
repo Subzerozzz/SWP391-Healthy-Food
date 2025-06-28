@@ -7,23 +7,19 @@ package com.su25.swp391.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
 
-
-@ToString
-@Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class Request {
-  private Integer id;
-  private String result;
-  private Integer foodDraftId;
-  private String statusRequest;
-
+@AllArgsConstructor
+@Builder
+public class OrderCombo {
+    private Integer orderComboId;
+    private Integer orderId;
+    private Integer comboId;
+    private String comboName;
+    private BigDecimal comboDiscountPrice;
+    private Integer quantity;
+    private BigDecimal totalPrice;
 }
