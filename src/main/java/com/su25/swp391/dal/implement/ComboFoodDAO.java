@@ -103,33 +103,56 @@ public class ComboFoodDAO extends DBContext implements I_DAO<ComboFood>{
 
     @Override
     public int insert(ComboFood t) {
-        String sql = "INSERT INTO ComboFood (comboId, foodId, quantityInCombo) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO ComboFood (comboId, foodId, quantityInCombo) VALUES (?, ?, ?)";
+    int result = 0;
 
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, t.getComboId());
-            statement.setInt(2, t.getFoodId());
-            statement.setInt(3, t.getQuantityInCombo());
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, t.getComboId());
+        statement.setInt(2, t.getFoodId());
+        statement.setInt(3, t.getQuantityInCombo());
 
-            int affectedRows = statement.executeUpdate();
+        result = statement.executeUpdate(); // Trả về số dòng bị ảnh hưởng
 
-            if (affectedRows == 0) {
-                throw new SQLException("Creating combo product failed, no rows affected.");
-            }
-            resultSet = statement.getGeneratedKeys();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            } else {
-                throw new SQLException("Creating combo product failed, no ID obtained.");
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error inserting combo product: " + ex.getMessage());
-            return -1;
-        } finally {
-            closeResources();
-        }
+    } catch (SQLException ex) {
+        System.out.println("❌ Error inserting combo-food: " + ex.getMessage());
+        ex.printStackTrace();
+        result = -1;
+    } finally {
+        closeResources();
     }
+
+    return result;
+}
+//    public int insert(ComboFood t) {
+//        String sql = "INSERT INTO ComboFood (comboId, foodId, quantityInCombo) VALUES (?, ?, ?)";
+//
+//        try {
+//            connection = getConnection();
+//            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+//            statement.setInt(1, t.getComboId());
+//            statement.setInt(2, t.getFoodId());
+//            statement.setInt(3, t.getQuantityInCombo());
+//
+//            int affectedRows = statement.executeUpdate();
+//
+//            if (affectedRows == 0) {
+//                throw new SQLException("Creating combo product failed, no rows affected.");
+//            }
+//            resultSet = statement.getGeneratedKeys();
+//            if (resultSet.next()) {
+//                return resultSet.getInt(1);
+//            } else {
+//                throw new SQLException("Creating combo product failed, no ID obtained.");
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("Error inserting combo product: " + ex.getMessage());
+//            return -1;
+//        } finally {
+//            closeResources();
+//        }
+//    }
 
     @Override
     public ComboFood getFromResultSet(ResultSet rs) throws SQLException {

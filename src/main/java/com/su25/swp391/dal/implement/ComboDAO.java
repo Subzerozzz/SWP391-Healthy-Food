@@ -7,11 +7,14 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Combo;
+import com.su25.swp391.entity.ComboFood;
 import com.su25.swp391.entity.ComboFoodDetails;
 import com.su25.swp391.entity.Food;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,10 @@ import java.util.Map;
  * @author Hang
  */
 public class ComboDAO extends DBContext implements I_DAO<Combo> {
+
+    private static Object builder() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     @Override
     public List<Combo> findAll() {
@@ -126,7 +133,7 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
     public boolean update(Combo combo) {
         String sql = "UPDATE Combo\n"
                 + "SET \n"
-                + "    name = ?,\n"
+                + "    comboName = ?,\n"
                 + "    description = ?,\n"
                 + "    originalPrice = ?,\n"
                 + "    discountPrice = ?,\n"
@@ -135,7 +142,7 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, combo.getName());
+            statement.setString(1, combo.getComboName());
             statement.setString(2, combo.getDescription());
             statement.setDouble(3, combo.getOriginalPrice());
             statement.setDouble(4, combo.getDiscountPrice());
@@ -171,40 +178,92 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
     @Override
     public int insert(Combo t) {
-        String sql = "INSERT INTO Combo (ComboId, name, description, originalPrice, discountPrice, status)\n"
-                + "VALUES\n" + "(?,?,?,?,?,?)";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getComboId());
-            statement.setString(2, t.getName());
-            statement.setString(3, t.getDescription());
-            statement.setDouble(4, t.getOriginalPrice());
-            statement.setDouble(5, t.getDiscountPrice());
-            statement.setString(6, t.getStatus());
-            int affectedRow = statement.executeUpdate();
-            if (affectedRow == 0) {
-                throw new SQLException("Creating combo fail ,no rows affected");
+    String sql = "INSERT INTO Combo (comboName, description, originalPrice, discountPrice, status) VALUES (?, ?, ?, ?, ?)";
 
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+        statement.setString(1, t.getComboName());
+        statement.setString(2, t.getDescription());
+        statement.setDouble(3, t.getOriginalPrice());
+        statement.setDouble(4, t.getDiscountPrice());
+        statement.setString(5, t.getStatus());
+
+        int affectedRow = statement.executeUpdate();
+        if (affectedRow == 0) {
+            throw new SQLException("Creating combo failed, no rows affected.");
+        }
+
+        resultSet = statement.getGeneratedKeys();
+        if (resultSet.next()) {
+            return resultSet.getInt(1); // comboId được sinh ra
+        } else {
+            throw new SQLException("Creating combo failed, no ID obtained.");
+        }
+    } catch (Exception e) {
+        System.out.println("Error insert fail: " + e.getMessage());
+        return -1;
+    } finally {
+        closeResources();
+    }
+}
+public class TestComboInsert {
+    public static void main(String[] args) {
+        List<Integer> foodIds = Arrays.asList(1, 2, 4);
+        List<Integer> quantities = Arrays.asList(1, 2, 1);
+
+        try {
+            // Tính originalPrice từ các món ăn
+            FoodDAO foodDAO = new FoodDAO();
+            double originalPrice = 0;
+            for (int i = 0; i < foodIds.size(); i++) {
+                double price = foodDAO.getPriceById(foodIds.get(i)); // Hàm bạn cần tự tạo
+                originalPrice += price * quantities.get(i);
             }
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
+
+            double discountPrice = originalPrice * 0.8; // giảm 20%
+
+            Combo combo = Combo.builder()
+                    .comboName("Combo thử nghiệm")
+                    .description("Gồm 3 món ăn phổ biến")
+                    .originalPrice(originalPrice)
+                    .discountPrice(discountPrice)
+                    .status("active")
+                    .build();
+
+            ComboDAO comboDAO = new ComboDAO();
+            int comboId = comboDAO.insert(combo);
+
+            if (comboId > 0) {
+                System.out.println("✅ Combo inserted with ID: " + comboId);
+
+                ComboFoodDAO comboFoodDAO = new ComboFoodDAO();
+                for (int i = 0; i < foodIds.size(); i++) {
+                    ComboFood cf = ComboFood.builder()
+                            .comboId(comboId)
+                            .foodId(foodIds.get(i))
+                            .quantityInCombo(quantities.get(i))
+                            .build();
+
+                    comboFoodDAO.insert(cf);
+                }
+
+                System.out.println("✅ ComboFood inserted.");
             } else {
-                throw new SQLException("Creating combo fail ,no rows affected");
+                System.out.println("❌ Insert combo failed.");
             }
         } catch (Exception e) {
-            System.out.println("Error insert fail" + e.getMessage());
-            return -1;
-        } finally {
-            closeResources();
+            e.printStackTrace();
         }
     }
+}
 
     @Override
     public Combo getFromResultSet(ResultSet resultSet) throws SQLException {
         Combo combo = new Combo();
-        combo.setComboId(resultSet.getInt("ComboId"));
-        combo.setName(resultSet.getString("name"));
+        combo.setComboId(resultSet.getInt("comboId"));
+        combo.setComboName(resultSet.getString("comboName"));
         combo.setDescription(resultSet.getString("description"));
         combo.setOriginalPrice(resultSet.getDouble("originalPrice"));
         combo.setDiscountPrice(resultSet.getDouble("discountPrice"));
@@ -243,10 +302,10 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
             "    f.price, \n" +
             "    f.calo, \n" +
             "    f.image_url, \n" +
-            "    cf.quanlityInCombo AS quantity_in_combo\n" +
+            "    cf.quantityInCombo AS quantity_in_combo\n" +
             "FROM ComboFood cf\n" +
-            "JOIN Food f ON cf.FoodId = f.id\n" +
-            "WHERE cf.ComboId = ?";
+            "JOIN Food f ON cf.foodId = f.id\n" +
+            "WHERE cf.comboId = ?";
 
     try {
         connection = getConnection();

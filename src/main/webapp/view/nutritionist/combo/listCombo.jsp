@@ -140,7 +140,7 @@
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                 <div class="name">
-                                                                                                                    <a href="${pageContext.request.contextPath}/managerCombo?action=viewComboFoodDetail&id=${cb.comboId}" class="body-title-2">${cb.name == null ? 'null' : cb.name}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/managerCombo?action=viewComboFoodDetail&id=${cb.comboId}" class="body-title-2">${cb.comboName == null ? 'null' : cb.comboName}</a>
                                                                                                                 </div>
                                                                                                                 <div class="body-text" style="width: 200px">${cb.comboId == null ? 'null': cb.comboId}</div>
                                                                                                                 <div class="body-text">${cb.description== null ? 'null' : cb.description}</div>
