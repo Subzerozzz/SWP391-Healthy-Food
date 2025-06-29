@@ -7,11 +7,17 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Coupon;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,8 +50,22 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public Map<Integer, Coupon> findAllMap() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Map<Integer, Coupon> couponMap = new HashMap<>();
+        try {
+            String sql = "SELECT * FROM Coupon";
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Coupon coupon = getFromResultSet(resultSet);
+                couponMap.put(coupon.getId(), coupon);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeResources();
+            return couponMap;
+        }
     }
 
     @Override
@@ -82,11 +102,21 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     }
 
     @Override
-    public boolean delete(Coupon t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean delete(Coupon coupon) {
+        String sql = "DELETE from Coupon WHERE id=? ";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, coupon.getId());
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting coupon: " + e.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
     }
-
     @Override
     public int insert(Coupon t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from
@@ -153,33 +183,224 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         return null;
     }
 
-    public static void main(String[] args) {
-        CouponDAO couponDAO = new CouponDAO();
+    public boolean isCouponCodeExists(String code, Integer id) {
+        String sql = "SELECT COUNT(*) FROM Coupon WHERE code = ? AND id != ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, code);
+            statement.setInt(2, id);
 
-        // Tạo đối tượng Coupon và gán dữ liệu test
-        Coupon coupon = new Coupon();
-        coupon.setId(4); 
-        coupon.setCode("COUPON1004");
-        coupon.setDescription("Test update usage_count");
-        coupon.setDiscount_type("fixed");
-        coupon.setDiscount_value(10.0);
-        coupon.setMin_purchase(100.0);
-        coupon.setMax_discount(50.0);
-        coupon.setStart_date(Date.valueOf("2025-06-01"));
-        coupon.setEnd_date(Date.valueOf("2025-06-30"));
-        coupon.setUsage_limit(30);
-        coupon.setUsage_count(4); 
-        coupon.setIs_active(1);
-        coupon.setUpdated_at(new Date(System.currentTimeMillis())); 
-
-        // Gọi hàm update
-        boolean success = couponDAO.update(coupon);
-
-        if (success) {
-            System.out.println("✅ Cập nhật usage_count thành công!");
-        } else {
-            System.out.println("❌ Cập nhật thất bại!");
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0; // Trả về true nếu code đã tồn tại ở bản ghi khác
+            }
+        } catch (Exception e) {
+            System.out.println("Error checking coupon code existence by id: " + e.getMessage());
+        } finally {
+            closeResources();
         }
+        return false;
     }
 
+    public List<Coupon> getAllActiveCoupons() {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon WHERE is_active = 1 AND end_date >= ? AND start_date <= ? ORDER BY start_date DESC";
+
+        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
+
+            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
+            ps.setTimestamp(1, currentTime); // Check end_date
+            ps.setTimestamp(2, currentTime); // Check start_date
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    coupons.add(getFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coupons;
+    }
+
+    public List<Coupon> searchCoupons(String keyword) {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon WHERE (code LIKE ? OR description LIKE ?) "
+                + "AND is_active = 1 AND end_date >= ? AND start_date <= ?";
+
+        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
+            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ps.setTimestamp(3, currentTime); // Check end_date
+            ps.setTimestamp(4, currentTime); // Check start_date
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    coupons.add(getFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coupons;
+    }
+    
+    public List<Coupon> searchCouponsByCodeorDescription(String keyword, int offset, int pageSize) {
+        List<Coupon> coupons = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon WHERE code LIKE ? OR description LIKE ? LIMIT ? OFFSET ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            statement.setString(2, likeKeyword);
+            statement.setInt(3, pageSize);
+            statement.setInt(4, offset);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching coupon with pagination: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return coupons;
+    }
+    
+    public int countCouponsBySearch(String keyword) {
+        String sql = "SELECT COUNT(*) FROM Coupon WHERE code LIKE ? OR description LIKE ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            String likeKeyword = "%" + keyword + "%";
+            statement.setString(1, likeKeyword);
+            statement.setString(2, likeKeyword);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting coupon by search: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+    public boolean isCouponCodeExists(String code) {
+        String sql = "SELECT COUNT(*) FROM Coupon WHERE code = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, code);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting coupon by search: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    public List<Coupon> filterCouponWithPagination(String discounttype, int page, int pageSize) {
+        List<Coupon> coupons = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Coupon WHERE 1=1");
+
+        if (discounttype != null && !discounttype.trim().isEmpty()) {
+            sql.append(" AND LOWER(discount_type) = LOWER(?)");
+        }
+
+        // Nối trực tiếp LIMIT và OFFSET vào câu SQL (tránh lỗi không hỗ trợ ? với LIMIT)
+        sql.append(" ORDER BY id ASC LIMIT ").append((page - 1) * pageSize).append(", ").append(pageSize);
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            if (discounttype != null && !discounttype.trim().isEmpty()) {
+                statement.setString(1, discounttype.toLowerCase());
+            }
+
+            System.out.println("SQL Filter Query: " + statement.toString());
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering coupons with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return coupons;
+    }
+public int getTotalCouponCountWithFilter(String discounttype) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Coupon WHERE 1=1");
+
+        if (discounttype != null && !discounttype.trim().isEmpty()) {
+            sql.append(" AND LOWER(discount_type) = LOWER(?)");
+        }
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            if (discounttype != null && !discounttype.trim().isEmpty()) {
+                statement.setString(1, discounttype.toLowerCase());
+            }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting filtered coupons: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+    public int getTotalCoupon() {
+        String sql = "SELECT COUNT(*) FROM Coupon";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking code: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+    public List<Coupon> pagingCoupon(int index) {
+        List<Coupon> coupon = new ArrayList<>();
+        String sql = "SELECT * FROM Coupon\n"
+                + "ORDER BY id\n"
+                + "LIMIT 10 OFFSET ?;";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (index - 1) * 10);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupon.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // BẮT BUỘC CÓ
+        } finally {
+            closeResources();
+        }
+        return coupon;
+    }
 }

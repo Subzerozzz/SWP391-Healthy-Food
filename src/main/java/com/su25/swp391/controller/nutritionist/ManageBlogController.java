@@ -193,7 +193,7 @@ public class ManageBlogController extends HttpServlet {
             String title = request.getParameter("title");
             String author = request.getParameter("author");
             String briefinfo = request.getParameter("briefinfo");
-            String description = request.getParameter("content");
+            String description = request.getParameter("ccountCouponsBySearchontent");
             String dateStr = request.getParameter("date");
             //Xu ly thong tin ve nhap date
             Date date = null;
@@ -339,9 +339,64 @@ public class ManageBlogController extends HttpServlet {
         }
         return errors;
     }
+    
+    private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String status = request.getParameter("status");
+        String search = request.getParameter("search"); // Thêm search parameter
 
-    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        // Lấy tham số phân trang - Sửa "page" thành "index" để phù hợp với phân trang
+        String pageParam = request.getParameter("index"); // Đổi từ "page" thành "index"
+        String pageSizeParam = request.getParameter("pageSize");
+
+        int currentPage = 1;
+        int pageSize = 10;
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
+        }
+
+        // Lấy danh sách đã lọc với phân trang
+        List<Blog> filteredBlog = blogDAO.filterBlogsWithPagination(status, search, currentPage, pageSize);
+
+        // Tính toán tổng số blog với bộ lọc
+        int totalBlogs = blogDAO.getTotalBlogCountWithFilter(status, search);
+        int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
+
+        // Thiết lập các thuộc tính cho JSP
+        request.setAttribute("blogs", filteredBlog);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPage", totalPages); // Đổi từ "totalPages" thành "totalPage" để phù hợp với phân trang
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("totalBlogs", totalBlogs);
+        request.setAttribute("status", status);
+        request.setAttribute("search", search); // Thêm search attribute
+
+        // Tính toán phạm vi hiển thị bản ghi
+        int startRecord = (currentPage - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalBlogs);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+        
+        request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
+    }
+
+    private void searchByNameDoGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String searchKeyword = request.getParameter("search");
         String indexStr = request.getParameter("index");
         int currentPage = 1;
@@ -371,60 +426,5 @@ public class ManageBlogController extends HttpServlet {
         request.setAttribute("totalPage", totalPage);
         request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
     }
-   private void handleFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String status = request.getParameter("status");
-    String search = request.getParameter("search"); // Thêm search parameter
-    
-    // Lấy tham số phân trang - Sửa "page" thành "index" để phù hợp với phân trang
-    String pageParam = request.getParameter("index"); // Đổi từ "page" thành "index"
-    String pageSizeParam = request.getParameter("pageSize");
-    
-    int currentPage = 1;
-    int pageSize = 10;
-    try {
-        if (pageParam != null && !pageParam.isEmpty()) {
-            currentPage = Integer.parseInt(pageParam);
-            if (currentPage < 1) {
-                currentPage = 1;
-            }
-        }
-        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
-            pageSize = Integer.parseInt(pageSizeParam);
-            if (pageSize < 5) {
-                pageSize = 5;
-            }
-            if (pageSize > 50) {
-                pageSize = 50;
-            }
-        }
-    } catch (NumberFormatException e) {
-        currentPage = 1;
-        pageSize = 10;
-    }
-    
-    // Lấy danh sách đã lọc với phân trang
-    List<Blog> filteredBlog = blogDAO.filterBlogsWithPagination(status, search, currentPage, pageSize);
-    
-    // Tính toán tổng số blog với bộ lọc
-    int totalBlogs = blogDAO.getTotalBlogCountWithFilter(status, search);
-    int totalPages = (int) Math.ceil((double) totalBlogs / pageSize);
-    
-    // Thiết lập các thuộc tính cho JSP
-    request.setAttribute("blogs", filteredBlog);
-    request.setAttribute("currentPage", currentPage);
-    request.setAttribute("totalPage", totalPages); // Đổi từ "totalPages" thành "totalPage" để phù hợp với phân trang
-    request.setAttribute("pageSize", pageSize);
-    request.setAttribute("totalBlogs", totalBlogs);
-    request.setAttribute("status", status);
-    request.setAttribute("search", search); // Thêm search attribute
-    
-    // Tính toán phạm vi hiển thị bản ghi
-    int startRecord = (currentPage - 1) * pageSize + 1;
-    int endRecord = Math.min(startRecord + pageSize - 1, totalBlogs);
-    request.setAttribute("startRecord", startRecord);
-    request.setAttribute("endRecord", endRecord);
-    
-    request.getRequestDispatcher("/view/nutritionist/blog/listBlog.jsp").forward(request, response);
-}
 }
 

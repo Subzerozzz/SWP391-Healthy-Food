@@ -205,8 +205,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="contact.html" class="nav-link">
-                                    Contact
+                                <a href="${pageContext.request.contextPath}/Coupon" class="nav-link">
+                                    Coupon
                                 </a>
                             </li>
                         </ul>
