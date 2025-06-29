@@ -45,6 +45,17 @@
         href="${pageContext.request.contextPath}/images/favicon_1.png">
 
     </head>
+        
+        <style>
+            .form-search{
+                display: flex;
+                gap: 20px 
+            }
+            
+            .filter-btn{
+                width: 200px;
+            }
+        </style>
 
     <body class="body">
 
@@ -117,50 +128,45 @@
                     <!-- /Thêm modal xác nhận xóa -->
                     <!-- product-list -->
                     <div class="wg-box">
-                      <div class="title-box">
-                        <i class="icon-coffee"></i>
-                        <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID,
-                          which
-                          you can rely on to find the exact product you need.</div>
-                      </div>
                       <div class="flex items-center justify-between gap10 flex-wrap">
-                        <div class="wg-filter flex-grow">
-                          <!-- filter -->
-                          <div class="filter-dropdown">
-                            <button class="filter-btn" type="button" id="filterToggle">
-                              <span class="filter-icon">
-                                <i class="fa-solid fa-filter"></i>
-                                </svg>
-                              </span>
-                              <span>Filter by category</span>
-                            </button>
-                            <div class="filter-select-wrap" id="filterSelectWrap">
-                              <select class="filter-select" onchange="filterByCategory(this)">
-                                  <option value="" disabled selected>-- Chọn danh mục --</option>
-                                  <option value="all" class="selected">
-                                      Tất cả
-                                  </option>
-                                <c:forEach items="${listCategory}" var="item">
-                                  <option value="${item.getId()}" ${item.getId()==categoryID? 'selected' : '' }>
-                                    ${item.getName()}
-                                  </option>
-                                </c:forEach>
-                              </select>
-                            </div>
-                          </div>
-                          <!-- search -->
-                          <form class="form-search" action="${pageContext.request.contextPath}/manage-food"
-                            method="GET">
-                            <fieldset class="name">
-                              <input type="hidden" name="action" value="search">
-                              <input type="text" placeholder="Search by food name here..." class="" name="name"
-                                tabindex="2" value="${not empty foodName? foodName : ""}" aria-required="true"
-                                required="">
-                            </fieldset>
-                            <div class="button-submit">
-                              <button class="" type="submit"><i class="icon-search"></i></button>
-                            </div>
-                          </form>
+                        <div class="wg-filter flex-grow">     
+                          <!--Filter channing-->
+                          <form style="width: 500px" class="form-search" action="${pageContext.request.contextPath}/manage-food" method="GET">
+                             
+                              <input type="hidden" name="action" value="searchFilter">
+                              <!-- FILTER BY CATEGORY -->
+                              <div class="filter-dropdown">
+                                <button class="filter-btn" type="button" id="filterToggle">
+                                  <span class="filter-icon">
+                                    <i class="fa-solid fa-filter"></i>
+                                  </span>
+                                  <span>Filter by category</span>
+                                </button>
+
+                                <div class="filter-select-wrap" id="filterSelectWrap">
+                                  <select class="filter-select" name="categoryID" onchange="filterByCategory(this)">
+                                    <option value="" disabled selected>-- Chọn danh mục --</option>
+                                    <option value="${0}" ${categoryID == 0 ? 'selected' : ''}>Tất cả</option>
+                                    <c:forEach items="${listCategory}" var="item">
+                                      <option value="${item.getId()}" ${item.getId()==categoryID? 'selected' : '' }>
+                                        ${item.getName()}
+                                      </option>
+                                    </c:forEach>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <!-- SEARCH BY NAME -->
+                              <fieldset style="flex:1" class="name">
+                                  <input type="text" placeholder="Search by food name" name="name"
+                                  value="${not empty foodName ? foodName : ''}" required="">
+                              </fieldset>
+
+                              <div class="button-submit">
+                                  <button type="submit"><i class="icon-search"></i></button>
+                              </div>
+                            </form>
+
                         
                                 
                         <!--Add new food--> 
@@ -171,85 +177,112 @@
                             </a>
                         </div>
                       <div class="wg-table table-product-list">
-                        <ul class="table-title flex gap20 mb-14">
-                          <li>
-                            <div class="body-title">Food Name</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Calo</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Category</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Price</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Status</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Created date</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Updated date</div>
-                          </li>
-                          <li>
-                            <div class="body-title">Action</div>
-                          </li>
-                        </ul>
-                        <ul class="flex flex-column">
-                          <c:forEach items="${listFood}" var="item">
-                            <li class="product-item gap14">
-                              <div class="image no-bg">
-                                  <img src="${item.getImage_url()}" alt="">
-                              </div>
-                              <div class="flex items-center justify-between gap20 flex-grow">
-                                <div class="name">
-                                  <a href="product-list.html" class="body-title-2">${item.getName()}</a>
-                                </div>
-                                <div class="body-text">${item.getCalo()}</div>
-                                <div class="body-text">
-                                  <c:forEach items="${listCategory}" var="itemCategory">
-                                    <c:if test="${itemCategory.getId() == item.getCategory_id()}">
-                                      ${itemCategory.getName()}
-                                    </c:if>
-                                  </c:forEach>
-                                </div>
-                                <div class="body-text">
-                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
-                                </div>
-                                <c:choose>
-                                    <c:when test="${item.getStatus() == 'inactive'}">
-                                        <div class="body-text food-inactive" >${item.getStatus()}</div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div class="body-text food-active" >${item.getStatus()}</div>
-                                    </c:otherwise>
-                                </c:choose>
-                                
-                                <div class="body-text">
-                                    <fmt:formatDate value="${item.getCreated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
-                                </div>
-                                <div class="body-text">
-                                    <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
-                                </div>
-                                <div class="list-icon-function">
-                                  <div class="item edit">
-                                    <a
-                                      href="${pageContext.request.contextPath}/manage-food?action=update&id=${item.id}">
-                                      <i class="icon-edit-3" style="color: green"></i>
-                                    </a>
-                                  </div>
-                                  <div class="item delete" id="item-delete">
-                                    <i class="icon-trash-2 item-trash" style="color: red;" data-id="${item.getId()}"
-                                      data-name="${item.getName()}" onclick="showModalForm(event)"></i>
-                                  </div>
-                                </div>
-                              </div>
-                            </li>
-                          </c:forEach>
+                          <c:choose>
+                              <c:when test="${listFood.size() == 0}">
+                                  <tr>
+                                    <td colspan="8" class="text-center">
+                                        <div class="py-4">
+                                            <h5>No Food Draft Request found</h5>
+                                            <p class="text-muted">
+                                                <c:choose>
+                                                    <c:when test="${not empty param.name}">
+                                                        No Food Draft Request match your search criteria. Try adjusting your filters.
+                                                        <br>
+                                                            <a href="${pageContext.request.contextPath}/manage-food" class="btn btn-outline-primary mt-2">
+                                                                <i class="fas fa-times me-2"></i>Clear Filters
+                                                            </a>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        There are no orders in the system yet.
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                              </c:when>
+                              <c:otherwise>
+                                  <ul class="table-title flex gap20 mb-14">
+                                    <li>
+                                      <div class="body-title">Food Name</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Calo</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Category</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Price</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Status</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Created date</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Updated date</div>
+                                    </li>
+                                    <li>
+                                      <div class="body-title">Action</div>
+                                    </li>
+                                  </ul>
+                                  <ul class="flex flex-column">
+                                      <c:forEach items="${listFood}" var="item">
+                                          <li class="product-item gap14">
+                                            <div class="image no-bg">
+                                                <img src="${item.getImage_url()}" alt="">
+                                            </div>
+                                            <div class="flex items-center justify-between gap20 flex-grow">
+                                              <div class="name">
+                                                <a href="product-list.html" class="body-title-2">${item.getName()}</a>
+                                              </div>
+                                              <div class="body-text">${item.getCalo()}</div>
+                                              <div class="body-text">
+                                                <c:forEach items="${listCategory}" var="itemCategory">
+                                                  <c:if test="${itemCategory.getId() == item.getCategory_id()}">
+                                                    ${itemCategory.getName()}
+                                                  </c:if>
+                                                </c:forEach>
+                                              </div>
+                                              <div class="body-text">
+                                                  <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                              </div>
+                                              <c:choose>
+                                                  <c:when test="${item.getStatus() == 'inactive'}">
+                                                      <div class="body-text food-inactive" >${item.getStatus()}</div>
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                      <div class="body-text food-active" >${item.getStatus()}</div>
+                                                  </c:otherwise>
+                                              </c:choose>
 
-                        </ul>
+                                              <div class="body-text">
+                                                  <fmt:formatDate value="${item.getCreated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                              </div>
+                                              <div class="body-text">
+                                                  <fmt:formatDate value="${item.getUpdated_at()}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                              </div>
+                                              <div class="list-icon-function">
+                                                <div class="item edit">
+                                                  <a
+                                                    href="${pageContext.request.contextPath}/manage-food?action=update&id=${item.id}">
+                                                    <i class="icon-edit-3" style="color: green"></i>
+                                                  </a>
+                                                </div>
+                                                <div class="item delete" id="item-delete">
+                                                  <i class="icon-trash-2 item-trash" style="color: red;" data-id="${item.getId()}"
+                                                    data-name="${item.getName()}" onclick="showModalForm(event)"></i>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </li>
+                                        </c:forEach>
+                                  </ul>
+                              </c:otherwise>
+                          </c:choose>
+                        
                       </div>
                       <div class="divider"></div>
                       <div class="flex items-center justify-between flex-wrap gap10">
@@ -257,21 +290,21 @@
                         <ul class="wg-pagination">
                           
                           <li>
-                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=1"><i class="icon-chevron-left"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=1"><i class="icon-chevron-left"></i></a>
                           </li>
                             <c:choose>
                                 <c:when test="${currentPage <= totalPage - 2}">
                                     <c:if test="${currentPage > 1}">
                                          <li class="">
-                                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage - 1}">${currentPage - 1}</a>
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage - 1}">${currentPage - 1}</a>
                                         </li>
                                     </c:if>
                                     <li class="active">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage}">${currentPage}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage}">${currentPage}</a>
                                     </li>
                                     
                                     <li class="">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${currentPage + 1}">${currentPage + 1}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${currentPage + 1}">${currentPage + 1}</a>
                                     </li>
                                     
                                     <c:if test="${currentPage < totalPage - 2}">
@@ -282,21 +315,21 @@
                                     
                                     
                                     <li class="">
-                                        <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${totalPage}">${totalPage}</a>
+                                        <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${totalPage}">${totalPage}</a>
                                     </li>
                                 </c:when>
                                 
                                 <c:otherwise>
                                     <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
                                         <li class="${currentPage == i ? 'active' : ''}">
-                                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${i}">${i}</a>
+                                            <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${i}">${i}</a>
                                         </li>
                                     </c:forEach>
                                 </c:otherwise>
                             </c:choose>
                             
                           <li>
-                            <a href="${pageContext.request.contextPath}/manage-food?action=pagination&page=${totalPage}"><i class="icon-chevron-right"></i></a>
+                            <a href="${pageContext.request.contextPath}/manage-food?action=searchFilter&name=${foodName}&cateoryID=${categoryID}&page=${totalPage}"><i class="icon-chevron-right"></i></a>
                           </li>
                         </ul>
                       </div>
@@ -541,13 +574,16 @@
             filterDropdown.classList.remove('active');
           }
         });
+        
         const filterByCategory = (e) => {
-          const id = e.value;
-           if (id === "all") {
-            window.location.href = '${pageContext.request.contextPath}/manager-dashboard';
-          }
-          else window.location.href = '${pageContext.request.contextPath}/manage-food?action=filter&id=' + id;
-        }
+             const form = e.closest("form"); // lấy thẻ form bao quanh
+            form.submit(); // submit form (có cả name và categoryID)
+
+ 
+          };
+               
+         
+             
         // End Filter 
       </script>
         

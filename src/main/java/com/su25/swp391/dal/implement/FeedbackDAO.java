@@ -41,11 +41,11 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     public List<Feedback> findAll() {
         List<Feedback> feedbacks = new ArrayList<>();
         String sql = "SELECT f.*, a.full_name, a.user_name, fo.name , fo.image_url "
-                + "FROM feedbacks f "
-                + "JOIN account a "
+                + "FROM Feedback f "
+                + "JOIN Account a "
                 + "ON f.user_id = a.id "
-                + "JOIN order_items oi "
-                + "ON f.order_item_id = oi.order_item_id "
+                + "JOIN OrderItem oi "
+                + "ON f.order_item_id = oi.id"
                 + "JOIN Food fo "
                 + "ON oi.food_id = fo.id "
                 + "Where f.is_visible = 1 "
@@ -312,6 +312,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         } finally {
             closeResources();
             // (Optional) Add resource cleanup here if you're not using try-with-resources
+            closeResources();
         }
 
         // Return the list of matched feedbacks
@@ -371,7 +372,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 
     public static void main(String[] args) {
         FeedbackDAO f = new FeedbackDAO();
-        System.out.println("");               
+        System.out.println(f.findFeedbackWithFilters("", "", "", 1, 10));               
     }
 
 }

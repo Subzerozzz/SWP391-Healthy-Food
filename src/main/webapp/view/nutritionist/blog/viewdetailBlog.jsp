@@ -426,12 +426,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+                <jsp:include page="../../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include> 
+                    <jsp:include page="../../common/headerDashboard.jsp"></jsp:include> 
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content blog-detail-container">
@@ -466,7 +466,6 @@
                                                         ${blog.brief_info}
                                                     </div>
                                                 </div>
-
                                                 <div class="content-section">
                                                     <h3 class="section-title">Content</h3>
                                                     <div class="description-content">
@@ -474,20 +473,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Right Column -->
-                                            <div class="content-right">
-                                                <div class="content-section">
-                                                    <h3 class="section-title">Featured Image</h3>
-                                                    <div class="image-showcase">
-                                                        <div class="image-frame">
-                                                            <img src="${blog.thumbnailblogs}" alt="Blog thumbnail">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
-
                                         <div class="content-section" style="text-align: center; margin-top: 3rem;">
                                             <a href="${pageContext.request.contextPath}/manage-blog" class="back-button">
                                                 ← Back to Blog Management

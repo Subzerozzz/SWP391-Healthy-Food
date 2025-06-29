@@ -137,7 +137,7 @@
     <body>
         <div class="container">
             <div class="logo">
-                <img src="${pageContext.request.contextPath}/images/logos/logo-2.png" alt="Logo">
+                <img src="${pageContext.request.contextPath}/images/healthylogo.png" alt="Logo">
             </div>
 
             <h1>Xác thực OTP</h1>

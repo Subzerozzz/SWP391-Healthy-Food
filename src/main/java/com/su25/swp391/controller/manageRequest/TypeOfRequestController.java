@@ -64,6 +64,9 @@ public class TypeOfRequestController extends HttpServlet {
                     case "DELETE":
                         deleteToFood(request, response);
                         break;
+                    case "Pending":
+                        listPending(request,response);
+                        break;
                     default:
                         listTypeOfRequest(request, response);
                         break;
@@ -98,6 +101,9 @@ public class TypeOfRequestController extends HttpServlet {
                         break;
                     case "DELETE":
                         listTypeOfDelete(request, response);
+                        break;
+                        case "Pending":
+                        listPending(request,response);
                         break;
                     default:
                         listTypeOfRequest(request, response);
@@ -615,6 +621,12 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("type", listType);
         // come to dashboard.jsp
         request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+    }
+
+    private void listPending(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+          List<FoodDraft> listF = null;
+          request.setAttribute("listFoodDraft", listF);
+          request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
 
 }

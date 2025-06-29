@@ -75,7 +75,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
                 food = getFromResultSet(resultSet);
             }
         } catch (Exception e) {
-        }finally{
+        } finally {
             closeResources();
         }
         return food;
@@ -94,7 +94,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return foodList;
@@ -115,7 +115,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return listFood;
@@ -140,7 +140,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -167,7 +167,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -194,7 +194,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }finally{
+        } finally {
             closeResources();
         }
         return list;
@@ -335,6 +335,53 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         }
         return null;
     }
+
+    public List<Food> filterChanning(Integer categoryId, String foodName, Integer limit, Integer currentPage) {
+        List<Food> list = new ArrayList<>();
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT f.* FROM Food f WHERE 1=1");
+
+        // Lọc theo categoryId nếu có
+        if (categoryId != 0) {
+            sqlBuilder.append(" AND f.category_id = ?");
+        }
+
+        // Lọc theo foodName nếu khác rỗng
+        if (foodName != null && !foodName.trim().isEmpty()) {
+            sqlBuilder.append(" AND f.name LIKE ?");
+        }
+
+        // set limit dựa vào currentPage
+        if (currentPage != null) {
+            sqlBuilder.append(" LIMIT ? OFFSET ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sqlBuilder.toString());
+            int paramIndex = 1;
+            if (categoryId != 0) {
+                statement.setInt(paramIndex++, categoryId);
+            }
+            if (foodName != null && !foodName.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + foodName + "%");
+            }
+            if (currentPage != null) {
+                statement.setInt(paramIndex++, limit);
+                statement.setInt(paramIndex++, (currentPage - 1) * limit);
+            }
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
     
     public List<String> findFoodNameList(){
         String sql = "Select DISTINCT name from Food";
@@ -352,11 +399,66 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             closeResources();
         }
         return lFood;
+    } 
+    
+    public List<Food> getFoodByFoodIdFromOrderItems(int foodId) {
+    List<Food> foodList = new ArrayList<>();
+    String sql = "SELECT f.* FROM Food f "
+               + "JOIN OrderItem oi ON f.id = oi.food_id "
+               + "WHERE oi.food_id = ?";
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, foodId);
+        resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            Food food = new Food();
+            food.setId(resultSet.getInt("id"));
+            food.setName(resultSet.getString("name"));
+            food.setDescription(resultSet.getString("description"));
+            food.setPrice(resultSet.getDouble("price"));
+            food.setImage_url(resultSet.getString("image_url"));
+            food.setStatus(resultSet.getString("status"));
+            food.setCategory_id(resultSet.getInt("category_id"));
+            food.setCreated_at(resultSet.getTimestamp("created_at"));
+            food.setUpdated_at(resultSet.getTimestamp("updated_at"));
+            food.setNutri_id(resultSet.getInt("nutri_id"));
+            food.setCalo(resultSet.getDouble("calo"));
+
+            foodList.add(food);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
     }
-    public static void main(String[] args) {
-        System.out.println(new FoodDAO().findById(1));
-        List<String> f = new FoodDAO().findFoodNameList();
-        System.out.println(f);
+
+    return foodList;
+  }
+     public static void main(String[] args) {
+        FoodDAO foodDAO = new FoodDAO();
+
+        int testFoodId = 1; // 📝 Thay bằng food_id thực tế có trong bảng Order_Items
+
+        List<Food> foods = foodDAO.getFoodByFoodIdFromOrderItems(testFoodId);
+
+        if (foods == null || foods.isEmpty()) {
+            System.out.println("❌ No food found for food_id = " + testFoodId);
+        } else {
+            System.out.println("✅ Found " + foods.size() + " food(s):");
+            for (Food food : foods) {
+                System.out.println("ID: " + food.getId());
+                System.out.println("Name: " + food.getName());
+                System.out.println("Price: " + food.getPrice());
+                System.out.println("Image: " + food.getImage_url());
+                System.out.println("Calo: " + food.getCalo());
+                System.out.println("------");
+            }
+        }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.su25.swp391.controller.nutri;
+package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.dal.implement.BlogDAO;
 import com.su25.swp391.entity.Blog;
