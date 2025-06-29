@@ -9,7 +9,7 @@ import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Coupon;
 import java.math.BigDecimal;
 import java.sql.Connection;
-    import java.sql.Date;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,15 +78,15 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             statement = connection.prepareStatement(sql);
             statement.setString(1, coupon.getCode());
             statement.setString(2, coupon.getDescription());
-            statement.setString(3, coupon.getDiscountType());
-            statement.setBigDecimal(4, coupon.getDiscountValue());
-            statement.setBigDecimal(5, coupon.getMinPurchase());
-            statement.setBigDecimal(6, coupon.getMaxDiscount());
-            statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
-            statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-            statement.setInt(9, coupon.getUsageLimit());
-            statement.setInt(10, coupon.getPerCustomerLimit());
-            statement.setInt(11, coupon.getIsactive());
+            statement.setString(3, coupon.getDiscount_type());
+            statement.setDouble(4, coupon.getDiscount_value());
+            statement.setDouble(5, coupon.getMin_purchase());
+            statement.setDouble(6, coupon.getMax_discount());
+            statement.setDate(7, new java.sql.Date(coupon.getStart_date().getTime()));
+            statement.setDate(8, new java.sql.Date(coupon.getEnd_date().getTime()));
+            statement.setInt(9, coupon.getUsage_limit());
+            statement.setInt(10, coupon.getPer_customer_limit());
+            statement.setInt(11, coupon.getIs_active());
             statement.setInt(12, coupon.getId()); 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -125,16 +124,16 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, coupon.getCode());
         statement.setString(2, coupon.getDescription());
-        statement.setString(3, coupon.getDiscountType());
-        statement.setBigDecimal(4, coupon.getDiscountValue()); 
-        statement.setBigDecimal(5, coupon.getMinPurchase());
-        statement.setBigDecimal(6, coupon.getMaxDiscount());
-        statement.setDate(7, new java.sql.Date(coupon.getStartDate().getTime()));
-        statement.setDate(8, new java.sql.Date(coupon.getEndDate().getTime()));
-        statement.setInt(9, coupon.getIsactive());
+        statement.setString(3, coupon.getDiscount_type());
+        statement.setDouble(4, coupon.getDiscount_value()); 
+        statement.setDouble(5, coupon.getMin_purchase());
+        statement.setDouble(6, coupon.getMax_discount());
+        statement.setDate(7, new java.sql.Date(coupon.getStart_date().getTime()));
+        statement.setDate(8, new java.sql.Date(coupon.getEnd_date().getTime()));
+        statement.setInt(9, coupon.getIs_active());
         // Xử lý null an toàn
-        statement.setObject(10, coupon.getUsageLimit(), java.sql.Types.INTEGER);
-        statement.setObject(11, coupon.getPerCustomerLimit(), java.sql.Types.INTEGER);
+        statement.setObject(10, coupon.getUsage_limit(), java.sql.Types.INTEGER);
+        statement.setObject(11, coupon.getPer_customer_limit(), java.sql.Types.INTEGER);
 
         int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
@@ -161,18 +160,18 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         coupon.setId(rs.getInt("id"));
         coupon.setCode(rs.getString("code"));
         coupon.setDescription(rs.getString("description"));
-        coupon.setDiscountType(rs.getString("discount_type"));
-        coupon.setDiscountValue(rs.getBigDecimal("discount_value"));
-        coupon.setMinPurchase(rs.getBigDecimal("min_purchase"));
-        coupon.setMaxDiscount(rs.getBigDecimal("max_discount"));
-        coupon.setStartDate(rs.getDate("start_date"));
-        coupon.setEndDate(rs.getDate("end_date"));
-        coupon.setUsageLimit(rs.getInt("usage_limit"));
-        coupon.setUsageCount(rs.getInt("usage_count"));
-        coupon.setIsactive(rs.getInt("is_active"));
-        coupon.setPerCustomerLimit(rs.getInt("per_customer_limit"));
-        coupon.setCreatedAt(rs.getDate("created_at"));
-        coupon.setUpdatedAt(rs.getDate("updated_at"));
+        coupon.setDiscount_type(rs.getString("discount_type"));
+        coupon.setDiscount_value(rs.getDouble("discount_value"));
+        coupon.setMin_purchase(rs.getDouble("min_purchase"));
+        coupon.setMax_discount(rs.getDouble("max_discount"));
+        coupon.setStart_date(rs.getDate("start_date"));
+        coupon.setEnd_date(rs.getDate("end_date"));
+        coupon.setUsage_limit(rs.getInt("usage_limit"));
+        coupon.setUsage_count(rs.getInt("usage_count"));
+        coupon.setIs_active(rs.getInt("is_active"));
+        coupon.setPer_customer_limit(rs.getInt("per_customer_limit"));
+        coupon.setCreated_at(rs.getDate("created_at"));
+        coupon.setUpdated_at(rs.getDate("updated_at"));
         return coupon;
     }
 

@@ -162,8 +162,8 @@
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <h3>Edit Coupon</h3>
-                                <fmt:formatDate value="${coupon.startDate}" pattern="yyyy-MM-dd" var="startDateFormatted" />
-                                <fmt:formatDate value="${coupon.endDate}" pattern="yyyy-MM-dd" var="endDateFormatted" />
+                                <fmt:formatDate value="${coupon.start_date}" pattern="yyyy-MM-dd" var="startDateFormatted" />
+                                <fmt:formatDate value="${coupon.end_date}" pattern="yyyy-MM-dd" var="endDateFormatted" />
                                 </div>
                                 <!-- form-add-coupon -->
                                 <form  
@@ -191,30 +191,30 @@
                                                 <select name="discountype" required>
                                                     <option value="">Select discount type</option>
                                                     <option value="percentage" 
-                                                            <c:if test="${coupon.discountType == 'percentage'}">selected</c:if>>Percentage (%)</option>
+                                                            <c:if test="${coupon.discount_type == 'percentage'}">selected</c:if>>Percentage (%)</option>
                                                             <option value="fixed" 
-                                                            <c:if test="${coupon.discountType == 'fixed'}">selected</c:if>>Fixed Amount</option>
+                                                            <c:if test="${coupon.discount_type == 'fixed'}">selected</c:if>>Fixed Amount</option>
                                                 </select>
                                             </div>
                                         </fieldset>
                                         <!-- Discount Value -->
                                         <fieldset class="discountValue">
                                             <div class="body-title mb-10">Discount Value <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter discount value" name="discountvalue" tabindex="0" value="${coupon.discountValue}" aria-required="true" required>
+                                            <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter discount value" name="discountvalue" tabindex="0" value="${coupon.discount_value}" aria-required="true" required>
                                             <div class="text-tiny">Enter the discount amount or percentage value.</div>
                                         </fieldset>
 
                                         <!-- Min Purchase -->
                                         <fieldset class="minPurchase">
                                             <div class="body-title mb-10">Minimum Purchase Amount</div>
-                                            <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter minimum purchase amount" name="minpurchase" tabindex="0" value="${coupon.minPurchase}">
+                                            <input class="mb-10" type="number" step="0.01" min="0" placeholder="Enter minimum purchase amount" name="minpurchase" tabindex="0" value="${coupon.min_purchase}">
                                             <div class="text-tiny">Minimum order amount required to use this coupon (optional).</div>
                                         </fieldset>
                                             <fieldset class="maxDiscount">
                                                 <div class="body-title mb-10">Maximum Discount Amount</div>
                                                 <input class="mb-10" type="number" step="0.01" min="0" 
                                                        placeholder="Enter maximum discount amount" name="maxdiscount"
-                                                       tabindex="0" value="${coupon.maxDiscount}">
+                                                       tabindex="0" value="${coupon.max_discount}">
                                                     <div class="text-tiny">Maximum discount amount for percentage coupons (optional).</div>
                                             </fieldset>
                                                  <!-- Usage Limit -->
@@ -223,7 +223,7 @@
                                                         <input class="mb-10" type="number" min="0" step="1" 
                                                                placeholder="Enter usage limit"
                                                                name="usageLimit"
-                                                               value="${coupon.usageLimit}">
+                                                               value="${coupon.usage_limit}">
                                                             <div class="text-tiny">Maximum number of times this coupon can be used. Leave empty for unlimited.</div>
                                                     </fieldset>
                                                                <!-- Per Customer Limit -->
@@ -232,7 +232,7 @@
                                                                    <input class="mb-10" type="number" min="0" step="1"
                                                                           placeholder="Enter per customer limit"
                                                                           name="percuslimit"
-                                                                          value="${coupon.perCustomerLimit}">
+                                                                          value="${coupon.per_customer_limit}">
                                                                        <div class="text-tiny">Maximum number of times a customer can use this coupon. Leave empty for unlimited.</div>
                                                                </fieldset>       
                                                     <!-- Status -->
@@ -241,12 +241,12 @@
                                                         <div style="display: flex; align-items: center; gap: 10px;">
                                                             <!-- Hidden input dùng để submit giá trị 0, sẽ được cập nhật bằng JS -->
                                                             <input type="hidden" id="isActiveHidden" name="isActive" 
-                                                                   value="${coupon.isactive == 1 ? '1' : '0'}" />
+                                                                   value="${coupon.is_active == 1 ? '1' : '0'}" />
 
                                                             <label class="switch">
                                                                 <!-- Checkbox KHÔNG có name để tránh gửi trùng name -->
                                                                 <input type="checkbox" id="isActiveCheckbox"
-                                                                       <c:if test="${coupon.isactive == 1}">checked</c:if>
+                                                                       <c:if test="${coupon.is_active == 1}">checked</c:if>
                                                                        onchange="document.getElementById('isActiveHidden').value = this.checked ? '1' : '0'" />
                                                                 <span class="slider round"></span>
                                                             </label>
