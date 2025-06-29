@@ -63,7 +63,7 @@
                                                                 <div id="wrapper">
                                                                     <!-- #page -->
                                                                     <div id="page" class="">
-                                                                        <!-- layout-wrap -->
+                                                                        <!-- layout-wrap -->    
                                                                         <div class="layout-wrap">
                                                                             <!-- preload -->
                                                                             <div id="preload" class="preload-container">
@@ -73,12 +73,12 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                           <!-- section-menu-left -->
-                                                                            <jsp:include page = "../common/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
+                                                                                <jsp:include page = "../../common/headerDashboard.jsp"></jsp:include>
                                                                                     <!-- /header-dashboard -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->
@@ -201,7 +201,7 @@
 
                                                                                                                                                     </div>
                                                                                                                                                     <div class="item edit" >
-                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&id=${cate.id}"> <i class="icon-edit-3"></i></i></a>
+                                                                                                                                                        <a href="${pageContext.request.contextPath}/manageCategory?action=edit&id=${cate.id}"> <i class="icon-edit-3"></i></a>
 
 
                                                                                                                                                     </div>

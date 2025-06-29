@@ -7,7 +7,7 @@ package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Category;
+import com.su25.swp391.entity.FoodCategory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,11 +21,11 @@ import java.util.Map;
  *
  * @author Hang
  */
-public class CategoryDAO extends DBContext implements I_DAO<Category> {
+public class CategoryDAO extends DBContext implements I_DAO<FoodCategory> {
 
     @Override
-    public List<Category> findAll() {
-        List<Category> category = new ArrayList<>();
+    public List<FoodCategory> findAll() {
+        List<FoodCategory> category = new ArrayList<>();
         String sql = "SELECT * FROM FoodCategory";
         try {
             connection = getConnection();
@@ -58,8 +58,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         return 0;
     }
 
-    public List<Category> findAllWithPagination(int page, int pageSize) {
-        List<Category> category = new ArrayList<>();
+    public List<FoodCategory> findAllWithPagination(int page, int pageSize) {
+        List<FoodCategory> category = new ArrayList<>();
         String sql = "SELECT * FROM FoodCategory ORDER BY id LIMIT ?, ?";
 
         try {
@@ -84,15 +84,15 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
 
     @Override
-    public Map<Integer, Category> findAllMap() {
-        Map<Integer, Category> categoryMap = new HashMap<>();
+    public Map<Integer, FoodCategory> findAllMap() {
+        Map<Integer, FoodCategory> categoryMap = new HashMap<>();
         String sql = "SELECT * FROM FoodCategory";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Category category = getFromResultSet(resultSet);
+                FoodCategory category = getFromResultSet(resultSet);
                 categoryMap.put(category.getId(), category);
             }
         } catch (Exception e) {
@@ -103,8 +103,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     @Override
-    public boolean update(Category t) {
-        List<Category> updatecategory = new ArrayList<>();
+    public boolean update(FoodCategory t) {
+        List<FoodCategory> updatecategory = new ArrayList<>();
         String sql = "UPDATE FoodCategory "
                 + "SET name = ?, description = ?, minBMI = ?, maxBMI = ?"
                 + " WHERE id = ?";
@@ -127,8 +127,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     @Override
-    public boolean delete(Category t) {
-        List<Category> deletecategory = new ArrayList<>();
+    public boolean delete(FoodCategory t) {
+        List<FoodCategory> deletecategory = new ArrayList<>();
         String sql = "DELETE FROM FoodCategory WHERE id = ?";
         try {
             connection = getConnection();
@@ -144,7 +144,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     @Override
-    public int insert(Category t) {
+    public int insert(FoodCategory t) {
         String sql = "INSERT INTO FoodCategory "
                 + " (name, description, maxBMI, minBMI) "
                 + "VALUES (?, ?, ?, ?)";
@@ -173,8 +173,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
 
 
     @Override
-    public Category getFromResultSet(ResultSet resultSet) throws SQLException {
-        return Category.builder()
+    public FoodCategory getFromResultSet(ResultSet resultSet) throws SQLException {
+        return FoodCategory.builder()
                 .id(resultSet.getInt("id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
@@ -184,7 +184,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     }
 
     @Override
-    public Category findById(Integer id) {
+    public FoodCategory findById(Integer id) {
         String sql = "SELECT * FROM FoodCategory WHERE id = ?";
         try {
             statement = connection.prepareStatement(sql);
@@ -203,8 +203,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         return null;
     }
 
-    public List<Category> findCategorybyName(String keyword) {
-        List<Category> category = new ArrayList<>();
+    public List<FoodCategory> findCategorybyName(String keyword) {
+        List<FoodCategory> category = new ArrayList<>();
         String sql = "SELECT * FROM FoodCategory WHERE name LIKE ? ";
         try {
             connection = getConnection();
@@ -223,8 +223,8 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
         return category;
     }
 
-    public List<Category> filterCategoryByBMI(double min, double max) {
-    List<Category> list = new ArrayList<>();
+    public List<FoodCategory> filterCategoryByBMI(double min, double max) {
+    List<FoodCategory> list = new ArrayList<>();
     String sql = "SELECT * FROM FoodCategory WHERE minBMI >= ? AND maxBMI <= ?";
     try {
         connection = getConnection();
@@ -243,7 +243,7 @@ public class CategoryDAO extends DBContext implements I_DAO<Category> {
     return list;
 }   
     public static void main(String[] args) {
-        new CategoryDAO().findAll().forEach(item -> {
+        new FoodCategoryDAO().findAll().forEach(item -> {
             System.out.println(item);
         });
     }
