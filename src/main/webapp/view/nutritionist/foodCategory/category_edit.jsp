@@ -175,7 +175,7 @@
                                                                                                             </c:if>
                                                                                                             <div class="invalid-feedback">Vui lòng nhập Số MinBMI</div>
                                                                                                         </fieldset>
-                                                                                                        
+
                                                                                                         <!-- MaxBMI -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">MaxBMI</div>
@@ -186,7 +186,7 @@
                                                                                                             </c:if>
                                                                                                             <div class="invalid-feedback">Vui lòng nhập Số MaxBMI</div>
                                                                                                         </fieldset>
-                                                                                                            <!-- BMI logic error -->
+                                                                                                        <!-- BMI logic error -->
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <c:if test="${not empty errors.BMI}">
                                                                                                                 <div class="error" style="color:red;">${errors.BMI}</div>
@@ -221,19 +221,20 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
+                                                                                <jsp:include page="../../common/footer.jsp"></jsp:include>
 
-                                                                                <!-- /bottom-page -->
+                                                                                    <!-- /bottom-page -->
+                                                                                </div>
+                                                                                <!-- /main-content -->
                                                                             </div>
-                                                                            <!-- /main-content -->
+                                                                            <!-- /section-content-right -->
                                                                         </div>
-                                                                        <!-- /section-content-right -->
+                                                                        <!-- /layout-wrap -->
                                                                     </div>
-                                                                    <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                                </div>
+                                                                    <!-- /#page -->
+                                                                    </div>
 
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
@@ -311,7 +312,7 @@
                                                                         display: block;
                                                                     }
                                                                 </style>
-                                                                 <script>
+                                                                <script>
                                                                     document.addEventListener('DOMContentLoaded', function () {
                                                                         const form = document.querySelector('.edit_category');
 
@@ -352,87 +353,87 @@
 
                                                                             if (number < minValue || number > maxValue) {
                                                                                 showError(input, ` Số phải nằm trong khoảng 10-50`);
-                                                                                                return false;
-                                                                                            }
+                                                                                return false;
+                                                                            }
 
-                                                                                            clearError(input);
-                                                                                            return true;
-                                                                                        }
+                                                                            clearError(input);
+                                                                            return true;
+                                                                        }
 
-                                                                                        // Khi submit form
-                                                                                        form.addEventListener('submit', function (e) {
-                                                                                            e.preventDefault();
-                                                                                            let isValid = true;
+                                                                        // Khi submit form
+                                                                        form.addEventListener('submit', function (e) {
+                                                                            e.preventDefault();
+                                                                            let isValid = true;
 
-                                                                                            // Validate name_category
-                                                                                            const nameInput = form.querySelector('[name="name"]');
-                                                                                            if (nameInput.value.trim().length < 3) {
-                                                                                                showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
-                                                                                                isValid = false;
-                                                                                            } else {
-                                                                                                clearError(nameInput);
-                                                                                            }
+                                                                            // Validate name_category
+                                                                            const nameInput = form.querySelector('[name="name"]');
+                                                                            if (nameInput.value.trim().length < 3) {
+                                                                                showError(nameInput, 'Tên category phải có ít nhất 3 ký tự');
+                                                                                isValid = false;
+                                                                            } else {
+                                                                                clearError(nameInput);
+                                                                            }
 
-                                                                                            // Validate description
-                                                                                            const descInput = form.querySelector('[name="description"]');
-                                                                                            if (descInput.value.trim().length < 5) {
-                                                                                                showError(descInput, 'Mô tả phải có ít nhất 5 ký tự');
-                                                                                                isValid = false;
-                                                                                            } else {
-                                                                                                clearError(descInput);
-                                                                                            }
+                                                                            // Validate description
+                                                                            const descInput = form.querySelector('[name="description"]');
+                                                                            if (descInput.value.trim().length < 5) {
+                                                                                showError(descInput, 'Mô tả phải có ít nhất 5 ký tự');
+                                                                                isValid = false;
+                                                                            } else {
+                                                                                clearError(descInput);
+                                                                            }
 
-                                                                                            // Validate minBMI và maxBMI
-                                                                                            const minBMIInput = form.querySelector('[name="minBMI"]');
-                                                                                            const maxBMIInput = form.querySelector('[name="maxBMI"]');
+                                                                            // Validate minBMI và maxBMI
+                                                                            const minBMIInput = form.querySelector('[name="minBMI"]');
+                                                                            const maxBMIInput = form.querySelector('[name="maxBMI"]');
 
-                                                                                            const isMinValid = validateNumberInput(minBMIInput, 'MinBMI');
-                                                                                            const isMaxValid = validateNumberInput(maxBMIInput, 'MaxBMI');
+                                                                            const isMinValid = validateNumberInput(minBMIInput, 'MinBMI');
+                                                                            const isMaxValid = validateNumberInput(maxBMIInput, 'MaxBMI');
 
-                                                                                            if (!isMinValid || !isMaxValid) {
-                                                                                                isValid = false;
-                                                                                            } else {
-                                                                                                const minVal = parseFloat(minBMIInput.value.trim());
-                                                                                                const maxVal = parseFloat(maxBMIInput.value.trim());
+                                                                            if (!isMinValid || !isMaxValid) {
+                                                                                isValid = false;
+                                                                            } else {
+                                                                                const minVal = parseFloat(minBMIInput.value.trim());
+                                                                                const maxVal = parseFloat(maxBMIInput.value.trim());
 
-                                                                                                if (minVal >= maxVal) {
-                                                                                                    showError(minBMIInput, 'MinBMI phải nhỏ hơn MaxBMI');
-                                                                                                    showError(maxBMIInput, 'MaxBMI phải lớn hơn MinBMI');
-                                                                                                    isValid = false;
-                                                                                                }
-                                                                                            }
+                                                                                if (minVal >= maxVal) {
+                                                                                    showError(minBMIInput, 'MinBMI phải nhỏ hơn MaxBMI');
+                                                                                    showError(maxBMIInput, 'MaxBMI phải lớn hơn MinBMI');
+                                                                                    isValid = false;
+                                                                                }
+                                                                            }
 
-                                                                                            // Nếu hợp lệ, submit form
-                                                                                            if (isValid) {
-                                                                                                form.submit();
-                                                                                            } else {
-                                                                                                const firstError = form.querySelector('.is-invalid');
-                                                                                                if (firstError) {
-                                                                                                    firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
-                                                                                                    firstError.focus();
-                                                                                                }
-                                                                                            }
-                                                                                        });
+                                                                            // Nếu hợp lệ, submit form
+                                                                            if (isValid) {
+                                                                                form.submit();
+                                                                            } else {
+                                                                                const firstError = form.querySelector('.is-invalid');
+                                                                                if (firstError) {
+                                                                                    firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
+                                                                                    firstError.focus();
+                                                                                }
+                                                                            }
+                                                                        });
 
-                                                                                        // Real-time validation + blur
-                                                                                        form.querySelectorAll('input').forEach(input => {
-                                                                                            input.addEventListener('input', function () {
-                                                                                                clearError(this);
+                                                                        // Real-time validation + blur
+                                                                        form.querySelectorAll('input').forEach(input => {
+                                                                            input.addEventListener('input', function () {
+                                                                                clearError(this);
 
-                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
-                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
-                                                                                                    validateNumberInput(this, fieldName);
-                                                                                                }
-                                                                                            });
+                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                    validateNumberInput(this, fieldName);
+                                                                                }
+                                                                            });
 
-                                                                                            input.addEventListener('blur', function () {
-                                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
-                                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
-                                                                                                    validateNumberInput(this, fieldName);
-                                                                                                }
-                                                                                            });
-                                                                                        });
-                                                                                    });
+                                                                            input.addEventListener('blur', function () {
+                                                                                if (this.name === 'minBMI' || this.name === 'maxBMI') {
+                                                                                    const fieldName = this.name === 'minBMI' ? 'MinBMI' : 'MaxBMI';
+                                                                                    validateNumberInput(this, fieldName);
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    });
                                                                 </script>
                                                                 <!--End validate ơ bên dao diện-->
                                                             </body>

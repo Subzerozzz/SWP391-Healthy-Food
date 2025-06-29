@@ -288,7 +288,7 @@
                                                                                                                         </div>
                                                                                                                         <!-- /main-content-wrap -->
                                                                                                                         <!-- bottom-page -->
-
+                                                                                                                           <jsp:include page="../../common/footer.jsp"></jsp:include>
                                                                                                                         <!-- /bottom-page -->
                                                                                                                         </div>
                                                                                                                         <!-- /main-content -->

@@ -62,7 +62,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <!-- /preload -->
-                                                                           <!-- section-menu-left -->
+                                                                            <!-- section-menu-left -->
                                                                             <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
@@ -99,7 +99,7 @@
                                                                                                 <!-- new-category -->
                                                                                                 <div class="wg-box">
                                                                                                     <form class="form-new-category form-style-1" method="POST" action="${pageContext.request.contextPath}/manageCategory?action=add">
-                                                                                                                                                                                                    
+
                                                                                                     <fieldset class="name">
                                                                                                         <div class="body-title"> Name: <span class="tf-color-1">*</span></div>
                                                                                                         <input class="flex-grow" type="text" placeholder="Category name" name="name" tabindex="0" value="${name != null ? name : ''}" aria-required="true" >
@@ -132,21 +132,22 @@
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                     <!-- bottom-page -->
+                                                                                    <jsp:include page="../../common/footer.jsp"></jsp:include>
 
-                                                                                    <!-- /bottom-page -->
+                                                                                        <!-- /bottom-page -->
+                                                                                    </div>
+                                                                                    <!-- /main-content -->
                                                                                 </div>
-                                                                                <!-- /main-content -->
+                                                                                <!-- /section-content-right -->
                                                                             </div>
-                                                                            <!-- /section-content-right -->
+                                                                            <!-- /layout-wrap -->
                                                                         </div>
-                                                                        <!-- /layout-wrap -->
+                                                                        <!-- /#page -->
                                                                     </div>
-                                                                    <!-- /#page -->
-                                                                </div>
-                                                                <!-- /#wrapper -->
+                                                                    <!-- /#wrapper -->
 
-                                                                <!-- Javascript -->
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                    <!-- Javascript -->
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/zoom.js"></script>

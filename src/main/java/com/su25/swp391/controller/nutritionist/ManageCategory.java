@@ -7,6 +7,7 @@ package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.CategoryDAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.FoodCategory;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +114,7 @@ public class ManageCategory extends HttpServlet {
     }// </editor-fold>
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_add.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/category_add.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -120,7 +122,7 @@ public class ManageCategory extends HttpServlet {
         int idCate = Integer.parseInt(request.getParameter("id"));
         CategoryDAO cateDao = new CategoryDAO();
         FoodCategory category = cateDao.findById(idCate);
-        
+
 //set lai gia trị cũ 
         request.setAttribute("cate", category);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/category_edit.jsp");
@@ -154,6 +156,9 @@ public class ManageCategory extends HttpServlet {
         //lấy tham số phan trang
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("account");
+        request.setAttribute("account", acc);
         int currentPage = 1;
         int pageSize = 6;
         try {
@@ -251,7 +256,7 @@ public class ManageCategory extends HttpServlet {
             } catch (NumberFormatException e) {
                 errors.put("BMIFormat", "Chỉ số BMI phải là số hợp lệ");
             }
-             //validate name
+            //validate name
             errors.putAll(validateAccountData(name));
 
             if (!errors.isEmpty()) {
@@ -277,7 +282,7 @@ public class ManageCategory extends HttpServlet {
             boolean isSuccess = cateDao.insert(category) > 0;
             if (isSuccess) {
                 // Lưu message thành công vào session để hiển thị 1 lần
-                  request.getSession().setAttribute("isAdd", true);
+                request.getSession().setAttribute("isAdd", true);
                 // Redirect về trang quản lý tài khoản
                 response.sendRedirect(request.getContextPath() + "/manageCategory");
                 return;
@@ -393,32 +398,32 @@ public class ManageCategory extends HttpServlet {
     }
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    try {
-        int idCategory = Integer.parseInt(request.getParameter("id"));
-        CategoryDAO cateDao = new CategoryDAO();
-        FoodCategory cate = cateDao.findById(idCategory);
+        try {
+            int idCategory = Integer.parseInt(request.getParameter("id"));
+            CategoryDAO cateDao = new CategoryDAO();
+            FoodCategory cate = cateDao.findById(idCategory);
 
-        if (cate != null) {
-            request.setAttribute("category", cate);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/viewDetail.jsp");
-            dispatcher.forward(request, response);
-            return; 
-        } else {
-            request.getSession().setAttribute("totalMess", "Không tìm thấy danh mục.");
-            request.getSession().setAttribute("totalType", "Err");
-            response.sendRedirect(request.getContextPath() + "/manageCategory");
-            return;
-        }
-    } catch (Exception e) {
-        if (!response.isCommitted()) { // kiểm tra trước khi redirect
-            request.getSession().setAttribute("totalMess", "Có lỗi xảy ra.");
-            request.getSession().setAttribute("totalType", "Err");
-            response.sendRedirect(request.getContextPath() + "/manageCategory");
-        } else {
-            e.printStackTrace(); // In log lỗi nếu không thể redirect
+            if (cate != null) {
+                request.setAttribute("category", cate);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/viewDetail.jsp");
+                dispatcher.forward(request, response);
+                return;
+            } else {
+                request.getSession().setAttribute("totalMess", "Không tìm thấy danh mục.");
+                request.getSession().setAttribute("totalType", "Err");
+                response.sendRedirect(request.getContextPath() + "/manageCategory");
+                return;
+            }
+        } catch (Exception e) {
+            if (!response.isCommitted()) { // kiểm tra trước khi redirect
+                request.getSession().setAttribute("totalMess", "Có lỗi xảy ra.");
+                request.getSession().setAttribute("totalType", "Err");
+                response.sendRedirect(request.getContextPath() + "/manageCategory");
+            } else {
+                e.printStackTrace(); // In log lỗi nếu không thể redirect
+            }
         }
     }
-}
 
     private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
@@ -459,13 +464,14 @@ public class ManageCategory extends HttpServlet {
                 return GlobalConfig.ALL;
         }
     }
+
     private Map<String, String> validateAccountData(String name) {
         Map<String, String> errors = new HashMap<>();
         CategoryDAO catedao = new CategoryDAO();
 
         // Trim inputs
         name = name != null ? name.trim() : null;
-        
+
         // Validate full_name
         if (name == null || name.trim().isEmpty()) {
             errors.put("name", "name is required");

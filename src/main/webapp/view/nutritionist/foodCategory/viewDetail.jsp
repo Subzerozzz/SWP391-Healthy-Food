@@ -127,13 +127,13 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                            <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
-                                                                                <!-- /section-menu-left -->
-                                                                                <!-- section-content-right -->
-                                                                                <div class="section-content-right">
-                                                                                    <!-- header-dashboard -->
-                                                                                <jsp:include page = "../../common/headerDashboard.jsp"></jsp:include>
-                                                                                    <!-- /header-dashboard -->
+                                                                        <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
+                                                                            <!-- /section-menu-left -->
+                                                                            <!-- section-content-right -->
+                                                                            <div class="section-content-right">
+                                                                                <!-- header-dashboard -->
+                                                                            <jsp:include page = "../../common/headerDashboard.jsp"></jsp:include>
+                                                                                <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
                                                                                 <div class="main-content">
                                                                                     <!-- main-content-wrap -->
@@ -160,7 +160,7 @@
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        
+
                                                                                         <form class="view_category" action="${pageContext.request.contextPath}/manageCategory?action=viewDetail" method="GET">
                                                                                             <div class="wg-box">
                                                                                                 <div class="left">
@@ -186,14 +186,14 @@
 
                                                                                                     </fieldset>
 
-                                                                             
+
 
                                                                                                     <!-- Email -->
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>Description:</label> 
                                                                                                             <span>${category.description}</span>
-                                                                                                            
+
                                                                                                         </div>
 
                                                                                                     </fieldset>
@@ -203,18 +203,18 @@
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>MaxBMI:</label> 
                                                                                                             <span>${category.maxBMI}</span>
-                                                                                                           </div>
+                                                                                                        </div>
 
                                                                                                     </fieldset>
-                                                                                                    
+
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>MinBMI:</label> 
                                                                                                             <span>${category.minBMI}</span>
-                                                                                                           
+
 
                                                                                                     </fieldset>
-                                                                                                      
+
 
                                                                                                 </div>
 
@@ -224,11 +224,11 @@
                                                                                             <div class="bot">
                                                                                                 <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/manageCategory'">Back</button>
                                                                                             </div>
-<!--                                                                                                <div class="item trash">
-                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
-                                                                                                        <button class="tf-button w180" type="submit">Delete</button>
-                                                                                                    </a>
-                                                                                                </div>-->
+                                                                                            <!--                                                                                                <div class="item trash">
+                                                                                                                                                                                                <a href="${pageContext.request.contextPath}/manage-account?action=delete&id=${account.id}" onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" >
+                                                                                                                                                                                                    <button class="tf-button w180" type="submit">Delete</button>
+                                                                                                                                                                                                </a>
+                                                                                                                                                                                            </div>-->
 
                                                                                         </form>
                                                                                         <!-- /add-new-user -->
@@ -237,21 +237,22 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
+                                                                                <jsp:include page="../../common/footer.jsp"></jsp:include>
 
-                                                                                <!-- /bottom-page -->
+                                                                                    <!-- /bottom-page -->
+                                                                                </div>
+                                                                                <!-- /main-content -->
                                                                             </div>
-                                                                            <!-- /main-content -->
+                                                                            <!-- /section-content-right -->
                                                                         </div>
-                                                                        <!-- /section-content-right -->
+                                                                        <!-- /layout-wrap -->
                                                                     </div>
-                                                                    <!-- /layout-wrap -->
+                                                                    <!-- /#page -->
                                                                 </div>
-                                                                <!-- /#page -->
-                                                            </div>
-                                                            <!-- /#wrapper -->
+                                                                <!-- /#wrapper -->
 
-                                                            <!-- Javascript -->
-                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                <!-- Javascript -->
+                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                             <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
