@@ -114,6 +114,13 @@
                       <div class="text">View Request</div>
                     </a>
                   </li>
+                  
+                  <li class="menu-item">
+                    <a href="${pageContext.request.contextPath}/ManagerCoupon" class="menu-item-button">
+                      <div class="icon"><i class="icon-layers"></i></div>
+                      <div class="text">View Coupon</div>
+                    </a>
+                  </li>
                 </c:if>   
                 <c:if test="${sessionScope.account.role eq 'seller'}">
                     <li class="menu-item">

@@ -18,12 +18,10 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
     public List<Blog> findAll() {
         List<Blog> blogs = new ArrayList<>();
         String sql = "SELECT * FROM blogs ";
-
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
-
             while (resultSet.next()) {
                 blogs.add(getFromResultSet(resultSet));
             }
@@ -110,11 +108,9 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(6, blog.getThumbnailblogs());
             statement.setString(7, blog.getStatus());
             int affectedRows = statement.executeUpdate();
-
             if (affectedRows == 0) {
                 throw new SQLException("Creating blog failed, no rows affected.");
             }
-
             resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 return resultSet.getInt(1);
