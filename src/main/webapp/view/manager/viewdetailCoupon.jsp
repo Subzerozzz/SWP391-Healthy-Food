@@ -83,14 +83,14 @@
                                             <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">Discount Type</h4>
                                             <p style="color: #666; margin: 0;">
                                                 <c:choose>
-                                                    <c:when test="${coupon.discountType == 'percentage'}">
+                                                    <c:when test="${coupon.discount_type == 'percentage'}">
                                                         <span style="background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px;">Percentage (%)</span>
                                                     </c:when>
-                                                    <c:when test="${coupon.discountType == 'fixed'}">
+                                                    <c:when test="${coupon.discount_type == 'fixed'}">
                                                         <span style="background: #17a2b8; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px;">Fixed Amount</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px;">${coupon.discountType}</span>
+                                                        <span style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px;">${coupon.discount_type}</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </p>
@@ -100,8 +100,8 @@
                                             <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">Discount Value</h4>
                                             <p style="color: #dc3545; font-weight: 600; font-size: 18px; margin: 0;">
                                                 <c:choose>
-                                                    <c:when test="${coupon.discountType == 'percentage'}">${coupon.discountValue}%</c:when>
-                                                    <c:otherwise>${coupon.discountValue}</c:otherwise>
+                                                    <c:when test="${coupon.discount_type == 'percentage'}">${coupon.discount_value}%</c:when>
+                                                    <c:otherwise>${coupon.discount_value}</c:otherwise>
                                                 </c:choose>
                                             </p>
                                         </div>
@@ -113,8 +113,8 @@
                                             <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">Minimum Purchase</h4>
                                             <p style="color: #666; margin: 0;">
                                                 <c:choose>
-                                                    <c:when test="${coupon.minPurchase != null && coupon.minPurchase > 0}">
-                                                        <span style="font-weight: 600;">${coupon.minPurchase}</span>
+                                                    <c:when test="${coupon.min_purchase != null && coupon.min_purchase > 0}">
+                                                        <span style="font-weight: 600;">${coupon.min_purchase}</span>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <span style="color: #28a745; font-style: italic;">No minimum required</span>
@@ -123,12 +123,12 @@
                                             </p>
                                         </div>
                                         
-                                        <c:if test="${coupon.discountType == 'percentage'}">
+                                        <c:if test="${coupon.discount_type == 'percentage'}">
                                             <div style="flex: 1;">
                                                 <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">Maximum Discount</h4>
                                                 <p style="color: #666; margin: 0;">
                                                     <c:choose>
-                                                        <c:when test="${coupon.maxDiscount != null && coupon.maxDiscount > 0}">
+                                                        <c:when test="${coupon.max_discount != null && coupon.max_discount > 0}">
                                                             <span style="font-weight: 600;">${coupon.maxDiscount}</span>
                                                         </c:when>
                                                         <c:otherwise>
@@ -143,11 +143,11 @@
                                     <div style="display: flex; gap: 30px; margin-bottom: 25px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;">
                                         <div style="flex: 1;">
                                             <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">Start Date</h4>
-                                            <p style="color: #666; margin: 0; font-weight: 500;">${coupon.startDate}</p>
+                                            <p style="color: #666; margin: 0; font-weight: 500;">${coupon.start_date}</p>
                                         </div>
                                         <div style="flex: 1;">
                                             <h4 style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 16px;">End Date</h4>
-                                            <p style="color: #666; margin: 0; font-weight: 500;">${coupon.endDate}</p>
+                                            <p style="color: #666; margin: 0; font-weight: 500;">${coupon.end_date}</p>
                                         </div>
                                     </div>  
                                     <!-- Back Button -->

@@ -124,21 +124,6 @@
                 background-color: #6a9a2d;
                 border-color: #6a9a2d;
             }
-        .pagination {
-            margin-top: 30px;
-            justify-content: center;
-        }
-
-        .pagination .page-link {
-            color: #2275FC;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #2275FC;
-            border-color: #2275FC;
-            color: white;
-        }
-
         .remaining-time {
             margin-top: 5px;
             font-size: 12px;
@@ -193,49 +178,55 @@
                    content: "🔍";
                    font-style: normal;
          }
-        .pagination {
-                   display: flex;
-                   justify-content: flex-end; /* 👈 Lệch phải */
-                   gap: 8px;
-                   list-style: none;
-                   padding-left: 0;
-                   margin-top: 30px;
-          }
+         .pagination {
+             display: flex;
+             justify-content: center !important; /* ép căn giữa */
+             align-items: center;
+             gap: 8px;
+             list-style: none;
+             padding-left: 0;
+             margin-top: 30px;
+             width: 100%;  /* chiếm toàn bộ để căn giữa */
+         }
 
-          .page-item {
-                     display: flex;
-                     align-items: center;
-           }
-           .page-link {
-                       width: 36px;
-                       height: 36px;
-                       line-height: 36px;
-                       border-radius: 50%;
-                       text-align: center;
-                       text-decoration: none;
-                       font-size: 16px;
-                       color: #333;
-                       border: 1px solid #e0e0e0;
-                       background-color: white;
-                       transition: all 0.2s ease;
-                       display: inline-block;
-                       padding: 0;
-            }
-            .page-link:hover {
-                        background-color: #f0f0f0;
-                        color: #000;
-            }
-            .page-item.active .page-link {
-                        background-color: #1a73e8;
-                        color: white;
-                        border: none;
-            }
-            .page-item.disabled .page-link {
-                        pointer-events: none;
-                        opacity: 0.4;
-                        background-color: white;
-                        border: 1px solid #e0e0e0;
-            }                   
+         .page-item {
+             display: flex;
+             align-items: center;
+         }
+
+         .page-link {
+             width: 36px;
+             height: 36px;
+             line-height: 36px;
+             border-radius: 50%;
+             text-align: center;
+             text-decoration: none;
+             font-size: 16px;
+             color: #333;
+             border: 1px solid #e0e0e0;
+             background-color: white;
+             transition: all 0.2s ease;
+             display: inline-block;
+             padding: 0;
+         }
+
+         .page-link:hover {
+             background-color: #ffa50033; /* Cam nhạt khi hover */
+             color: #000;
+         }
+
+         .page-item.active .page-link {
+             background-color: orange; /* Nút màu cam */
+             border-color: orange;
+             color: white;
+         }
+
+         .page-item.disabled .page-link {
+             pointer-events: none;
+             opacity: 0.4;
+             background-color: white;
+             border: 1px solid #e0e0e0;
+         }
             footer-wrap {
                         background: #fff;
                         padding: 16px;
@@ -345,26 +336,26 @@
                                                             <div class="coupon-description">${coupon.description}</div>
                                                             <div class="coupon-value">
                                                                 <c:choose>
-                                                                    <c:when test="${coupon.discountType == 'percentage'}">                                                        
-                                                                        ${coupon.discountValue}% OFF
+                                                                    <c:when test="${coupon.discount_type == 'percentage'}">                                                        
+                                                                        ${coupon.discount_value}% OFF
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        $<fmt:formatNumber value="${coupon.discountValue}" pattern="#,##0.00"/> OFF
+                                                                        $<fmt:formatNumber value="${coupon.discount_value}" pattern="#,##0.00"/> OFF
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </div>
                                                             <div class="coupon-details">
-                                                                <div>Min Purchase: $<fmt:formatNumber value="${coupon.minPurchase}" pattern="#,##0.00"/></div>
-                                                                <c:if test="${not empty coupon.maxDiscount}">
-                                                                    <div>Max Discount: $<fmt:formatNumber value="${coupon.maxDiscount}" pattern="#,##0.00"/></div>
+                                                                <div>Min Purchase: $<fmt:formatNumber value="${coupon.min_purchase}" pattern="#,##0.00"/></div>
+                                                                <c:if test="${not empty coupon.max_discount}">
+                                                                    <div>Max Discount: $<fmt:formatNumber value="${coupon.max_discount}" pattern="#,##0.00"/></div>
                                                                 </c:if>
                                                             </div>
                                                             <div class="coupon-dates">
-                                                                Valid from: <fmt:formatDate value="${coupon.startDate}" pattern="MMM dd, yyyy"/> -
-                                                                <fmt:formatDate value="${coupon.endDate}" pattern="MMM dd, yyyy"/>
+                                                                Valid from: <fmt:formatDate value="${coupon.start_date}" pattern="MMM dd, yyyy"/> -
+                                                                <fmt:formatDate value="${coupon.end_date}" pattern="MMM dd, yyyy"/>
 
                                                                 <c:set var="now" value="<%= new java.util.Date() %>"/>
-                                                                <c:set var="remainingDays" value="${((coupon.endDate.time - now.time) / (1000*60*60*24))}"/>
+                                                                <c:set var="remainingDays" value="${((coupon.end_date.time - now.time) / (1000*60*60*24))}"/>
                                                                 <div class="remaining-time ${remainingDays <= 7 ? 'urgent' : ''}">
                                                                     <c:choose>
                                                                         <c:when test="${remainingDays > 1}">
@@ -380,8 +371,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="coupon-usage">
-                                                                <c:if test="${not empty coupon.usageLimit}">
-                                                                    Used ${coupon.usageCount} times out of ${coupon.usageLimit}
+                                                                <c:if test="${not empty coupon.usage_limit}">
+                                                                    Used ${coupon.usage_count} times out of ${coupon.usage_limit}
                                                                 </c:if>
                                                             </div>
                                                         </div>

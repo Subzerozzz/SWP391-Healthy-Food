@@ -245,12 +245,20 @@ public class ManagerCouponController extends HttpServlet {
             String code = request.getParameter("code");
             String description = request.getParameter("description");
             String discounType = request.getParameter("discountype");
-            BigDecimal discountValue = new BigDecimal(request.getParameter("discountvalue"));
-            BigDecimal minPurchase = new BigDecimal(request.getParameter("minpurchase"));
+            String discountValueStr = request.getParameter("discountvalue");
+            Double discountValue = (discountValueStr != null && !discountValueStr.isEmpty())
+                    ? Double.parseDouble(discountValueStr)
+                    : 0.0;
+
+            String minPurchaseStr = request.getParameter("minpurchase");
+            Double minPurchase = (minPurchaseStr != null && !minPurchaseStr.isEmpty())
+                    ? Double.parseDouble(minPurchaseStr)
+                    : 0.0;
+
             String maxDiscountStr = request.getParameter("maxdiscount");
-            BigDecimal maxDiscount = (maxDiscountStr != null && !maxDiscountStr.isEmpty())
-                    ? new BigDecimal(maxDiscountStr)
-                    : BigDecimal.ZERO; // hoặc null tùy logic hệ thống
+            Double maxDiscount = (maxDiscountStr != null && !maxDiscountStr.isEmpty())
+                    ? Double.parseDouble(maxDiscountStr)
+                    : 0.0; // hoặc null tùy theo logic xử lý
             String dateStr1 = request.getParameter("date1");
             String dateStr2 = request.getParameter("date2");
             String usageLimitStr = request.getParameter("usageLimit");
@@ -307,15 +315,15 @@ public class ManagerCouponController extends HttpServlet {
             Coupon newCoupon = Coupon.builder()
                     .code(code)
                     .description(description)
-                    .discountType(discounType)
-                    .discountValue(discountValue)
-                    .minPurchase(minPurchase)
-                    .maxDiscount(maxDiscount)
-                    .isactive(isActive)
-                    .usageLimit(usageLimit)
-                    .perCustomerLimit(percustomerlimit)
-                    .startDate(date1)
-                    .endDate(date2)
+                    .discount_type(discounType)
+                    .discount_value(discountValue)
+                    .min_purchase(minPurchase)
+                    .max_discount(maxDiscount)
+                    .is_active(isActive)
+                    .usage_limit(usageLimit)
+                    .per_customer_limit(percustomerlimit)
+                    .start_date(date2)
+                    .end_date(date2)
                     .build();
             CouponDAO couponDao = new CouponDAO();            
             boolean isSuccses = couponDao.insert(newCoupon) > 0;
@@ -345,9 +353,9 @@ public class ManagerCouponController extends HttpServlet {
             String code = request.getParameter("code");
             String description = request.getParameter("description");
             String discounType = request.getParameter("discountype");
-            BigDecimal discountValue = new BigDecimal(request.getParameter("discountvalue"));
-            BigDecimal minPurchase = new BigDecimal(request.getParameter("minpurchase"));
-            BigDecimal maxDiscount = new BigDecimal(request.getParameter("maxdiscount"));
+            double discountValue = Double.parseDouble(request.getParameter("discountvalue"));
+            double minPurchase = Double.parseDouble(request.getParameter("minpurchase"));
+            double maxDiscount = Double.parseDouble(request.getParameter("maxdiscount"));
             String usageLimitStr = request.getParameter("usageLimit");
             Integer usageLimit = (usageLimitStr != null && !usageLimitStr.isEmpty())
                     ? Integer.parseInt(usageLimitStr) : null;
@@ -390,15 +398,15 @@ public class ManagerCouponController extends HttpServlet {
             Coupon Coupon = couponDao.findById(id);
             Coupon.setCode(code);
             Coupon.setDescription(description);
-            Coupon.setDiscountType(discounType);
-            Coupon.setDiscountValue(discountValue);
-            Coupon.setMinPurchase(minPurchase);
-            Coupon.setMaxDiscount(maxDiscount);
-            Coupon.setIsactive(isActive);
-            Coupon.setUsageLimit(usageLimit);
-            Coupon.setPerCustomerLimit(percustomerlimit);
-            Coupon.setStartDate(date1);
-            Coupon.setEndDate(date2);
+            Coupon.setDiscount_type(discounType);
+            Coupon.setDiscount_value(discountValue);
+            Coupon.setMin_purchase(minPurchase);
+            Coupon.setMax_discount(maxDiscount);
+            Coupon.setIs_active(isActive);
+            Coupon.setUsage_limit(usageLimit);
+            Coupon.setPer_customer_limit(percustomerlimit);
+            Coupon.setStart_date(date1);
+            Coupon.setEnd_date(date2);
             boolean isSuccess = couponDao.update(Coupon);
             if (isSuccess) {
                 HttpSession session = request.getSession();
@@ -422,7 +430,7 @@ public class ManagerCouponController extends HttpServlet {
         }
     }
     private Map<String, String> validateCouponData(String code, String description, String discountType,
-            BigDecimal discountValue, BigDecimal minPurchase, BigDecimal maxDiscount,
+            Double discountValue, Double minPurchase, Double maxDiscount,
             Integer usageLimit, Integer perCustomerLimit, Integer id) {
 
         Map<String, String> errors = new HashMap<>();
@@ -450,21 +458,15 @@ public class ManagerCouponController extends HttpServlet {
             errors.put("discountType", "Discount type must be either 'percentage' or 'fixed'");
         }
         // Validate discount value
-        if (discountValue == null) {
-            errors.put("discountValue", "Discount value is required");
-        } else if (discountValue.compareTo(BigDecimal.ZERO) < 0) {
+        if (discountValue < 0) {
             errors.put("discountValue", "Discount value must be greater than or equal to 0");
         }
-        // Validate min purchase
-        if (minPurchase == null) {
-            errors.put("minPurchase", "Minimum purchase amount is required");
-        } else if (minPurchase.compareTo(BigDecimal.ZERO) < 0) {
+        //Validate min purchase
+        if (minPurchase < 0) {
             errors.put("minPurchase", "Minimum purchase must be greater than or equal to 0");
         }
         // Validate max discount
-        if (maxDiscount == null) {
-            errors.put("maxDiscount", "Maximum discount value is required");
-        } else if (maxDiscount.compareTo(BigDecimal.ZERO) < 0) {
+        if (maxDiscount < 0) {
             errors.put("maxDiscount", "Maximum discount must be greater than or equal to 0");
         }
         // Validate usage limit

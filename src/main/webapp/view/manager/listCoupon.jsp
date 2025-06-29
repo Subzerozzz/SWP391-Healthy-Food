@@ -851,28 +851,28 @@
                                      <div class="col body-title_3">${coupon.id}</div>
                                      <div class="col body-title_3">${coupon.description}</div>
                                      <c:choose>
-                                         <c:when test="${coupon.discountType == 'fixed'}">
+                                         <c:when test="${coupon.discount_type == 'fixed'}">
                                              <div class="col">
-                                                 <span class="discount-type discount-fixed">${coupon.discountType}</span>
+                                                 <span class="discount-type discount-fixed">${coupon.discount_type}</span>
                                              </div>
                                          </c:when>
-                                         <c:when test="${coupon.discountType == 'percentage'}">
+                                         <c:when test="${coupon.discount_type == 'percentage'}">
                                              <div class="col">
-                                                 <span class="discount-type discount-percentage">${coupon.discountType}</span>
+                                                 <span class="discount-type discount-percentage">${coupon.discount_type}</span>
                                              </div>
                                          </c:when>
                                          <c:otherwise>
                                              <div class="col">
-                                                 <span class="discount-type">${coupon.discountType}</span>
+                                                 <span class="discount-type">${coupon.discount_type}</span>
                                              </div>
                                          </c:otherwise>
                                      </c:choose>
-                                     <div class="col body-title_3">${coupon.discountValue}</div>
-                                     <div class="col body-title_3">${coupon.minPurchase}</div>
+                                     <div class="col body-title_3">${coupon.discount_value}</div>
+                                     <div class="col body-title_3">${coupon.min_purchase}</div>
                                      <div class="col body-title_3">
                                          <div class="col" >
                                              <c:choose>
-                                                 <c:when test="${coupon.isactive==1}">
+                                                 <c:when test="${coupon.is_active==1}">
                                                      <span class="status-label status-active">ACTIVE</span>
                                                  </c:when>
                                                  <c:otherwise>
@@ -881,9 +881,9 @@
                                              </c:choose>
                                          </div>
                                      </div>
-                                     <div class="col body-title_3">${coupon.perCustomerLimit}</div>
-                                     <div class="col body-title_3">${coupon.startDate}</div>
-                                     <div class="col body-title_3">${coupon.endDate}</div>
+                                     <div class="col body-title_3">${coupon.per_customer_limit}</div>
+                                     <div class="col body-title_3">${coupon.start_date}</div>
+                                     <div class="col body-title_3">${coupon.end_date}</div>
                                      <div class="col actions body-title_3">
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=view&id=${coupon.id}"><i class="icon-eye"></i></a>
                                          <a href="${pageContext.request.contextPath}/ManagerCoupon?action=edit&id=${coupon.id}"> <i class="icon-edit-3"></i></a>

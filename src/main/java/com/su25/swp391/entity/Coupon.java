@@ -29,16 +29,16 @@ public class Coupon {
     private int id;
     private String code;
     private String description;
-    private String discountType; // percentage or fixed
-    private BigDecimal discountValue;
-    private BigDecimal minPurchase;
-    private BigDecimal maxDiscount;
-    private Date startDate;
-    private Date endDate;
-    private Integer usageLimit;
-    private Integer usageCount;
-    private Integer perCustomerLimit;
-    private Integer isactive;
-    private Date createdAt;
-    private Date updatedAt;
+    private String discount_type; // percentage or fixed
+    private Double discount_value;
+    private Double min_purchase;
+    private Double max_discount;
+    private Date start_date;
+    private Date end_date;
+    private Integer usage_limit;
+    private Integer usage_count;
+    private Integer per_customer_limit;
+    private Integer is_active;
+    private Date created_at;
+    private Date updated_at;
 }
