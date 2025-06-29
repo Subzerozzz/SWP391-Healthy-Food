@@ -283,7 +283,7 @@ public class ManageCategory extends HttpServlet {
             } else {
                 request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
                 request.getSession().setAttribute("toastType", "Fail");
-                request.getRequestDispatcher("/view/common/categoryPage/category_add.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {

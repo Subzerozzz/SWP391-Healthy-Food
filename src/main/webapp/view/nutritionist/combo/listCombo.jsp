@@ -159,10 +159,12 @@
 
                                                                                                                 <div class="list-icon-function">
                                                                                                                     <div class="item eye">
-                                                                                                                        <i class="icon-eye"></i>
+                                                                                                                        <a href="${pageContext.request.contextPath}/managerCombo?action=viewComboFoodDetail&id=${cb.comboId}"><i class="icon-eye"></i></a>
+                                                                                                                        
                                                                                                                     </div>
                                                                                                                     <div class="item edit">
-                                                                                                                        <i class="icon-edit-3"></i>
+                                                                                                                        <a href="${pageContext.request.contextPath}/managerCombo?action=edit&id=${cb.comboId}"><i class="icon-edit-3" ></i></a>
+                                                                                                                        
                                                                                                                     </div>
                                                                                                                     
                                                                                                                     <label class="switch"
