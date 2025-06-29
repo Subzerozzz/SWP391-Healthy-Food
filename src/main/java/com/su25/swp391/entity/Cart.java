@@ -4,7 +4,7 @@
  */
 package com.su25.swp391.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ *
+ * @author kieud
+ */
+
 @ToString
 @Builder
 @Data
@@ -20,8 +25,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Coupon {
-     private Integer id;
-     private String code;
-     private Double discount_value;
+
+
+public class Cart {
+    private int id;
+    private int account_id;
+    private Timestamp created_at;
+    private Timestamp update_at;
+    
 }
