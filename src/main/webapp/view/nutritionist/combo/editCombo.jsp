@@ -78,7 +78,7 @@
                                                                                                     </div>
                                                                                                     <div class="card">
                                                                                                         <div class="card-body p-24">
-                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/admin/manage-combo?action=update" method="post" enctype="multipart/form-data">
+                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=edit" method="post" enctype="multipart/form-data">
                                                                                                             <input type="hidden" name="id" value="${combo.comboId}">
                                                                                                                 <input type="hidden" name="page" value="${param.page}">
 
@@ -93,10 +93,10 @@
                                                                                                                         <% session.removeAttribute("errors");%>
                                                                                                                     </c:if>
 
-                                                                                                                    <c:if test="${not empty sessionScope.errors['duplicate_product']}">
+                                                                                                                    <c:if test="${not empty sessionScope.errors['duplicate_food']}">
                                                                                                                         <div class="alert alert-danger">
                                                                                                                             <ul class="mb-0">
-                                                                                                                                <li>${sessionScope.errors['duplicate_product']}</li>
+                                                                                                                                <li>${sessionScope.errors['duplicate_food']}</li>
                                                                                                                             </ul>
                                                                                                                         </div>
                                                                                                                     </c:if>
@@ -120,77 +120,60 @@
                                                                                                                             <textarea class="form-control" id="description" name="description"
                                                                                                                                       rows="3" placeholder="Enter detailed description of the combo">${combo.description}</textarea>
                                                                                                                         </div>
-                                                                                                                        <!-- Image upload field and current image display -->
-                                                                                                                        <div class="col-md-12">
-                                                                                                                            <label for="image" class="form-label">Combo Image</label>
-                                                                                                                            <div class="row">
-                                                                                                                                <div class="col-md-3">
-                                                                                                                                    <c:if test="${not empty combo.image}">
-                                                                                                                                        <div class="mb-2">
-                                                                                                                                            <img src="${pageContext.request.contextPath}/${combo.image}" 
-                                                                                                                                                 alt="${combo.name}" class="img-thumbnail" style="max-width: 150px;">
-                                                                                                                                                <div class="form-text">Current image</div>
-                                                                                                                                        </div>
-                                                                                                                                    </c:if>
-                                                                                                                                </div>
-                                                                                                                                <div class="col-md-9">
-                                                                                                                                    
-                                                                                                                                            </div>
-                                                                                                                                            </div>
-                                                                                                                                            </div>
+                                                                                                                        
                                                                                                                                             </div>
 
-                                                                                                                                            <!-- Product Selection Section -->
+                                                                                                                                            <!-- Food Selection Section -->
                                                                                                                                             <div class="card border-info mt-4 mb-4">
                                                                                                                                                 <div class="card-header bg-info text-white">
                                                                                                                                                     <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Foods for Combo</h6>
                                                                                                                                                 </div>
                                                                                                                                                 <div class="card-body">
-                                                                                                                                                    <div class="product-selection-container">
-                                                                                                                                                        <c:forEach items="${comboProducts}" var="comboProduct" varStatus="status">
-                                                                                                                                                            <div class="product-selection-row row mb-3">
+                                                                                                                                                    <div class="food-selection-container">
+                                                                                                                                                        <c:forEach items="${comboFoods}" var="comboFood" varStatus="status">
+                                                                                                                                                            <div class="food-selection-row row mb-3">
                                                                                                                                                                 <div class="col-md-8">
-                                                                                                                                                                    <select class="form-control product-select" required>
-                                                                                                                                                                        <option value="">Choose a product</option>
-                                                                                                                                                                        <c:forEach items="${allProducts}" var="product">
-                                                                                                                                                                            <option value="${product.productId}" 
-                                                                                                                                                                                    data-price="${product.price}"
-                                                                                                                                                                                    ${product.productId == comboProduct.productId ? 'selected' : ''}>
-                                                                                                                                                                                ${product.productName} - ${product.price}đ
+                                                                                                                                                                    <select class="form-control food-select" required>
+                                                                                                                                                                        <option value="">Choose a food</option>
+                                                                                                                                                                        <c:forEach items="${allFoods}" var="food">
+                                                                                                                                                                            <option value="${food.foodId}" 
+                                                                                                                                                                                    data-price="${food.price}"
+                                                                                                                                                                                    ${food.foodId == comboFood.foodId ? 'selected' : ''}>
+                                                                                                                                                                                ${food.foodName} - ${food.price}đ
                                                                                                                                                                             </option>
                                                                                                                                                                         </c:forEach>
                                                                                                                                                                     </select>
                                                                                                                                                                 </div>
                                                                                                                                                                 <div class="col-md-2">
-                                                                                                                                                                    <input type="number" class="form-control product-quantity" 
-                                                                                                                                                                           value="${comboProduct.quantityInCombo}" min="1" required>
+                                                                                                                                                                    <input type="number" class="form-control food-quantity" 
+                                                                                                                                                                           value="${comboFood.quantityInCombo}" min="1" required>
                                                                                                                                                                 </div>
                                                                                                                                                                 <div class="col-md-2">
-                                                                                                                                                                    <button type="button" class="btn btn-danger remove-product" 
-                                                                                                                                                                            ${status.index == 0 && comboProducts.size() == 1 ? 'disabled' : ''}>
+                                                                                                                                                                    <button type="button" class="btn btn-danger remove-food" 
+                                                                                                                                                                            ${status.index == 0 && comboFoods.size() == 1 ? 'disabled' : ''}>
                                                                                                                                                                         <i class="fas fa-trash"></i>
                                                                                                                                                                     </button>
                                                                                                                                                                 </div>
                                                                                                                                                             </div>
                                                                                                                                                         </c:forEach>
 
-                                                                                                                                                        <c:if test="${empty comboProducts}">
-                                                                                                                                                            <div class="product-selection-row row mb-3">
+                                                                                                                                                        <c:if test="${empty comboFoods}">
+                                                                                                                                                            <div class="food-selection-row row mb-3">
                                                                                                                                                                 <div class="col-md-8">
-                                                                                                                                                                    <select class="form-control product-select" required>
-                                                                                                                                                                        <option value="">Choose a product</option>
-                                                                                                                                                                        <c:forEach items="${products}" var="product">
-                                                                                                                                                                            <option value="${product.productId}" data-price="${product.price}">
-                                                                                                                                                                                ${product.productName} - <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                                                                                                                                                    <select class="form-control food-select" required>
+                                                                                                                                                                        <option value="">Choose a food</option>
+                                                                                                                                                                        <c:forEach items="${foods}" var="food">
+                                                                                                                                                                            <option value="${food.foodId}" data-price="${food.price}">
+                                                                                                                                                                                ${food.foodName} - <fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
                                                                                                                                                                             </option>
                                                                                                                                                                         </c:forEach>
                                                                                                                                                                     </select>
                                                                                                                                                                 </div>
                                                                                                                                                                 <div class="col-md-2">
-                                                                                                                                                                    <input type="number" class="form-control product-quantity" value="1" min="1" required>
+                                                                                                                                                                    <input type="number" class="form-control food-quantity" value="1" min="1" required>
                                                                                                                                                                 </div>
                                                                                                                                                                 <div class="col-md-1 d-flex align-items-end">
-                                                                                                                                                                    <button type="button" class="btn btn-danger remove-product" disabled title="Remove product">
+                                                                                                                                                                    <button type="button" class="btn btn-danger remove-food" disabled title="Remove food">
                                                                                                                                                                         <i class="fas fa-trash"></i>
                                                                                                                                                                     </button>
                                                                                                                                                                 </div>
@@ -200,8 +183,8 @@
 
                                                                                                                                                     <div class="row mt-3">
                                                                                                                                                         <div class="col-12">
-                                                                                                                                                            <button type="button" class="btn btn-success add-product">
-                                                                                                                                                                <i class="fas fa-plus"></i> Add Product
+                                                                                                                                                            <button type="button" class="btn btn-success add-food">
+                                                                                                                                                                <i class="fas fa-plus"></i> Add Food
                                                                                                                                                             </button>
                                                                                                                                                         </div>
                                                                                                                                                     </div>
@@ -209,7 +192,7 @@
                                                                                                                                             </div>
 
                                                                                                                                             <!-- Hidden inputs for form submission -->
-                                                                                                                                            <input type="hidden" id="productIdsInput" name="productIds">
+                                                                                                                                            <input type="hidden" id="foodIdsInput" name="foodIds">
                                                                                                                                                 <input type="hidden" id="quantitiesInput" name="quantities">
 
                                                                                                                                                     <!-- Price Summary -->
@@ -256,7 +239,7 @@
                                                                                                                                                     </div>
                                                                                                                                                     </form>
 
-                                                                                                                                                    <!-- Combo Product Manager -->
+                                                                                                                                                    <!-- Combo Food Manager -->
                                                                                                                                                     <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
                                                                                                                                                     <script>
                                                                                                                                                         document.addEventListener('DOMContentLoaded', function () {

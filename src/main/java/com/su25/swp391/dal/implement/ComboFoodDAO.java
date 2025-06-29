@@ -101,6 +101,22 @@ public class ComboFoodDAO extends DBContext implements I_DAO<ComboFood>{
         }
     }
 
+     
+    public boolean deleteByComboId(Integer comboId) {
+         String sql = "DELETE FROM ComboFood WHERE id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, comboId);
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error deleting combo food: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
     @Override
     public int insert(ComboFood t) {
     String sql = "INSERT INTO ComboFood (comboId, foodId, quantityInCombo) VALUES (?, ?, ?)";

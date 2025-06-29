@@ -139,7 +139,7 @@ public class ManagerCombo extends HttpServlet {
         request.getRequestDispatcher("/view/nutritionist/combo/addCombo_1.jsp").forward(request, response);
     }
 
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         //lấy id combo cần edit
         String comboIdStr = request.getParameter("comboId");
         //kieem tra xem id co ton tại không
@@ -186,7 +186,7 @@ public class ManagerCombo extends HttpServlet {
                                 .append("\"price\":\"").append(food.getPrice()).append(",")
                                 .append("\"quantity\":").append(food.getCalo())
                                 .append("}");
-                        if( i <comboFood.size() -1){
+                        if (i < comboFood.size() - 1) {
                             selectedFoodsJson.append("]");
                         }
                     }
@@ -196,15 +196,15 @@ public class ManagerCombo extends HttpServlet {
                     request.setAttribute("allFoods", allFoods);
                     request.setAttribute("foodJson", foodsJson);
                     request.setAttribute("selectedFoodJson", selectedFoodsJson);
-                    
-                    request.getRequestDispatcher("/view/nutritionist/combo/editCombo.jsp");
+
+                    request.getRequestDispatcher("/view/nutritionist/combo/editCombo.jsp").forward(request, response);
                     return;
                 }
-               
+
             }
         }
-         // If combo not found or ID not provided, redirect to list
-                response.sendRedirect(request.getContextPath()+ "/view/nutritionist/combo/listCombo.jsp");
+    
+        response.sendRedirect(request.getContextPath() + "/view/nutritionist/combo/editCombo.jsp");
     }
 
     private void deactiveCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -362,8 +362,72 @@ public class ManagerCombo extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/managerCombo");
     }
 
-    private void updateCombo(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void updateCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int comboId = Integer.parseInt(request.getParameter("comboId"));
+            String name = request.getParameter("comboName");
+            String description = request.getParameter("description");
+            Double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
+            String status = request.getParameter("status");
+
+            String foodIdsStr = request.getParameter("foodIds");
+            String quantitiesStr = request.getParameter("quantities");
+            String[] foodIds = foodIdsStr != null ? foodIdsStr.split(",") : null;
+            String[] quantities = quantitiesStr != null ? quantitiesStr.split(",") : null;
+
+            // validate 
+            Map<String, String> errors = validateComboData(name, discountPrice, quantities, foodIds, comboId);
+            if (!errors.isEmpty()) {
+                request.getSession().setAttribute("errors", errors);
+                request.getSession().setAttribute("formData", request.getParameterMap());
+                response.sendRedirect(request.getContextPath() + "/managerCombo?action=edit" + comboId);
+
+            }
+            FoodDAO foodDao = new FoodDAO();
+            Double originalPrice = calculateOriginalPrice(foodIds, quantities, foodDao);
+
+            ComboDAO comboDao = new ComboDAO();
+            Combo combo = comboDao.findById(comboId);
+
+            if (combo != null) {
+                combo.setComboName(name);
+                combo.setDescription(description);
+                combo.setDiscountPrice(discountPrice);
+                combo.setOriginalPrice(originalPrice);
+                combo.setStatus(status);
+
+                boolean updated = comboDao.update(combo);
+                if (updated) {
+                    ComboFoodDAO comboFoodDao = new ComboFoodDAO();
+                    //xoa het nhung mon an trong combo cũ
+                    comboFoodDao.deleteByComboId(comboId);
+                    for (int i = 0; i < foodIds.length; i++) {
+                        int foodId = Integer.parseInt(foodIds[i]);
+                        int quantity = Integer.parseInt(quantities[i]);
+                        comboFoodDao.insert(ComboFood.builder()
+                                .comboId(comboId)
+                                .foodId(foodId)
+                                .quantityInCombo(quantity)
+                                .build()
+                        );
+
+                    }
+                    setToastMessage(request, "Combo updated successfully!", "success");
+                } else {
+                    setToastMessage(request, "Failed to update combo!", "error");
+                }
+            } else {
+                setToastMessage(request, "Combo not found!", "error");
+            }
+        } catch (NumberFormatException e) {
+            setToastMessage(request, "Error: " + e.getMessage(), "error");
+        }
+        String page = request.getParameter("page");
+        String redirectUrl = request.getContextPath() + "/managerCombo?action=list";
+        if (page != null && !page.isEmpty()) {
+            redirectUrl += "&page=" + page;
+        }
+        response.sendRedirect(redirectUrl);
     }
 
     private void viewComboFoodDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -443,5 +507,13 @@ public class ManagerCombo extends HttpServlet {
             }
         }
         return originalPrice;
+    }
+
+    /**
+     * Set a toast message for display
+     */
+    private void setToastMessage(HttpServletRequest request, String message, String type) {
+        request.getSession().setAttribute("toastMessage", message);
+        request.getSession().setAttribute("toastType", type);
     }
 }
