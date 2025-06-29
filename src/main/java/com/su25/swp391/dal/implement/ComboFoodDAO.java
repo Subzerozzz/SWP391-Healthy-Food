@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  *
@@ -141,34 +142,6 @@ public class ComboFoodDAO extends DBContext implements I_DAO<ComboFood>{
 
     return result;
 }
-//    public int insert(ComboFood t) {
-//        String sql = "INSERT INTO ComboFood (comboId, foodId, quantityInCombo) VALUES (?, ?, ?)";
-//
-//        try {
-//            connection = getConnection();
-//            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//            statement.setInt(1, t.getComboId());
-//            statement.setInt(2, t.getFoodId());
-//            statement.setInt(3, t.getQuantityInCombo());
-//
-//            int affectedRows = statement.executeUpdate();
-//
-//            if (affectedRows == 0) {
-//                throw new SQLException("Creating combo product failed, no rows affected.");
-//            }
-//            resultSet = statement.getGeneratedKeys();
-//            if (resultSet.next()) {
-//                return resultSet.getInt(1);
-//            } else {
-//                throw new SQLException("Creating combo product failed, no ID obtained.");
-//            }
-//        } catch (SQLException ex) {
-//            System.out.println("Error inserting combo product: " + ex.getMessage());
-//            return -1;
-//        } finally {
-//            closeResources();
-//        }
-//    }
 
     @Override
     public ComboFood getFromResultSet(ResultSet rs) throws SQLException {
@@ -196,8 +169,39 @@ public class ComboFoodDAO extends DBContext implements I_DAO<ComboFood>{
         } finally {
             closeResources();
         }
-        return null;
+         return null;
     }
-    
+    public List<ComboFood> findByIdList(Integer comboId) {
+    List<ComboFood> comboFood = new ArrayList<>();
+    String sql = "SELECT * FROM ComboFood WHERE comboId = ?";
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, comboId);
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            comboFood.add(getFromResultSet(resultSet));
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error finding combo products by combo ID: " + ex.getMessage());
+    } finally {
+        closeResources();
+    }
+    return comboFood; // ✅ Đúng rồi nè!
+}
+public static void main(String[] args) {
+    ComboFoodDAO dao = new ComboFoodDAO();
+    int comboId = 11; // thay ID combo bạn muốn test
+
+    List<ComboFood> list = dao.findByIdList(comboId);
+
+    for (ComboFood cf : list) {
+        System.out.println("ComboId: " + cf.getComboId()
+                         + ", FoodId: " + cf.getFoodId()
+                         + ", Quantity: " + cf.getQuantityInCombo());
+    }
+}
+
+
     
 }

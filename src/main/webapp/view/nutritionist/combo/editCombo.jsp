@@ -74,12 +74,12 @@
                                                                                             <section class="content">
                                                                                                 <div class="dashboard-main-body">
                                                                                                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-                                                                                                        <h6 class="fw-semibold mb-0">Create New Combo</h6>
+                                                                                                        <h6 class="fw-semibold mb-0">Update Combo</h6>
                                                                                                     </div>
                                                                                                     <div class="card">
                                                                                                         <div class="card-body p-24">
                                                                                                             <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=edit" method="post" enctype="multipart/form-data">
-                                                                                                            <input type="hidden" name="id" value="${combo.comboId}">
+                                                                                                            <input type="hidden" name="comboId" value="${combo.comboId}">
                                                                                                                 <input type="hidden" name="page" value="${param.page}">
 
                                                                                                                     <c:if test="${not empty sessionScope.errors}">
@@ -106,7 +106,7 @@
                                                                                                                             <label for="name" class="form-label">Combo Name <span class="text-danger">*</span></label>
                                                                                                                             <input type="text" class="form-control" id="name" name="name"
                                                                                                                                    placeholder="Enter combo name" required
-                                                                                                                                   value="${combo.name}">
+                                                                                                                                   value="${combo.comboName}">
                                                                                                                         </div>
                                                                                                                         <div class="col-md-6">
                                                                                                                             <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
@@ -120,220 +120,220 @@
                                                                                                                             <textarea class="form-control" id="description" name="description"
                                                                                                                                       rows="3" placeholder="Enter detailed description of the combo">${combo.description}</textarea>
                                                                                                                         </div>
-                                                                                                                        
-                                                                                                                                            </div>
 
-                                                                                                                                            <!-- Food Selection Section -->
-                                                                                                                                            <div class="card border-info mt-4 mb-4">
-                                                                                                                                                <div class="card-header bg-info text-white">
-                                                                                                                                                    <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Foods for Combo</h6>
-                                                                                                                                                </div>
-                                                                                                                                                <div class="card-body">
-                                                                                                                                                    <div class="food-selection-container">
-                                                                                                                                                        <c:forEach items="${comboFoods}" var="comboFood" varStatus="status">
-                                                                                                                                                            <div class="food-selection-row row mb-3">
-                                                                                                                                                                <div class="col-md-8">
-                                                                                                                                                                    <select class="form-control food-select" required>
-                                                                                                                                                                        <option value="">Choose a food</option>
-                                                                                                                                                                        <c:forEach items="${allFoods}" var="food">
-                                                                                                                                                                            <option value="${food.foodId}" 
-                                                                                                                                                                                    data-price="${food.price}"
-                                                                                                                                                                                    ${food.foodId == comboFood.foodId ? 'selected' : ''}>
-                                                                                                                                                                                ${food.foodName} - ${food.price}đ
-                                                                                                                                                                            </option>
-                                                                                                                                                                        </c:forEach>
-                                                                                                                                                                    </select>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div class="col-md-2">
-                                                                                                                                                                    <input type="number" class="form-control food-quantity" 
-                                                                                                                                                                           value="${comboFood.quantityInCombo}" min="1" required>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div class="col-md-2">
-                                                                                                                                                                    <button type="button" class="btn btn-danger remove-food" 
-                                                                                                                                                                            ${status.index == 0 && comboFoods.size() == 1 ? 'disabled' : ''}>
-                                                                                                                                                                        <i class="fas fa-trash"></i>
-                                                                                                                                                                    </button>
-                                                                                                                                                                </div>
-                                                                                                                                                            </div>
-                                                                                                                                                        </c:forEach>
+                                                                                                                    </div>
 
-                                                                                                                                                        <c:if test="${empty comboFoods}">
-                                                                                                                                                            <div class="food-selection-row row mb-3">
-                                                                                                                                                                <div class="col-md-8">
-                                                                                                                                                                    <select class="form-control food-select" required>
-                                                                                                                                                                        <option value="">Choose a food</option>
-                                                                                                                                                                        <c:forEach items="${foods}" var="food">
-                                                                                                                                                                            <option value="${food.foodId}" data-price="${food.price}">
-                                                                                                                                                                                ${food.foodName} - <fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
-                                                                                                                                                                            </option>
-                                                                                                                                                                        </c:forEach>
-                                                                                                                                                                    </select>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div class="col-md-2">
-                                                                                                                                                                    <input type="number" class="form-control food-quantity" value="1" min="1" required>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div class="col-md-1 d-flex align-items-end">
-                                                                                                                                                                    <button type="button" class="btn btn-danger remove-food" disabled title="Remove food">
-                                                                                                                                                                        <i class="fas fa-trash"></i>
-                                                                                                                                                                    </button>
-                                                                                                                                                                </div>
-                                                                                                                                                            </div>
-                                                                                                                                                        </c:if>
-                                                                                                                                                    </div>
+                                                                                                                    <!-- Food Selection Section -->
+                                                                                                                    <div class="card border-info mt-4 mb-4">
+                                                                                                                        <div class="card-header bg-info text-white">
+                                                                                                                            <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Foods for Combo</h6>
+                                                                                                                        </div>
+                                                                                                                        <div class="card-body">
+                                                                                                                            <div class="food-selection-container">
+                                                                                                                                <c:forEach items="${comboFood}" var="comboFood" varStatus="status">
+                                                                                                                                    <div class="food-selection-row row mb-3">
+                                                                                                                                        <div class="col-md-8">
+                                                                                                                                            <select class="form-control food-select" required>
+                                                                                                                                                <option value="">Choose a food</option>
+                                                                                                                                                <c:forEach items="${allFoods}" var="food">
+                                                                                                                                                    <option value="${food.id}" 
+                                                                                                                                                            data-price="${food.price}"
+                                                                                                                                                            ${food.id == comboFood.foodId ? 'selected' : ''}>
+                                                                                                                                                        ${food.name} - ${food.price}đ
+                                                                                                                                                    </option>
+                                                                                                                                                </c:forEach>
+                                                                                                                                            </select>
+                                                                                                                                        </div>
+                                                                                                                                        <div class="col-md-2">
+                                                                                                                                            <input type="number" class="form-control food-quantity" 
+                                                                                                                                                   value="${comboFood.quantityInCombo}" min="1" required>
+                                                                                                                                        </div>
+                                                                                                                                        <div class="col-md-2">
+                                                                                                                                            <button type="button" class="btn btn-danger remove-food" 
+                                                                                                                                                    ${status.index == 0 && comboFoods.size() == 1 ? 'disabled' : ''}>
+                                                                                                                                                <i class="fas fa-trash"></i>
+                                                                                                                                            </button>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </c:forEach>
 
-                                                                                                                                                    <div class="row mt-3">
-                                                                                                                                                        <div class="col-12">
-                                                                                                                                                            <button type="button" class="btn btn-success add-food">
-                                                                                                                                                                <i class="fas fa-plus"></i> Add Food
-                                                                                                                                                            </button>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
+                                                                                                                                <c:if test="${empty comboFoods}">
+                                                                                                                                    <div class="food-selection-row row mb-3">
+                                                                                                                                        <div class="col-md-8">
+                                                                                                                                            <select class="form-control food-select" required>
+                                                                                                                                                <option value="">Choose a food</option>
+                                                                                                                                                <c:forEach items="${allFoods}" var="food">
+                                                                                                                                                    <option value="${food.id}" data-price="${food.price}">
+                                                                                                                                                        ${food.name} - <fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" pattern="#,##0"/>đ
+                                                                                                                                                    </option>
+                                                                                                                                                </c:forEach>
+                                                                                                                                            </select>
+                                                                                                                                        </div>
+                                                                                                                                        <div class="col-md-2">
+                                                                                                                                            <input type="number" class="form-control food-quantity" value="1" min="1" required>
+                                                                                                                                        </div>
+                                                                                                                                        <div class="col-md-1 d-flex align-items-end">
+                                                                                                                                            <button type="button" class="btn btn-danger remove-food" disabled title="Remove food">
+                                                                                                                                                <i class="fas fa-trash"></i>
+                                                                                                                                            </button>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </c:if>
+                                                                                                                            </div>
 
-                                                                                                                                            <!-- Hidden inputs for form submission -->
-                                                                                                                                            <input type="hidden" id="foodIdsInput" name="foodIds">
-                                                                                                                                                <input type="hidden" id="quantitiesInput" name="quantities">
+                                                                                                                            <div class="row mt-3">
+                                                                                                                                <div class="col-12">
+                                                                                                                                    <button type="button" class="btn btn-success add-food">
+                                                                                                                                        <i class="fas fa-plus"></i> Add Food
+                                                                                                                                    </button>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
 
-                                                                                                                                                    <!-- Price Summary -->
-                                                                                                                                                    <div class="row mt-4">
-                                                                                                                                                        <div class="col-md-6 offset-md-6">
-                                                                                                                                                            <div class="table-responsive">
-                                                                                                                                                                <table class="table table-bordered">
-                                                                                                                                                                    <tr>
-                                                                                                                                                                        <th>Total Original Price:</th>
-                                                                                                                                                                        <td>
-                                                                                                                                                                            <span id="original-price-display">${combo.originalPrice}</span>đ
-                                                                                                                                                                            <input type="hidden" id="original_price" name="original_price" 
-                                                                                                                                                                                   value="${combo.originalPrice}">
-                                                                                                                                                                        </td>
-                                                                                                                                                                    </tr>
-                                                                                                                                                                    <tr>
-                                                                                                                                                                        <th>Discounted Price: <span class="text-danger">*</span></th>
-                                                                                                                                                                        <td>
-                                                                                                                                                                            <input type="number" class="form-control" id="discount_price" 
-                                                                                                                                                                                   name="discount_price" value="${combo.discountPrice}" 
-                                                                                                                                                                                   min="0" required>
-                                                                                                                                                                        </td>
-                                                                                                                                                                    </tr>
-                                                                                                                                                                    <tr>
-                                                                                                                                                                        <th>Savings:</th>
-                                                                                                                                                                        <td><span id="savings-display">${combo.originalPrice - combo.discountPrice}</span>đ</td>
-                                                                                                                                                                    </tr>
-                                                                                                                                                                </table>
-                                                                                                                                                            </div>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
+                                                                                                                    <!-- Hidden inputs for form submission -->
+                                                                                                                    <input type="hidden" id="foodIdsInput" name="foodIds">
+                                                                                                                        <input type="hidden" id="quantitiesInput" name="quantities">
 
-                                                                                                                                                    <!-- Submit Buttons -->
-                                                                                                                                                    <div class="row mt-4">
-                                                                                                                                                        <div class="col-12 text-end">
-                                                                                                                                                            <a href="${pageContext.request.contextPath}/admin/manage-combo" 
-                                                                                                                                                               class="btn btn-secondary me-2">
-                                                                                                                                                                <i class="fas fa-times"></i> Cancel
-                                                                                                                                                            </a>
-                                                                                                                                                            <button type="submit" class="btn btn-primary">
-                                                                                                                                                                <i class="fas fa-save"></i> Save Changes
-                                                                                                                                                            </button>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    </form>
+                                                                                                                            <!-- Price Summary -->
+                                                                                                                            <div class="row mt-4">
+                                                                                                                                <div class="col-md-6 offset-md-6">
+                                                                                                                                    <div class="table-responsive">
+                                                                                                                                        <table class="table table-bordered">
+                                                                                                                                            <tr>
+                                                                                                                                                <th>Total Original Price:</th>
+                                                                                                                                                <td>
+                                                                                                                                                    <span id="original-price-display">${combo.originalPrice}</span>đ
+                                                                                                                                                    <input type="hidden" id="original_price" name="originalPrice" 
+                                                                                                                                                           value="${combo.originalPrice}">
+                                                                                                                                                </td>
+                                                                                                                                            </tr>
+                                                                                                                                            <tr>
+                                                                                                                                                <th>Discounted Price: <span class="text-danger">*</span></th>
+                                                                                                                                                <td>
+                                                                                                                                                    <input type="number" class="form-control" id="discount_price" 
+                                                                                                                                                           name="discountPrice" value="${combo.discountPrice}" 
+                                                                                                                                                           min="0" required>
+                                                                                                                                                </td>
+                                                                                                                                            </tr>
+                                                                                                                                            <tr>
+                                                                                                                                                <th>Savings:</th>
+                                                                                                                                                <td><span id="savings-display">${combo.originalPrice - combo.discountPrice}</span>đ</td>
+                                                                                                                                            </tr>
+                                                                                                                                        </table>
+                                                                                                                                    </div>
+                                                                                                                                </div>
+                                                                                                                            </div>
 
-                                                                                                                                                    <!-- Combo Food Manager -->
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
-                                                                                                                                                    <script>
-                                                                                                                                                        document.addEventListener('DOMContentLoaded', function () {
-                                                                                                                                                            // Validate form name
-                                                                                                                                                            var comboForm = document.getElementById('comboForm');
-                                                                                                                                                            if (comboForm) {
-                                                                                                                                                                comboForm.addEventListener('submit', function (e) {
-                                                                                                                                                                    var nameInput = document.getElementById('name');
-                                                                                                                                                                    var nameValue = nameInput.value;
-                                                                                                                                                                    var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
-                                                                                                                                                                    if (!regex.test(nameValue)) {
-                                                                                                                                                                        alert('Combo name cannot contain special characters!');
-                                                                                                                                                                        nameInput.focus();
-                                                                                                                                                                        e.preventDefault();
-                                                                                                                                                                        return false;
-                                                                                                                                                                    }
+                                                                                                                            <!-- Submit Buttons -->
+                                                                                                                            <div class="row mt-4">
+                                                                                                                                <div class="col-12 text-end">
+                                                                                                                                    <a href="${pageContext.request.contextPath}/admin/manage-combo" 
+                                                                                                                                       class="btn btn-secondary me-2">
+                                                                                                                                        <i class="fas fa-times"></i> Cancel
+                                                                                                                                    </a>
+                                                                                                                                    <button type="submit" class="btn btn-primary">
+                                                                                                                                        <i class="fas fa-save"></i> Save Changes
+                                                                                                                                    </button>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                            </form>
 
-                                                                                                                                                                    //ĐỔ DỮ LIỆU vào input hidden trước khi submit
-                                                                                                                                                                    const foodSelects = document.querySelectorAll(".food-select");
-                                                                                                                                                                    const quantityInputs = document.querySelectorAll(".food-quantity");
+                                                                                                                            <!-- Combo Food Manager -->
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
+                                                                                                                            <script>
+                                                                                                                                document.addEventListener('DOMContentLoaded', function () {
+                                                                                                                                    // Validate form name
+                                                                                                                                    var comboForm = document.getElementById('comboForm');
+                                                                                                                                    if (comboForm) {
+                                                                                                                                        comboForm.addEventListener('submit', function (e) {
+                                                                                                                                            var nameInput = document.getElementById('name');
+                                                                                                                                            var nameValue = nameInput.value;
+                                                                                                                                            var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
+                                                                                                                                            if (!regex.test(nameValue)) {
+                                                                                                                                                alert('Combo name cannot contain special characters!');
+                                                                                                                                                nameInput.focus();
+                                                                                                                                                e.preventDefault();
+                                                                                                                                                return false;
+                                                                                                                                            }
 
-                                                                                                                                                                    const foodIds = [];
-                                                                                                                                                                    const quantities = [];
+                                                                                                                                            //ĐỔ DỮ LIỆU vào input hidden trước khi submit
+                                                                                                                                            const foodSelects = document.querySelectorAll(".food-select");
+                                                                                                                                            const quantityInputs = document.querySelectorAll(".food-quantity");
 
-                                                                                                                                                                    foodSelects.forEach((select, index) => {
-                                                                                                                                                                        const foodId = select.value;
-                                                                                                                                                                        const quantity = quantityInputs[index].value;
+                                                                                                                                            const foodIds = [];
+                                                                                                                                            const quantities = [];
 
-                                                                                                                                                                        if (foodId && quantity) {
-                                                                                                                                                                            foodIds.push(foodId);
-                                                                                                                                                                            quantities.push(quantity);
-                                                                                                                                                                        }
-                                                                                                                                                                    });
+                                                                                                                                            foodSelects.forEach((select, index) => {
+                                                                                                                                                const foodId = select.value;
+                                                                                                                                                const quantity = quantityInputs[index].value;
 
-                                                                                                                                                                    document.getElementById("foodIdsInput").value = foodIds.join(",");
-                                                                                                                                                                    document.getElementById("quantitiesInput").value = quantities.join(",");
-                                                                                                                                                                });
-                                                                                                                                                            }
+                                                                                                                                                if (foodId && quantity) {
+                                                                                                                                                    foodIds.push(foodId);
+                                                                                                                                                    quantities.push(quantity);
+                                                                                                                                                }
+                                                                                                                                            });
 
-                                                                                                                                                            // Handle add food
-                                                                                                                                                            const addFoodBtn = document.querySelector('.add-food');
-                                                                                                                                                            console.log("Add food Button:", addFoodBtn);
+                                                                                                                                            document.getElementById("foodIdsInput").value = foodIds.join(",");
+                                                                                                                                            document.getElementById("quantitiesInput").value = quantities.join(",");
+                                                                                                                                        });
+                                                                                                                                    }
 
-                                                                                                                                                            if (addFoodBtn) {
-                                                                                                                                                                addFoodBtn.addEventListener('click', function () {
-                                                                                                                                                                    console.log('Add food clicked');
-                                                                                                                                                                    // Bạn cần bổ sung code clone dòng chọn món tại đây
-                                                                                                                                                                });
-                                                                                                                                                            } else {
-                                                                                                                                                                console.warn("Add food button not found!");
-                                                                                                                                                            }
-                                                                                                                                                        });
+                                                                                                                                    // Handle add food
+                                                                                                                                    const addFoodBtn = document.querySelector('.add-food');
+                                                                                                                                    console.log("Add food Button:", addFoodBtn);
 
-                                                                                                                                                    </script>
-                                                                                                                                                    </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    </section>
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /main-content-wrap -->
-                                                                                                                                                    <!-- bottom-page -->
+                                                                                                                                    if (addFoodBtn) {
+                                                                                                                                        addFoodBtn.addEventListener('click', function () {
+                                                                                                                                            console.log('Add food clicked');
+                                                                                                                                            // Bạn cần bổ sung code clone dòng chọn món tại đây
+                                                                                                                                        });
+                                                                                                                                    } else {
+                                                                                                                                        console.warn("Add food button not found!");
+                                                                                                                                    }
+                                                                                                                                });
 
-                                                                                                                                                    <!-- /bottom-page -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /main-content -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /section-content-right -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /layout-wrap -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /#page -->
-                                                                                                                                                    </div>
-                                                                                                                                                    <!-- /#wrapper -->
+                                                                                                                            </script>
+                                                                                                                            </div>
+                                                                                                                            </div>
+                                                                                                                            </div>
+                                                                                                                            </section>
+                                                                                                                            </div>
+                                                                                                                            <!-- /main-content-wrap -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /main-content-wrap -->
+                                                                                                                            <!-- bottom-page -->
 
-                                                                                                                                                    <!-- Javascript -->
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/main.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
-                                                                                                                                                    <!-- jQuery -->
-                                                                                                                                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                                                                                                            <!-- /bottom-page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /main-content -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /section-content-right -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /layout-wrap -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#wrapper -->
 
-                                                                                                                                                    <!-- Gọi sau khi jQuery + Select2 sẵn -->
+                                                                                                                            <!-- Javascript -->
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
+                                                                                                                            <!-- jQuery -->
+                                                                                                                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                                                                                                                                                    </body>
-                                                                                                                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-                                                                                                                                                    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                            <!-- Gọi sau khi jQuery + Select2 sẵn -->
 
-                                                                                                                                                    <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
-                                                                                                                                                    </html>
+                                                                                                                            </body>
+                                                                                                                            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+
+                                                                                                                            <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
+                                                                                                                            </html>
