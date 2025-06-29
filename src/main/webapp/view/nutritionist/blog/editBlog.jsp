@@ -38,9 +38,9 @@
                 <div class="preloading"><span></span></div>
             </div>
 
-            <jsp:include page="../../common/nutritionist/sidebar.jsp" />
+            <jsp:include page="../../common/sidebar.jsp"></jsp:include>
             <div class="section-content-right">
-                <jsp:include page="../../common/nutritionist/headerDashboard.jsp" />
+                 <jsp:include page="../../common/headerDashboard.jsp"></jsp:include>
                 <div class="main-content">
                     <div class="main-content-inner">
                         <div class="main-content-wrap">
@@ -54,7 +54,7 @@
                                     <li><div class="text-tiny">Edit Blog</div></li>
                                 </ul>
                             </div>
-                            <form class="tf-section-2 form-add-product" 
+                            <form  
                                   action="manage-blog?action=edit"
                                      method="POST"
                                      enctype="multipart/form-data">
@@ -84,29 +84,7 @@
                                         <textarea class="mb-10" type="text" name="content" required>${blog.content}</textarea>
                                         <div class="text-tiny">Do not exceed 1000 characters for the description.</div>
                                     </fieldset>
-                                </div>
-                                <div class="wg-box">
-                                    <!--Image-->
-                                    <fieldset>
-                                        <div class="body-title mb-10">Upload images</div>
-                                        <div class="upload-image mb-16">
-                                            <div class="item">
-                                                <img src="images/upload/upload-1.png" alt="">
-                                            </div>
-                                            <div class="item up-load">
-                                                <label class="uploadfile" for="myFile">
-                                                    <span class="icon">
-                                                        <i class="icon-upload-cloud"></i>
-                                                    </span>
-                                                    <span class="text-tiny">Drop your images here or select <span class="tf-color">click
-                                                            to
-                                                            browse</span></span>
-                                                    <input type="file" id="myFile" name="filename">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
+                                        
                                     <fieldset class="name">
                                         <div class="body-title mb-10">Blog Date</div>
                                         <div class="select">
@@ -118,6 +96,8 @@
                                         <button class="tf-button w-full" type="submit">Update Blog</button>
                                         <a href="blogList.jsp" class="tf-button style-2 w-full">Cancel</a>
                                     </div>
+                                        
+                                        
                                 </div>
                             </form>
                         </div>

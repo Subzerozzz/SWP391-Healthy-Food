@@ -60,12 +60,12 @@
                 </div>
                 <!-- /preload -->
                 <!-- section-menu-left -->
-                <jsp:include page="../../common/nutritionist/sidebar.jsp"></jsp:include>
+                <jsp:include page="../../common/sidebar.jsp"></jsp:include>
                 <!-- /section-menu-left -->
                 <!-- section-content-right -->
                 <div class="section-content-right">
                     <!-- header-dashboard -->
-                    <jsp:include page="../../common/nutritionist/headerDashboard.jsp"></jsp:include> 
+                   <jsp:include page="../../common/headerDashboard.jsp"></jsp:include>  
                     <!-- /header-dashboard -->
                     <!-- main-content -->
                     <div class="main-content">
@@ -74,9 +74,17 @@
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Add Blog</h3>
+                                <h3>Add Blog</h3>
+                                <ul class="breadcrumbs flex items-center flex-wrap gap10">
+                                    <li><a href="index.html"><div class="text-tiny">Dashboard</div></a></li>
+                                    <li><i class="icon-chevron-right"></i></li>
+                                    <li><a href="#"><div class="text-tiny">Ecommerce</div></a></li>
+                                    <li><i class="icon-chevron-right"></i></li>
+                                    <li><div class="text-tiny">Add Blog</div></li>
+                                </ul>
+                            </div>
                                 <!-- form-add-product -->
-                                <form class="tf-section-2 form-add-product" 
+                                <form  
                                     action="manage-blog?action=add"
                                      method="POST"
                                      enctype="multipart/form-data"
@@ -97,31 +105,10 @@
                                             <label class="form-label">Content <span class="text-danger">*</span></label>
                                             <textarea class="form-control" name="content" id="content" rows="10"></textarea>
                                         </div>
-                                    </div>
-                                    <div class="wg-box">
-                                        <!--Image-->
-                                        <fieldset>
-                                            <div class="body-title mb-10">Upload images</div>
-                                            <div class="upload-image mb-16">
-                                                <div class="item">
-                                                    <img src="" alt<img id="preview" src="#" alt="Preview Image" style="display:none; width:100%; max-height:500px; object-fit:cover; margin-bottom: 10px; border-radius: 10px;" />
-                                                </div>
-                                                <div class="item up-load">
-                                                    <label class="uploadfile" for="myFile">
-                                                        <span class="icon">
-                                                            <i class="icon-upload-cloud"></i>
-                                                        </span>
-                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click
-                                                                to browse</span></span>
-                                                        <input type="file" id="myFile" name="filename" onchange="previewImage(event)">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                         <div class="cols gap10">
+                                        <div class="cols gap10">
                                              <button class="tf-button w-full" type="submit">Add Blog</button>
                                          </div>
-                                     </div>
+                                    </div>
                                  </form>
                                  <!-- /form-add-product -->
                              </div>

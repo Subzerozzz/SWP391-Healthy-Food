@@ -122,8 +122,8 @@
 
                                                                                                         <fieldset class="email mb-24">
                                                                                                             <div class="body-title mb-10">Email</div>
-                                                                                                            <input class="flex-grow" type="email" placeholder="Email" name="email"
-                                                                                                                   value="${email != null ? email : ''}" required>
+                                                                                                            <input class="flex-grow" type="email" placeholder="Email" name="emails"
+                                                                                                                   value="${emails != null ? emails : ''}" required>
                                                                                                                 <c:if test="${errors != null && errors['email'] != null}">
                                                                                                                     <span style="color: red;">${errors['email']}</span>
                                                                                                                 </c:if>
@@ -172,8 +172,8 @@
                                                                                                         <!-- Status -->
                                                                                                         <fieldset class="status mb-24">
                                                                                                             <div class="body-title mb-10">Status</div>
-                                                                                                            <label><input type="radio" name="status" value="active" ${status == 'active' ? 'checked' : ''}> Active</label>
-                                                                                                            <label><input type="radio" name="status" value="banned" ${status == 'banned' ? 'checked' : ''}> Banned</label>
+                                                                                                            <label><input type="radio" name="status" value="active" checked> Active</label>
+                                                                                                            <label><input type="radio" name="status" value="banned" > Banned</label>
                                                                                                         </fieldset>
 
                                                                                                         <!-- Birth Date -->
@@ -208,23 +208,26 @@
                                                                                                 </div>
 
                                                                                         </div>
-
+                                                                                            <!--button add--> 
+                                                                                            <div class="bot" style="margin-top:20px">
+                                                                                                <button class="tf-button w180" type="submit">Save</button>
+                                                                                            </div>
                                                                                     </div>
 
 
-                                                                                    <div class="bot">
-                                                                                        <button class="tf-button w180" type="submit">Save</button>
-                                                                                    </div>
+                                                                                    
 
                                                                                     </form>
                                                                                     <!-- /add-new-user -->
+                                                                                    <!-- bottom-page -->
+                                                                                        <jsp:include page="../common/footer.jsp"></jsp:include>
+                                                                                    <!-- /bottom-page -->
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
+                                                                                
                                                                             </div>
                                                                             <!-- /main-content-wrap -->
-                                                                            <!-- bottom-page -->
-                                                                                <jsp:include page="../common/footer.jsp"></jsp:include>
-                                                                            <!-- /bottom-page -->
+                                                                            
                                                                         </div>
                                                                         <!-- /main-content -->
                                                                     </div>
@@ -304,6 +307,8 @@
                                                                         message += `- Mật khẩu xác nhận không khớp\n`;
                                                                     }
                                                                 </script>
+                                                                            
+
                                                             </body>
 
 

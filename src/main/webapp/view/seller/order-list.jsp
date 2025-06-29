@@ -415,8 +415,8 @@
         <select    style="height: 40px;font-size: 15px; "
             class="form-select" name="paymentMethod">
           <option value="">All Payment Methods</option>
-          <option value="Cash on Delivery" ${paymentMethod == 'Cash on Delivery' ? 'selected' : ''}>Cash on Delivery</option>
-          <option value="VN Pay"   ${paymentMethod == 'VN Pay'   ? 'selected' : ''}>VN Pay</option>
+          <option value="cod" ${paymentMethod == 'cod' ? 'selected' : ''}>Cash on Delivery</option>
+          <option value="vnpay"   ${paymentMethod == 'vnpay'   ? 'selected' : ''}>VN Pay</option>
          </select>
         
           <!--select payment Status-->

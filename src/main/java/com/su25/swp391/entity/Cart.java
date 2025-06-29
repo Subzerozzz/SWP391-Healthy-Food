@@ -4,7 +4,7 @@
  */
 package com.su25.swp391.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +15,9 @@ import lombok.ToString;
 
 /**
  *
- * @author Predator
+ * @author kieud
  */
+
 @ToString
 @Builder
 @Data
@@ -24,16 +25,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Blog {
 
+
+public class Cart {
     private int id;
-    private String title;
-    private String author;
-    private String brief_info;
-    private String content;
-    private String thumbnailblogs;
-    private String status;
-    private Date birth_date;
-
- 
+    private int account_id;
+    private Timestamp created_at;
+    private Timestamp update_at;
+    
 }

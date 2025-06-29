@@ -2,10 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.su25.swp391.admin;
+package com.su25.swp391.controller.admin;
 
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.utils.EmailUtils;
+import static com.su25.swp391.utils.MD5PasswordEncoderUtils.encodeMD5;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -55,11 +60,25 @@ public class ManageAccount extends HttpServlet {
                 deleteAccount(request, response);
                 break;
             case "deactive":
-                deactivateAccount(request, response);
+            {
+                try {
+                    deactivateAccount(request, response);
+                } catch (MessagingException ex) {
+                    Logger.getLogger(ManageAccount.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 break;
+
             case "activate":
-                activateAccount(request, response);
+            {
+                try {
+                    activateAccount(request, response);
+                } catch (MessagingException ex) {
+                    Logger.getLogger(ManageAccount.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 break;
+
             case "list":
                 listAccount(request, response);
                 break;
@@ -128,16 +147,31 @@ public class ManageAccount extends HttpServlet {
         request.getRequestDispatcher("/view/admin/list_account.jsp").forward(request, response);
     }
 
-    private void deactivateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void deactivateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException {
         String accountIdStr = request.getParameter("id");
 
         if (accountIdStr != null && !accountIdStr.isEmpty()) {
             int accountId = Integer.parseInt(accountIdStr);
             AccountDAO accountDao = new AccountDAO();
+
+            // Lấy thông tin tài khoản để gửi email
+            Account account = accountDao.findById(accountId); // Bạn cần tạo hàm này nếu chưa có
+
             boolean deactivated = accountDao.deactivateAccount(accountId);
             if (deactivated) {
-                request.getSession().setAttribute("toastMessage", "Tài khoản đã bị vô hiệu hóa!");
-                request.getSession().setAttribute("toastType", "error"); // error => màu đỏ
+                // Gửi email thông báo
+                String subject = "Tai khoan da bi vo hieu hoa";
+                String content = "<h3>Xin chào " + account.getFull_name() + ",</h3>"
+                        + "<p>Tài khoản của bạn trên hệ thống đã bị vô hiệu hóa.</p>"
+                        + "<p>Nếu bạn nghĩ đây là nhầm lẫn, vui lòng liên hệ qua hotline.</p>"
+                        + "<br><p>Trân trọng!</p>";
+
+                boolean sent = EmailUtils.sendMail(account.getEmail(), subject, content);
+//            System.out.println("Email deactivate sent: " + sent);
+
+                request.getSession().setAttribute("toastMessage", "Tài khoản đã bị vô hiệu hóa!"
+                        + (sent ? " Email đã được gửi!" : " Gửi email thất bại!"));
+                request.getSession().setAttribute("toastType", "error");
             } else {
                 request.getSession().setAttribute("toastMessage", "Không thể vô hiệu hóa tài khoản!");
                 request.getSession().setAttribute("toastType", "error");
@@ -150,15 +184,33 @@ public class ManageAccount extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/manage-account");
     }
 
-    private void activateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void activateAccount(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException {
         String accountIdStr = request.getParameter("id");
 
         if (accountIdStr != null && !accountIdStr.isEmpty()) {
             int accountId = Integer.parseInt(accountIdStr);
             AccountDAO accountDao = new AccountDAO();
             boolean activated = accountDao.activateAccount(accountId);
+
             if (activated) {
-                request.getSession().setAttribute("toastMessage", "Tài khoản đã được kích hoạt!");
+                // Lấy lại tài khoản sau khi kích hoạt
+                Account account = accountDao.findById(accountId);
+                if (account != null) {
+                    // Gửi email thông báo
+                    String subject = "tai Khoan cua ban da duoc kich hoat";
+                    String content = "<h3>Xin chào " + account.getFull_name() + ",</h3>"
+                            + "<p>Tài khoản của bạn đã được <strong>kích hoạt</strong> thành công.</p>"
+                            + "<p>Bạn có thể đăng nhập với tên người dùng: <strong>" + account.getUser_name() + "</strong>.</p>"
+                            + "<p>Hãy truy cập hệ thống và thay đổi mật khẩu nếu cần.</p>"
+                            + "<br><p>Trân trọng,</p><p>Đội ngũ quản trị</p>";
+
+                    boolean emailSent = EmailUtils.sendMail(account.getEmail(), subject, content);
+                    String emailStatus = emailSent ? " Email đã được gửi." : " Gửi email thất bại.";
+
+                    request.getSession().setAttribute("toastMessage", "Tài khoản đã được kích hoạt!" + emailStatus);
+                } else {
+                    request.getSession().setAttribute("toastMessage", "Kích hoạt thành công nhưng không thể lấy thông tin tài khoản để gửi email.");
+                }
                 request.getSession().setAttribute("toastType", "success");
             } else {
                 request.getSession().setAttribute("toastMessage", "Không thể kích hoạt tài khoản!");
@@ -234,7 +286,7 @@ public class ManageAccount extends HttpServlet {
             // Lấy thông tin từ request
             String full_name = request.getParameter("full_name");
             String user_name = request.getParameter("user_name");
-            String email = request.getParameter("email");
+            String email = request.getParameter("emails");
             String password = request.getParameter("password");
             String address = request.getParameter("address");
             String role = request.getParameter("role");
@@ -245,6 +297,7 @@ public class ManageAccount extends HttpServlet {
             //khởi tạo map chung để chứa tất cả các lỗi
             Map<String, String> errors = new HashMap<>();
             errors.putAll(validateAccountData(full_name, email, password, mobile, 0));
+            //
             if (user_name != null && email != null && user_name.equalsIgnoreCase(email)) {
                 errors.put("user_name", "Tên đăng nhập không được trùng với email");
             }
@@ -285,7 +338,7 @@ public class ManageAccount extends HttpServlet {
                 // Gán lại các giá trị đã nhập vào request để hiện lại trên form
                 request.setAttribute("full_name", full_name);
                 request.setAttribute("user_name", user_name);
-                request.setAttribute("email", email);
+                request.setAttribute("emails", email);
                 request.setAttribute("address", address);
                 request.setAttribute("role", role);
                 request.setAttribute("status", status);
@@ -301,7 +354,7 @@ public class ManageAccount extends HttpServlet {
                     .full_name(full_name)
                     .user_name(user_name)
                     .email(email)
-                    .password(password)
+                    .password(encodeMD5(password))
                     .address(address)
                     .role(role)
                     .status(status)
@@ -314,21 +367,22 @@ public class ManageAccount extends HttpServlet {
             boolean isSuccess = accountDao.insert(newAccount) > 0;
 
             if (isSuccess) {
-                // Lưu message thành công vào session để hiển thị 1 lần
-                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công!");
+                // Gửi mail chứa thông tin tài khoản
+                String emailResult = EmailUtils.sendAccountMail(email, user_name, password);
+                request.getSession().setAttribute("toastMessage", "Thêm tài khoản thành công! " + emailResult);
                 request.getSession().setAttribute("toastType", "success");
                 // Redirect về trang quản lý tài khoản
                 response.sendRedirect(request.getContextPath() + "/manage-account");
                 return;
             } else {
                 request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
-                request.getSession().setAttribute("toastType", "Fail");
+                request.getSession().setAttribute("toastType", "error");
                 request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {
-            request.getSession().setAttribute("totalMess", "Fail to add Account");
-            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
+            request.getSession().setAttribute("totalMessage", "Fail to add Account");
+            request.getSession().setAttribute("toastType ", "error" + e.getMessage());
             e.printStackTrace();
             request.getRequestDispatcher("/view/admin/add_account.jsp").forward(request, response);
         }
@@ -446,13 +500,13 @@ public class ManageAccount extends HttpServlet {
         mobile = mobile != null ? mobile.trim() : null;
         // Validate full_name
         if (full_name == null || full_name.trim().isEmpty()) {
-            errors.put("full_name", "Username is required");
+            errors.put("full_name", "Full_name is required");
         } else if (!full_name.equals(full_name.trim())) {
-            errors.put("full_name", "Username must not start or end with a space");
-        } else if (full_name.length() < 3 || full_name.length() > 50) {
-            errors.put("full_name", "Username must be between 3 and 50 characters");
-        } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", full_name)) {
-            errors.put("full_name", "Username can only contain letters, numbers, underscores, and spaces");
+            errors.put("full_name", "Full_name must not start or end with a space");
+        } else if (full_name.length() < 3 || full_name.length() > 30) {
+            errors.put("full_name", "Full_name must be between 3 and 50 characters");
+        } else if (!Pattern.matches("^[\\p{L}\\s]+$", full_name)) {
+            errors.put("full_name", "Full_name can only contain letters, and spaces");
         }
 
         // Validate email
@@ -462,7 +516,9 @@ public class ManageAccount extends HttpServlet {
             String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
             if (!Pattern.matches(emailRegex, email)) {
                 errors.put("email", "Invalid email format");
-            } else if (accountdao.isEmailExists(email, id)) {
+            }
+            if (accountdao.isEmailExists(email)) {
+                System.out.println("Lỗi email");
                 errors.put("email", "Email already exists");
             }
         }

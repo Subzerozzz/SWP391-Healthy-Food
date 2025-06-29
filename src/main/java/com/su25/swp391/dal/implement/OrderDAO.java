@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+
 public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     /*
@@ -175,6 +176,81 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             // Close ResultSet, Statement, Connection
             closeResources();
         }
+        return -1;
+    }
+
+
+
+    public List<Order> searchOrderListByUserIdAndStatus(int userId, String status) {
+        List<Order> orderLists = new ArrayList<>();
+        String sql = "SELECT "
+                + "o.id, "
+                + "o.account_id, "
+                + "o.status, "
+                + "o.total, "
+                + "o.payment_method, "
+                + "o.created_at, "
+                + "o.updated_at, "
+                + "o.coupon_code, "
+                + "o.discount_amount, "
+                + "o.full_name, "
+                + "o.mobile, "
+                + "o.address, "
+                + "o.email, "
+                + "o.shipping_address, "
+                + "o.payment_status "
+                + "FROM `Order` o "
+                + "WHERE o.id = ? AND o.status = ?";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            statement.setString(2, status);
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = getFromResultSet(resultSet); // dùng lại hàm đã viết
+                orderLists.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return orderLists;
+    }
+
+   
+    public int getTotalOrderCountByUserIdAndStatus(int userId, String status) {
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        String sql = "SELECT COUNT(*) FROM `Order` WHERE account_id = ?";
+        if (filterByStatus) {
+            sql += " AND status = ?";
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            if (filterByStatus) {
+                statement.setString(2, status);
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
         return 0;
     }
 
@@ -200,6 +276,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             // Step 1: Fetch current status of the order
             String getStatusSql = "SELECT status FROM `Order` WHERE id = ?";
             statement = connection.prepareStatement(getStatusSql);
+            //
             statement.setInt(1, orderId);
             resultSet = statement.executeQuery();
 
@@ -273,6 +350,45 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             closeResources();
         }
     }
+            
+    public List<Order> findOrdersByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
+        List<Order> list = new ArrayList<>();
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+
+        String sql = "SELECT * FROM `Order` WHERE account_id = ?";
+        if (filterByStatus) {
+            sql += " AND status = ?";
+        }
+        sql += " ORDER BY id DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByStatus) {
+                statement.setString(paramIndex++, status);
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+
+    
 
     /**
      * Searches for Order based on keyword, status, and payment method.
@@ -414,7 +530,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     @Override
     public int insert(Order order) {
-        String sql = "INSERT INTO `Order` (user_id, status, total, shipping_address, payment_method, coupon_id) "
+        String sql = "INSERT INTO `Order` (account_id, status, total, shipping_address, payment_method, coupon_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = getConnection();
@@ -473,10 +589,52 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     @Override
     public boolean delete(Order order) {
         throw new UnsupportedOperationException("Delete operation is not supported for Order");
+         
+    }
+
+    public boolean updateOrderStatusCustomer(int orderId, String status) {
+        String sql = "UPDATE `Order` SET status = ? WHERE id = ?";
+        boolean success = false;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, status);
+            statement.setInt(2, orderId);
+
+            int rows = statement.executeUpdate();
+            success = (rows > 0);
+        } catch (Exception e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return success;
+    }
+
+    public List<Order> findAllByUserId(int userId) {
+        String sql = "SELECT * FROM `Order` WHERE account_id = ?";
+        List<Order> order = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId); // Gán giá trị userId vào ?
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                order.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return order;
     }
 
     @Override
     public List<Order> findAll() {
+
         return null;
     }
 
@@ -508,4 +666,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         List<Order> l = d.findOrdersWithFilters("DESC", "", "", -1,1 , 10);
         System.out.println(l);
     }
+       
+
 }

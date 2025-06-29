@@ -7,6 +7,7 @@ package com.su25.swp391.controller.authen;
 import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
 import com.su25.swp391.utils.MD5PasswordEncoderUtils;
@@ -50,6 +51,7 @@ public class AuthenController extends HttpServlet {
     private static final String MYACCOUNT_PAGE = "view/authen/myaccount.jsp";
 
     AccountDAO accountDAO = new AccountDAO();
+    CartDAO cartDAO = new CartDAO();
     EmailUtils emailotp = new EmailUtils();
 
     @Override
@@ -65,7 +67,7 @@ public class AuthenController extends HttpServlet {
                 request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
                 break;
             case "/home":
-                request.getRequestDispatcher(HOME_PAGE ).forward(request, response);
+                request.getRequestDispatcher(HOME_PAGE).forward(request, response);
                 break;
             case "/otp":
                 request.getRequestDispatcher(OTP_PAGE).forward(request, response);
@@ -85,7 +87,6 @@ public class AuthenController extends HttpServlet {
             case "/logout":
                 logoutDoGet(request, response);
                 break;
-
             default:
                 break;
         }
@@ -115,7 +116,7 @@ public class AuthenController extends HttpServlet {
             case "/changepassword":
                 changepasswordDoPost(request, response);
                 break;
-             case "/myaccount":
+            case "/myaccount":
                 myaccountDoPost(request, response);
                 break;
             case "/logout":
@@ -136,7 +137,6 @@ public class AuthenController extends HttpServlet {
         String user_name = request.getParameter("user_name");
         String password = request.getParameter("password");
         String cfpassword = request.getParameter("confirmpassword");
-        String address = request.getParameter("address");
 
         // Kiểm tra các trường bắt buộc
         if (user_name == null || user_name.trim().isEmpty()
@@ -176,36 +176,39 @@ public class AuthenController extends HttpServlet {
         Account account = Account.builder()
                 .email(email)
                 .user_name(user_name)
+                .role("customer")
                 .password(password)
+                .role("customer")
                 .status("active")
                 .build();
 
         // Kiểm tra xem email đã tồn tại trong database chưa
         Account accountFoundByEmail = accountDAO.findByEmail(account);
+        Account accountFoundByUsername = accountDAO.findByUsername(account);
 
         // Nếu email đã tồn tại
-        if (accountFoundByEmail != null) {
-            // Nếu username trùng với email
-            if (accountFoundByEmail.getUser_name().equalsIgnoreCase(email)) {
-                session.setAttribute("toastMessage", "Username already exists!");
-                session.setAttribute("toastType", "error");
-            } else {
-                // Nếu email đã tồn tại
-                session.setAttribute("toastMessage", "Email already exists!");
-                session.setAttribute("toastType", "error");
-            }
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
+            // Trường hợp user_name trùng với user_name của account có email trùng
+            session.setAttribute("toastMessage", "Username already exists!");
+            session.setAttribute("toastType", "error");
+            url = REGISTER_PAGE;
+        } else if (accountFoundByEmail != null) {
+            // Trùng email
+            session.setAttribute("toastMessage", "Email already exists!");
+            session.setAttribute("toastType", "error");
             url = REGISTER_PAGE;
         } else {
-            // Nếu email chưa tồn tại
+            // Không trùng — tạo tài khoản
             String otp = EmailUtils.sendOTPMail(email);
             session.setAttribute("otp", otp);
             session.setAttribute("account", account);
             session.setAttribute("email", email);
+            session.setAttribute("user_name", user_name);
             session.setAttribute("password", password);
             session.setAttribute("otpType", "register");
             url = OTP_PAGE;
-
         }
+
         request.getRequestDispatcher(url).forward(request, response);
 
     }
@@ -242,8 +245,13 @@ public class AuthenController extends HttpServlet {
                 session.setAttribute("toastType", "error");
                 url = LOGIN_PAGE;
             } else {
+                boolean checkCart = cartDAO.hasCart(accFoundByUsernamePass.getId());
+                if (!checkCart) {
+                    cartDAO.createCart(accFoundByUsernamePass.getId());
+                }
                 session.setAttribute("email", usernameOrEmail);
                 session.setAttribute("password", password);
+                session.setAttribute("user_name", usernameOrEmail);
                 session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
                 url = HOME_PAGE;
             }
@@ -259,6 +267,7 @@ public class AuthenController extends HttpServlet {
 
     private void otpDoPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String url = null;
         //get ve OTP
         HttpSession session = request.getSession();
@@ -275,10 +284,13 @@ public class AuthenController extends HttpServlet {
         String otp6 = request.getParameter("otp6");
         String otpForm = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
         // so sanh OTP
+//  
         if (otp.equals(otpForm)) {
             if ("register".equals(otpType)) {
                 accountFoundByEmail.setPassword(MD5PasswordEncoderUtils.encodeMD5(accountFoundByEmail.getPassword()));
                 accountDAO.insert(accountFoundByEmail);
+                Account savedAccount = accountDAO.findByEmail(accountFoundByEmail);
+                cartDAO.createCart(savedAccount.getId());
                 url = HOME_PAGE;
             } else if ("forgot".equals(otpType)) {
                 url = NEWPASS_PAGE;
@@ -396,11 +408,12 @@ public class AuthenController extends HttpServlet {
             accountDAO.updatePasswordByEmail(account);
             session.setAttribute("password", new_password);
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
-            url = HOME_PAGE;
+            url = LOGIN_PAGE;
         } else {
             session.setAttribute("toastMessage", "Email incorect!");
             session.setAttribute("toastType", "error");
-            url = LOGIN_PAGE;
+            response.sendRedirect(HOME_PAGE);
+            return;
         }
         request.getRequestDispatcher(url).forward(request, response);
 
@@ -466,75 +479,77 @@ public class AuthenController extends HttpServlet {
     }
     
     
-    
+
      private void myaccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String url = null;
-        HttpSession session = request.getSession();
+       String url = null;
+       HttpSession session = request.getSession();
 
-        String full_name = request.getParameter("full_name");
-        String birth_date = request.getParameter("birth_date");
-        String gender = request.getParameter("gender");
-        String mobile = request.getParameter("mobile");
-        String address = request.getParameter("address");
-        String email = (String) session.getAttribute("email");
+       String full_name = request.getParameter("full_name");
+       String birth_date = request.getParameter("birth_date");
+       String gender = request.getParameter("gender");
+       String mobile = request.getParameter("mobile");
+       String address = request.getParameter("address");
+       String email = (String) session.getAttribute("email");
 
-        Date date = null;
-        if (birth_date != null && !birth_date.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date utilDate = sdf.parse(birth_date);
-                date = new java.sql.Date(utilDate.getTime());
+       Date date = null;
+       if (birth_date != null && !birth_date.isEmpty()) {
+           try {
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+               java.util.Date utilDate = sdf.parse(birth_date);
+               date = new java.sql.Date(utilDate.getTime());
 
-                //tính tuổi
-                LocalDate birtDate = date.toLocalDate();
-                LocalDate now = LocalDate.now();
-                int age = Period.between(birtDate, now).getYears();
-                if (age < 18 || age > 80) {
-                    session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
-                    session.setAttribute("toastType", "error");
-                    return;
-                }
+               //tính tuổi
+               LocalDate birtDate = date.toLocalDate();
+               LocalDate now = LocalDate.now();
+               int age = Period.between(birtDate, now).getYears();
+               if (age < 18 || age > 80) {
+                   session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
+                   session.setAttribute("toastType", "error");
+                   return;
+               }
 
-            } catch (ParseException e) {
-                session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
-                session.setAttribute("toastType", "error");
-                return;
-            }
-        }
-        if (!isValidPhoneNumber(mobile)) {
-            session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
-            session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
-            request.getRequestDispatcher(url).forward(request, response);
-            return;
-        }
+           } catch (ParseException e) {
+               session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
+               session.setAttribute("toastType", "error");
+               return;
+           }
+       }
+       if (!isValidPhoneNumber(mobile)) {
+           session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
+           session.setAttribute("toastType", "error");
+           url = MYACCOUNT_PAGE;
+           request.getRequestDispatcher(url).forward(request, response);
+           return;
+       }
 
-        Account account = Account.builder()
-                .email(email)
-                .full_name(full_name)
-                .gender(gender)
-                .birth_date(date)
-                .address(address)
-                .mobile(mobile)
-                .build();
+       Account account = Account.builder()
+               .email(email)
+               .full_name(full_name)
+               .gender(gender)
+               .birth_date(date)
+               .address(address)
+               .mobile(mobile)
+               .build();
 
-        // Kiểm tra xem email đã tồn tại trong database chưa
-        Account accountFoundByEmail = accountDAO.findByEmail(account);
+       // Kiểm tra xem email đã tồn tại trong database chưa
+       Account accountFoundByEmail = accountDAO.findByEmail(account);
 
-        if (accountFoundByEmail != null) {
-            accountDAO.update(account);
-            Account newAccount = accountDAO.findByEmail(account);
-            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
-            url = MYACCOUNT_PAGE;
-        } else {
-            session.setAttribute("toastMessage", "Email incorect!");
-            session.setAttribute("toastType", "error");
-            url = MYACCOUNT_PAGE;
-        }
-        request.getRequestDispatcher(url).forward(request, response);
+       if (accountFoundByEmail != null) {
+           // tránh để sau khi update, database sẽ xóa role và active
+           account.setRole(accountFoundByEmail.getRole());
+           account.setStatus(accountFoundByEmail.getStatus());
+           accountDAO.update(account);
+           Account newAccount = accountDAO.findByEmail(account);
+           session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
+           url = MYACCOUNT_PAGE;
+       } else {
+           session.setAttribute("toastMessage", "Email incorect!");
+           session.setAttribute("toastType", "error");
+           url = MYACCOUNT_PAGE;
+       }
+       request.getRequestDispatcher(url).forward(request, response);
 
-    }
-
+   }
 
     /**
      * Kiểm tra định dạng email.
@@ -582,4 +597,5 @@ public class AuthenController extends HttpServlet {
         return phone.matches(regex);
     }
 
+ 
 }

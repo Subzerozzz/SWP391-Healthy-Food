@@ -207,7 +207,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                return resultSet.getInt(1);
+            return resultSet.getInt(1);
             }
         } catch (Exception e) {
         } finally {
@@ -301,6 +301,23 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getEmail());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+    public Account findByUsername(Account t) {
+        String sql = "SELECT * FROM Account WHERE user_name = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getUser_name());
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return getFromResultSet(resultSet);
@@ -418,16 +435,18 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         return accounts;
     }
 
-    public boolean isEmailExists(String email, Integer id) {
+    public boolean isEmailExists(String email) {
         String sql = "SELECT COUNT (*) FROM Account WHERE email = ?";
-        if (id != null) {
-            // kiem tra xem co tai khoan nao trung id ma dung tk nay ko
-            sql += "AND id !=?";
-        }
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, email);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int count = resultSet.getInt(1); // lấy cột đầu tiên (COUNT(*))
+                return count > 0;
+            }
         } catch (Exception e) {
             System.out.println("Is EmailExist" + e.getMessage());
         } finally {
@@ -543,6 +562,28 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             return false;
         } finally {
             closeResources();
+        }
+    }
+
+public static void main(String[] args) {
+        // Tạo đối tượng DAO
+        AccountDAO dao = new AccountDAO();
+
+        // Tạo đối tượng Account với email cần tìm
+        Account acc = new Account();
+        acc.setEmail("test@example.com"); // <-- thay bằng email tồn tại trong DB
+
+        // Gọi hàm findByEmail
+        Account found = dao.findByEmail(acc);
+
+        // In kết quả
+        if (found != null) {
+            System.out.println("Tìm thấy tài khoản:");
+            System.out.println("ID: " + found.getId());
+            System.out.println("Username: " + found.getUser_name());
+            System.out.println("Role: " + found.getRole());
+        } else {
+            System.out.println("Không tìm thấy tài khoản với email này.");
         }
     }
 }
