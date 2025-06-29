@@ -240,7 +240,6 @@ button,
 input,
 select,
 textarea {
-<<<<<<< HEAD
   font-family: "Inter", sans-serif;
   font-weight: 400;
   /*color: var(--Body-Text);*/
@@ -249,16 +248,6 @@ textarea {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   overflow-y: auto;
-=======
-    font-family: "Inter", sans-serif;
-    font-weight: 400;
-    color: var(--Body-Text);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-    overflow-y: auto;
->>>>>>> origin/feature-manager-coupon
 }
 
 img {
@@ -419,6 +408,8 @@ del,
 
 /* Table */
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -428,11 +419,14 @@ del,
 >>>>>>> origin/feature-authen
 =======
 >>>>>>> origin/feauture_manage_account
+>>>>>>> origin/main
 table,
 th,
 td {
     border: 1px solid #343444;
 }
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -445,6 +439,7 @@ td {
 >>>>>>> origin/feature-authen
 =======
 >>>>>>> origin/feauture_manage_account
+>>>>>>> origin/main
 
 table {
     border-collapse: separate;
@@ -542,20 +537,16 @@ input[type=submit] {
 
 input[type=checkbox],
 input[type=radio] {
-<<<<<<< HEAD
   padding: 0;
-<<<<<<< HEAD
   width: 22px;
-=======
+  width: 22px;
   width: 50px;
->>>>>>> origin/feauture_manage_account
   height: 22px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0) !important;
   cursor: pointer;
   vertical-align: sub;
   /* Addresses excess padding in IE8/9 */
-=======
     padding: 0;
     width: 22px;
     height: 22px;
@@ -564,7 +555,6 @@ input[type=radio] {
     cursor: pointer;
     vertical-align: sub;
     /* Addresses excess padding in IE8/9 */
->>>>>>> origin/feature-manager-coupon
 }
 
 input[type=search] {
@@ -1945,6 +1935,11 @@ a:hover, a:focus {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+<<<<<<< HEAD
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+=======
   gap:10px;
   align-items: center;
   justify-content: start;
@@ -1953,6 +1948,7 @@ a:hover, a:focus {
 =======
   gap: 10px;
 >>>>>>> origin/feauture_manage_account
+<<<<<<< HEAD
 =======
     display: -webkit-box;
     display: -moz-box;
@@ -1963,6 +1959,9 @@ a:hover, a:focus {
     justify-content: start;
     gap: 20px;
 >>>>>>> origin/feature-manager-coupon
+=======
+>>>>>>> origin/main
+>>>>>>> origin/manage-category
 }
 .list-icon-function .item {
     font-size: 20px;
@@ -3764,7 +3763,6 @@ select.h40 {
     transition-delay: 0.3s;
 }
 .layout-wrap .section-menu-left .center .menu-item.has-children::after {
-<<<<<<< HEAD
   position: absolute;
   content: "\e934";
   top: 15px;
@@ -4206,6 +4204,9 @@ select.h40 {
 
  color: var(--22-c-55-e);
 
+
+color: var(--22-c-55-e);
+ color: var(--22-c-55-e);
   font-size: 12px;
   font-weight: 500;
   line-height: 12px;
@@ -4790,6 +4791,7 @@ select.h40 {
   width: 100%;
 }
 .wg-table.table-all-category .product-item > .flex > div:first-child {
+  width: 100px;
   width: 366px;
   flex-shrink: 0;
 }
@@ -5608,23 +5610,17 @@ select.h40 {
   color: #94A3B8 !important;
 }
 .dark-theme .section-menu-left .menu-item a .icon svg path {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+  stroke: #94A3B8;
+
   stroke: #A3D9A5;
-=======
+
   stroke: #94A3B8;
->>>>>>> origin/manager-request
-=======
+
   stroke: #94A3B8;
->>>>>>> origin/feature-manager-blog
-=======
+
   stroke: #94A3B8;
->>>>>>> origin/feature-authen
-=======
+
   stroke: #94A3B8;
->>>>>>> origin/feauture_manage_account
 }
 .dark-theme .section-menu-left .menu-item a .text {
   color: #fff !important;
@@ -5948,8 +5944,6 @@ select.h40 {
   }
   .layout-wrap.menu-style-icon-default .section-menu-left .center-item .menu-item.has-children .sub-menu {
     width: 208px;
-=======
->>>>>>> origin/feature-manager-coupon
     position: absolute;
     content: "\e934";
     top: 15px;
@@ -8753,7 +8747,6 @@ select.h40 {
     }
 }
 @media (max-width: 1440px) {
-<<<<<<< HEAD
   .tf-main-product {
     flex-direction: column;
   }
@@ -8767,19 +8760,6 @@ select.h40 {
   .wg-chart-default,
   .wg-box {
     padding: 24px 15px;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    
->>>>>>> origin/manager-request
-=======
->>>>>>> origin/feature-manager-blog
-=======
->>>>>>> origin/feature-authen
-=======
->>>>>>> origin/feauture_manage_account
   }
   .tf-section-4 > div {
     grid-column: span 2/span 2 !important;
@@ -8811,7 +8791,6 @@ select.h40 {
   .all-gallery-wrap .right .image {
     text-align: center;
   }
-=======
     .tf-main-product {
         flex-direction: column;
     }
@@ -8856,7 +8835,6 @@ select.h40 {
     .all-gallery-wrap .right .image {
         text-align: center;
     }
->>>>>>> origin/feature-manager-coupon
 }
 @media (max-width: 1200px) {
     .tf-section-5 > div:nth-child(2), .tf-section-5 > div:nth-child(3) {
