@@ -13,11 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author kieud
- */
-
 @ToString
 @Builder
 @Data
@@ -25,12 +20,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-
-
 public class Cart {
-    private int id;
-    private int account_id;
+    private Integer id;
+    private Integer account_id;
     private Timestamp created_at;
-    private Timestamp update_at;
-    
+    private Timestamp updated_at;
 }

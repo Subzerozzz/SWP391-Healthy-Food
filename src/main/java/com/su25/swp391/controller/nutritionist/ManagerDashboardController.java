@@ -42,7 +42,7 @@ public class ManagerDashboardController extends HttpServlet {
     Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
         : totalOfRecord / RECORD_PER_PAGE + 1;
     // lấy ra số bản ghi theo từng page
-    List<Food> listFood = foodDao.findRecordByPage(1);
+    List<Food> listFood = foodDao.findRecordByPage(RECORD_PER_PAGE,1);
     request.setAttribute("listFood", listFood);
     request.setAttribute("listCategory", listCategory);
     request.setAttribute("totalPage", totalPage);
