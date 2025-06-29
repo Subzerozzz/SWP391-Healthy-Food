@@ -14,9 +14,8 @@ import lombok.ToString;
 
 /**
  *
- * @author Dell
- */
-@ToString
+ * @author Hang
+ */@ToString
 @Builder
 @Data
 @AllArgsConstructor
@@ -24,9 +23,9 @@ import lombok.ToString;
 @Getter
 @Setter
 public class FoodCategory {
-  private Integer id;
-  private String name;
-  private String description;
-  private Double minBMI;
-  private Double maxBMI;
+   private int id;
+   private String name;
+   private String description;
+   private Double maxBMI;
+   private Double minBMI;
 }

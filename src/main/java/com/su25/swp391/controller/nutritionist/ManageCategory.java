@@ -7,7 +7,7 @@ package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.CategoryDAO;
-import com.su25.swp391.entity.Category;
+import com.su25.swp391.entity.FoodCategory;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -119,17 +119,18 @@ public class ManageCategory extends HttpServlet {
     private void showEditForn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int idCate = Integer.parseInt(request.getParameter("id"));
         CategoryDAO cateDao = new CategoryDAO();
-        Category category = cateDao.findById(idCate);
+        FoodCategory category = cateDao.findById(idCate);
+        
 //set lai gia trị cũ 
         request.setAttribute("cate", category);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/category_edit.jsp");
         dispatcher.forward(request, response);
     }
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int idStr = Integer.parseInt(request.getParameter("id"));
         CategoryDAO categoryDao = new CategoryDAO();
-        Category cate = categoryDao.findById(idStr);
+        FoodCategory cate = categoryDao.findById(idStr);
         if (cate != null) {
             Boolean deletCate = categoryDao.delete(cate);
             if (deletCate) {
@@ -154,7 +155,7 @@ public class ManageCategory extends HttpServlet {
         String pageParam = request.getParameter("page");
         String pageSizeParam = request.getParameter("pageSize");
         int currentPage = 1;
-        int pageSize = 10;
+        int pageSize = 6;
         try {
             if (pageParam != null && !pageParam.isEmpty()) {
                 currentPage = Integer.parseInt(pageParam);
@@ -174,12 +175,12 @@ public class ManageCategory extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             currentPage = 1;
-            pageSize = 10;
+            pageSize = 6;
         }
         CategoryDAO cateDao = new CategoryDAO();
 
         //lay ra danh sach cate
-        List<Category> listcategory = cateDao.findAllWithPagination(currentPage, pageSize);
+        List<FoodCategory> listcategory = cateDao.findAllWithPagination(currentPage, pageSize);
         //tinh toan phan trang 
         int totalCategory = cateDao.getTotalCategoryCount();
         int totalPages = (int) Math.ceil((double) totalCategory / pageSize);
@@ -195,7 +196,7 @@ public class ManageCategory extends HttpServlet {
         int endRecord = Math.min(startRecord + pageSize - 1, totalCategory);
         request.setAttribute("startRecord", startRecord);
         request.setAttribute("endRecord", endRecord);
-        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/nutritionist/foodCategory/category_list.jsp").forward(request, response);
 
     }
 
@@ -208,10 +209,10 @@ public class ManageCategory extends HttpServlet {
         }
         searchKey = searchKey.trim();//xoa khoang trang 2 dau
         CategoryDAO cateDao = new CategoryDAO();
-        List<Category> listCateSearch = cateDao.findCategorybyName(searchKey);
+        List<FoodCategory> listCateSearch = cateDao.findCategorybyName(searchKey);
         request.setAttribute("listcategory", listCateSearch);
         request.setAttribute("find", searchKey);
-        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/nutritionist/foodCategory/category_list.jsp").forward(request, response);
     }
 
     private void addCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -262,11 +263,11 @@ public class ManageCategory extends HttpServlet {
                 request.setAttribute("maxBMI", maxBMI);
                 request.setAttribute("description", description);
 
-                request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/nutritionist/foodCategory/category_add.jsp").forward(request, response);
                 return;
             }
             // tao doi tuong category moi
-            Category category = Category.builder()
+            FoodCategory category = FoodCategory.builder()
                     .name(name)
                     .minBMI(minBMI)
                     .maxBMI(maxBMI)
@@ -283,14 +284,14 @@ public class ManageCategory extends HttpServlet {
             } else {
                 request.getSession().setAttribute("toastMessage", "Thêm tài khoản thất bại!");
                 request.getSession().setAttribute("toastType", "Fail");
-                request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/nutritionist/foodCategory/category_add.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {
             request.getSession().setAttribute("totalMess", "Fail to add Account");
             request.getSession().setAttribute("totalType", "Err" + e.getMessage());
             e.printStackTrace();
-            request.getRequestDispatcher("/view/categoryPage/category_add.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/nutritionist/foodCategory/category_add.jsp").forward(request, response);
         }
     }
 
@@ -302,7 +303,7 @@ public class ManageCategory extends HttpServlet {
             String maxBMIStr = request.getParameter("maxBMI");
             String minBMIStr = request.getParameter("minBMI");
             CategoryDAO cateDao = new CategoryDAO();
-            Category cate = cateDao.findById(id);
+            FoodCategory cate = cateDao.findById(id);
             //validate
             Map<String, String> errors = new HashMap<>();
             Double minBMI = null;
@@ -357,7 +358,7 @@ public class ManageCategory extends HttpServlet {
                 //giữ nhưng trường không lỗi vào 
                 request.setAttribute("formData", formData);
                 request.setAttribute("cate", cate);
-                request.getRequestDispatcher("/view/categoryPage/category_edit.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/nutritionist/foodCategory/category_edit.jsp").forward(request, response);
                 return;
             }
 
@@ -377,7 +378,7 @@ public class ManageCategory extends HttpServlet {
                 request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
                 request.getSession().setAttribute("toastType", "Fail");
                 request.setAttribute("error", "Update Fail");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/category_edit.jsp");
                 dispatcher.forward(request, response);
                 return;
             }
@@ -385,48 +386,53 @@ public class ManageCategory extends HttpServlet {
             request.getSession().setAttribute("toastMessage", "Edit tài khoản thất bại!");
             request.getSession().setAttribute("toastType", "Fail");
             request.setAttribute("error", "Update Fail");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/category_edit.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/category_edit.jsp");
             dispatcher.forward(request, response);
             return;
         }
     }
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            int idCategory = Integer.parseInt(request.getParameter("id"));
-            CategoryDAO cateDao = new CategoryDAO();
-            Category cate = cateDao.findById(idCategory);
-            if (cate != null) {
-                request.setAttribute("category", cate);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/categoryPage/viewDetail.jsp");
-                dispatcher.forward(request, response);
-            } else {
-                request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
-                request.getSession().setAttribute("totalType", "Err");
-                response.sendRedirect(request.getContextPath() + "/manageCategory");
+    try {
+        int idCategory = Integer.parseInt(request.getParameter("id"));
+        CategoryDAO cateDao = new CategoryDAO();
+        FoodCategory cate = cateDao.findById(idCategory);
 
-            }
-        } catch (Exception e) {
-            request.getSession().setAttribute("totalMess", "Không tìm thấy tài khoản.");
+        if (cate != null) {
+            request.setAttribute("category", cate);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/nutritionist/foodCategory/viewDetail.jsp");
+            dispatcher.forward(request, response);
+            return; 
+        } else {
+            request.getSession().setAttribute("totalMess", "Không tìm thấy danh mục.");
             request.getSession().setAttribute("totalType", "Err");
             response.sendRedirect(request.getContextPath() + "/manageCategory");
-
+            return;
+        }
+    } catch (Exception e) {
+        if (!response.isCommitted()) { // kiểm tra trước khi redirect
+            request.getSession().setAttribute("totalMess", "Có lỗi xảy ra.");
+            request.getSession().setAttribute("totalType", "Err");
+            response.sendRedirect(request.getContextPath() + "/manageCategory");
+        } else {
+            e.printStackTrace(); // In log lỗi nếu không thể redirect
         }
     }
+}
 
     private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
 
         // Lấy toàn bộ danh mục
         CategoryDAO dao = new CategoryDAO();
-        List<Category> allCategories = dao.findAll();
+        List<FoodCategory> allCategories = dao.findAll();
         // Xác định khoảng BMI cần lọc
         double[] range = getBMIRange(filterType);
         double minBMI = range[0];
         double maxBMI = range[1];
         // Lọc trực tiếp trong vòng lặp  và goppj hàm filterCategoryByBMI
-        List<Category> filtered = new ArrayList<>();
-        for (Category c : allCategories) {
+        List<FoodCategory> filtered = new ArrayList<>();
+        for (FoodCategory c : allCategories) {
             if (c.getMinBMI() <= maxBMI && c.getMaxBMI() >= minBMI) {
                 filtered.add(c);
             }
@@ -435,7 +441,7 @@ public class ManageCategory extends HttpServlet {
         // Truyền dữ liệu sang JSP
         request.setAttribute("listcategory", filtered);
         request.setAttribute("selectedFilter", filterType);
-        request.getRequestDispatcher("/view/categoryPage/category_list.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/nutritionist/foodCategory/category_list.jsp").forward(request, response);
     }
 
 // Hàm lấy khoảng BMI tương ứng với filterType

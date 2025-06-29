@@ -60,7 +60,7 @@
         }
 
         .bot button {
-            background-color: #007BFF;
+            background-color: #22c55e;
             border: none;
             color: #ffffff;
             padding: 12px 28px;
@@ -71,7 +71,7 @@
         }
 
         .bot button:hover {
-            background-color: #0056b3;
+            background-color: #22c55e;
             transform: scale(1.02);
         }
 
@@ -127,13 +127,13 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                         <jsp:include page = "section-menu-left.jsp"></jsp:include>
-                                                                            <!-- /section-menu-left -->
-                                                                            <!-- section-content-right -->
-                                                                            <div class="section-content-right">
-                                                                                <!-- header-dashboard -->
-                                                                            <jsp:include page = "header.jsp"></jsp:include>
-                                                                                <!-- /header-dashboard -->
+                                                                            <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
+                                                                                <!-- /section-menu-left -->
+                                                                                <!-- section-content-right -->
+                                                                                <div class="section-content-right">
+                                                                                    <!-- header-dashboard -->
+                                                                                <jsp:include page = "../../common/headerDashboard.jsp"></jsp:include>
+                                                                                    <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
                                                                                 <div class="main-content">
                                                                                     <!-- main-content-wrap -->
@@ -160,8 +160,8 @@
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        <!-- add-new-user -->
-                                                                                        <form class="view_category" action="${pageContext.request.contextPath}/manageCategory?action=viewDetail" method="get">
+                                                                                        
+                                                                                        <form class="view_category" action="${pageContext.request.contextPath}/manageCategory?action=viewDetail" method="GET">
                                                                                             <div class="wg-box">
                                                                                                 <div class="left">
                                                                                                     <h5 class="mb-4">Category Detail</h5>
@@ -181,7 +181,7 @@
                                                                                                     <fieldset class="name mb-24">
                                                                                                         <div class="body-title mb-10">
                                                                                                             <label>  Name:</label>     
-                                                                                                            <span>${category.name_category}</span>     
+                                                                                                            <span>${category.name}</span>     
                                                                                                         </div>
 
                                                                                                     </fieldset>

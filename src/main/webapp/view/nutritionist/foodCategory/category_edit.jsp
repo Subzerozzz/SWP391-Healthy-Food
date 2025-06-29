@@ -108,12 +108,12 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page = "../common/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page = "../../common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "../common/headerDashboard.jsp"></jsp:include>
+                                                                                <jsp:include page = "../../common/headerDashboard.jsp"></jsp:include>
                                                                                     <!-- /header-dashboard -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->

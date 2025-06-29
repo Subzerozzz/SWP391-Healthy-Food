@@ -14,18 +14,19 @@ import lombok.ToString;
 
 /**
  *
- * @author Hang
- */@ToString
+ * @author Dell
+ */
+@ToString
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Category {
-   private int id;
-   private String name;
-   private String description;
-   private Double maxBMI;
-   private Double minBMI;
+public class FooCategory {
+  private Integer id;
+  private String name;
+  private String description;
+  private Double minBMI;
+  private Double maxBMI;
 }
