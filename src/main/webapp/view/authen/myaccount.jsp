@@ -102,20 +102,15 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-<<<<<<< HEAD
-                                                                            <jsp:include page="../common/sidebar.jsp"></jsp:include>
-=======
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
->>>>>>> origin/order-customer2.0
+
+                                                                            <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
+
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-<<<<<<< HEAD
-                                                                                <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
-=======
+
                                                                                 <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
->>>>>>> origin/order-customer2.0
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">

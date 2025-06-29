@@ -90,7 +90,7 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
@@ -308,7 +308,7 @@
                                                                                                                 </c:when>
                                                                                                                 <c:otherwise>
                                                                                                                     <a style=" margin-top: 20px;    margin-bottom: 20px;    " class="tf-button style-1 w-full"
-                                                                                                                       onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel Order</a>
+                                                                                                                       onclick="cancelOrder(${order.id}, '${order.status}')">Cancel Order</a>
                                                                                                                 </c:otherwise>
                                                                                                             </c:choose>
 

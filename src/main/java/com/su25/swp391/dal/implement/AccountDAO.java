@@ -312,7 +312,6 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
         return null;
     }
-    
     public Account findByUsername(Account t) {
         String sql = "SELECT * FROM Account WHERE user_name = ?";
         try {
@@ -567,22 +566,24 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
 public static void main(String[] args) {
-        AccountDAO accountDAO = new AccountDAO(); // hoặc AccountDAOImpl nếu bạn dùng interface
-        Account account = new Account();
+        // Tạo đối tượng DAO
+        AccountDAO dao = new AccountDAO();
 
-        // Chỉ truyền email, password, user_name
-        account.setEmail("test@example.com");
-        account.setPassword("secure123");
-        account.setUser_name("testuser");
+        // Tạo đối tượng Account với email cần tìm
+        Account acc = new Account();
+        acc.setEmail("test@example.com"); // <-- thay bằng email tồn tại trong DB
 
-       
+        // Gọi hàm findByEmail
+        Account found = dao.findByEmail(acc);
 
-        int id = accountDAO.insert(account);
-
-        if (id != -1) {
-            System.out.println("Insert thành công! ID mới: " + id);
+        // In kết quả
+        if (found != null) {
+            System.out.println("Tìm thấy tài khoản:");
+            System.out.println("ID: " + found.getId());
+            System.out.println("Username: " + found.getUser_name());
+            System.out.println("Role: " + found.getRole());
         } else {
-            System.out.println("Insert thất bại.");
+            System.out.println("Không tìm thấy tài khoản với email này.");
         }
     }
 }
