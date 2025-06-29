@@ -6,7 +6,7 @@
 package com.su25.swp391.controller.nutritionist;
 
 import com.su25.swp391.config.GlobalConfig;
-import com.su25.swp391.dal.implement.CategoryDAO;
+import com.su25.swp391.dal.implement.FoodCategoryDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.FoodCategory;
 import jakarta.servlet.RequestDispatcher;
@@ -120,7 +120,7 @@ public class ManageCategory extends HttpServlet {
 
     private void showEditForn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int idCate = Integer.parseInt(request.getParameter("id"));
-        CategoryDAO cateDao = new CategoryDAO();
+        FoodCategoryDAO cateDao = new FoodCategoryDAO();
         FoodCategory category = cateDao.findById(idCate);
 
 //set lai gia trị cũ 
@@ -131,7 +131,7 @@ public class ManageCategory extends HttpServlet {
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int idStr = Integer.parseInt(request.getParameter("id"));
-        CategoryDAO categoryDao = new CategoryDAO();
+        FoodCategoryDAO categoryDao = new FoodCategoryDAO();
         FoodCategory cate = categoryDao.findById(idStr);
         if (cate != null) {
             Boolean deletCate = categoryDao.delete(cate);
@@ -182,7 +182,7 @@ public class ManageCategory extends HttpServlet {
             currentPage = 1;
             pageSize = 6;
         }
-        CategoryDAO cateDao = new CategoryDAO();
+        FoodCategoryDAO cateDao = new FoodCategoryDAO();
 
         //lay ra danh sach cate
         List<FoodCategory> listcategory = cateDao.findAllWithPagination(currentPage, pageSize);
@@ -213,7 +213,7 @@ public class ManageCategory extends HttpServlet {
             return;
         }
         searchKey = searchKey.trim();//xoa khoang trang 2 dau
-        CategoryDAO cateDao = new CategoryDAO();
+        FoodCategoryDAO cateDao = new FoodCategoryDAO();
         List<FoodCategory> listCateSearch = cateDao.findCategorybyName(searchKey);
         request.setAttribute("listcategory", listCateSearch);
         request.setAttribute("find", searchKey);
@@ -278,7 +278,7 @@ public class ManageCategory extends HttpServlet {
                     .maxBMI(maxBMI)
                     .description(description)
                     .build();
-            CategoryDAO cateDao = new CategoryDAO();
+            FoodCategoryDAO cateDao = new FoodCategoryDAO();
             boolean isSuccess = cateDao.insert(category) > 0;
             if (isSuccess) {
                 // Lưu message thành công vào session để hiển thị 1 lần
@@ -307,7 +307,7 @@ public class ManageCategory extends HttpServlet {
             String description = request.getParameter("description");
             String maxBMIStr = request.getParameter("maxBMI");
             String minBMIStr = request.getParameter("minBMI");
-            CategoryDAO cateDao = new CategoryDAO();
+            FoodCategoryDAO cateDao = new FoodCategoryDAO();
             FoodCategory cate = cateDao.findById(id);
             //validate
             Map<String, String> errors = new HashMap<>();
@@ -400,7 +400,7 @@ public class ManageCategory extends HttpServlet {
     private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             int idCategory = Integer.parseInt(request.getParameter("id"));
-            CategoryDAO cateDao = new CategoryDAO();
+            FoodCategoryDAO cateDao = new FoodCategoryDAO();
             FoodCategory cate = cateDao.findById(idCategory);
 
             if (cate != null) {
@@ -429,7 +429,7 @@ public class ManageCategory extends HttpServlet {
         String filterType = request.getParameter("filterType"); // Giá trị: low, normal, overweight, obese
 
         // Lấy toàn bộ danh mục
-        CategoryDAO dao = new CategoryDAO();
+        FoodCategoryDAO dao = new FoodCategoryDAO();
         List<FoodCategory> allCategories = dao.findAll();
         // Xác định khoảng BMI cần lọc
         double[] range = getBMIRange(filterType);
@@ -467,7 +467,7 @@ public class ManageCategory extends HttpServlet {
 
     private Map<String, String> validateAccountData(String name) {
         Map<String, String> errors = new HashMap<>();
-        CategoryDAO catedao = new CategoryDAO();
+        FoodCategoryDAO catedao = new FoodCategoryDAO();
 
         // Trim inputs
         name = name != null ? name.trim() : null;

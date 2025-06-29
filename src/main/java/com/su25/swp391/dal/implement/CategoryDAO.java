@@ -8,6 +8,7 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.FoodCategory;
+import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  *
@@ -126,22 +128,41 @@ public class CategoryDAO extends DBContext implements I_DAO<FoodCategory> {
         return false;
     }
 
-    @Override
-    public boolean delete(FoodCategory t) {
-        List<FoodCategory> deletecategory = new ArrayList<>();
-        String sql = "DELETE FROM FoodCategory WHERE id = ?";
+   
+   @Override
+public boolean delete(FoodCategory t) {
+    String deleteFoodSql = "DELETE FROM Food WHERE category_id = ?";
+    String deleteCategorySql = "DELETE FROM FoodCategory WHERE id = ?";
+
+    try {
+        connection = getConnection();
+        connection.setAutoCommit(false); // Bắt đầu transaction
+
+        // Xóa tất cả các món ăn thuộc category này
+        PreparedStatement stmtFood = connection.prepareStatement(deleteFoodSql);
+        stmtFood.setInt(1, t.getId());
+        stmtFood.executeUpdate();
+
+        // Sau đó xóa category
+        PreparedStatement stmtCategory = connection.prepareStatement(deleteCategorySql);
+        stmtCategory.setInt(1, t.getId());
+        int rows = stmtCategory.executeUpdate();
+
+        connection.commit(); // Hoàn tất nếu không có lỗi
+        return rows > 0;
+    } catch (Exception e) {
+        System.out.println("❌ Lỗi khi xóa: " + e.getMessage());
         try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, t.getId());
-            return statement.executeUpdate() > 0;
-        } catch (Exception e) {
-            System.out.println("Err delete" + e.getMessage());
-        } finally {
-            closeResources();
+            if (connection != null) connection.rollback();
+        } catch (Exception ex) {
+            System.out.println("❌ Rollback lỗi: " + ex.getMessage());
         }
-        return false;
+    } finally {
+        closeResources();
     }
+    return false;
+}
+
 
     @Override
     public int insert(FoodCategory t) {
@@ -242,9 +263,5 @@ public class CategoryDAO extends DBContext implements I_DAO<FoodCategory> {
     }
     return list;
 }   
-    public static void main(String[] args) {
-        new FoodCategoryDAO().findAll().forEach(item -> {
-            System.out.println(item);
-        });
-    }
+ 
 }
