@@ -20,8 +20,8 @@
                             <div class="footer-widget footer-widget-color-2">
                                 <div class="footer-logo">
                                     <a href="index.html">
-                                        <img src="assets/images/logos/footer-logo.png" class="footer-logo1" alt="Images">
-                                        <img src="assets/images/logos/logo-1.png" class="footer-logo2" alt="Images">
+                                        <img src="${pageContext.request.contextPath}/images/logos/footer-logo.png" class="footer-logo1" alt="Images">
+                                        <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" class="footer-logo2" alt="Images">
                                     </a>
                                 </div>
                                 <p>

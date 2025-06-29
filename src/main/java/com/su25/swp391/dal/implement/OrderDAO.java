@@ -18,60 +18,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderDAO extends DBContext implements I_DAO<Order> {
-
-    /*
-     * Convert a ResultSet row into an Order object.
-     * 
-     * @param rs the ResultSet from a SQL query (likely includes JOIN with user
-     * table)
-     * 
-     * @return Order object populated with data from the current ResultSet row
-     * 
-     * @throws SQLException if there is an error reading from the ResultSet
-     */
-    @Override
-    public Order getFromResultSet(ResultSet rs) throws SQLException {
-        return Order
-                .builder()
-                .id(rs.getInt("id"))
-                .account_id(rs.getInt("account_id"))
-                .status(rs.getString("status"))
-                .total(rs.getDouble("total"))
-                .shipping_address(rs.getString("shipping_address"))
-                .payment_method(rs.getString("payment_method"))
-                .created_at(rs.getTimestamp("created_at"))
-                .updated_at(rs.getTimestamp("updated_at"))
-                .coupon_code(rs.getString("coupon_code"))
-                .discount_amount(rs.getDouble("discount_amount"))
-                .full_name(rs.getString("full_name"))
-                .mobile(rs.getString("mobile"))
-                .email(rs.getString("email"))
-                .payment_status(rs.getInt("payment_status"))
-                .build();
-    }
-
     /**
      * Retrieves a paginated list of Order based on optional status and payment
      * method filters.
      *
-     * @param status        Optional order status filter (e.g., "pending",
-     *                      "completed", etc.)
+     * @param status Optional order status filter (e.g., "pending", "completed",
+     * etc.)
      * @param paymentMethod Optional payment method filter (e.g., "Cash on
-     *                      Delivery", "Bank Transfer", etc.)
-     * @param page          The current page number (starting from 1)
-     * @param pageSize      The number of results to return per page
+     * Delivery", "Bank Transfer", etc.)
+     * @param page The current page number (starting from 1)
+     * @param pageSize The number of results to return per page
      * @return List of filtered and paginated Order objects
      */
-    public List<Order> findOrdersWithFilters(String status, String paymentMethod,int paymentStatus, int page, int pageSize) {
+    public List<Order> findOrdersWithFilters(String status, String paymentMethod, int paymentStatus, int page, int pageSize) {
         List<Order> Order = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
                 "SELECT * "
-                        + "FROM `Order` "
-                        + "WHERE 1=1 ");
+                + "FROM `Order` "
+                + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
@@ -84,7 +57,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentMethod);
         }
         // Add payment status filter if provied
-        if(paymentStatus >=0 && paymentStatus <= 1){
+        if (paymentStatus >= 0 && paymentStatus <= 1) {
             sql.append("AND payment_status = ? ");
             params.add(paymentStatus);
         }
@@ -116,19 +89,17 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     /**
-     * Counts the total number of Order that match optional filters for status and
-     * payment method.
-     * This is typically used to support pagination (by calculating the total number
-     * of pages).
+     * Counts the total number of Order that match optional filters for status
+     * and payment method. This is typically used to support pagination (by
+     * calculating the total number of pages).
      *
-     * @param status        Optional status filter (e.g., "pending", "completed",
-     *                      etc.)
+     * @param status Optional status filter (e.g., "pending", "completed", etc.)
      * @param paymentMethod Optional payment method filter (e.g., "Cash on
-     *                      Delivery", "Bank Transfer", etc.)
+     * Delivery", "Bank Transfer", etc.)
      * @return Total number of matching Order, or 0 if none found or in case of
-     *         error
+     * error
      */
-    public int getTotalFilteredOrders(String status, String paymentMethod,int paymentStatus) {
+    public int getTotalFilteredOrders(String status, String paymentMethod, int paymentStatus) {
         // Build the SQL query with optional WHERE conditions
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
                 + "FROM `Order`  "
@@ -145,7 +116,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentMethod);
         }
         // Add payment status filter if provied
-        if(paymentStatus >=0 && paymentStatus <= 1){
+        if (paymentStatus >= 0 && paymentStatus <= 1) {
             sql.append("AND payment_status = ? ");
             params.add(paymentStatus);
         }
@@ -170,8 +141,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
         return -1;
     }
-
-
 
     public List<Order> searchOrderListByUserIdAndStatus(int userId, String status) {
         List<Order> orderLists = new ArrayList<>();
@@ -216,7 +185,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return orderLists;
     }
 
-   
     public int getTotalOrderCountByUserIdAndStatus(int userId, String status) {
         boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
         String sql = "SELECT COUNT(*) FROM `Order` WHERE account_id = ?";
@@ -248,14 +216,13 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
     /**
      * Updates the status of a specific order and logs the change in the
-     * OrderApproval table.
-     * This method uses a transaction to ensure consistency between the order update
-     * and the approval log.
+     * OrderApproval table. This method uses a transaction to ensure consistency
+     * between the order update and the approval log.
      *
-     * @param orderId   ID of the order to update
+     * @param orderId ID of the order to update
      * @param newStatus New status to set (e.g., "accepted", "completed", etc.)
-     * @param sellerId  ID of the seller who approves the status change
-     * @param note      Optional note explaining the reason for status change
+     * @param sellerId ID of the seller who approves the status change
+     * @param note Optional note explaining the reason for status change
      * @return true if update and logging were successful, false otherwise
      */
     public boolean updateOrderStatus(int orderId, String newStatus, int sellerId, String note) {
@@ -342,7 +309,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             closeResources();
         }
     }
-            
+
     public List<Order> findOrdersByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
         List<Order> list = new ArrayList<>();
         boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
@@ -380,24 +347,21 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return list;
     }
 
-    
-
     /**
-     * Searches for Order based on keyword, status, and payment method.
-     * The search keyword is matched against username, email, or order ID (cast to
-     * string).
-     * Supports pagination through LIMIT and OFFSET.
+     * Searches for Order based on keyword, status, and payment method. The
+     * search keyword is matched against username, email, or order ID (cast to
+     * string). Supports pagination through LIMIT and OFFSET.
      *
-     * @param search        The keyword to search (matches user name, email, or
-     *                      order ID)
-     * @param status        Optional order status filter (e.g., "pending",
-     *                      "completed")
-     * @param paymentMethod Optional payment method filter (e.g., "COD", "PayPal")
-     * @param page          Page number for pagination (1-based)
-     * @param pageSize      Number of results per page
+     * @param search The keyword to search (matches user name, email, or order
+     * ID)
+     * @param status Optional order status filter (e.g., "pending", "completed")
+     * @param paymentMethod Optional payment method filter (e.g., "COD",
+     * "PayPal")
+     * @param page Page number for pagination (1-based)
+     * @param pageSize Number of results per page
      * @return A list of matching Order objects
      */
-    public List<Order> searchOrders(String search, String status, String paymentMethod, int page, int pageSize) {
+    public List<Order> searchOrders(String sort, String search, String status, String paymentMethod, int page, int pageSize) {
 
         // Build the base SQL query to search by user name, email, or order ID
         List<Order> orders = new ArrayList<>();
@@ -431,7 +395,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentMethod);
         }
         // Add ordering and pagination
-        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        if (sort != null && !sort.isEmpty()) {
+            sql.append("ORDER BY id " + sort + " LIMIT ? OFFSET ? ");
+        } else {
+            sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        }
         params.add(pageSize); // LIMIT
         params.add((page - 1) * pageSize); // OFFSET (start index)
         try {
@@ -455,15 +423,35 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return orders;
     }
 
+    @Override
+    public List<Order> findAll() {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM `Order`";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orders.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+        return orders;
+    }
+
     /**
-     * Returns the total number of Order that match a search keyword and optional
-     * filters.
-     * This is used for pagination to know how many pages of results there are.
+     * Returns the total number of Order that match a search keyword and
+     * optional filters. This is used for pagination to know how many pages of
+     * results there are.
      *
-     * @param search        The keyword to search (matches user name, email, or
-     *                      order ID)
-     * @param status        Optional status filter (e.g., "pending", "completed")
-     * @param paymentMethod Optional payment method filter (e.g., "COD", "PayPal")
+     * @param search The keyword to search (matches user name, email, or order
+     * ID)
+     * @param status Optional status filter (e.g., "pending", "completed")
+     * @param paymentMethod Optional payment method filter (e.g., "COD",
+     * "PayPal")
      * @return The total number of matching Order
      */
     public int getTotalSearchResults(String search, String status, String paymentMethod) {
@@ -516,17 +504,83 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
     }
 
     @Override
-    public int insert(Order order) {
-        String sql = "INSERT INTO `Order` (account_id, status, total, shipping_address, payment_method, coupon_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public Map<Integer, Order> findAllMap() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean update(Order order) {
+        String sql = "UPDATE `Order` SET account_id=?, status=?, total=?, shipping_address=?, "
+                + "payment_method=?, updated_at=?, coupon_code=?, full_name=?, mobile=?, email=?, "
+                + "discount_amount=?, payment_status =? WHERE id=?";
         try {
             connection = getConnection();
-            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement = connection.prepareStatement(sql);
             statement.setInt(1, order.getAccount_id());
             statement.setString(2, order.getStatus());
             statement.setDouble(3, order.getTotal());
             statement.setString(4, order.getShipping_address());
             statement.setString(5, order.getPayment_method());
+            statement.setTimestamp(6, order.getUpdated_at());
+            statement.setString(7, order.getCoupon_code());
+            statement.setString(8, order.getFull_name());
+            statement.setString(9, order.getMobile());
+            statement.setString(10, order.getEmail());
+            statement.setDouble(11, order.getDiscount_amount());
+            statement.setInt(12, order.getPayment_status());
+            statement.setInt(13, order.getId());
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(Order order) {
+        String sql = "DELETE FROM `Order` WHERE id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, order.getId());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    @Override
+    public int insert(Order order) {
+        String sql = "INSERT INTO `Order` (account_id, status, total, shipping_address, payment_method, created_at"
+                + ",updated_at, coupon_code, full_name, mobile, email, discount_amount,payment_status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            if (order.getAccount_id() != null) {
+                statement.setInt(1, order.getAccount_id());
+            } else {
+                statement.setNull(1, java.sql.Types.INTEGER);
+            }
+            statement.setString(2, order.getStatus());
+            statement.setDouble(3, order.getTotal());
+            statement.setString(4, order.getShipping_address());
+            statement.setString(5, order.getPayment_method());
+            statement.setTimestamp(6, order.getCreated_at());
+            statement.setTimestamp(7, order.getUpdated_at());
+            statement.setString(8, order.getCoupon_code());
+            statement.setString(9, order.getFull_name());
+            statement.setString(10, order.getMobile());
+            statement.setString(11, order.getEmail());
+            statement.setInt(12, order.getPayment_status());
+            statement.setDouble(13, order.getDiscount_amount());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -541,42 +595,50 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             }
         } catch (SQLException ex) {
             System.out.println("Error inserting order: " + ex.getMessage());
-            return -1;
         } finally {
             closeResources();
         }
+        return -1;
+    }
+
+    @Override
+    public Order getFromResultSet(ResultSet rs) throws SQLException {
+        Order order = new Order();
+        order.setId(rs.getInt("id"));
+        order.setAccount_id(rs.getInt("account_id"));
+        order.setStatus(rs.getString("status"));
+        order.setTotal(rs.getDouble("total"));
+        order.setShipping_address(rs.getString("shipping_address"));
+        order.setPayment_method(rs.getString("payment_method"));
+        order.setCreated_at(rs.getTimestamp("created_at"));
+        order.setUpdated_at(rs.getTimestamp("updated_at"));
+        order.setCoupon_code(rs.getString("coupon_code"));
+        order.setFull_name(rs.getString("full_name"));
+        order.setMobile(rs.getString("mobile"));
+        order.setEmail(rs.getString("email"));
+        order.setPayment_status(rs.getInt("payment_status"));
+        order.setDiscount_amount(rs.getDouble("discount_amount"));
+        return order;
     }
 
     @Override
     public Order findById(Integer id) {
-        String sql = "SELECT * "
-                + "FROM `Order`  "
-                + "WHERE id = ?";
+        Order order = null;
+        String sql = "SELECT * FROM `Order` WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return getFromResultSet(resultSet);
+                order = getFromResultSet(resultSet);
             }
         } catch (SQLException ex) {
-            System.out.println("Error finding order by ID: " + ex.getMessage());
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeResources();
         }
-        return null;
-    }
-
-    @Override
-    public Map<Integer, Order> findAllMap() {
-        return null;
-    }
-
-    @Override
-    public boolean delete(Order order) {
-        throw new UnsupportedOperationException("Delete operation is not supported for Order");
-         
+        return order;
     }
 
     public boolean updateOrderStatusCustomer(int orderId, String status) {
@@ -599,61 +661,5 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
         return success;
     }
-
-    public List<Order> findAllByUserId(int userId) {
-        String sql = "SELECT * FROM `Order` WHERE account_id = ?";
-        List<Order> order = new ArrayList<>();
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, userId); // Gán giá trị userId vào ?
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                order.add(getFromResultSet(resultSet));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return order;
-    }
-
-    @Override
-    public List<Order> findAll() {
-
-        return null;
-    }
-
-    @Override
-    public boolean update(Order order) {
-        return true;
-    }
-
-    public static void main(String[] args) {
-        AccountDAO aD = new AccountDAO();
-        CouponDAO cD = new CouponDAO();
-        OrderItemDAO otD = new OrderItemDAO();
-        OrderDAO d = new OrderDAO();
-        // List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
-        // HashMap<Integer,Account> Account = new HashMap<>();
-        // for (Order order : l) {
-        // Account acc = aD.findById(order.getAccount_id());
-        // Account.put(order.getAccount_id(), acc);
-        // }
-        // System.out.println(l);
-        // System.out.println(Account.get(16));
-        // }
-        // List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
-        // System.out.println(l2);
-        // List<Order> l = d.searchOrders("kien", "", "", 1, 10);
-        // System.out.println(l);
-      //  Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
-       // System.out.println(b);
-         List<Order> l = d.findOrdersWithFilters("", "", 0, 1, 10);
-         System.out.println(l);
-         System.out.println(d.getTotalFilteredOrders("", "", 0));
-    }
-       
 
 }

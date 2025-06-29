@@ -7,66 +7,179 @@ package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
 import com.su25.swp391.entity.Coupon;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-
-public class CouponDAO extends DBContext implements I_DAO<Coupon>{
+/**
+ *
+ * @author Dell
+ */
+public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     @Override
     public List<Coupon> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Coupon> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            String sql = "SELECT * FROM Coupon";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CouponDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+        return list;
     }
 
     @Override
     public Map<Integer, Coupon> findAllMap() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean update(Coupon t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean update(Coupon coupon) {
+        try {
+            connection = getConnection();
+            String sql = "UPDATE Coupon SET code = ?, description = ?, discount_type = ?, "
+                    + "discount_value = ?, min_purchase = ?, max_discount = ?, "
+                    + "start_date = ?, end_date = ?, usage_limit = ?,usage_count = ?, is_active = ?, "
+                    + "updated_at = ? WHERE id = ?";
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, coupon.getCode());
+            statement.setString(2, coupon.getDescription());
+            statement.setString(3, coupon.getDiscount_type());
+            statement.setDouble(4, coupon.getDiscount_value());
+            statement.setDouble(5, coupon.getMin_purchase());
+            statement.setDouble(6, coupon.getMax_discount());
+            statement.setDate(7, coupon.getStart_date());
+            statement.setDate(8, coupon.getEnd_date());
+            statement.setInt(9, coupon.getUsage_limit());
+            statement.setInt(10, coupon.getUsage_count());
+            statement.setInt(11, coupon.getIs_active());
+            statement.setDate(12, coupon.getUpdated_at());
+            statement.setInt(13, coupon.getId());
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(CouponDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+        return false;
     }
 
     @Override
     public boolean delete(Coupon t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public int insert(Coupon t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Coupon getFromResultSet(ResultSet resultSet) throws SQLException {
-      return Coupon
-             .builder()
-             .id(resultSet.getInt("id"))
-             .code(resultSet.getString("code"))
-             .discount_value(resultSet.getDouble("discount_value"))
-             .build();
+    public Coupon getFromResultSet(ResultSet rs) throws SQLException {
+        return Coupon.builder()
+                .id(rs.getInt("id"))
+                .code(rs.getString("code"))
+                .description(rs.getString("description"))
+                .discount_type(rs.getString("discount_type"))
+                .discount_value(rs.getDouble("discount_value"))
+                .min_purchase(rs.getDouble("min_purchase"))
+                .max_discount(rs.getDouble("max_discount"))
+                .start_date(rs.getDate("start_date"))
+                .end_date(rs.getDate("end_date"))
+                .usage_limit(rs.getInt("usage_limit"))
+                .usage_count(rs.getInt("usage_count"))
+                .is_active(rs.getInt("is_active"))
+                .created_at(rs.getDate("created_at"))
+                .updated_at(rs.getDate("updated_at"))
+                .per_customer_limit(rs.getInt("per_customer_limit"))
+                .build();
+
     }
 
     @Override
     public Coupon findById(Integer id) {
-      String sql = "Select * from Coupon where id = ?";
         try {
             connection = getConnection();
+            String sql = "SELECT * FROM Coupon WHERE id = ?";
             statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
-            resultSet= statement.executeQuery();
-            if(resultSet.next()){
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
                 return getFromResultSet(resultSet);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            Logger.getLogger(CouponDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             closeResources();
         }
         return null;
-     }
-    
+    }
+
+    public Coupon findCouponByCouponCode(String couponCode) {
+        String sql = "Select * from Coupon Where code = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, couponCode);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        CouponDAO couponDAO = new CouponDAO();
+
+        // Tạo đối tượng Coupon và gán dữ liệu test
+        Coupon coupon = new Coupon();
+        coupon.setId(4); 
+        coupon.setCode("COUPON1004");
+        coupon.setDescription("Test update usage_count");
+        coupon.setDiscount_type("fixed");
+        coupon.setDiscount_value(10.0);
+        coupon.setMin_purchase(100.0);
+        coupon.setMax_discount(50.0);
+        coupon.setStart_date(Date.valueOf("2025-06-01"));
+        coupon.setEnd_date(Date.valueOf("2025-06-30"));
+        coupon.setUsage_limit(30);
+        coupon.setUsage_count(4); 
+        coupon.setIs_active(1);
+        coupon.setUpdated_at(new Date(System.currentTimeMillis())); 
+
+        // Gọi hàm update
+        boolean success = couponDAO.update(coupon);
+
+        if (success) {
+            System.out.println("✅ Cập nhật usage_count thành công!");
+        } else {
+            System.out.println("❌ Cập nhật thất bại!");
+        }
+    }
+
 }
