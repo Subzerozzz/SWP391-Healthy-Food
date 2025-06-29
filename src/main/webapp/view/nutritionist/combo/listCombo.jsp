@@ -163,7 +163,7 @@
                                                                                                                         
                                                                                                                     </div>
                                                                                                                     <div class="item edit">
-                                                                                                                        <a href="${pageContext.request.contextPath}/managerCombo?action=edit&id=${cb.comboId}"><i class="icon-edit-3" ></i></a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/managerCombo?action=edit&comboId=${cb.comboId}"><i class="icon-edit-3" ></i></a>
                                                                                                                         
                                                                                                                     </div>
                                                                                                                     
