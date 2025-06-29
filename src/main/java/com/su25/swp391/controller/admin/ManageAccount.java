@@ -466,9 +466,9 @@ public class ManageAccount extends HttpServlet {
             boolean isSuccess = accountDao.updateAdmin(account);
             //xu ly ket qua 
             if (isSuccess) {
-                request.getSession().setAttribute("isUpdate", true); // ✅ thêm biến này để hiển thị toast
+                //hiển thị trên toát 
+                request.getSession().setAttribute("isUpdate", true); 
                 response.sendRedirect(request.getContextPath() + "/manage-account?action=list");
-
                 return;
             } else {
                 setToastMessage(request, "totalMess", "Fail to update Account");

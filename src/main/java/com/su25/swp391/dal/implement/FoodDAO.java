@@ -44,6 +44,25 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
 
     }
 
+    public List<Food> findAllFoodActive() {
+        String sql = "select * from Food  where status = 'active'";
+        List<Food> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in FoodDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+
+    }
+
     @Override
     public Food getFromResultSet(ResultSet resultSet) throws SQLException {
         return Food
@@ -397,6 +416,26 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             closeResources();
         }
         return list;
+    }
+    //them hàm lay gia tien của món ăn cho combo 
+
+    public double getPriceById(int foodId) throws SQLException {
+        String sql = "SELECT price FROM Food WHERE id = ?";
+        double price = 0;
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, foodId);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                price = resultSet.getDouble("price");
+            } else {
+                throw new SQLException("Không tìm thấy foodId: " + foodId);
+            }
+        } finally {
+            closeResources();
+        }
+        return price;
     }
 
     public List<String> findFoodNameList() {

@@ -19,125 +19,138 @@
     <div class="section-menu-left-wrap">
       <div class="center">
         <div class="center-item">
-            
-            <ul class="menu-list">
-                <li class="menu-item">
-                    <a href="${pageContext.request.contextPath}/myaccount" class="">
-                    <div class="icon">
-                      <i class="icon-settings"></i>
-                    </div>
-                    <div class="text">My Account</div>
-                  </a>
-                </li>
 
-                <li class="menu-item">
-                    <a href="${pageContext.request.contextPath}/changepassword" class="">
-                    <div class="icon">
-                      <i class="icon-settings"></i>
-                    </div>
-                    <div class="text">Change password</div>
-                  </a>
-                </li>
+          <ul class="menu-list">
+            <li class="menu-item">
+              <a href="${pageContext.request.contextPath}/myaccount" class="">
+                <div class="icon">
+                  <i class="icon-settings"></i>
+                </div>
+                <div class="text">My Account</div>
+              </a>
+            </li>
 
-                <c:if test="${sessionScope.account.role eq 'nutri' }">
+            <li class="menu-item">
+              <a href="${pageContext.request.contextPath}/changepassword" class="">
+                <div class="icon">
+                  <i class="icon-settings"></i>
+                </div>
+                <div class="text">Change password</div>
+              </a>
+            </li>
 
-                    <li class="menu-item">
-                      <a href="${pageContext.request.contextPath}/manage-food?action=add" class="">
-                        <div class="icon">
-                          <i class="icon-settings"></i>
-                        </div>
-                        <div class="text">Add New Food</div>
-                      </a>
-                    </li>
-                    <li class="menu-item">
-                      <a href="${pageContext.request.contextPath}/manage-food?action=view" class="menu-item-button">
-                        <div class="icon"><i class="icon-layers"></i></div>
-                        <div class="text">View Food List</div>
-                      </a>
-                    </li>
+            <c:if test="${sessionScope.account.role eq 'nutri' }">
 
-                    <li class="menu-item">
-                      <a href="${pageContext.request.contextPath}/manage-food?action=request" class="menu-item-button">
-                        <div class="icon"><i class="icon-layers"></i></div>
-                        <div class="text">View Request</div>
-                      </a>
-                    </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-food?action=add" class="">
+                  <div class="icon">
+                    <i class="icon-settings"></i>
+                  </div>
+                  <div class="text">Add New Food</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-food?action=view" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Food List</div>
+                </a>
+              </li>
 
-                    <li class="menu-item">
-                      <a href="${pageContext.request.contextPath}/manage-blog" class="menu-item-button">
-                        <div class="icon"><i class="icon-layers"></i></div>
-                        <div class="text">View Blog</div>
-                      </a>
-                    </li>
-                </c:if>
-                    
-                <c:if test="${sessionScope.account.role eq 'admin' }">
-                    <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/manage-account?action=add" class="">
-                            <div class="icon">
-                                <i class="icon-settings"></i>
-                            </div>
-                            <div class="text">Add New User</div>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/manage-account?action=list" class="menu-item-button">
-                            <div class="icon"><i class="icon-layers"></i></div>
-                            <div class="text">All Account</div>
-                        </a>
-                    </li>
-                </c:if>
-                    
-                <c:if test="${sessionScope.account.role eq 'customer' }">
-                    <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/orderlist" class="">
-                            <div class="icon">
-                                <i class="icon-settings"></i>
-                            </div>
-                            <div class="text">Order List</div>
-                        </a>
-                    </li>
-                     <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/feedback" class="">
-                            <div class="icon">
-                                <i class="icon-settings"></i>
-                            </div>
-                            <div class="text">Feedback List</div>
-                        </a>
-                    </li>
-                </c:if>
-                    
-                <c:if test="${sessionScope.account.role eq 'manager' }">
-                  <li class="menu-item">
-                    <a href="${pageContext.request.contextPath}/type-of-request" class="menu-item-button">
-                      <div class="icon"><i class="icon-layers"></i></div>
-                      <div class="text">View Request</div>
-                    </a>
-                  </li>
-                  
-                  <li class="menu-item">
-                    <a href="${pageContext.request.contextPath}/ManagerCoupon" class="menu-item-button">
-                      <div class="icon"><i class="icon-layers"></i></div>
-                      <div class="text">View Coupon</div>
-                    </a>
-                  </li>
-                </c:if>   
-                <c:if test="${sessionScope.account.role eq 'seller'}">
-                    <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/seller/manage-order" class="menu-item-button">
-                            <div class="icon"><i class="icon-layers"></i></div>
-                            <div class="text">View Order</div>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="menu-item-button">
-                            <div class="icon"><i class="icon-layers"></i></div>
-                            <div class="text">View Feedback</div>
-                        </a>
-                    </li>
-                </c:if> 
-            </ul>
-            
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-food?action=request" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Request</div>
+                </a>
+              </li>
+
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-blog" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Blog</div>
+                </a>
+              </li>
+            </c:if>
+
+            <c:if test="${sessionScope.account.role eq 'admin' }">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-account?action=add" class="">
+                  <div class="icon">
+                    <i class="icon-settings"></i>
+                  </div>
+                  <div class="text">Add New User</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manage-account?action=list" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">All Account</div>
+                </a>
+              </li>
+            </c:if>
+
+            <c:if test="${sessionScope.account.role eq 'customer' }">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/orderlist" class="">
+                  <div class="icon">
+                    <i class="icon-settings"></i>
+                  </div>
+                  <div class="text">Order List</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/feedback" class="">
+                  <div class="icon">
+                    <i class="icon-settings"></i>
+                  </div>
+                  <div class="text">Feedback List</div>
+                </a>
+              </li>
+            </c:if>
+
+            <c:if test="${sessionScope.account.role eq 'manager' }">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/type-of-request" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Request</div>
+                </a>
+              </li>
+
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/ManagerCoupon" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Coupon</div>
+                </a>
+              </li>
+            </c:if>
+            <c:if test="${sessionScope.account.role eq 'seller'}">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/seller/manage-order" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Order</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Feedback</div>
+                </a>
+              </li>
+            </c:if>
+            <c:if test="${sessionScope.account.role eq 'nutri'}">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manageCategory?action=addCate" class="menu-item-button">
+                  <div class="icon"><i class="icon-settings"></i></div>
+                  <div class="text">Add new Category</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/manageCategory" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">All Category</div>
+                </a>
+              </li>
+            </c:if>
+          </ul>
         </div>
       </div>
 
@@ -145,7 +158,7 @@
   </div>
 
   <style>
-/*   .box-logo {
+    /*   .box-logo {
       overflow: hidden;
       margin-bottom: 50px
     }
@@ -158,13 +171,12 @@
 
     .section-menu-left-wrap {
       margin-top: 50px;
-      
+
     }
-    
-    .layout-wrap .section-menu-left::before{
-        background-color: #F0FDF4 !important
+
+    .layout-wrap .section-menu-left::before {
+      background-color: #F0FDF4 !important
     }
-    
   </style>
 
 </body>

@@ -15,17 +15,15 @@ import lombok.ToString;
 /**
  *
  * @author Hang
- */@ToString
+ */
+@ToString
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class FoodCategory {
-   private int id;
-   private String name;
-   private String description;
-   private Double maxBMI;
-   private Double minBMI;
+public class ComboFoodDetails {
+    private Food food;
+    private Integer quantityInCombo;
 }

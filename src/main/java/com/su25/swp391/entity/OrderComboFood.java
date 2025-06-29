@@ -4,6 +4,9 @@
  */
 package com.su25.swp391.entity;
 
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,20 +15,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author Hang
- */@ToString
+@ToString
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class FoodCategory {
-   private int id;
-   private String name;
-   private String description;
-   private Double maxBMI;
-   private Double minBMI;
+
+public class OrderComboFood {
+     private Integer orderComboFoodId;
+    private Integer orderComboId;
+    private Integer foodId;
+    private String name;//ten mon an 
+    private Double price;
+    private Integer quantityInCombo;
+    private Integer totalQuantity;
 }
