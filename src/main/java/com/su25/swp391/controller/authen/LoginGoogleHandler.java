@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.GlobalUtils;
 import jakarta.servlet.ServletException;
@@ -44,19 +45,19 @@ public class LoginGoogleHandler extends HttpServlet {
             String code = request.getParameter("code");
 
             if (code == null || code.isEmpty()) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
             String accessToken = getToken(code);
             if (accessToken == null || accessToken.isEmpty()) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
             UserGoogleDto userGoogleDto = getUserInfo(accessToken);
             if (userGoogleDto == null || userGoogleDto.getEmail() == null) {
-                response.sendRedirect("home.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
@@ -66,10 +67,11 @@ public class LoginGoogleHandler extends HttpServlet {
             Account userInDB = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
 
             if (userInDB == null) {
+                user.setRole("customer");
+                user.setStatus("active");
                 int insertResult = userDao.insert(user);
                 if (insertResult == -1) {
-                    System.err.println("Insert Google user failed. Possibly missing fields.");
-                    response.sendRedirect("chang.jsp"); // hoặc thông báo lỗi hợp lý
+                    response.sendRedirect("home"); // hoặc thông báo lỗi hợp lý
                     return;
                 }
             }
@@ -77,14 +79,24 @@ public class LoginGoogleHandler extends HttpServlet {
             // Lấy lại thông tin user từ DB (dù là mới hay cũ)
             user = userDao.findByEmail(Account.builder().email(user.getEmail()).build());
 
+            CartDAO cartDAO = new CartDAO();
+            if (!cartDAO.hasCart(user.getId())) {
+                int cartId = cartDAO.createCart(user.getId());
+            } else {
+                user = userInDB;
+            }
+
             if (user == null) {
-                response.sendRedirect("kakaka.jsp");
+                response.sendRedirect("home");
                 return;
             }
 
             // Tạo session và cookie
             HttpSession session = request.getSession();
             session.setAttribute(GlobalConfig.SESSION_ACCOUNT, user);
+            session.setAttribute("email", user.getEmail());
+            session.setAttribute("user_name", user.getUser_name());
+            session.setAttribute("account_id", user.getId());
             session.setMaxInactiveInterval(60 * 60 * 24);
 
             Cookie u = new Cookie("userC", user.getEmail());
@@ -98,7 +110,7 @@ public class LoginGoogleHandler extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("error.jsp");
+            response.sendRedirect("home");
         }
     }
 

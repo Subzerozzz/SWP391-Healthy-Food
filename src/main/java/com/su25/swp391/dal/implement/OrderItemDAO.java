@@ -16,7 +16,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
+    
+  public List<OrderItem> findOrderItemsByOrderId(int order_id) {  //getOrderDetailByOrderId
+        List<OrderItem> orderDetails = new ArrayList<>();
+        String sql = "SELECT "
+                + "oi.id, "
+                + "oi.order_id, "
+                + "oi.food_id, "
+                + "oi.quantity, "
+                + "oi.price, "
+                + "oi.created_at, "
+                + "oi.updated_at "
+                + "FROM OrderItem oi "
+                + "WHERE oi.order_id = ?";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, order_id);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                OrderItem od = getFromResultSet(resultSet);
+                orderDetails.add(od);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return orderDetails;
+    }
 
     // Lấy danh sách items của một đơn hàng
     public List<OrderItem> getOrderItemsByOrderId(int orderId) {
@@ -36,43 +69,11 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
             while (resultSet.next()) {
                 items.add(getFromResultSet(resultSet));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
+        }catch(Exception e){
+      
         }
-
         return items;
     }
-
-    /**
-     * Insert a new order item
-     * 
-     * @param item
-     * @return
-     */
-    // public boolean insert(OrderItem item) {
-    // String sql = "INSERT INTO OrderItem (order_id, product_id, quantity, price,
-    // created_at, updated_at) "
-    // + "VALUES (?, ?, ?, ?, NOW(), NOW())";
-    //
-    // try {
-    // connection = getConnection();
-    // statement = connection.prepareStatement(sql);
-    // statement.setInt(1, item.getOrderId());
-    // statement.setInt(2, item.getFoodId());
-    // statement.setInt(3, item.getQuantity());
-    // statement.setBigDecimal(4, item.getPrice());
-    //
-    // int affectedRows = statement.executeUpdate();
-    // return affectedRows > 0;
-    // } catch (SQLException ex) {
-    // System.out.println("Error inserting order item: " + ex.getMessage());
-    // return false;
-    // } finally {
-    // closeResources();
-    // }
-    // }
 
     @Override
     public List<OrderItem> findAll() {
@@ -134,7 +135,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
     }
 
     @Override
-    public int insert(OrderItem t) {
+    public int insert(OrderItem t ) {
         String sql = "INSERT INTO OrderItem (order_id, product_id, quantity, price, created_at, updated_at) "
                 + "VALUES (?, ?, ?, ?, NOW(), NOW())";
 
@@ -163,4 +164,10 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
         }
 
     }
+
+   
+
+    
+    
 }
+    

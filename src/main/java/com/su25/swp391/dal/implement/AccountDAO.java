@@ -207,7 +207,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                return resultSet.getInt(1);
+            return resultSet.getInt(1);
             }
         } catch (Exception e) {
         } finally {
@@ -301,6 +301,24 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setString(1, t.getEmail());
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return getFromResultSet(resultSet);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return null;
+    }
+    
+    public Account findByUsername(Account t) {
+        String sql = "SELECT * FROM Account WHERE user_name = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getUser_name());
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return getFromResultSet(resultSet);
@@ -548,4 +566,23 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
     }
 
+public static void main(String[] args) {
+        AccountDAO accountDAO = new AccountDAO(); // hoặc AccountDAOImpl nếu bạn dùng interface
+        Account account = new Account();
+
+        // Chỉ truyền email, password, user_name
+        account.setEmail("test@example.com");
+        account.setPassword("secure123");
+        account.setUser_name("testuser");
+
+       
+
+        int id = accountDAO.insert(account);
+
+        if (id != -1) {
+            System.out.println("Insert thành công! ID mới: " + id);
+        } else {
+            System.out.println("Insert thất bại.");
+        }
+    }
 }

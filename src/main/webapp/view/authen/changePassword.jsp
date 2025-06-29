@@ -114,7 +114,7 @@
                                                                                             <!-- main-content-wrap -->
                                                                                             <div class="main-content-wrap">
                                                                                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                    <h3>Edit User</h3>
+                                                                                                    <h3>Change Password</h3>
                                                                                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                                                                                         <li>
                                                                                                             <a href="index.html"><div class="text-tiny">Dashboard</div></a>
