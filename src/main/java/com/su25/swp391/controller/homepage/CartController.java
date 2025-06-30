@@ -701,7 +701,7 @@ public class CartController extends HttpServlet {
                 cartItemDao.delete(cartItem);
             }
             //Sau do chuyen sang trang myOrder
-            // request.getRequestDispatcher("").forward(request, response);
+            response.sendRedirect("orderlist");
         } else {
             List<CartItem> listCartItem1 = new ArrayList<>();
             session.setAttribute("cart", listCartItem1);
