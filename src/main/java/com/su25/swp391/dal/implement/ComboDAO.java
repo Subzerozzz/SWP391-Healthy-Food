@@ -25,10 +25,7 @@ import java.util.Map;
  */
 public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
-    private static Object builder() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
+   
     @Override
     public List<Combo> findAll() {
         List<Combo> combos = new ArrayList<>();
@@ -91,23 +88,6 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         return combo;
     }
 
-    public static void main(String[] args) {
-        ComboDAO comboDAO = new ComboDAO(); // Giả sử bạn có class này
-        int page = 1;
-        int pageSize = 5;
-
-        List<Combo> combos = comboDAO.findAllWithPagination(page, pageSize);
-
-        if (combos.isEmpty()) {
-            System.out.println("No combos found on page " + page);
-        } else {
-            System.out.println("Combos on page " + page + ":");
-            for (Combo combo : combos) {
-                System.out.println(combo);
-            }
-        }
-    }
-
     @Override
     public Map<Integer, Combo> findAllMap() {
         Map<Integer, Combo> comboMap = new HashMap<>();
@@ -138,7 +118,7 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
                 + "    originalPrice = ?,\n"
                 + "    discountPrice = ?,\n"
                 + "    status = ?\n"
-                + "WHERE ComboId = ?";
+                + "WHERE comboId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -158,8 +138,28 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
             closeResources();
         }
     }
+public class ComboDAOTest {
+    public static void main(String[] args) {
+        ComboDAO dao = new ComboDAO();
 
-    @Override
+        // Giả lập combo có ID = 1 trong DB
+        Combo combo = new Combo();
+        combo.setComboId(1); // comboId phải tồn tại trong DB
+        combo.setComboName("Combo Test Update");
+        combo.setDescription("Updated description");
+        combo.setOriginalPrice(50000.0);
+        combo.setDiscountPrice(45000.0);
+        combo.setStatus("active"); // phải đúng ENUM trong DB
+
+        boolean result = dao.update(combo);
+        if (result) {
+            System.out.println("✅ Update successful");
+        } else {
+            System.out.println("❌ Update failed");
+        }
+    }
+}
+   @Override
     public boolean delete(Combo t) {
         String sql = "DELETE From Combo WHERE comboId = ?";
         try {
@@ -208,56 +208,7 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         closeResources();
     }
 }
-public class TestComboInsert {
-    public static void main(String[] args) {
-        List<Integer> foodIds = Arrays.asList(1, 2, 4);
-        List<Integer> quantities = Arrays.asList(1, 2, 1);
 
-        try {
-            // Tính originalPrice từ các món ăn
-            FoodDAO foodDAO = new FoodDAO();
-            double originalPrice = 0;
-            for (int i = 0; i < foodIds.size(); i++) {
-                double price = foodDAO.getPriceById(foodIds.get(i)); // Hàm bạn cần tự tạo
-                originalPrice += price * quantities.get(i);
-            }
-
-            double discountPrice = originalPrice * 0.8; // giảm 20%
-
-            Combo combo = Combo.builder()
-                    .comboName("Combo thử nghiệm")
-                    .description("Gồm 3 món ăn phổ biến")
-                    .originalPrice(originalPrice)
-                    .discountPrice(discountPrice)
-                    .status("active")
-                    .build();
-
-            ComboDAO comboDAO = new ComboDAO();
-            int comboId = comboDAO.insert(combo);
-
-            if (comboId > 0) {
-                System.out.println("✅ Combo inserted with ID: " + comboId);
-
-                ComboFoodDAO comboFoodDAO = new ComboFoodDAO();
-                for (int i = 0; i < foodIds.size(); i++) {
-                    ComboFood cf = ComboFood.builder()
-                            .comboId(comboId)
-                            .foodId(foodIds.get(i))
-                            .quantityInCombo(quantities.get(i))
-                            .build();
-
-                    comboFoodDAO.insert(cf);
-                }
-
-                System.out.println("✅ ComboFood inserted.");
-            } else {
-                System.out.println("❌ Insert combo failed.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
 
     @Override
     public Combo getFromResultSet(ResultSet resultSet) throws SQLException {

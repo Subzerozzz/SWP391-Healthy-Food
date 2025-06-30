@@ -78,7 +78,7 @@
                                                                                                     </div>
                                                                                                     <div class="card">
                                                                                                         <div class="card-body p-24">
-                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=edit" method="post" enctype="multipart/form-data">
+                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=update" method="post" enctype="multipart/form-data">
                                                                                                             <input type="hidden" name="comboId" value="${combo.comboId}">
                                                                                                                 <input type="hidden" name="page" value="${param.page}">
 
@@ -104,7 +104,7 @@
                                                                                                                     <div class="row g-3">
                                                                                                                         <div class="col-md-6">
                                                                                                                             <label for="name" class="form-label">Combo Name <span class="text-danger">*</span></label>
-                                                                                                                            <input type="text" class="form-control" id="name" name="name"
+                                                                                                                            <input type="text" class="form-control" id="name" name="comboName"
                                                                                                                                    placeholder="Enter combo name" required
                                                                                                                                    value="${combo.comboName}">
                                                                                                                         </div>
@@ -157,7 +157,7 @@
                                                                                                                                     </div>
                                                                                                                                 </c:forEach>
 
-                                                                                                                                <c:if test="${empty comboFoods}">
+                                                                                                                                <c:if test="${empty comboFood}">
                                                                                                                                     <div class="food-selection-row row mb-3">
                                                                                                                                         <div class="col-md-8">
                                                                                                                                             <select class="form-control food-select" required>
@@ -204,14 +204,14 @@
                                                                                                                                                 <th>Total Original Price:</th>
                                                                                                                                                 <td>
                                                                                                                                                     <span id="original-price-display">${combo.originalPrice}</span>đ
-                                                                                                                                                    <input type="hidden" id="original_price" name="originalPrice" 
+                                                                                                                                                    <input type="hidden" id="originalPrice" name="originalPrice" 
                                                                                                                                                            value="${combo.originalPrice}">
                                                                                                                                                 </td>
                                                                                                                                             </tr>
                                                                                                                                             <tr>
                                                                                                                                                 <th>Discounted Price: <span class="text-danger">*</span></th>
                                                                                                                                                 <td>
-                                                                                                                                                    <input type="number" class="form-control" id="discount_price" 
+                                                                                                                                                    <input type="number" class="form-control" id="discountPrice" 
                                                                                                                                                            name="discountPrice" value="${combo.discountPrice}" 
                                                                                                                                                            min="0" required>
                                                                                                                                                 </td>
@@ -247,6 +247,7 @@
                                                                                                                                     var comboForm = document.getElementById('comboForm');
                                                                                                                                     if (comboForm) {
                                                                                                                                         comboForm.addEventListener('submit', function (e) {
+                                                                                                                                            // Validate combo name
                                                                                                                                             var nameInput = document.getElementById('name');
                                                                                                                                             var nameValue = nameInput.value;
                                                                                                                                             var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
@@ -257,14 +258,27 @@
                                                                                                                                                 return false;
                                                                                                                                             }
 
-                                                                                                                                            //ĐỔ DỮ LIỆU vào input hidden trước khi submit
+                                                                                                                                            // Prepare data for submission
                                                                                                                                             const foodSelects = document.querySelectorAll(".food-select");
                                                                                                                                             const quantityInputs = document.querySelectorAll(".food-quantity");
-
                                                                                                                                             const foodIds = [];
                                                                                                                                             const quantities = [];
 
+                                                                                                                                            // Validate at least one food item is selected
+                                                                                                                                            if (foodSelects.length === 0) {
+                                                                                                                                                alert('Please add at least one food item!');
+                                                                                                                                                e.preventDefault();
+                                                                                                                                                return false;
+                                                                                                                                            }
+
                                                                                                                                             foodSelects.forEach((select, index) => {
+                                                                                                                                                if (!select.value) {
+                                                                                                                                                    alert('Please select a food for all items!');
+                                                                                                                                                    select.focus();
+                                                                                                                                                    e.preventDefault();
+                                                                                                                                                    return false;
+                                                                                                                                                }
+
                                                                                                                                                 const foodId = select.value;
                                                                                                                                                 const quantity = quantityInputs[index].value;
 
@@ -279,20 +293,25 @@
                                                                                                                                         });
                                                                                                                                     }
 
-                                                                                                                                    // Handle add food
+                                                                                                                                    // Handle add food button
                                                                                                                                     const addFoodBtn = document.querySelector('.add-food');
-                                                                                                                                    console.log("Add food Button:", addFoodBtn);
-
                                                                                                                                     if (addFoodBtn) {
                                                                                                                                         addFoodBtn.addEventListener('click', function () {
-                                                                                                                                            console.log('Add food clicked');
-                                                                                                                                            // Bạn cần bổ sung code clone dòng chọn món tại đây
-                                                                                                                                        });
-                                                                                                                                    } else {
-                                                                                                                                        console.warn("Add food button not found!");
-                                                                                                                                    }
-                                                                                                                                });
+                                                                                                                                            const container = document.querySelector('.food-selection-container');
+                                                                                                                                            const rows = container.querySelectorAll('.food-selection-row');
+                                                                                                                                            const lastRow = rows[rows.length - 1];
+                                                                                                                                            const newRow = lastRow.cloneNode(true);
 
+                                                                                                                                            // Reset values
+                                                                                                                                            newRow.querySelector('.food-select').value = '';
+                                                                                                                                            newRow.querySelector('.food-quantity').value = '1';
+                                                                                                                                            newRow.querySelector('.remove-food').disabled = false;
+
+                                                                                                                                            container.appendChild(newRow);
+                                                                                                                                        });
+                                                                                                                                    }
+
+                                                                                                                                  
                                                                                                                             </script>
                                                                                                                             </div>
                                                                                                                             </div>
