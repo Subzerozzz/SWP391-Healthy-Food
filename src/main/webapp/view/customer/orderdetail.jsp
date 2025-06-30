@@ -276,7 +276,7 @@
                                                                                                                             <span class="">Không xác định</span>
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose> 
-                                                                                                                </div>
+                                                                                                                 </div>
                                                                                                             </div>
                                                                                                             <div class="wg-box gap10">
                                                                                                                 <div class="body-title">Expected Date Of Delivery</div>
