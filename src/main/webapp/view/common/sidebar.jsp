@@ -97,6 +97,14 @@
                             <div class="text">Order List</div>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="${pageContext.request.contextPath}/feedback" class="">
+                            <div class="icon">
+                                <i class="icon-settings"></i>
+                            </div>
+                            <div class="text">Feed back</div>
+                        </a>
+                    </li>
                 </c:if>
                     
                 <c:if test="${sessionScope.account.role eq 'manager' }">
@@ -107,7 +115,7 @@
                     </a>
                   </li>
                 </c:if>   
-                <c:if test="${sessionScope.account.role eq 'seller'}">
+                <c:if test="${sessionScope.account.role eq 'seler'}">
                     <li class="menu-item">
                         <a href="${pageContext.request.contextPath}/seller/manage-order" class="menu-item-button">
                             <div class="icon"><i class="icon-layers"></i></div>

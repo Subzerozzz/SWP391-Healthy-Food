@@ -630,30 +630,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         return true;
     }
 
-    public static void main(String[] args) {
-        AccountDAO aD = new AccountDAO();
-        CouponDAO cD = new CouponDAO();
-        OrderItemDAO otD = new OrderItemDAO();
-        OrderDAO d = new OrderDAO();
-        // List<Order> l = d.findOrdersWithFilters("", "", 1, 10);
-        // HashMap<Integer,Account> Account = new HashMap<>();
-        // for (Order order : l) {
-        // Account acc = aD.findById(order.getAccount_id());
-        // Account.put(order.getAccount_id(), acc);
-        // }
-        // System.out.println(l);
-        // System.out.println(Account.get(16));
-        // }
-        // List<Order> l2 = d.findOrdersWithFilters("", "", 1, 10);
-        // System.out.println(l2);
-        // List<Order> l = d.searchOrders("kien", "", "", 1, 10);
-        // System.out.println(l);
-      //  Boolean b = d.updateOrderStatus(63, "accepted", 21, "ac");
-       // System.out.println(b);
-         List<Order> l = d.findOrdersWithFilters("", "", 0, 1, 10);
-         System.out.println(l);
-         System.out.println(d.getTotalFilteredOrders("", "", 0));
-    }
+
        
 
 }

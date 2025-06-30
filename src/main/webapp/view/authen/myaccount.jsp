@@ -102,20 +102,15 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-<<<<<<< HEAD
-                                                                            <jsp:include page="../common/sidebar.jsp"></jsp:include>
-=======
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
->>>>>>> origin/order-customer2.0
+                                                                          
+                                                                            <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
+                                                                                >>>>>>> origin/order-customer2.0
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-<<<<<<< HEAD
-                                                                                <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
-=======
                                                                                 <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
->>>>>>> origin/order-customer2.0
+                                                                                    >>>>>>> origin/order-customer2.0
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">
@@ -177,63 +172,63 @@
                                                                                                                 </fieldset>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
-                                                                                                        
 
-                                                                                                            <c:choose>
-                                                                                                                <c:when test="${account.getBirth_date() == null}">
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Birth Date</div>
-                                                                                                                        <input class="form-control" type="date" name="birth_date" value="" placeholder="Cập nhật ngày sinh của bạn..." >
-                                                                                                                    </fieldset>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Birth Date</div>
-                                                                                                                        <input class="form-control" type="date" name="birth_date" value="${account.birth_date}" >
-                                                                                                                    </fieldset>
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
 
-                                       
-                                                                                                            <fieldset class="name mb-24">
-                                                                                                                    <div class="body-title mb-10">Gender</div>
-                                                                                                                    <select class="form-control" name="gender">
-                                                                                                                        <option value="Male" ${account.gender == 'Male' ? 'selected' : ''}>Male</option>
-                                                                                                                        <option value="Female" ${account.gender == 'Female' ? 'selected' : ''}>Female</option>
-                                                                                                                        <option value="Other" ${account.gender == 'Other' ? 'selected' : ''}>Other</option>
-                                                                                                                    </select>
-                                                                                                            </fieldset>  
-                                                                                                        
                                                                                                         <c:choose>
-                                                                                                                <c:when test="${account.getMobile() == null}">
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Mobile</div>
-                                                                                                                        <input class="form-control" type="text" name="mobile" value="" placeholder="Cập nhật số điện thoại của bạn...">
-                                                                                                                    </fieldset>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Mobile</div>
-                                                                                                                        <input class="form-control" type="text" name="mobile" value="${account.mobile}">
-                                                                                                                    </fieldset>
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                                                                                        
+                                                                                                            <c:when test="${account.getBirth_date() == null}">
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Birth Date</div>
+                                                                                                                    <input class="form-control" type="date" name="birth_date" value="" placeholder="Cập nhật ngày sinh của bạn..." >
+                                                                                                                </fieldset>
+                                                                                                            </c:when>
+                                                                                                            <c:otherwise>
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Birth Date</div>
+                                                                                                                    <input class="form-control" type="date" name="birth_date" value="${account.birth_date}" >
+                                                                                                                </fieldset>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
+
+                                                                                                        <fieldset class="name mb-24">
+                                                                                                            <div class="body-title mb-10">Gender</div>
+                                                                                                            <select class="form-control" name="gender">
+                                                                                                                <option value="Male" ${account.gender == 'Male' ? 'selected' : ''}>Male</option>
+                                                                                                                <option value="Female" ${account.gender == 'Female' ? 'selected' : ''}>Female</option>
+                                                                                                                <option value="Other" ${account.gender == 'Other' ? 'selected' : ''}>Other</option>
+                                                                                                            </select>
+                                                                                                        </fieldset>  
+
                                                                                                         <c:choose>
-                                                                                                                <c:when test="${account.getAddress() == null}">
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Address</div>
-                                                                                                                        <input class="form-control" type="text" name="address" value="" placeholder="Cập nhật địa chỉ của bạn...">
-                                                                                                                    </fieldset>
-                                                                                                                </c:when>
-                                                                                                                <c:otherwise>
-                                                                                                                    <fieldset class="name mb-24">
-                                                                                                                        <div class="body-title mb-10">Address</div>
-                                                                                                                        <input class="form-control" type="text" name="address" value="${account.address}">
-                                                                                                                    </fieldset>
-                                                                                                                </c:otherwise>
-                                                                                                            </c:choose>
-                                             
+                                                                                                            <c:when test="${account.getMobile() == null}">
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Mobile</div>
+                                                                                                                    <input class="form-control" type="text" name="mobile" value="" placeholder="Cập nhật số điện thoại của bạn...">
+                                                                                                                </fieldset>
+                                                                                                            </c:when>
+                                                                                                            <c:otherwise>
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Mobile</div>
+                                                                                                                    <input class="form-control" type="text" name="mobile" value="${account.mobile}">
+                                                                                                                </fieldset>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
+                                                                                                        <c:choose>
+                                                                                                            <c:when test="${account.getAddress() == null}">
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Address</div>
+                                                                                                                    <input class="form-control" type="text" name="address" value="" placeholder="Cập nhật địa chỉ của bạn...">
+                                                                                                                </fieldset>
+                                                                                                            </c:when>
+                                                                                                            <c:otherwise>
+                                                                                                                <fieldset class="name mb-24">
+                                                                                                                    <div class="body-title mb-10">Address</div>
+                                                                                                                    <input class="form-control" type="text" name="address" value="${account.address}">
+                                                                                                                </fieldset>
+                                                                                                            </c:otherwise>
+                                                                                                        </c:choose>
+
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <p style="color:red">${toastMessage}</p>
@@ -246,39 +241,39 @@
                                                                                         <!-- /add-new-user -->
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
-<<<<<<< HEAD
+                                                                                    <<<<<<< HEAD
                                                                                     <!-- bottom-page -->
-                                                                                        <jsp:include page = "../common/footer.jsp"></jsp:include>
-                                                                                    <!-- /bottom-page -->
-                                                                                </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                
-=======
+                                                                                    <jsp:include page = "../common/footer.jsp"></jsp:include>
+                                                                                        <!-- /bottom-page -->
+                                                                                    </div>
+                                                                                    <!-- /main-content-wrap -->
+
+                                                                                    =======
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
                                                                                 <!-- /bottom-page -->
->>>>>>> origin/order-customer2.0
+                                                                                >>>>>>> origin/order-customer2.0
                                                                             </div>
                                                                             <!-- /main-content -->
                                                                         </div>
                                                                         <!-- /section-content-right -->
                                                                     </div>
                                                                     <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                                </div>
-                                                                <!-- /#wrapper -->
+                                                                    </div>
+                                                                    <!-- /#page -->
+                                                                    </div>
+                                                                    <!-- /#wrapper -->
 
-                                                                <!-- Javascript -->
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                    <!-- Javascript -->
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/main.js"></script>
-<!--a
+                                                                <!--a
                                                                 <c:if test="${toastType == 'error'}">
                                                                     <script>
                                                                         document.addEventListener("DOMContentLoaded", function () {

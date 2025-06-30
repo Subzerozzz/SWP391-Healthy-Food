@@ -11,18 +11,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-
-
-
 public class CartDAO extends DBContext implements I_DAO<Cart>{
-    private Connection connection = null;
-    private PreparedStatement statement = null;
-    private ResultSet resultSet = null;
 
-
-    
-
-   
 
     /**
      * Tạo giỏ hàng mới cho người dùng

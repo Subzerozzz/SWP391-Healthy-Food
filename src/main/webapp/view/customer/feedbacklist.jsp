@@ -13,6 +13,24 @@
 
     <!-- Mirrored from themesflat.co/html/remos/oder-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
     <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <style>
+            .rating-stars {
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .rating-stars .fa-star {
+                color: #ccc; /* màu mặc định là xám */
+                font-size: 20px;
+                margin-right: 2px;
+            }
+
+            .rating-stars .fas.fa-star {
+                color: #f5c518; /* màu vàng cho sao đầy */
+            }
+
+        </style>
         <!-- Basic Page Needs -->
         <meta charset="utf-8">
             <!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'><![endif]-->
@@ -60,7 +78,7 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                        <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                        <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
@@ -94,7 +112,6 @@
                                                                                                         </div>
                                                                                                     </form>
                                                                                                 </div>
-                                                                                                <a class="tf-button style-1 w208" href="oder-detail.html"><i class="icon-file-text"></i>Export all feedback</a>
                                                                                             </div>
                                                                                             <div class="wg-table table-all-category">
                                                                                                 <ul class="table-title flex gap20 mb-14">
@@ -103,27 +120,35 @@
                                                                                                         <div class="body-title">ID</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Updated At</div>
+                                                                                                        <div class="body-title">Rating</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title">Content</div>
                                                                                                     </li>
-
+                                                                                                    <li>
+                                                                                                        <div class="body-title">Updated At</div>
+                                                                                                    </li>
                                                                                                     <li>
                                                                                                         <div class="body-title">Action</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
-
-
                                                                                                     <c:forEach var="feedback" items="${feedbacklist}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="body-text format-view">#${feedback.id} </div>
-                                                                                                                <div class="body-text format-view">
-                                                                                                                    <fmt:formatDate value="${feedback.created_at}" pattern="dd-MM-yyyy HH:mm:ss" />
+                                                                                                                <div class="body-text format-view">#${feedback.id}</div>
+                                                                                                                <div class="rating-stars">
+                                                                                                                    <c:forEach begin="1" end="5" var="i">
+                                                                                                                        <i class="<c:choose>
+                                                                                                                               <c:when test='${i <= feedback.rating}'>fas fa-star</c:when>
+                                                                                                                               <c:otherwise>far fa-star</c:otherwise>
+                                                                                                                           </c:choose>"></i>
+                                                                                                                    </c:forEach>
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view">${feedback.content} </div>
+                                                                                                                <div class="body-text format-view">
+                                                                                                                    <fmt:formatDate value="${feedback.createdAt}" pattern="dd-MM-yyyy HH:mm:ss" />
+                                                                                                                </div>
                                                                                                                 <div class="list-icon-function ">
                                                                                                                     <a href="${pageContext.request.contextPath}/feedbackdetail?id=${feedback.id}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
@@ -195,7 +220,7 @@
                                                                                 </div>
                                                                                 <!-- /main-content-wrap -->
                                                                                 <!-- bottom-page -->
-                                                                                <jsp:include page = "/view/common/nutritionist/footer.jsp"></jsp:include>
+                                                                                <jsp:include page = "/view/common/footer.jsp"></jsp:include>
                                                                                     <!-- /bottom-page -->
                                                                                 </div>
                                                                                 <!-- /main-content -->

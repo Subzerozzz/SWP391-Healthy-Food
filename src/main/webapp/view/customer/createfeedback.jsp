@@ -154,7 +154,7 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page="/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page="/view/common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
@@ -174,7 +174,7 @@
                                                                                                           method="POST">
                                                                                                         <!-- Kiểm tra xem có order_item_id không -->
                                                                                                         <input type="hidden" name="order_item_id" value="${param.order_item_id}" />
-                                                                                                    
+
                                                                                                     <div class="form-group">
                                                                                                         <label>Đánh giá:</label>
                                                                                                         <div class="rating">
@@ -203,7 +203,10 @@
                                                                                                                                               placeholder="Viết ý kiến của bạn ..."></textarea>
                                                                                                                                 </div>
 
-                                                                                                                                <button type="submit" class="btn-submit">Gửi phản hồi</button>
+                                                                                                                                <button type="submit" class="btn-submit">Send Feedback</button>
+                                                                                                                                <a href="${pageContext.request.contextPath}/orderdetail?order_id=${order.id}" class="btn-submit">
+                                                                                                                                    Cancel Orderdetail
+                                                                                                                                </a>
                                                                                                                                 </form>
                                                                                                                                 </div>
                                                                                                                                 </div>
@@ -211,7 +214,7 @@
                                                                                                                                 </div>
                                                                                                                                 <!-- /main-content-wrap -->
                                                                                                                                 <!-- bottom-page -->
-                                                                                                                                <jsp:include page="/view/common/nutritionist/footer.jsp"></jsp:include>
+                                                                                                                                <jsp:include page="/view/common/footer.jsp"></jsp:include>
                                                                                                                                     <!-- /bottom-page -->
                                                                                                                                     </div>
                                                                                                                                     <!-- /main-content -->

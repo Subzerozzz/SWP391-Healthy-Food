@@ -90,7 +90,7 @@
                                                                             </div>
                                                                             <!-- /preload -->
                                                                             <!-- section-menu-left -->
-                                                                            <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                            <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
                                                                                 <!-- /section-menu-left -->
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
@@ -175,7 +175,7 @@
                                                                                                                                 <div class="name">
                                                                                                                                     <div class="text-tiny mb-1">Feedback</div>
                                                                                                                                     <c:if test="${order.payment_status == 1 && order.status == 'completed'}">
-                                                                                                                                        <a href="createfeedback?id=${orderItem.id}" title="Write Feedback">
+                                                                                                                                        <a href="createfeedback?order_item_id=${orderItem.id}" title="Write Feedback">
                                                                                                                                             <i class="fa fa-pencil-alt" style="font-size: 15px; color: #595959;"></i>
                                                                                                                                         </a>
                                                                                                                                     </c:if>
@@ -308,7 +308,7 @@
                                                                                                                 </c:when>
                                                                                                                 <c:otherwise>
                                                                                                                     <a style=" margin-top: 20px;    margin-bottom: 20px;    " class="tf-button style-1 w-full"
-                                                                                                                       onclick="cancelOrder(${order.order_id}, '${order.status}')">Cancel Order</a>
+                                                                                                                       onclick="cancelOrder(${order.id}, '${order.status}')">Cancel Order</a>
                                                                                                                 </c:otherwise>
                                                                                                             </c:choose>
 
