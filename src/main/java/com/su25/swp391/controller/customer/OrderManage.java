@@ -110,7 +110,7 @@ public class OrderManage extends HttpServlet {
             Order order = orderListDAO.findById(orderId);
 
             if (order != null) {
-                request.setAttribute("order", order);
+                session.setAttribute("order", order);
                 session.setAttribute("orderIdStr", orderIdStr);
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
                 return;

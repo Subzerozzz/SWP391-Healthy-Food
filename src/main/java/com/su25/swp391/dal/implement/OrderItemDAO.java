@@ -70,6 +70,7 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
                 items.add(getFromResultSet(resultSet));
             }
         }catch(Exception e){
+            closeResources();
       
         }
         return items;

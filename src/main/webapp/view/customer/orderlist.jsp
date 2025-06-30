@@ -155,7 +155,7 @@
                                                                         </div>
                                                                         <!-- /preload -->
                                                                         <!-- section-menu-left -->
-                                                                        <jsp:include page = "/view/common/homePage/sidebar.jsp"></jsp:include>
+                                                                        <jsp:include page = "/view/common/sidebar.jsp"></jsp:include>
                                                                             <!-- /section-menu-left -->
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
