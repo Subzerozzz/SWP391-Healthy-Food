@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 
 public class DBContext {
 
-  protected Connection connection;
+  public Connection connection;
   protected ResultSet resultSet;
-  protected PreparedStatement statement;
+  public PreparedStatement statement;
 
   public DBContext() {
     try {
