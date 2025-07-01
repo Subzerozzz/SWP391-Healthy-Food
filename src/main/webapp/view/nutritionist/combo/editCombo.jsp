@@ -78,7 +78,7 @@
                                                                                                     </div>
                                                                                                     <div class="card">
                                                                                                         <div class="card-body p-24">
-                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=update" method="post" enctype="multipart/form-data">
+                                                                                                            <form id="comboForm" action="${pageContext.request.contextPath}/managerCombo?action=update" method="post">
                                                                                                             <input type="hidden" name="comboId" value="${combo.comboId}">
                                                                                                                 <input type="hidden" name="page" value="${param.page}">
 
@@ -228,7 +228,7 @@
                                                                                                                             <!-- Submit Buttons -->
                                                                                                                             <div class="row mt-4">
                                                                                                                                 <div class="col-12 text-end">
-                                                                                                                                    <a href="${pageContext.request.contextPath}/admin/manage-combo" 
+                                                                                                                                    <a href="${pageContext.request.contextPath}/managerCombo" 
                                                                                                                                        class="btn btn-secondary me-2">
                                                                                                                                         <i class="fas fa-times"></i> Cancel
                                                                                                                                     </a>
@@ -239,80 +239,73 @@
                                                                                                                             </div>
                                                                                                                             </form>
 
-                                                                                                                            <!-- Combo Food Manager -->
-                                                                                                                            <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
+
                                                                                                                             <script>
                                                                                                                                 document.addEventListener('DOMContentLoaded', function () {
-                                                                                                                                    // Validate form name
                                                                                                                                     var comboForm = document.getElementById('comboForm');
+
                                                                                                                                     if (comboForm) {
                                                                                                                                         comboForm.addEventListener('submit', function (e) {
                                                                                                                                             // Validate combo name
                                                                                                                                             var nameInput = document.getElementById('name');
-                                                                                                                                            var nameValue = nameInput.value;
+                                                                                                                                            var nameValue = nameInput.value.trim();
                                                                                                                                             var regex = /^[a-zA-Z0-9\sÀ-ỹà-ỹ_.,-]+$/;
                                                                                                                                             if (!regex.test(nameValue)) {
                                                                                                                                                 alert('Combo name cannot contain special characters!');
                                                                                                                                                 nameInput.focus();
                                                                                                                                                 e.preventDefault();
-                                                                                                                                                return false;
+                                                                                                                                                return;
                                                                                                                                             }
 
-                                                                                                                                            // Prepare data for submission
+                                                                                                                                            // Validate and collect foodIds and quantities
                                                                                                                                             const foodSelects = document.querySelectorAll(".food-select");
                                                                                                                                             const quantityInputs = document.querySelectorAll(".food-quantity");
                                                                                                                                             const foodIds = [];
                                                                                                                                             const quantities = [];
 
-                                                                                                                                            // Validate at least one food item is selected
                                                                                                                                             if (foodSelects.length === 0) {
                                                                                                                                                 alert('Please add at least one food item!');
                                                                                                                                                 e.preventDefault();
-                                                                                                                                                return false;
+                                                                                                                                                return;
                                                                                                                                             }
 
-                                                                                                                                            foodSelects.forEach((select, index) => {
-                                                                                                                                                if (!select.value) {
+                                                                                                                                            let isValid = true;
+
+                                                                                                                                            for (let i = 0; i < foodSelects.length; i++) {
+                                                                                                                                                const foodId = foodSelects[i].value.trim();
+                                                                                                                                                const quantity = quantityInputs[i].value.trim();
+
+                                                                                                                                                if (!foodId) {
                                                                                                                                                     alert('Please select a food for all items!');
-                                                                                                                                                    select.focus();
-                                                                                                                                                    e.preventDefault();
-                                                                                                                                                    return false;
+                                                                                                                                                    foodSelects[i].focus();
+                                                                                                                                                    isValid = false;
+                                                                                                                                                    break;
                                                                                                                                                 }
 
-                                                                                                                                                const foodId = select.value;
-                                                                                                                                                const quantity = quantityInputs[index].value;
-
-                                                                                                                                                if (foodId && quantity) {
-                                                                                                                                                    foodIds.push(foodId);
-                                                                                                                                                    quantities.push(quantity);
+                                                                                                                                                if (!quantity || isNaN(quantity) || parseInt(quantity) <= 0) {
+                                                                                                                                                    alert('Please enter a valid quantity for all foods!');
+                                                                                                                                                    quantityInputs[i].focus();
+                                                                                                                                                    isValid = false;
+                                                                                                                                                    break;
                                                                                                                                                 }
-                                                                                                                                            });
 
+                                                                                                                                                foodIds.push(foodId);
+                                                                                                                                                quantities.push(quantity);
+                                                                                                                                            }
+
+                                                                                                                                            if (!isValid) {
+                                                                                                                                                e.preventDefault();
+                                                                                                                                                return;
+                                                                                                                                            }
+
+                                                                                                                                            // Gán vào input ẩn
                                                                                                                                             document.getElementById("foodIdsInput").value = foodIds.join(",");
                                                                                                                                             document.getElementById("quantitiesInput").value = quantities.join(",");
                                                                                                                                         });
                                                                                                                                     }
-
-                                                                                                                                    // Handle add food button
-                                                                                                                                    const addFoodBtn = document.querySelector('.add-food');
-                                                                                                                                    if (addFoodBtn) {
-                                                                                                                                        addFoodBtn.addEventListener('click', function () {
-                                                                                                                                            const container = document.querySelector('.food-selection-container');
-                                                                                                                                            const rows = container.querySelectorAll('.food-selection-row');
-                                                                                                                                            const lastRow = rows[rows.length - 1];
-                                                                                                                                            const newRow = lastRow.cloneNode(true);
-
-                                                                                                                                            // Reset values
-                                                                                                                                            newRow.querySelector('.food-select').value = '';
-                                                                                                                                            newRow.querySelector('.food-quantity').value = '1';
-                                                                                                                                            newRow.querySelector('.remove-food').disabled = false;
-
-                                                                                                                                            container.appendChild(newRow);
-                                                                                                                                        });
-                                                                                                                                    }
-
-                                                                                                                                  
+                                                                                                                                });
                                                                                                                             </script>
+                                                                                                                           
                                                                                                                             </div>
                                                                                                                             </div>
                                                                                                                             </div>
@@ -346,9 +339,6 @@
                                                                                                                             <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>
                                                                                                                             <!-- jQuery -->
                                                                                                                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-                                                                                                                            <!-- Gọi sau khi jQuery + Select2 sẵn -->
-
                                                                                                                             </body>
                                                                                                                             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
                                                                                                                             <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>

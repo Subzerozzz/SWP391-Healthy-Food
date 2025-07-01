@@ -27,8 +27,8 @@ public class OrderComboFood {
      private Integer orderComboFoodId;
     private Integer orderComboId;
     private Integer foodId;
-    private String name;//ten mon an 
-    private Double price;
+    private String foodName;//ten mon an 
+    private Double foodPrice;
     private Integer quantityInCombo;
     private Integer totalQuantity;
 }

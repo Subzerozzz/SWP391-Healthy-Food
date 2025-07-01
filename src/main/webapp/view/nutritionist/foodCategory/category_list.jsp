@@ -113,7 +113,7 @@
                                                                                                             <form class="form-search" action="${pageContext.request.contextPath}/manageCategory" method = "get">
                                                                                                             <fieldset class="name">
                                                                                                                 <input type="text" placeholder="Search here..." class="" name="find" tabindex="2" value="${param.find}" >
-                                                                                                                    <input type="hidden" name="action" value = "find">
+                                                                                                                <input type="hidden" name="action" value = "find">
                                                                                                                         </fieldset>
                                                                                                                         <div class="button-submit">
                                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>

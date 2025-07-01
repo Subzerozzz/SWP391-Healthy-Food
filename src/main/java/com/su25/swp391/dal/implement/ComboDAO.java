@@ -132,13 +132,14 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
             int affectecdRows = statement.executeUpdate();
             return affectecdRows > 0;
         } catch (Exception e) {
-            System.out.println("Erroe updating combo" + e.getMessage());
+            System.out.println("Error updating combo" + e.getMessage());
             return false;
         } finally {
             closeResources();
         }
     }
-public class ComboDAOTest {
+
+    public class ComboDAOTest {
     public static void main(String[] args) {
         ComboDAO dao = new ComboDAO();
 
@@ -320,4 +321,164 @@ public boolean deactivateAccount(int comboId) {
             closeResources();
         }
     }
+public List<Combo> searchCombos(String searchTerm, int page, int pageSize) {
+        List<Combo> combos = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Combo WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Thêm điều kiện tìm kiếm
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            sql.append(" AND (comboName LIKE ? OR description LIKE ?)");
+            params.add("%" + searchTerm + "%");
+            params.add("%" + searchTerm + "%");
+        }
+
+        
+
+        // Thêm phân trang
+        sql.append(" ORDER BY comboId DESC LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            // Thiết lập tham số
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                combos.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error searching combos: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+
+        return combos;
+    }
+public static void main(String[] args) {
+    ComboDAO dao = new ComboDAO();
+    List<Combo> result = dao.searchCombos("combo", 1, 10);
+    for (Combo c : result) {
+        System.out.println(c.getComboId() + " - " + c.getComboName());
+    }
+}
+    /**
+     * Đếm tổng số combo thỏa mãn điều kiện tìm kiếm
+     *
+     * @param searchTerm Từ khóa tìm kiếm (tên, mô tả)
+     * @param status Trạng thái combo (active/inactive)
+     * @return Tổng số combo thỏa mãn điều kiện
+     */
+    public int countSearchResults(String searchTerm) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Combo WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Thêm điều kiện tìm kiếm
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            sql.append(" AND (comboName LIKE ? OR description LIKE ?)");
+            params.add("%" + searchTerm + "%");
+            params.add("%" + searchTerm + "%");
+        }
+
+      
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            // Thiết lập tham số
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error counting search results: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+
+        return 0;
+    }
+ public List<Combo> filterComboPaging( String status, int pageIndex, int pageSize) {
+        List<Combo> combos = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Combo WHERE 1=1 ");
+
+      
+        if (status != null) {
+            sql.append(" AND status = ?");
+        }
+
+        sql.append(" ORDER BY comboId");
+        sql.append(" LIMIT ? OFFSET ?");
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Thêm tham số lọc
+            
+            if (status != null) {
+                statement.setString(paramIndex++, status);
+            }
+
+            // Thêm tham số phân trang
+            statement.setInt(paramIndex++, pageSize); // LIMIT
+            statement.setInt(paramIndex++, (pageIndex - 1) * pageSize); // OFFSET
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                combos.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering and paging combos: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+
+        return combos;
+    }
+ 
+ public int countByStatus(String status) {
+    int count = 0;
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Combo WHERE 1=1");
+
+    // Thêm điều kiện lọc nếu có
+    if (status != null && !status.isEmpty()) {
+        sql.append(" AND status = ?");
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        // Thiết lập tham số nếu có
+        if (status != null && !status.isEmpty()) {
+            statement.setString(1, status);
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error counting accounts by status: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+
+    return count;
+}
+
+
 }

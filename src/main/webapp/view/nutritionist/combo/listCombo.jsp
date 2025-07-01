@@ -94,19 +94,36 @@
                                                                                             </div>
                                                                                             <!-- product-list -->
                                                                                             <div class="wg-box">
-                                                                                                <div class="title-box">
-                                                                                                    <i class="icon-coffee"></i>
-
-                                                                                                </div>
+                      
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
-                                                                                                    <div class="wg-filter flex-grow" action = "${pageContext.request.contextPath}/managerCombo" method = "get">
-                                                                                                    <form class="form-search">
+                                                                                                    <div class="wg-filter flex-grow" >
+                                                                                                    <form class="form-search" action="${pageContext.request.contextPath}/managerCombo" method = "get">
                                                                                                         <fieldset class="name">
-                                                                                                            <input type="text" placeholder="Search here..." class="" name="name" tabindex="2" value="" aria-required="true" required="">
+                                                                                                            <input type="text" placeholder="Search here..." class="name" name="find" tabindex="2" value="${param.find}"  required="">
+                                                                                                                  <input type="hidden" name="action" value = "find">
                                                                                                         </fieldset>
+                                                                                                        
                                                                                                         <div class="button-submit">
                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
                                                                                                         </div>
+                                                                                                       
+                                                                                                    </form>
+                                                                                                </div>
+                                                                                                    <div class="wg-filter flex-grow" >
+                                                                                                    <form class="form-search" action = "${pageContext.request.contextPath}/managerCombo" method = "get">
+                                                                                                        <fieldset class="name">
+                                                                                                                       <input type="hidden" name="action" value="filter" /> 
+                                                                                                                       <select name="status">
+                                                                                                                        <option  value="" ${empty param.status ? 'selected' : ''}>All Status</option>
+                                                                                                                        <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
+                                                                                                                        <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>In_Active</option>
+                                                                                                                    </select> 
+                                                                                                        </fieldset>
+                                                                                                        
+                                                                                                        <div class="button-submit">
+                                                                                                            <button class="" type="submit"><i class="icon-search"></i></button>
+                                                                                                        </div>
+                                                                                                       
                                                                                                     </form>
                                                                                                 </div>
                                                                                                 <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/managerCombo?action=add"><i class="icon-plus"></i>Add new</a>
@@ -142,7 +159,7 @@
                                                                                                                 <div class="name">
                                                                                                                     <a href="${pageContext.request.contextPath}/managerCombo?action=viewComboFoodDetail&id=${cb.comboId}" class="body-title-2">${cb.comboName == null ? 'null' : cb.comboName}</a>
                                                                                                                 </div>
-                                                                                                                <div class="body-text" style="width: 200px">${cb.comboId == null ? 'null': cb.comboId}</div>
+                                                                                                                <div class="body-text" style="width: 400px">${cb.comboId == null ? 'null': cb.comboId}</div>
                                                                                                                 <div class="body-text">${cb.description== null ? 'null' : cb.description}</div>
                                                                                                                 <div class="body-text">${cb.originalPrice == null ? 'null' : cb.originalPrice}</div>
                                                                                                                 <div class="body-text">${cb.discountPrice == null ? 'null' : cb.discountPrice}</div>
@@ -276,7 +293,7 @@
                                                             <c:if test="${not empty sessionScope.toastMessage}">
                                                                 <script>
                                                                 iziToast.${sessionScope.toastType}({
-                                                                title: '${sessionScope.toastType == "success" ? "Thành công" : "Thành Công"}',
+                                                                title: '${sessionScope.toastType == "success" ? "Thành công" : "That bai"}',
                                                                 message: '${sessionScope.toastMessage}',
                                                                 position: 'topRight',
                                                                 timeout: 3000,
