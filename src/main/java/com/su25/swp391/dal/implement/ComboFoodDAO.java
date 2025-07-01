@@ -187,7 +187,7 @@ public class ComboFoodDAO extends DBContext implements I_DAO<ComboFood>{
     } finally {
         closeResources();
     }
-    return comboFood; // ✅ Đúng rồi nè!
+    return comboFood; 
 }
 public static void main(String[] args) {
     ComboFoodDAO dao = new ComboFoodDAO();

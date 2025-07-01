@@ -120,6 +120,18 @@
                                     <div class="text">All Category</div>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="${pageContext.request.contextPath}/managerCombo?action=add" class="menu-item-button">
+                                    <div class="icon"><i class="icon-layers"></i></div>
+                                    <div class="text">Add new Combo</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a href="${pageContext.request.contextPath}/managerCombo" class="menu-item-button">
+                                    <div class="icon"><i class="icon-layers"></i></div>
+                                    <div class="text">All Combo</div>
+                                </a>
+                            </li>
                 </c:if>
             </ul>
         </div>
