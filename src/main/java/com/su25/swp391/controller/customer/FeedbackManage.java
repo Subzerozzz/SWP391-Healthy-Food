@@ -11,7 +11,9 @@ import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Feedback;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderItem;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,13 +21,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author kieud
  */
-@WebServlet(name = "FeedbackManage", urlPatterns = {"/feedback", "/feedbackdetail", "/createfeedback"})
+@WebServlet(name = "FeedbackManage", urlPatterns = {"/feedback", "/feedbackdetail", "/createfeedback", "/remove"})
 public class FeedbackManage extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
@@ -54,6 +60,9 @@ public class FeedbackManage extends HttpServlet {
             case "/createfeedback":
                 request.getRequestDispatcher(CREATE_PAGE).forward(request, response);
                 break;
+            case "/remove":
+                removeFeedback(request, response);
+                break;
             default:
                 break;
         }
@@ -65,7 +74,6 @@ public class FeedbackManage extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
-
             case "/createfeedback":
                 createfeedback(request, response);
                 break;
@@ -122,6 +130,29 @@ public class FeedbackManage extends HttpServlet {
         if (findAccountbyEmail != null || findAccountbyUsername != null) {
             int userId = (findAccountbyEmail != null) ? findAccountbyEmail.getId() : findAccountbyUsername.getId();
             List<Feedback> feedbacklist = feedbackDAO.feedbackByUserIdAndRatingWithPagination(userId, search, currentPage, pageSize);
+
+            // Duyệt qua toàn bộ orderItemList, lấy food_id từ mỗi OrderItem, và cho vào một Set<Integer> để loại bỏ trùng lặp
+            Set<Integer> orderItemIds = feedbacklist.stream()
+                    .map(Feedback::getOrder_item_id)
+                    .collect(Collectors.toSet());
+
+            //Tạo một Map<Integer, Food> tên là foodMap để ánh xạ foodId → Food.
+            Map<Integer, Food> foodMap = new HashMap<>();
+            // Duyệt qua từng orderItemId trong Set, gọi orderDetailDAO.findById(orderItemId) để lấy đối tượng OrderItem từ CSDL.
+            for (Integer orderItemId : orderItemIds) {
+                OrderItem orderItem = orderDetailDAO.findById(orderItemId);
+                // nếu orderItem tồn tại thì tìm nó trong bảng food
+                if (orderItem != null) {
+                    Food food = foodDAO.findById(orderItem.getFood_id());
+                    // nếu tìm thấy trong bẳng food Gộp lại thành một Map<food_id, Food> để dễ tra cứu trong JSP
+                    if (food != null) {
+                        foodMap.put(orderItemId, food);
+                    }
+                }
+            }
+
+            request.setAttribute("foodMap", foodMap);
+
             int totalFeedback = feedbackDAO.getTotalFeedbackCountByUserIdAndRating(userId, search);
             // lấy tổng số lượng order chia cho kích thức trang (10) để biết tổng số trang
             int totalPages = (int) Math.ceil((double) totalFeedback / pageSize);
@@ -148,39 +179,12 @@ public class FeedbackManage extends HttpServlet {
         }
     }
 
-//    private void feedbackdetail(HttpServletRequest request, HttpServletResponse response) {
-//        HttpSession session = request.getSession();
-//
-//        String email = (String) session.getAttribute("email");
-//        String username = (String) session.getAttribute("user_name");
-//        String rating = request.getParameter("rating");
-//        String content = request.getParameter("feedbackText");
-//
-//        try {
-//            if (email == null && username == null) {
-//                response.sendRedirect(HOME_PAGE);
-//                return;
-//            }
-//        } catch (IOException ex) {
-//            Logger.getLogger(FeedbackManage.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//       Account acc = Account.builder().email(email).user_name(username).build();
-//       
-//       Account findByEmail = accountDAO.findByEmail(acc);
-//       Account findByUsername = accountDAO.findByUsername(acc);
-//       
-//       if(findByEmail != null || findByUsername != null){
-//           int userId = (findByEmail != null) ? findByEmail.getId() : findByUsername.getId();
-//           
-//       }
-//
-//    }
     private void createfeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
+        String source = request.getParameter("source"); // dùng để thực hiệc việc back lại trang feedback list
         String ratingraw = request.getParameter("rating");
         String content = request.getParameter("feedbackText");
         String orderitem = request.getParameter("order_item_id");
@@ -211,21 +215,53 @@ public class FeedbackManage extends HttpServlet {
             boolean isFeedbackExists = (checkfeedback != null);
             if (checkfeedback == null) {
                 feedbackDAO.insert(feedback);
-                if (orderIdParam != null && !orderIdParam.isEmpty()) {
-                    response.sendRedirect("orderdetail?order_id=" + orderID);
+                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
+                    response.sendRedirect("orderdetail?order_id=" + orderIdParam);
+                } else if ("feedback".equals(source)) {
+                    response.sendRedirect("feedback");
                 } else {
-                    response.sendRedirect("order"); // fallback
+                    response.sendRedirect("order");
                 }
             } else {
                 request.setAttribute("isFeedbackExists", isFeedbackExists);
                 request.setAttribute("order_item_id", orderItemId);
                 feedbackDAO.updateByUserIdAndOrderItemId(userId, orderItemId, content, rating);
-                if (orderIdParam != null && !orderIdParam.isEmpty()) {
-                    response.sendRedirect("orderdetail?order_id=" + orderID);
+                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
+                    response.sendRedirect("orderdetail?order_id=" + orderIdParam);
+                } else if ("feedback".equals(source)) {
+                    response.sendRedirect("feedback");
                 } else {
-                    response.sendRedirect("order"); // fallback
+                    response.sendRedirect("order");
                 }
             }
+        } else {
+            response.sendRedirect(HOME_PAGE);
+        }
+    }
+
+    private void removeFeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        String idfeedbackraw = request.getParameter("id");
+        int idfeedback = Integer.parseInt(idfeedbackraw);
+
+        String email = (String) session.getAttribute("email");
+        String username = (String) session.getAttribute("user_name");
+
+        if (email == null && username == null) {
+            response.sendRedirect(HOME_PAGE);
+        }
+
+        Account account = Account.builder().email(email).user_name(username).build();
+
+        Account accFindEmail = accountDAO.findByEmail(account);
+        Account accFindUsername = accountDAO.findByUsername(account);
+
+        if (accFindEmail != null || accFindUsername != null) {
+            int userID = (accFindEmail != null) ? accFindEmail.getId() : accFindUsername.getId();
+            Feedback feedback = Feedback.builder().id(idfeedback).user_id(userID).isVisible(false).build();
+            feedbackDAO.update(feedback);
+            response.sendRedirect("feedback"); // tái sử dụng logic của url /feedback
         } else {
             response.sendRedirect(HOME_PAGE);
         }

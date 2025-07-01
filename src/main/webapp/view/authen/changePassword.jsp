@@ -105,8 +105,7 @@
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
-                                                                                    <!-- /header-dashboard -->
+                                                                                <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>                                                                                    <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->
@@ -147,7 +146,7 @@
                                                                                                             <fieldset class="name mb-24">
                                                                                                                 <div class="body-title mb-10">Current Password</div>
                                                                                                                 <input type="password" class="form-control" name="current_password">
-                                                                                                                    
+
                                                                                                             </fieldset>
 
 
@@ -178,24 +177,24 @@
                                                                                     </div>
                                                                                     <!-- /main-content-wrap -->
                                                                                     <!-- bottom-page -->
-                                                                                        <jsp:include page="../common/footer.jsp"></jsp:include>
-                                                                                    <!-- /bottom-page -->
-                                                                                </div>
-                                                                                <!-- /main-content-wrap -->
-                                                                                
-                                                                            </div>
-                                                                            <!-- /main-content -->
-                                                                        </div>
-                                                                        <!-- /section-content-right -->
-                                                                    </div>
-                                                                    <!-- /layout-wrap -->
-                                                                </div>
-                                                                <!-- /#page -->
-                                                                </div>
-                                                                <!-- /#wrapper -->
+                                                                                    <jsp:include page="../common/footer.jsp"></jsp:include>
+                                                                                        <!-- /bottom-page -->
+                                                                                    </div>
+                                                                                    <!-- /main-content-wrap -->
 
-                                                                <!-- Javascript -->
-                                                                <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                                </div>
+                                                                                <!-- /main-content -->
+                                                                            </div>
+                                                                            <!-- /section-content-right -->
+                                                                        </div>
+                                                                        <!-- /layout-wrap -->
+                                                                    </div>
+                                                                    <!-- /#page -->
+                                                                    </div>
+                                                                    <!-- /#wrapper -->
+
+                                                                    <!-- Javascript -->
+                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                 <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
@@ -221,7 +220,7 @@
                                                                         session.removeAttribute("toastMessage");
                                                                     %>
                                                                 </c:if>
-                                                                    
+
 
                                                                 <!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:55 GMT -->
                                                                 </html>

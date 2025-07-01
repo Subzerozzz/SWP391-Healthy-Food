@@ -17,11 +17,11 @@ import lombok.ToString;
 
 @ToString
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+
 public class Feedback {
     private Integer id;
     private Integer user_id;
@@ -32,4 +32,5 @@ public class Feedback {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     
+                               //k phải sửa tên thuộc tính mà vẫn thuận tiện dùng thuộc tính isVisible
 }
