@@ -72,10 +72,10 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
                 "SELECT * "
-                        + "FROM `Order` "
-                        + "WHERE 1=1 ");
+                + "FROM `Order` "
+                + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
-        // Sort by id order
+        
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
             sql.append("AND status = ? ");
@@ -87,14 +87,14 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentMethod);
         }
         // Add payment status filter if provied
-        if(paymentStatus >=0 && paymentStatus <= 1){
+        if (paymentStatus >= 0 && paymentStatus <= 1) {
             sql.append("AND payment_status = ? ");
             params.add(paymentStatus);
         }
         // Append sorting and pagination
-        if( sort != null && !sort.isEmpty()){
-            sql.append("ORDER BY id "+sort +" LIMIT ? OFFSET ? ");
-        }else{
+        if (sort != null && !sort.isEmpty()) {
+            sql.append("ORDER BY id " + sort + " LIMIT ? OFFSET ? ");
+        } else {
             sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
         }
         params.add(pageSize); // LIMIT
@@ -114,12 +114,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 Order.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error finding filtered Order: " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
         }
-        return Order; 
+        return Order;
     }
     
 
@@ -171,7 +171,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-            System.out.println("Error counting filtered Order: " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
