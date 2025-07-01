@@ -95,7 +95,7 @@
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                                <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>
 
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
@@ -175,7 +175,7 @@
                                                                                                                                 <div class="name">
                                                                                                                                     <div class="text-tiny mb-1">Feedback</div>
                                                                                                                                     <c:if test="${order.payment_status == 1 && order.status == 'completed'}">
-                                                                                                                                        <a href="createfeedback?order_item_id=${orderItem.id}" title="Write Feedback">
+                                                                                                                                        <a href="createfeedback?order_item_id=${orderItem.id}&source=orderdetail&order_id=${order.id}" title="Write Feedback">
                                                                                                                                             <i class="fa fa-pencil-alt" style="font-size: 15px; color: #595959;"></i>
                                                                                                                                         </a>
                                                                                                                                     </c:if>

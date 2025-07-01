@@ -159,8 +159,7 @@
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page="/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
-                                                                                    <!-- /header-dashboard -->
+                                                                                <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>                                                                                    <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
                                                                                     <div class="main-content">
                                                                                         <!-- main-content-wrap -->
@@ -204,10 +203,18 @@
                                                                                                                                 </div>
 
                                                                                                                                 <button type="submit" class="btn-submit">Send Feedback</button>
-                                                                                                                                <a href="${pageContext.request.contextPath}/orderdetail?order_id=${order.id}" class="btn-submit">
-                                                                                                                                    Cancel Orderdetail
-                                                                                                                                </a>
-                                                                                                                                </form>
+                                                                                                                                <c:choose>
+                                                                                                                                    <c:when test="${param.source == 'feedback' || empty param.order_id}">
+                                                                                                                                        <a href="${pageContext.request.contextPath}/feedback" class="btn-submit">
+                                                                                                                                            Cancel Feedback
+                                                                                                                                        </a>
+                                                                                                                                    </c:when>
+                                                                                                                                    <c:otherwise>
+                                                                                                                                        <a href="${pageContext.request.contextPath}/orderdetail?order_id=${param.order_id}" class="btn-submit">
+                                                                                                                                            Cancel Order Detail
+                                                                                                                                        </a>
+                                                                                                                                    </c:otherwise>
+                                                                                                                                </c:choose>                                                                                                                               </form>
                                                                                                                                 </div>
                                                                                                                                 </div>
                                                                                                                                 <!-- /main-content-wrap -->
