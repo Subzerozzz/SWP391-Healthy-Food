@@ -304,7 +304,7 @@
                                                                                                             <c:choose>
                                                                                                                 <c:when test="${order.status == 'completed' and order.payment_status == 1}">
                                                                                                                     <a style="margin-top: 20px; margin-bottom: 20px;" class="tf-button style-1 w-full"
-                                                                                                                       href="feedback?orderId=${order.id}">Feedback Order</a>
+                                                                                                                       href="feedback">Feedback Order</a>
                                                                                                                 </c:when>
                                                                                                                 <c:otherwise>
                                                                                                                     <a style=" margin-top: 20px;    margin-bottom: 20px;    " class="tf-button style-1 w-full"

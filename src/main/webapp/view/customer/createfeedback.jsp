@@ -15,6 +15,8 @@
 
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
             <style>
                 .main-content {
                     display: flex;
@@ -242,6 +244,25 @@
                                                                                                                                 <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
                                                                                                                                 <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
                                                                                                                                 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+                                                                                                                                <c:if test="${toastType == 'error'}">
+                                                                                                                                    <script>
+                                                                                                                                        document.addEventListener("DOMContentLoaded", function () {
+                                                                                                                                            iziToast.error({
+                                                                                                                                                title: "Thông báo",
+                                                                                                                                                message: '${sessionScope.toastMessage}',
+                                                                                                                                                position: 'topRight',
+                                                                                                                                                timeout: 5000,
+                                                                                                                                                backgroundColor: "#E53E31"
+                                                                                                                                            });
+                                                                                                                                        });
+                                                                                                                                    </script>
+                                                                                                                                    <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+                                                                                                                                    <%
+                                                                                                                                        session.removeAttribute("toastType");
+                                                                                                                                        session.removeAttribute("toastMessage");
+                                                                                                                                    %>
+                                                                                                                                </c:if>
 
                                                                                                                                 </body>
 
