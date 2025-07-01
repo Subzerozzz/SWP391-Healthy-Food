@@ -27,10 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author kieud
- */
 @WebServlet(name = "FeedbackManage", urlPatterns = {"/feedback", "/feedbackdetail", "/createfeedback", "/remove"})
 public class FeedbackManage extends HttpServlet {
 
@@ -179,24 +175,91 @@ public class FeedbackManage extends HttpServlet {
         }
     }
 
+//    private void createfeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        HttpSession session = request.getSession();
+//
+//        String email = (String) session.getAttribute("email");
+//        String username = (String) session.getAttribute("user_name");
+//        String source = request.getParameter("source"); // dùng để thực hiệc việc back lại trang feedback list
+//        //String ratingraw = request.getParameter("rating");
+//        String content = request.getParameter("feedbackText");
+//        String orderitem = request.getParameter("order_item_id");
+//        String orderIdParam = (String) session.getAttribute("orderIdStr");
+//        int orderItemId = Integer.parseInt(orderitem);
+//        int orderID = 0;
+//        int rating = 1;
+//        
+//        if(orderIdParam != null && !orderIdParam.isEmpty()){
+//            orderID = Integer.parseInt(orderIdParam);
+//        }
+//
+//        if (email == null && username == null) {
+//            response.sendRedirect(HOME_PAGE);
+//            return;
+//        }
+//
+//        Account acc = Account.builder().email(email).user_name(username).build();
+//        Account findByEmail = accountDAO.findByEmail(acc);
+//        Account findByUsername = accountDAO.findByUsername(acc);
+//
+//        if (findByEmail != null || findByUsername != null) {
+//            int userId = (findByEmail != null) ? findByEmail.getId() : findByUsername.getId();
+//            Feedback feedback = Feedback.builder()
+//                    .user_id(userId)
+//                    .order_item_id(orderItemId)
+//                    .content(content)
+//                    .rating(rating)
+//                    .isVisible(true)
+//                    .build();
+//            Feedback checkfeedback = feedbackDAO.findByUserIdAndOrderItemId(userId, orderItemId);
+//            boolean isFeedbackExists = (checkfeedback != null);
+//            if (checkfeedback == null) {
+//                feedbackDAO.insert(feedback);
+//                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
+//                    response.sendRedirect("orderdetail?order_id=" + orderID);
+//                } else if ("feedback".equals(source)) {
+//                    response.sendRedirect("feedback");
+//                } else {
+//                    response.sendRedirect("order");
+//                }
+//            } else {
+//                request.setAttribute("isFeedbackExists", isFeedbackExists);
+//                request.setAttribute("order_item_id", orderItemId);
+//                feedbackDAO.updateByUserIdAndOrderItemId(userId, orderItemId, content, rating);
+//                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
+//                    response.sendRedirect("orderdetail?order_id=" + orderID);
+//                } else if ("feedback".equals(source)) {
+//                    response.sendRedirect("feedback");
+//                } else {
+//                    response.sendRedirect("order");
+//                }
+//            }
+//        } else {
+//            response.sendRedirect(HOME_PAGE);
+//        }
+//    }
     private void createfeedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-
         String email = (String) session.getAttribute("email");
         String username = (String) session.getAttribute("user_name");
-        String source = request.getParameter("source"); // dùng để thực hiệc việc back lại trang feedback list
+        String orderIdraw = (String) session.getAttribute("orderIdStr");
         String ratingraw = request.getParameter("rating");
         String content = request.getParameter("feedbackText");
         String orderitem = request.getParameter("order_item_id");
-        String orderIdParam = (String) session.getAttribute("orderIdStr");
-        int orderItemId = Integer.parseInt(orderitem);
-        int orderID = Integer.parseInt(orderIdParam);
-        int rating = Integer.parseInt(ratingraw);
 
         if (email == null && username == null) {
             response.sendRedirect(HOME_PAGE);
             return;
         }
+
+        if (ratingraw == null || ratingraw.isEmpty() || content == null || content.isEmpty()) {
+            session.setAttribute("toastMessage", "Enter enough information to submit");
+            session.setAttribute("toastType", "error");
+            request.getRequestDispatcher(CREATE_PAGE).forward(request, response);
+            return;
+        }
+        int rating = Integer.parseInt(ratingraw);
+        int orderItemId = Integer.parseInt(orderitem);
 
         Account acc = Account.builder().email(email).user_name(username).build();
         Account findByEmail = accountDAO.findByEmail(acc);
@@ -215,27 +278,13 @@ public class FeedbackManage extends HttpServlet {
             boolean isFeedbackExists = (checkfeedback != null);
             if (checkfeedback == null) {
                 feedbackDAO.insert(feedback);
-                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
-                    response.sendRedirect("orderdetail?order_id=" + orderIdParam);
-                } else if ("feedback".equals(source)) {
-                    response.sendRedirect("feedback");
-                } else {
-                    response.sendRedirect("order");
-                }
+                response.sendRedirect("orderdetail?order_id=" + orderIdraw);
             } else {
                 request.setAttribute("isFeedbackExists", isFeedbackExists);
                 request.setAttribute("order_item_id", orderItemId);
                 feedbackDAO.updateByUserIdAndOrderItemId(userId, orderItemId, content, rating);
-                if ("orderdetail".equals(source) && orderIdParam != null && !orderIdParam.isEmpty()) {
-                    response.sendRedirect("orderdetail?order_id=" + orderIdParam);
-                } else if ("feedback".equals(source)) {
-                    response.sendRedirect("feedback");
-                } else {
-                    response.sendRedirect("order");
-                }
+                response.sendRedirect("feedback");
             }
-        } else {
-            response.sendRedirect(HOME_PAGE);
         }
     }
 
