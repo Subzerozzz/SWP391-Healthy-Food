@@ -140,7 +140,7 @@ textarea.form-control {
 
 /* Buttons */
 .btn {
-/*    padding: 10px 20px;*/
+    padding: 10px 20px;
     font-size: 14px;
     border-radius: 8px;
     font-weight: 500;
@@ -179,13 +179,7 @@ textarea.form-control {
     gap: 24px;
 }
 
-/* Image inside table */
-.product-image {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-}
+
 
 /* Text alignment for amounts */
 .text-end {
@@ -247,7 +241,7 @@ textarea.form-control {
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Order detail</div></a>
+                                            <a href="#"><div class="text-tiny">Order Status</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -262,156 +256,137 @@ textarea.form-control {
                                 
                                  <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-              </div> 
+             
+                
+            </div> 
                 
                                   <div class="row g-24" >
-                                      <div class="col-lg-12 col-md-12" style="display: flex;gap:70px">
-                                 <!-- Order Information -->     
-                <div  class="col-lg-6 col-md-6">
+                                      <div class="col-lg-5 col-md-12" style="display: flex;flex-direction:column;gap:15px">
+             
+                 
+                            </div>
+                             <!-- Update Status -->
+                <div class="col-lg-12 col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title mb-0">Order Information</h6>
+                            <h6 class="card-title mb-0">Status Information</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Order ID:</strong> #${order.id}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Order Date:</strong> <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Payment Method:</strong> ${order.payment_method}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Status:</strong>
-                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
-                                                    order.status == 'accepted' ? 'bg-info' : 
-                                                    order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                    ${order.status}
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Total Amount:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                            </div>
-                            <c:if test="${not empty order.coupon_code}">
-                                <div class="mb-3">
-                                    <strong>Coupon Applied:</strong> ${order.coupon_code}
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                                </div>
-                              </c:if>
+                            <c:choose>
+                                <%-- For completed or cancelled orders - Read only view --%>
+                                <c:when test="${order.status == 'completed' || order.status == 'cancelled'}">
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Status</label>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge ${order.status == 'completed' ? 'bg-success' : 'bg-danger'} fs-6">
+                                                ${order.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            This order has been ${order.status} and cannot be modified further.
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                                           class="btn btn-secondary">
+                                            Back to Order List
+                                        </a>
+                                    </div>
+                                </c:when>
+                                
+                                <%-- For pending or accepted orders - Allow updates --%>
+                                <c:otherwise>
+                                    <form action="${pageContext.request.contextPath}/seller/manage-order" method="post">
+                                        <input type="hidden" name="action" value="updateStatus">
+                                        <input type="hidden" name="orderId" value="${order.id}">
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">New Status</label>
+                                            <select class="form-select" name="newStatus" required>
+                                                <option value="">-- Select Status --</option>
+                                                <c:if test="${order.status == 'pending'}">
+                                                    <option value="accepted">Accept Order</option>
+                                                    <option value="cancelled">Reject Order</option>
+                                                </c:if>
+                                                <c:if test="${order.status == 'accepted'}">
+                                                    <option value="completed">Complete Order</option>
+                                                    <option value="cancelled">Cancel Order</option>
+                                                </c:if>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Note</label>
+                                            <textarea class="form-control" name="note" rows="3" 
+                                                      placeholder="Enter note..."></textarea>
+                                        </div>
+                                        
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary">Update</button>
+                                            <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                                               class="btn btn-secondary">Back</a>
+                                        </div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
-                            <!-- Customer Information -->
-                            <div  class="col-lg-5 col-md-5" >
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title mb-0">Customer Information</h6>
                         </div>
-                        <c:choose>
-                            <c:when test="${not empty account}">
-                                  <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Name:</strong> ${account.user_name}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong> ${account.email}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mobile:</strong> ${account.mobile}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>
-                                ${order.shipping_address}
-                            </div>
-                        </div>
-                            </c:when>
-                            <c:otherwise>
-                               <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Name:</strong> ${order.full_name}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong> ${order.email}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mobile:</strong> ${order.mobile}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>${order.address}
-                            </div>
-                        </div>  
-                            </c:otherwise>
-                        </c:choose>
                       
-                    </div>
-                </div>
-                            </div>
-                     
-                        </div>
-                             <!-- Order Items -->
+                   <!-- Order History -->
             <div class="card mt-24">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">Order Items</h6>
+                    <h6 class="card-title mb-0">Order History</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Image</th>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
+                                    <th>Updated By</th>
+                                    <th>Date</th>
+                                    <th>Previous Status</th>
+                                    <th>New Status</th>
+                                    <th>Note</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach var="item" items="${OrderItems}">
-                                    <c:set var="food" value="${OrderItemMap[item.food_id]}"/>
+                                <c:forEach var="approval" items="${approvals}">
+                                    <c:set var="ItemAccount" value="${OrderApprovalMap[approval.approved_by]}"/>
                                     <tr>
-                                        <td> 
-                                            <a 
-                                                href="${food.image_url}"
-                                                target="_blank">
-                                            <img 
-                                                src="${food.image_url}"
-                                            alt="${food.name}" class="product-image">
-                                              </a>
+                                        <td>${ItemAccount.user_name}</td>
+                                        <td><fmt:formatDate value="${approval.approved_at}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                        <td>
+                                            <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
+                                                                approval.statusBefore == 'accepted' ? 'bg-info' : 
+                                                                approval.statusBefore == 'completed' ? 'bg-success' : 'bg-danger'}">
+                                                ${approval.statusBefore}
+                                            </span>
                                         </td>
-                                        <td>${food.name}</td>
-                                        <td><fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                        <td>${item.quantity}</td>
-                                        <td><fmt:formatNumber value="${food.price*item.quantity}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td>
+                                            <span class="badge ${approval.statusAfter == 'pending' ? 'bg-warning' : 
+                                                                approval.statusAfter == 'accepted' ? 'bg-info' : 
+                                                                approval.statusAfter == 'completed' ? 'bg-success' : 'bg-danger'}">
+                                                ${approval.statusAfter}
+                                            </span>
+                                        </td>
+                                        <td>${approval.note}</td>
                                     </tr>
                                 </c:forEach>
-                                <a href="../../../java/com/su25/swp391/dal/implement/BlogDAO.java"></a>
-                                <c:if test="${not empty order.discount_amount}">
+                                <c:if test="${empty approvals}">
                                     <tr>
-                                        <td colspan="4" class="text-end"><strong>Discount Amount:</strong></td>
-                                        <td><fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
+                                        <td colspan="5" class="text-center">No update history</td>
                                     </tr>
                                 </c:if>
-                                <tr>
-                                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                    <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>                <div style="display:flex;justify-content:end;gap:40px">
-                                <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: #ffc107
-                                   ;">Go to Update</a>
-                                <a href="${pageContext.request.contextPath}/seller/manage-order" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
-                                   ;">Go Back</a>
             </div>
-                              
-           
              </div>
                                 <!--end fix-->
                                  <!-- Toast Container -->

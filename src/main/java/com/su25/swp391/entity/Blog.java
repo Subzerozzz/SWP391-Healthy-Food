@@ -34,4 +34,6 @@ public class Blog {
     private String thumbnailblogs;
     private String status;
     private Date birth_date;
+
+ 
 }
