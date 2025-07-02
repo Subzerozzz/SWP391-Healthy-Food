@@ -2,14 +2,10 @@
 package com.su25.swp391.dal.implement;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Feedback;
-import com.su25.swp391.entity.Food;
-import com.su25.swp391.entity.OrderItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -310,9 +306,11 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 feedbacks.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             // Handle any SQL exceptions that may occur
             System.out.println("Error finding filtered orders: " + ex.getMessage());
         } finally {
+            closeResources();
             // (Optional) Add resource cleanup here if you're not using try-with-resources
             closeResources();
         }
