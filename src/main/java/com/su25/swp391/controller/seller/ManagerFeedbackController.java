@@ -129,7 +129,7 @@ public class ManagerFeedbackController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
-// get Parameter sort by id
+            // get Parameter sort by id
             String sort = request.getParameter("sort");
             // Pagination
             //Get parameter by Food Name
@@ -354,5 +354,5 @@ public class ManagerFeedbackController extends HttpServlet {
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
-
+   // Change feedback
 }
