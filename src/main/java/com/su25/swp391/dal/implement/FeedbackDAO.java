@@ -405,7 +405,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 && !rating.trim().isEmpty()
                 && !rating.equalsIgnoreCase("all");
 
-        String sql = "SELECT COUNT(*) FROM Feedback WHERE user_id = ?";
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE user_id = ? AND is_visible = 1";
         if (filterByRating) {
             sql += " AND rating = ?";
         }
@@ -439,7 +439,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 && !rating.trim().isEmpty()
                 && !rating.equalsIgnoreCase("all");
 
-        String sql = "SELECT * FROM Feedback WHERE user_id = ?";
+        String sql = "SELECT * FROM Feedback WHERE user_id = ? AND is_visible = 1";
         if (filterByRating) {
             sql += " AND rating = ?";
         }
