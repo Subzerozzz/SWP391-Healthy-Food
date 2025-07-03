@@ -281,7 +281,6 @@ public class CartController extends HttpServlet {
                 }
                 count++;
             }
-
             // Chuyển về trang shopDetail và báo
             request.setAttribute("listRelated", listRelated);
             request.setAttribute("foodDetail", food);
