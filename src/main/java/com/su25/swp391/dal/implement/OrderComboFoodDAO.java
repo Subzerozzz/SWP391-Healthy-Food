@@ -72,7 +72,7 @@ public class OrderComboFoodDAO extends DBContext implements I_DAO<OrderComboFood
 
     @Override
     public boolean delete(OrderComboFood orderComboFood) {
- String sql = "DELETE FROM OrderComboFood WHERE orderComboFoodId = ?";
+        String sql = "DELETE FROM OrderComboFood WHERE orderComboFoodId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -89,7 +89,7 @@ public class OrderComboFoodDAO extends DBContext implements I_DAO<OrderComboFood
 
     @Override
     public int insert(OrderComboFood orderComboFood) {
- String sql = "INSERT INTO oOrderComboFood (orderComboId, foodId,foodName, foodPrice, "
+        String sql = "INSERT INTO oOrderComboFood (orderComboId, foodId,foodName, foodPrice, "
                 + "quantityInCombo, totalQuantity) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -124,7 +124,7 @@ public class OrderComboFoodDAO extends DBContext implements I_DAO<OrderComboFood
 
     @Override
     public OrderComboFood getFromResultSet(ResultSet rs) throws SQLException {
-  OrderComboFood orderComboFood = new OrderComboFood();
+        OrderComboFood orderComboFood = new OrderComboFood();
         orderComboFood.setOrderComboFoodId(rs.getInt("orderComboFoodId"));
         orderComboFood.setOrderComboId(rs.getInt("orderComboId"));
         orderComboFood.setFoodId(rs.getInt("foodId"));
@@ -132,12 +132,12 @@ public class OrderComboFoodDAO extends DBContext implements I_DAO<OrderComboFood
         orderComboFood.setFoodPrice(rs.getDouble("foodPrice"));
         orderComboFood.setQuantityInCombo(rs.getInt("quantityInCombo"));
         orderComboFood.setTotalQuantity(rs.getInt("totalQuantity"));
-        return orderComboFood;   
+        return orderComboFood;
     }
 
     @Override
     public OrderComboFood findById(Integer orderComboFoodId) {
-String sql = "SELECT * FROM orderComboFood WHERE orderComboFoodId = ?";
+        String sql = "SELECT * FROM orderComboFood WHERE orderComboFoodId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -151,6 +151,50 @@ String sql = "SELECT * FROM orderComboFood WHERE orderComboFoodId = ?";
         } finally {
             closeResources();
         }
-        return null;    }
+        return null;
+    }
 
+    public List<OrderComboFood> findByOrderComboId(int orderComboId) {
+        List<OrderComboFood> list = new ArrayList<>();
+        String sql = "SELECT * FROM OrderComboFood WHERE orderComboId = ?";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, orderComboId);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                OrderComboFood ocf = getFromResultSet(resultSet);
+                list.add(ocf);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error finding order combo food by orderComboId: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+
+        return list;
+    }
+
+    public static void main(String[] args) {
+        OrderComboFoodDAO dao = new OrderComboFoodDAO();
+
+        // Nhập orderComboId muốn test
+        int orderComboId = 1;
+
+        List<OrderComboFood> list = dao.findByOrderComboId(orderComboId);
+
+        if (list.isEmpty()) {
+            System.out.println("Không tìm thấy món nào trong combo với orderComboId = " + orderComboId);
+        } else {
+            System.out.println("Danh sách món ăn trong orderComboId = " + orderComboId + ":");
+            for (OrderComboFood food : list) {
+                System.out.println(" - " + food.getFoodName()
+                        + " | Số lượng trong combo: " + food.getQuantityInCombo()
+                        + " | Tổng SL: " + food.getTotalQuantity()
+                        + " | Giá: " + food.getFoodPrice());
+            }
+        }
+    }
 }

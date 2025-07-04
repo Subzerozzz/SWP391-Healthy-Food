@@ -30,4 +30,5 @@ public class OrderCombo {
     private Double discountPrice;
     private Integer quantity;
     private Double totalPrice;
+    private Integer payment_status;
 }

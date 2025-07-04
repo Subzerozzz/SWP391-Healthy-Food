@@ -29,6 +29,285 @@
         <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
     </head>
+   <style>
+                .pagination li.disabled a {
+                    pointer-events: none;
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                /* Combo card styling */
+                .combo-product {
+                    background: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    margin-bottom: 30px;
+                    overflow: hidden;
+                }
+
+                .combo-product:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                }
+
+                .combo-product .product-img {
+                    width: 100%;
+                    height: 280px;
+                    position: relative;
+                    overflow: hidden;
+                    padding: 20px;
+                    background: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .combo-product .product-img img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                    transition: transform 0.5s ease;
+                }
+
+                .combo-product:hover .product-img img {
+                    transform: scale(1.08);
+                }
+
+                .combo-product .product-content {
+                    padding: 15px;
+                    text-align: center;
+                    background: #fff;
+                }
+
+                .combo-product .product-content h2 {
+                    font-size: 16px;
+                    margin-bottom: 10px;
+                    font-weight: 500;
+                    height: 40px;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                }
+
+                .combo-product .product-content h2 a {
+                    color: #333;
+                    text-decoration: none;
+                }
+
+                .combo-product .product-price {
+                    margin: 10px 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .combo-product .original-price {
+                    font-size: 16px;
+                    color: #999;
+                    text-decoration: line-through;
+                    margin-bottom: 5px;
+                }
+
+                .combo-product .discount-price {
+                    font-size: 18px;
+                    color: #80b435;
+                    font-weight: 600;
+                }
+
+                .combo-product .savings {
+                    font-size: 14px;
+                    color: #e74c3c;
+                    font-weight: 500;
+                    margin-top: 5px;
+                }
+
+                .combo-product .add-to-cart-btn {
+                    display: inline-block;
+                    padding: 8px 20px;
+                    background-color: #80b435;
+                    color: #fff;
+                    border-radius: 4px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    border: none;
+                    cursor: pointer;
+                    margin-top: 10px;
+                    text-decoration: none;
+                }
+
+                .combo-product .add-to-cart-btn:hover {
+                    background-color: #6a9c2a;
+                }
+
+                .combo-product .view-details-btn {
+                    display: inline-block;
+                    padding: 8px 20px;
+                    background-color: #f8f9fa;
+                    color: #333;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    margin-top: 10px;
+                    margin-right: 5px;
+                    text-decoration: none;
+                }
+
+                .combo-product .view-details-btn:hover {
+                    background-color: #e9ecef;
+                }
+
+                .combo-badge {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background-color: #e74c3c;
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    z-index: 1;
+                }
+
+                .page-title {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+
+                .page-title h1 {
+                    font-size: 32px;
+                    color: #333;
+                    margin-bottom: 10px;
+                }
+
+                .page-title p {
+                    font-size: 16px;
+                    color: #666;
+                }
+            </style>
+
+            <style>
+                /* Remove old combo styles and add new coupon-like styles */
+                .combo-product {
+                    border: 2px dashed #f78600;
+                    padding: 20px;
+                    margin-bottom: 30px;
+                    border-radius: 8px;
+                    background-color: #fff;
+                    transition: all 0.3s ease;
+                }
+
+                .combo-product:hover {
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    transform: translateY(-2px);
+                }
+
+                .combo-header {
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 15px;
+                    margin-bottom: 15px;
+                    text-align: center;
+                }
+
+                .combo-price {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 15px;
+                    font-size: 14px;
+                    color: #888;
+                }
+
+                .combo-badge {
+                    background-color: #e74c3c;
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+
+                /* Update product image styling */
+                .product-img {
+                    width: 100%;
+                    height: 200px;
+                    position: relative;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 15px;
+                }
+
+                /* Modify buttons to match coupon style */
+                .add-to-cart-btn {
+                    background-color: #f78600 !important;
+                    border: none !important;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .view-details-btn {
+                    background-color: #f8f9fa !important;
+                    border: 1px solid #ddd !important;
+                    color: #333 !important;
+                    width: 100%;
+                    margin-top: 10px !important;
+                }
+            </style>
+
+            <style>
+                /* Add these pagination styles */
+                .pagination-area {
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 40px;
+                }
+
+                .pagination-content {
+                    display: flex;
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    gap: 5px;
+                }
+
+                .pagination-content li {
+                    display: inline-block;
+                }
+
+                .pagination-content li a {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 40px;
+                    height: 40px;
+                    border: 1px solid #ddd;
+                    color: #666;
+                    border-radius: 4px;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                .pagination-content li.active a {
+                    background-color: #80b435;
+                    border-color: #80b435;
+                    color: #fff;
+                }
+
+                .pagination-content li a:hover:not(.active) {
+                    background-color: #f8f9fa;
+                    border-color: #80b435;
+                    color: #80b435;
+                }
+
+                .pagination-content li a i {
+                    font-size: 18px;
+                }
+            </style>
 
     <body>
         <!-- Pre Loader -->
@@ -116,194 +395,101 @@
         <!-- Inner Banner Area End -->
 
         <!-- Product Area -->
-        <div class="product-area pt-100 pb-70">
-            <div class="container">
-                <form action="${pageContext.request.contextPath}/shop" id='formSearch'>
-                    <!-- gán 1 ô input để luôn luôn có param sort trên request-->
-                    <input type="hidden" name="sort" value="${sort}">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="product-side-bar">
-
-                                <!--Search By Name-->
-                                <div class="search-widget formSearchByName">
-                                    <input name="foodName" type="search" class="formSearch" placeholder="Search by food name..." value="${foodName != null ? foodName : ''}">               
-                                    <button type="submit">
-                                        <i class="bx bx-search"></i>
-                                    </button>
-                                </div>
-
-                                <!--Price Range-->
-                                <div class="product-side-bar-widget">
-                                    <h3 class="title">Prices Range</h3>
-                                    <div class="price-range-bar" id="range-slider"></div>
-                                    <div class="price-range-filter">
-                                        <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
-                                            <h4>Range:</h4>
-                                            <input type="text" id="price-amount" readonly>
-                                            <input type="hidden" name="selectedMin" id="selected-min">
-                                            <input type="hidden" name="selectedMax" id="selected-max">
-                                        </div>
-
-                                        <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
-                                            <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
-                                        </div>
-                                    </div>
+         <!--Shop Area Start-->
+                <div class="shop-area mb-70">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title">
+                                    <h1>Combo Sản Phẩm</h1>
+                                    <p>Tiết kiệm hơn với các combo sản phẩm đặc biệt của chúng tôi</p>
                                 </div>
                                 
-                                <!--Calo--> 
-                                <div class="product-side-bar-widget">
-                                    <h3 class="title">Calories range</h3>
-                                    <div class="price-range-bar" id="calo-slider"></div>
-                                    <div class="price-range-filter">
-                                        <div class="price-range-filter-item d-flex align-items-center order-1 order-xl-2">
-                                            <h4>Range:</h4>
-                                            <input type="text" id="calo-amount" readonly>
-                                            <input type="hidden" name="selectedMinCalo" id="selected-min-calo">
-                                            <input type="hidden" name="selectedMaxCalo" id="selected-max-calo">
+                                <!-- Add search form similar to coupons -->
+                                <div class="coupon-search mb-5">
+                                    <form action="${pageContext.request.contextPath}/comboController" method="get">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="search" value="${searchTerm}" placeholder="Tìm kiếm combo...">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
+                                            </div>
                                         </div>
-
-                                        <div class="price-range-filter-item price-range-filter-button order-2 order-xl-1">
-                                            <button class="btn btn-red btn-icon" onclick="document.querySelector('#formSearch').submit()">Filter</button>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
 
-                                <!--Food Categories-->
-                                <div class="product-side-bar-widget">
-                                    <h3 class="title">Product Categories</h3>
-                                    <div class="categoryList">
-                                        <ul>
-                                            <li class="${category == 0 ? 'active': ''}">
-                                                <input ${category == 0 ? 'checked': ''} type="radio" value='0' name='category' id='cate_0' onclick="document.querySelector('#formSearch').submit()">
-                                                <label for='cate_0'>Tất cả sản phẩm</label>
-                                            </li>
-                                            <c:forEach items="${listFoodCategory}" var="item">
-                                                <li class="${category == item.getId()?'active' : ''}">
-                                                    <input ${category == item.getId()? 'checked' : ''} type="radio" value='${item.getId()}' name='category' id='cate_${item.getId()}' onclick="document.querySelector('#formSearch').submit()">
-                                                    <label  for='cate_${item.getId()}'>${item.getName()}</label>
+                                <div class="row">
+                                    <c:forEach items="${combos}" var="combo">
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="combo-product">
+                                                <div class="combo-header">
+                                                    <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}"/>đ</span>
+                                                    <h2 style="margin-top: 15px;">
+                                                        <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}">${combo.comboName}</a>
+                                                    </h2>
+                                                </div>
+                                                
+                                                <div class="product-img">
+                                                    <img src="" alt="" class="product-image">
+                                                </div>
+
+                                                <div class="combo-price">
+                                                    <div>
+                                                        <del><fmt:formatNumber value="${combo.originalPrice}"/>đ</del>
+                                                        <div class="text-success" style="font-size: 1.2em; font-weight: bold;">
+                                                            <fmt:formatNumber value="${combo.discountPrice}"/>đ
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-action">
+                                                        <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}" class="view-details-btn">Xem chi tiết</a>
+                                                        <a href="${pageContext.request.contextPath}/cart?action=add&comboId=${combo.comboId}&quantity=1" class="add-to-cart-btn">Thêm vào giỏ</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                    
+                                    <c:if test="${empty combos}">
+                                        <div class="col-12 text-center">
+                                            <p>Không có combo nào được tìm thấy.</p>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </div>
+                            
+                            <!-- Replace the pagination HTML structure -->
+                            <c:if test="${totalPages > 1}">
+                                <div class="col-12">
+                                    <div class="pagination-area">
+                                        <ul class="pagination-content">
+                                            <c:if test="${currentPage > 1}">
+                                                <li>
+                                                    <a href="${pageContext.request.contextPath}/comboController?page=${currentPage - 1}${searchQueryString}">
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </a>
+                                                </li>
+                                            </c:if>
+                                            
+                                            <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                                <li class="${currentPage == i ? 'active' : ''}">
+                                                    <a href="${pageContext.request.contextPath}/comboController?page=${i}${searchQueryString}">${i}</a>
                                                 </li>
                                             </c:forEach>
+                                            
+                                            <c:if test="${currentPage < totalPages}">
+                                                <li>
+                                                    <a href="${pageContext.request.contextPath}/comboController?page=${currentPage + 1}${searchQueryString}">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                </li>
+                                            </c:if>
                                         </ul>
                                     </div>
                                 </div>
-
-
-                            </div>
-                        </div>
-                        <div class="col-lg-9">
-                            <!--Sort-->
-                            <div class="product-topper">
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-8">
-                                        <div class="product-topper-title">
-                                            <h3>ComboFood List <span>( Showing 9 of ${totalOfRecord} result )</span> </h3>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="product-category">
-                                            <div class="form-group">
-                                                <select class="form-control" onchange="submitSort(this)">
-                                                    <option value="default" ${not empty sort and sort == 'default' ? 'selected' : ''}>Default sort</option>
-                                                    <option value="price_asc" ${not empty sort and sort == 'price_asc' ? 'selected' : ''}>Price: Low to high</option>
-                                                    <option value="price_desc" ${not empty sort and sort == 'price_desc' ? 'selected' : ''}>Price: High to low</option>
-                                                    <option value="calo_asc" ${not empty sort and sort == 'calo_asc' ? 'selected' : ''}>Calories: Low to high</option>
-                                                    <option value="calo_desc" ${not empty sort and sort == 'calo_desc' ? 'selected' : ''}>Calories: High to low</option>
-                                                </select>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Food list-->
-                            <div class="row">
-                                <c:forEach items="${listFood}" var="item">
-                                    <div class="col-lg-4 col-sm-6">
-                                        <div class="product-item">
-                                            <div class="product-img">
-                                                <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
-                                                    <img src="${item.getImage_url()}" alt="Product Images">
-                                                </a>
-                                                <ul class="product-item-action">
-                                                    <li><a href="#"><i class='bx bx-repost'></i></a></li>
-                                                    <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
-                                                    <li><a href="cart.html"><i class='bx bx-cart'></i></a></li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="content">
-                                                <h3><a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">${item.getName()}</a></h3>
-                                                <div>
-                                                    Calo: ${item.getCalo()}
-                                                </div>
-                                                <span>
-                                                    <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true"
-                                                                      maxFractionDigits="0" /> VNĐ
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:forEach>
-
-                            </div>
-
-                            <!--Pagination-->
-                            <div class="col-lg-12 col-md-12 text-center">
-                                <c:choose>
-                                    <c:when test= "${totalPage > 0}">
-                                        <div class="pagination-area">
-                                            <a href="javascript:void(0)" onclick="goToPage(1)" class="prev page-numbers">
-                                                <i class="bx bx-chevrons-left"></i>
-                                            </a>
-
-                                            <c:choose>
-                                                <c:when test="${currentPage <= totalPage - 2}">
-                                                    <c:if test="${currentPage > 1}">
-                                                        <a href="javascript:void(0)" onclick="goToPage(${currentPage - 1})"
-                                                           class="page-numbers">${currentPage - 1}</a>
-                                                    </c:if>
-                                                    <a href="javascript:void(0)" onclick="goToPage(${currentPage})"
-                                                       class="page-numbers current">${currentPage}</a>
-
-                                                    <a href="javascript:void(0)" onclick="goToPage(${currentPage + 1})"
-                                                       class="page-numbers">${currentPage + 1}</a>
-
-                                                    <c:if test="${currentPage < totalPage - 2}">
-                                                        <a href="#" class="page-numbers">...</a>
-                                                    </c:if>
-
-                                                    <a href="javascript:void(0)" onclick="goToPage(${totalPage})"
-                                                       class="page-numbers">${totalPage}</a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <!--Cái này không thể kiểm tra từ currentPage vì nếu không thì nếu currentPage bằng 2 3 chẳng hạn thì nó mất trang 1--> 
-                                                    <c:forEach begin="${totalPage-2 <= 0 ? 1 : totalPage - 2}" end="${totalPage}" var="i">
-                                                        <a href="javascript:void(0)" onclick="goToPage(${i})"
-                                                           class="page-numbers ${currentPage == i?'current' : ''}">${i}</a>
-                                                    </c:forEach>
-                                                </c:otherwise>
-                                            </c:choose>
-
-                                            <a href="javascript:void(0)" onclick="goToPage(${totalPage})" class="next page-numbers">
-                                                <i class="bx bx-chevrons-right"></i>
-                                            </a>
-
-                                        </div>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div style="font-size: 24px">Product not found</div>
-                                    </c:otherwise>
-                                </c:choose>
-                                
-
-                            </div>
+                            </c:if>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
+                <!--Shop Area End-->
         <!-- Product Area End -->
 
         <!-- Footer Area -->

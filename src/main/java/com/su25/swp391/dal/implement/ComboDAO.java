@@ -25,7 +25,6 @@ import java.util.Map;
  */
 public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
-   
     @Override
     public List<Combo> findAll() {
         List<Combo> combos = new ArrayList<>();
@@ -140,27 +139,29 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
     }
 
     public class ComboDAOTest {
-    public static void main(String[] args) {
-        ComboDAO dao = new ComboDAO();
 
-        // Giả lập combo có ID = 1 trong DB
-        Combo combo = new Combo();
-        combo.setComboId(1); // comboId phải tồn tại trong DB
-        combo.setComboName("Combo Test Update");
-        combo.setDescription("Updated description");
-        combo.setOriginalPrice(50000.0);
-        combo.setDiscountPrice(45000.0);
-        combo.setStatus("active"); // phải đúng ENUM trong DB
+        public static void main(String[] args) {
+            ComboDAO dao = new ComboDAO();
 
-        boolean result = dao.update(combo);
-        if (result) {
-            System.out.println("✅ Update successful");
-        } else {
-            System.out.println("❌ Update failed");
+            // Giả lập combo có ID = 1 trong DB
+            Combo combo = new Combo();
+            combo.setComboId(1); // comboId phải tồn tại trong DB
+            combo.setComboName("Combo Test Update");
+            combo.setDescription("Updated description");
+            combo.setOriginalPrice(50000.0);
+            combo.setDiscountPrice(45000.0);
+            combo.setStatus("active"); // phải đúng ENUM trong DB
+
+            boolean result = dao.update(combo);
+            if (result) {
+                System.out.println("✅ Update successful");
+            } else {
+                System.out.println("❌ Update failed");
+            }
         }
     }
-}
-   @Override
+
+    @Override
     public boolean delete(Combo t) {
         String sql = "DELETE From Combo WHERE comboId = ?";
         try {
@@ -179,37 +180,36 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
     @Override
     public int insert(Combo t) {
-    String sql = "INSERT INTO Combo (comboName, description, originalPrice, discountPrice, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Combo (comboName, description, originalPrice, discountPrice, status) VALUES (?, ?, ?, ?, ?)";
 
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        statement.setString(1, t.getComboName());
-        statement.setString(2, t.getDescription());
-        statement.setDouble(3, t.getOriginalPrice());
-        statement.setDouble(4, t.getDiscountPrice());
-        statement.setString(5, t.getStatus());
+            statement.setString(1, t.getComboName());
+            statement.setString(2, t.getDescription());
+            statement.setDouble(3, t.getOriginalPrice());
+            statement.setDouble(4, t.getDiscountPrice());
+            statement.setString(5, t.getStatus());
 
-        int affectedRow = statement.executeUpdate();
-        if (affectedRow == 0) {
-            throw new SQLException("Creating combo failed, no rows affected.");
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Creating combo failed, no rows affected.");
+            }
+
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1); // comboId được sinh ra
+            } else {
+                throw new SQLException("Creating combo failed, no ID obtained.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error insert fail: " + e.getMessage());
+            return -1;
+        } finally {
+            closeResources();
         }
-
-        resultSet = statement.getGeneratedKeys();
-        if (resultSet.next()) {
-            return resultSet.getInt(1); // comboId được sinh ra
-        } else {
-            throw new SQLException("Creating combo failed, no ID obtained.");
-        }
-    } catch (Exception e) {
-        System.out.println("Error insert fail: " + e.getMessage());
-        return -1;
-    } finally {
-        closeResources();
     }
-}
-
 
     @Override
     public Combo getFromResultSet(ResultSet resultSet) throws SQLException {
@@ -222,8 +222,6 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         combo.setStatus(resultSet.getString("status"));
         return combo;
     }
-
-  
 
     @Override
     public Combo findById(Integer id) {
@@ -245,52 +243,53 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
     }
     //get food detai trong combo 
 
-   public List<ComboFoodDetails> getComboFoodDetails(int comboId) {
-    List<ComboFoodDetails> foodDetails = new ArrayList<>();
-    String sql = "SELECT \n" +
-            "    f.id AS food_id, \n" +
-            "    f.name AS food_name, \n" +
-            "    f.description, \n" +
-            "    f.price, \n" +
-            "    f.calo, \n" +
-            "    f.image_url, \n" +
-            "    cf.quantityInCombo AS quantity_in_combo\n" +
-            "FROM ComboFood cf\n" +
-            "JOIN Food f ON cf.foodId = f.id\n" +
-            "WHERE cf.comboId = ?";
+    public List<ComboFoodDetails> getComboFoodDetails(int comboId) {
+        List<ComboFoodDetails> foodDetails = new ArrayList<>();
+        String sql = "SELECT \n"
+                + "    f.id AS food_id, \n"
+                + "    f.name AS food_name, \n"
+                + "    f.description, \n"
+                + "    f.price, \n"
+                + "    f.calo, \n"
+                + "    f.image_url, \n"
+                + "    cf.quantityInCombo AS quantity_in_combo\n"
+                + "FROM ComboFood cf\n"
+                + "JOIN Food f ON cf.foodId = f.id\n"
+                + "WHERE cf.comboId = ?";
 
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setInt(1, comboId);
-        resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, comboId);
+            resultSet = statement.executeQuery();
 
-        while (resultSet.next()) {
-            Food food = new Food();
-            food.setId(resultSet.getInt("food_id")); // dùng alias đúng
-            food.setName(resultSet.getString("food_name"));
-            food.setDescription(resultSet.getString("description"));
-            food.setPrice(resultSet.getDouble("price"));
-            food.setImage_url(resultSet.getString("image_url"));
-            food.setCalo(resultSet.getDouble("calo"));
-            //lay so luong quanlityFood 
-            int quantity = resultSet.getInt("quantity_in_combo");
-            //khởi tạo một đối tượng
-            ComboFoodDetails detail = new ComboFoodDetails();
-            detail.setFood(food);
-            detail.setQuantityInCombo(quantity);
-            foodDetails.add(detail);
+            while (resultSet.next()) {
+                Food food = new Food();
+                food.setId(resultSet.getInt("food_id")); // dùng alias đúng
+                food.setName(resultSet.getString("food_name"));
+                food.setDescription(resultSet.getString("description"));
+                food.setPrice(resultSet.getDouble("price"));
+                food.setImage_url(resultSet.getString("image_url"));
+                food.setCalo(resultSet.getDouble("calo"));
+                //lay so luong quanlityFood 
+                int quantity = resultSet.getInt("quantity_in_combo");
+                //khởi tạo một đối tượng
+                ComboFoodDetails detail = new ComboFoodDetails();
+                detail.setFood(food);
+                detail.setQuantityInCombo(quantity);
+                foodDetails.add(detail);
+            }
+        } catch (Exception e) {
+            System.out.println("Error loading combo food details: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error loading combo food details: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        closeResources();
+
+        return foodDetails;
     }
 
-    return foodDetails;
-}
-        public boolean activatCombo(int comboId) {
+    public boolean activatCombo(int comboId) {
         String sql = "UPDATE Combo SET status = 'active' WHERE comboId=?";
         try {
             connection = getConnection();
@@ -305,8 +304,8 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
             closeResources();
         }
     }
-        
-public boolean deactivateAccount(int comboId) {
+
+    public boolean deactivateAccount(int comboId) {
         String sql = "UPDATE Combo SET status = 'inactive' WHERE comboId=?";
         try {
             connection = getConnection();
@@ -321,7 +320,8 @@ public boolean deactivateAccount(int comboId) {
             closeResources();
         }
     }
-public List<Combo> searchCombos(String searchTerm, int page, int pageSize) {
+
+    public List<Combo> searchCombos(String searchTerm, int page, int pageSize) {
         List<Combo> combos = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Combo WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -332,8 +332,6 @@ public List<Combo> searchCombos(String searchTerm, int page, int pageSize) {
             params.add("%" + searchTerm + "%");
             params.add("%" + searchTerm + "%");
         }
-
-        
 
         // Thêm phân trang
         sql.append(" ORDER BY comboId DESC LIMIT ? OFFSET ?");
@@ -361,13 +359,15 @@ public List<Combo> searchCombos(String searchTerm, int page, int pageSize) {
 
         return combos;
     }
-public static void main(String[] args) {
-    ComboDAO dao = new ComboDAO();
-    List<Combo> result = dao.searchCombos("combo", 1, 10);
-    for (Combo c : result) {
-        System.out.println(c.getComboId() + " - " + c.getComboName());
+
+    public static void main(String[] args) {
+        ComboDAO dao = new ComboDAO();
+        List<Combo> result = dao.searchCombos("combo", 1, 10);
+        for (Combo c : result) {
+            System.out.println(c.getComboId() + " - " + c.getComboName());
+        }
     }
-}
+
     /**
      * Đếm tổng số combo thỏa mãn điều kiện tìm kiếm
      *
@@ -385,8 +385,6 @@ public static void main(String[] args) {
             params.add("%" + searchTerm + "%");
             params.add("%" + searchTerm + "%");
         }
-
-      
 
         try {
             connection = getConnection();
@@ -409,11 +407,30 @@ public static void main(String[] args) {
 
         return 0;
     }
- public List<Combo> filterComboPaging( String status, int pageIndex, int pageSize) {
+    //lay ra nhung combo co trnag thai active
+        public List<Combo> findAllComboActive() {
+        String sql = "select * from Combo  where status = 'active'";
+        List<Combo> list = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error happen in ComboDAO:" + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return list;
+
+    }
+
+    public List<Combo> filterComboPaging(String status, int pageIndex, int pageSize) {
         List<Combo> combos = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Combo WHERE 1=1 ");
 
-      
         if (status != null) {
             sql.append(" AND status = ?");
         }
@@ -427,7 +444,6 @@ public static void main(String[] args) {
             int paramIndex = 1;
 
             // Thêm tham số lọc
-            
             if (status != null) {
                 statement.setString(paramIndex++, status);
             }
@@ -448,37 +464,36 @@ public static void main(String[] args) {
 
         return combos;
     }
- 
- public int countByStatus(String status) {
-    int count = 0;
-    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Combo WHERE 1=1");
 
-    // Thêm điều kiện lọc nếu có
-    if (status != null && !status.isEmpty()) {
-        sql.append(" AND status = ?");
-    }
+    public int countByStatus(String status) {
+        int count = 0;
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Combo WHERE 1=1");
 
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-
-        // Thiết lập tham số nếu có
+        // Thêm điều kiện lọc nếu có
         if (status != null && !status.isEmpty()) {
-            statement.setString(1, status);
+            sql.append(" AND status = ?");
         }
 
-        resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            count = resultSet.getInt(1);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            // Thiết lập tham số nếu có
+            if (status != null && !status.isEmpty()) {
+                statement.setString(1, status);
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting accounts by status: " + e.getMessage());
+        } finally {
+            closeResources();
         }
-    } catch (SQLException e) {
-        System.out.println("Error counting accounts by status: " + e.getMessage());
-    } finally {
-        closeResources();
+
+        return count;
     }
-
-    return count;
-}
-
 
 }

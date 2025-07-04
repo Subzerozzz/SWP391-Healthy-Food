@@ -90,7 +90,7 @@ List<OrderCombo> orderCombos = new ArrayList<>();
     @Override
     public int insert(OrderCombo orderCombo ) {
   String sql = "INSERT INTO OrderCombo (order_id, comboId, comboName, discountPrice, " +
-                "quantity, totalPrice) VALUES (?, ?, ?, ?, ?, ?)";
+                "quantity, totalPrice,payment_status) VALUES (?, ?, ?, ?, ?, ?,?)";
 
         try {
             connection = getConnection();
@@ -101,7 +101,7 @@ List<OrderCombo> orderCombos = new ArrayList<>();
             statement.setDouble(4, orderCombo.getDiscountPrice());
             statement.setInt(5, orderCombo.getQuantity());
             statement.setDouble(6, orderCombo.getTotalPrice());
-
+            statement.setInt(7, orderCombo.getPayment_status());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -132,6 +132,7 @@ List<OrderCombo> orderCombos = new ArrayList<>();
         orderCombo.setDiscountPrice(rs.getDouble("discountPrice"));
         orderCombo.setQuantity(rs.getInt("quantity"));
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
+        orderCombo.setPayment_status(rs.getInt("payment_status"));
         return orderCombo;
     }
 
