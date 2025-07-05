@@ -1,6 +1,7 @@
 package com.su25.swp391.utils;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.utils.GlobalUtils;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -13,6 +14,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.util.List;
 
 public class EmailUtils {
 
@@ -55,22 +57,33 @@ public class EmailUtils {
 
         return otp + "";
     }
-     public static String sendAccountMail(String to, String username, String password) throws MessagingException {
-    String subject = "Tai Khoan truy cap he thong:";
-    String content = "<h3>Xin chào,</h3>"
-            + "<p>Bạn đã được cấp một tài khoản để truy cập hệ thống:</p>"
-            + "<p><strong>Tên đăng nhập:</strong> " + username + "</p>"
-            + "<p><strong>Mật khẩu:</strong> " + password + "</p>"
-            + "<p>Hãy đăng nhập và thay đổi mật khẩu ngay sau lần đăng nhập đầu tiên.</p>"
-            + "<br><p>Trân trọng!</p>";
 
-    boolean sent = sendMail(to, subject, content);
-    if (sent) {
-        return "Gửi tài khoản qua email thành công!";
-    } else {
-        return "Gửi email thất bại!";
+    public static String sendAccountMail(String to, String username, String password) throws MessagingException {
+        String subject = "Tai Khoan truy cap he thong:";
+        String content = "<h3>Xin chào,</h3>"
+                + "<p>Bạn đã được cấp một tài khoản để truy cập hệ thống:</p>"
+                + "<p><strong>Tên đăng nhập:</strong> " + username + "</p>"
+                + "<p><strong>Mật khẩu:</strong> " + password + "</p>"
+                + "<p>Hãy đăng nhập và thay đổi mật khẩu ngay sau lần đăng nhập đầu tiên.</p>"
+                + "<br><p>Trân trọng!</p>";
+
+        boolean sent = sendMail(to, subject, content);
+        if (sent) {
+            return "Gửi tài khoản qua email thành công!";
+        } else {
+            return "Gửi email thất bại!";
+        }
     }
-}
+    
+    public static boolean sendOrderViaEmail(String to, List<OrderItem> listOrderItem , Integer orderId) throws MessagingException{
+        String subject = "Xin chào, Mã đơn hàng của bạn là:" + orderId ;
+        String content = "Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi !";
+        for(OrderItem o : listOrderItem){
+            System.out.println(o.toString());
+        }
+        boolean send = sendMail(to, subject, content);
+        return send;
+    }
 
     public static void main(String[] args) {
         try {
