@@ -20,6 +20,8 @@ import com.su25.swp391.entity.CouponUsage;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -602,7 +604,7 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, MessagingException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         List<CartItem> listCartItem = new ArrayList<>();
@@ -704,9 +706,12 @@ public class CartController extends HttpServlet {
         } else {
             List<CartItem> listCartItem1 = new ArrayList<>();
             session.setAttribute("cart", listCartItem1);
-            //Dùng email để gửi 
-            //Có đoạn code dùng hàm gửi về email
-            request.setAttribute("notificationForEmail", true);
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
 
