@@ -857,7 +857,7 @@ public class CartController extends HttpServlet {
         if (account != null) {
             //Chuyen ve trang myOrder
             //O day chuyen tam ve home de check
-            response.sendRedirect("home");
+            response.sendRedirect("orderlist");
         } else {
             response.sendRedirect("home");
         }
@@ -920,7 +920,7 @@ public class CartController extends HttpServlet {
         if (account != null) {
             //Chuyen ve trang myOrder
             //O day chuyen tam ve home de check
-            response.sendRedirect("home");
+            response.sendRedirect("orderlist");
         } else {
             response.sendRedirect("home");
         }
