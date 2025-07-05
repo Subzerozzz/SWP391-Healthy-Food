@@ -251,6 +251,8 @@ public class FeedbackManage extends HttpServlet {
             int userID = (accFindEmail != null) ? accFindEmail.getId() : accFindUsername.getId();
             Feedback feedback = Feedback.builder().id(idfeedback).user_id(userID).isVisible(false).build();
             feedbackDAO.update(feedback);
+            session.setAttribute("toastMessage", "Remove Success");
+            session.setAttribute("toastType", "success");
             response.sendRedirect("feedback"); // tái sử dụng logic của url /feedback
         } else {
             response.sendRedirect(HOME_PAGE);
