@@ -1,6 +1,10 @@
 package com.su25.swp391.utils;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.OrderDAO;
+import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.utils.GlobalUtils;
 import java.util.Properties;
@@ -14,7 +18,10 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EmailUtils {
 
@@ -74,22 +81,54 @@ public class EmailUtils {
             return "Gửi email thất bại!";
         }
     }
-    
-    public static boolean sendOrderViaEmail(String to, List<OrderItem> listOrderItem , Integer orderId) throws MessagingException{
-        String subject = "Xin chào, Mã đơn hàng của bạn là:" + orderId ;
-        String content = "Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi !";
-        for(OrderItem o : listOrderItem){
-            System.out.println(o.toString());
+
+    public static boolean sendOrderViaEmail(String to, List<OrderItem> listOrderItem, Integer orderId) throws MessagingException {
+        FoodDAO foodDao = new FoodDAO();
+        OrderDAO orderDao = new OrderDAO();
+        Locale localeVN = new Locale("vi", "VN");     
+        NumberFormat numberFormat = NumberFormat.getInstance(localeVN);
+        numberFormat.setGroupingUsed(true);
+        //lấy ra order theo orderID
+        Order order = orderDao.findById(orderId);
+        String subject = "Xin chào " + order.getFull_name() +", mã đơn hàng của bạn là:" + orderId;
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body style=\"font-family:Arial,sans-serif;line-height:1.6;\">");
+
+        sb.append("<h2 style=\"color:#4caf50;\">Cảm ơn bạn đã đặt hàng!</h2>");
+        sb.append("<h3>Mã đơn hàng của bạn: #").append(orderId).append("</h3>");
+        sb.append("<h3>Chi tiết đơn hàng:</h3>");
+        
+        Double total = 0.0;
+        for (OrderItem o : listOrderItem) {
+            //Lấy ra foodId 
+            Food food = foodDao.findById(o.getFood_id());
+            //gan vao sb
+            sb.append("--").append(food.getName()).append("(x" + o.getQuantity() + ")").append(": ")
+                    .append(numberFormat.format(o.getPrice()) + " VNĐ");
         }
-        boolean send = sendMail(to, subject, content);
+        
+        sb.append("<h3>Tổng Tiền: ").append(numberFormat.format(order.getTotal()) + "VNĐ").append("</h3>");
+        if(order.getPayment_method().equalsIgnoreCase("cod")){
+            sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Thanh toán khi nhận hàng(COD)</div>");
+        }
+        else{
+            sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Đã thanh toán qua VNPay</div>");
+        }
+        sb.append("<div><h3 style='display:inline'>Giao đến: </h3>"+ order.getShipping_address() + "</div>");
+        sb.append("<h3>Một lần nữa cảm ơn bạn đã sử dụng dịch vụ!</h3>");
+        sb.append("<h3>Nếu cần hỗ trợ, vui lòng liên hệ qua hotline: 0819525888😊</h3>");
+        
+        boolean send = sendMail(to, subject, sb.toString());
         return send;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MessagingException {
         try {
-            sendMail("kieuducmanh2004vinhphuc@gmail.com", "test gửi email", "Hello");
-        } catch (MessagingException ex) {
-            Logger.getLogger(EmailUtils.class.getName()).log(Level.SEVERE, null, ex);
+            List<OrderItem> list = new ArrayList<>();
+            sendOrderViaEmail("ngyenduyntn112004@gmail.com", list, 1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
     }
 }
