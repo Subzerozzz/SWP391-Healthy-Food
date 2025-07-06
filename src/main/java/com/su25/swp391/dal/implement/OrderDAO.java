@@ -579,8 +579,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(9, order.getFull_name());
             statement.setString(10, order.getMobile());
             statement.setString(11, order.getEmail());
-            statement.setInt(12, order.getPayment_status());
-            statement.setDouble(13, order.getDiscount_amount());
+            statement.setDouble(12, order.getDiscount_amount());
+            statement.setInt(13, order.getPayment_status());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {

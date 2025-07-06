@@ -612,7 +612,7 @@ public class CartController extends HttpServlet {
                 default:
                     throw new AssertionError();
             }
-
+            //Kiem tra neu co couponCode thi them
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
