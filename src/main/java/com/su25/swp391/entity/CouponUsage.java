@@ -5,11 +5,21 @@
 package com.su25.swp391.entity;
 
 import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- *
- * @author Dell
- */
+@ToString
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CouponUsage {
     private Integer id;
     private Integer coupon_id;
