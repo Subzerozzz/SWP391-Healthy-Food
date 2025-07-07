@@ -33,7 +33,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         return list;
     }
     
-    public List<Delivery> findDeliveryWithFilters(String sort,String status){
+    public List<Delivery> findDeliveryWithFilters(String sort,String status, int page, int pageSize){
         List<Delivery> list = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
@@ -46,11 +46,13 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         }
         // Append sorting and pagination
         if(sort != null && !sort.isEmpty()){
-            sql.append(" ORDER BY order_id "+sort+" ");
+            sql.append(" ORDER BY order_id "+sort+" LIMIT ? OFFSET ?");
         }else{
-            sql.append(" ORDER BY assigned_at DESC ");
+            sql.append(" ORDER BY assigned_at DESC LIMIT ? OFFSET ?");
         }
-       
+        // Add pagination parameters
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
         try {
             // Open connection and prepare statement
             connection = getConnection();
@@ -71,7 +73,46 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         return list;
     }
     
-    public List<Delivery> searchDelivery(String search, String sort, String status) {
+      public int getTotalFilteredDelivery(String status) {
+        // Build the base SQL query with necessary joins
+        StringBuilder sql = new StringBuilder(
+        "SELECT * from Delivery where 1 = 1 ");
+        // Store query parameters in a list for later use
+        List<Object> params = new ArrayList<>();
+
+        // Add filter for food name, if provided
+        if (status!= null && !status.isEmpty()) {
+            sql.append("AND status = ? ");
+            params.add(status);
+        }
+
+        try {
+            // Open a connection and prepare the SQL statement
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            // Bind all parameters to the prepared statement
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            // Execute the query and process the result set
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1); // Return the value of COUNT(*)
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Clean up database resources (connection, statement, resultSet, etc.)
+            closeResources();
+        }
+
+        // Return the list of matched feedback
+        return 0;
+    }
+    
+    public List<Delivery> searchDelivery(String search, String sort, String status, int page, int pageSize) {
         // Create a list to hold the feedback results
         List<Delivery> list = new ArrayList<>();
 
@@ -98,11 +139,13 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
         // Append sorting and pagination
         if(sort != null && !sort.isEmpty()){
-            sql.append(" ORDER BY d.order_id "+sort+" ");
+            sql.append(" ORDER BY d.order_id "+sort+" LIMIT ? OFFSET ?");
         }else{
-            sql.append(" ORDER BY d.assigned_at DESC ");
+            sql.append(" ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?");
         }
-
+        // Add pagination parameters
+        params.add(pageSize);
+        params.add((page - 1) * pageSize);
         
 
         try {
@@ -129,6 +172,54 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
         // Return the list of matched feedback
         return list;
+    }
+    
+    public int getTotalDeliveryResults(String search,String status) {
+      // Build the base SQL query with necessary joins
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
+                + "FROM Delivery d "
+                + "JOIN Account a ON d.shipper_id = a.id "
+                + "WHERE (a.user_name LIKE ? OR a.email LIKE ?) ");
+
+        // Store query parameters in a list for later use
+        List<Object> params = new ArrayList<>();
+
+        // Prepare search pattern for user_name or email (wildcard matching)
+        String searchPattern = "%" + search.trim() + "%";
+        params.add(searchPattern);
+        params.add(searchPattern);
+
+
+        // Add filter for food name, if provided
+        if (status!= null && !status.isEmpty()) {
+            sql.append("AND d.status = ? ");
+            params.add(status);
+        }
+
+        try {
+            // Open a connection and prepare the SQL statement
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+
+            // Bind all parameters to the prepared statement
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            // Execute the query and process the result set
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1); // Return the value of COUNT(*)
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Clean up database resources (connection, statement, resultSet, etc.)
+            closeResources();
+        }
+
+        // Return the list of matched feedback
+        return 0;
     }
     
     @Override
@@ -171,9 +262,10 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     public static void main(String[] args) {
-        for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "")) {
+        for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "",1,2 )) {
             System.out.println(d);
         }
+        System.out.println(new DeliveryDAO().getTotalFilteredDelivery(""));
     }
     
 }

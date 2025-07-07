@@ -119,8 +119,8 @@
             }
 .filter-row {
   display: grid;
-  grid-template-columns: 100px 120px 200px 160px 1fr 80px; /* 6 cột */
-  gap: 25px;
+  grid-template-columns:  140px 140px  1fr 100px; /* 6 cột */
+  gap: 20px;
   align-items: center;
   width: 100%;
 }
@@ -373,13 +373,13 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Order Management</div></a>
+                                            <a href="#"><div class="text-tiny">Delivery Management</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Order List</div>
+                                            <div class="text-tiny">Delivery List</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -396,13 +396,14 @@
       <!-- Thêm class filter-row -->
       <div class="filter-row">
           <!--Sort by id-->
-          <select style="width:100px" name="sort"  class="form-select">
+          <select  name="sort"  class="form-select">
               <option value="" ${param.sort == '' ? 'selected' : ''}>Sort ID</option> 
               <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Increase</option>
               <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Decrease</option>
           </select> 
           <!-- Select Status -->
-        <select  style="height: 40px;font-size: 15px;"
+          <!--style="height: 40px;font-size: 15px;"-->
+        <select  
             class="form-select" name="status">
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
@@ -445,18 +446,18 @@
                                         <td colspan="8" class="text-center">
                                             <div class="py-4">
                                                 <i class="fas fa-search fs-1 text-muted mb-3"></i>
-                                                <h5>No orders found</h5>
+                                                <h5>No deliveries found</h5>
                                                 <p class="text-muted">
                                                     <c:choose>
                                                         <c:when test="${not empty status || not empty search}">
-                                                            No orders match your search criteria. Try adjusting your filters.
+                                                            No deliveries match your search criteria. Try adjusting your filters.
                                                             <br>
-                                                            <a href="${pageContext.request.contextPath}/seller/manage-order" class="btn btn-outline-primary mt-2">
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery" class="btn btn-outline-primary mt-2">
                                                                 <i class="fas fa-times me-2"></i>Clear Filters
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            There are no orders in the system yet.
+                                                            There are no deliveries in the system yet.
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </p>
@@ -514,21 +515,21 @@
                            <ul class="pagination-wrapper">
 
                                <li >
-                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=1&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}"><i class="icon-chevron-left"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=1&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
                                </li>
                                <c:choose>
                                    <c:when test="${currentPage <= totalPages - 2}">
                                        <c:if test="${currentPage > 1}">
                                            <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}">${currentPage - 1}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
                                            </li>
                                        </c:if>
                                        <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}">${currentPage}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
                                        </li>
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}">${currentPage + 1}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
                                        </li>
 
                                        <c:if test="${currentPage < totalPages - 2}">
@@ -539,21 +540,21 @@
 
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}">${totalPages}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${totalPages}</a>
                                        </li>
                                    </c:when>
 
                                    <c:otherwise>
                                        <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                            <li class="${currentPage == i ? 'active' : ''}">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-order?page=${i}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}">${i}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${i}&status=${status}&search=${search}&sort=${sort}">${i}</a>
                                            </li>
                                        </c:forEach>
                                    </c:otherwise>
                                </c:choose>
 
                                <li>
-                                   <a href="${pageContext.request.contextPath}/seller/manage-order?page=${totalPages}&status=${status}&search=${search}&sort=${sort}&paymentMethod=${paymentMethod}&paymentStatus=${paymentStatus}"><i class="icon-chevron-right"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
                                </li>
                            </ul>
                        </div>  
