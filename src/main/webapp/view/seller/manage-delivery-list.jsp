@@ -407,8 +407,9 @@
             class="form-select" name="status">
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
-          <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
-          <option value="rejected" ${status == 'rejected' ? 'selected' : ''}>Rejected</option>
+          <option value="delivering"  ${status == 'accepted'  ? 'selected' : ''}>Delivering</option>
+          <option value="success" ${status == 'rejected' ? 'selected' : ''}>Success</option>
+          <option value="reject" ${status == 'rejected' ? 'selected' : ''}>Reject</option>
         </select>
 
          
@@ -478,8 +479,8 @@
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
                                                               de.status == 'pending' ? 'badge-pending' :
-                                                              de.status == 'accepted' ? 'badge-accepted' :
-                                                              de.status == 'reject' ? 'badge-completed' :
+                                                              de.status == 'delivering' ? 'badge-accepted' :
+                                                              de.status == 'success' ? 'badge-completed' :
                                                               'badge-rejected'
                                                           }">
                                                         ${de.status}
@@ -521,15 +522,15 @@
                                    <c:when test="${currentPage <= totalPages - 2}">
                                        <c:if test="${currentPage > 1}">
                                            <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
                                            </li>
                                        </c:if>
                                        <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
                                        </li>
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
                                        </li>
 
                                        <c:if test="${currentPage < totalPages - 2}">
