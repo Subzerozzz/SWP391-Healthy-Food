@@ -725,6 +725,20 @@ public class CartController extends HttpServlet {
             for (CartItem cartItem : listCartItem) {
                 cartItemDao.delete(cartItem);
             }
+            //Kiem tra xem co couponCode khong thi them 1 ban ghi vào couponUseage
+            if(couponCode != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(couponCode);
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(updated_at)
+                        .discount_amount(discountAmount)
+                        .build();
+                couponUsageDao.insert(couponUsage);
+                        
+            }
             //Sau do chuyen sang trang myOrder
             response.sendRedirect("orderlist");
         } else {
