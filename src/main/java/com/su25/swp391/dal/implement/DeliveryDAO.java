@@ -56,7 +56,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         try {
             // Open connection and prepare statement
             connection = getConnection();
-            statement = connection.prepareCall(sql.toString());
+            statement = connection.prepareStatement(sql.toString());
              // Set parameters in PreparedStatement
            for(int i = 0;i < params.size();i++){
                 statement.setObject(i+1, params.get(i));
@@ -76,7 +76,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
       public int getTotalFilteredDelivery(String status) {
         // Build the base SQL query with necessary joins
         StringBuilder sql = new StringBuilder(
-        "SELECT * from Delivery where 1 = 1 ");
+        "SELECT COUNT(*) from Delivery where 1 = 1 ");
         // Store query parameters in a list for later use
         List<Object> params = new ArrayList<>();
 
