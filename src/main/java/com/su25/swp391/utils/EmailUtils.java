@@ -82,7 +82,7 @@ public class EmailUtils {
         }
     }
 
-    public static boolean sendOrderViaEmail(String to, List<OrderItem> listOrderItem, Integer orderId) throws MessagingException {
+    public static boolean sendOrderViaEmail(String to, List<OrderItem> listOrderItem, Integer orderId, boolean isPayment) throws MessagingException {
         FoodDAO foodDao = new FoodDAO();
         OrderDAO orderDao = new OrderDAO();
         Locale localeVN = new Locale("vi", "VN");     
@@ -105,6 +105,7 @@ public class EmailUtils {
             //gan vao sb
             sb.append("--").append(food.getName()).append("(x" + o.getQuantity() + ")").append(": ")
                     .append(numberFormat.format(o.getPrice()) + " VNĐ");
+            sb.append("<br></br>");
         }
         
         sb.append("<h3>Tổng Tiền: ").append(numberFormat.format(order.getTotal()) + "VNĐ").append("</h3>");
@@ -112,7 +113,13 @@ public class EmailUtils {
             sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Thanh toán khi nhận hàng(COD)</div>");
         }
         else{
-            sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Đã thanh toán qua VNPay</div>");
+            if(isPayment){
+                sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Đã thanh toán qua VNPay.</div>");
+            }
+            else{
+                sb.append("<div><h3 style='display:inline'>Thanh toán</h3>: Thanh toán qua VNPay thất bại, bạn có thể thanh toán trực tiếp khi nhận hàng.</div>");
+            }
+            
         }
         sb.append("<div><h3 style='display:inline'>Giao đến: </h3>"+ order.getShipping_address() + "</div>");
         sb.append("<h3>Một lần nữa cảm ơn bạn đã sử dụng dịch vụ!</h3>");
@@ -122,13 +129,4 @@ public class EmailUtils {
         return send;
     }
 
-    public static void main(String[] args) throws MessagingException {
-        try {
-            List<OrderItem> list = new ArrayList<>();
-            sendOrderViaEmail("ngyenduyntn112004@gmail.com", list, 1);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
 }
