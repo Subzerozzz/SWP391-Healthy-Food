@@ -13,6 +13,7 @@ import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Delivery;
+import com.su25.swp391.entity.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -100,7 +101,21 @@ public class ManageDeliveryController extends HttpServlet {
 
     private void listDelivery(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
       String sort = request.getParameter("sort");
-      List<Delivery> listDelivery = deliveryDAO.findDeliveryWithFilters(sort);
+      String status = request.getParameter("status");
+      String search = request.getParameter("search");
+      // Get orders with filters
+        List<Delivery> listDelivery;
+        int totalOrders;
+      if (search != null && !search.trim().isEmpty()) {
+          listDelivery = deliveryDAO.searchDelivery(search, sort, status);
+      } else {
+            // If no search, use filters
+            listDelivery = deliveryDAO.findDeliveryWithFilters(sort,status);
+         }
+     
+      request.setAttribute("sort", sort);
+      request.setAttribute("status", status);
+      request.setAttribute("search", search);
       request.setAttribute("accDAO", accDAO);
       request.setAttribute("orderDAO", orderDAO);
       request.setAttribute("listDelivery", listDelivery);

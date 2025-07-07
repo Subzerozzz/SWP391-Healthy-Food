@@ -407,8 +407,7 @@
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
-          <option value="completed" ${status == 'completed' ? 'selected' : ''}>Completed</option>
-          <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+          <option value="rejected" ${status == 'rejected' ? 'selected' : ''}>Rejected</option>
         </select>
 
          
@@ -486,7 +485,8 @@
                                                     </span>
                                             </td>
                                            <td>
-                                                ${de.shipper_id}
+                                              ${de.shipper_id == 0 ? 'Don\'t have' : accDAO.findById(de.shipper_id).user_name}
+                                                
                                             </td>
                                             <td>
 
