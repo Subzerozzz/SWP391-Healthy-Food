@@ -382,13 +382,17 @@
                 subTotalSpan.textContent = subTotal.toLocaleString("vi-VN") + " VNĐ"
                 //Lay ra the coupon
                 let coupon = document.querySelector(".coupon").querySelector("span").textContent
-                const couponNumber = parseInt(coupon);
+                const couponNumber =parseInt(coupon.replace(/[^\d]/g, ""));
                 
                 //Tinh toan total = subTotal - coupon
                 const totalPrice = subTotal - couponNumber;
                 console.log(totalPrice)
                 const totalPriceSpan = document.querySelector(".totalPrice").querySelector("span b");
                 totalPriceSpan.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                
+                console.log(couponNumber)
+                console.log(subTotal)
+                console.log(totalPrice)
                 
                 //Lay ra input subTotal va totalPrice
                 const inputSubTotal = document.querySelector("input[name='subTotal']")
