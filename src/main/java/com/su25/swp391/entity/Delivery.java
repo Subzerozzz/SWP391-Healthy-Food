@@ -21,8 +21,8 @@ import lombok.ToString;
 @Setter
 public class Delivery {
     private Integer id;
-    private Integer orderId;
-    private Integer shipperId;
+    private Integer order_id;
+    private Integer shipper_id;
     private String status;
     private Timestamp assigned_at;
     private Timestamp delivered_at;
