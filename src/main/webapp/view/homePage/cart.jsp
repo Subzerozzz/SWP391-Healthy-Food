@@ -243,7 +243,16 @@
                                 <h3>Cart Totals</h3>
                                 <ul>
                                   <li class="subTotal">Subtotal<span></span></li>
-                                  <li class="coupon">Coupon <span>${not empty discountValue? discountValue: 0}</span></li>
+                                  <li class="coupon">Coupon
+                                      <span>
+                                          <c:if test="${not empty discountValue}">
+                                              <fmt:formatNumber value="${discountValue}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                          </c:if>
+                                          <c:if test="${empty discountValue}"> 
+                                              0           
+                                          </c:if>
+                                      </span>
+                                  </li>
                                   <li class="totalPrice">Total <span><b></b></span></li>
                                 </ul>
                                 <input type="hidden" name="action" value="checkout">
@@ -373,13 +382,17 @@
                 subTotalSpan.textContent = subTotal.toLocaleString("vi-VN") + " VNĐ"
                 //Lay ra the coupon
                 let coupon = document.querySelector(".coupon").querySelector("span").textContent
-                const couponNumber = parseInt(coupon);
+                const couponNumber =parseInt(coupon.replace(/[^\d]/g, ""));
                 
                 //Tinh toan total = subTotal - coupon
                 const totalPrice = subTotal - couponNumber;
                 console.log(totalPrice)
                 const totalPriceSpan = document.querySelector(".totalPrice").querySelector("span b");
                 totalPriceSpan.textContent = totalPrice.toLocaleString("vi-VN") + " VNĐ"
+                
+                console.log(couponNumber)
+                console.log(subTotal)
+                console.log(totalPrice)
                 
                 //Lay ra input subTotal va totalPrice
                 const inputSubTotal = document.querySelector("input[name='subTotal']")
