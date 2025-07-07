@@ -103,19 +103,38 @@ public class ManageDeliveryController extends HttpServlet {
       String sort = request.getParameter("sort");
       String status = request.getParameter("status");
       String search = request.getParameter("search");
+      // Pagination
+        int page = 1;
+        int pageSize = 2;
+         try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Keep default value
+        }
       // Get orders with filters
         List<Delivery> listDelivery;
-        int totalOrders;
+        int totalDeliveries = 0;
       if (search != null && !search.trim().isEmpty()) {
-          listDelivery = deliveryDAO.searchDelivery(search, sort, status);
+          listDelivery = deliveryDAO.searchDelivery(search, sort, status,page,pageSize);
+          totalDeliveries = deliveryDAO.getTotalDeliveryResults(search,status);
       } else {
             // If no search, use filters
-            listDelivery = deliveryDAO.findDeliveryWithFilters(sort,status);
+            listDelivery = deliveryDAO.findDeliveryWithFilters(sort,status,page,pageSize);
+            totalDeliveries = deliveryDAO.getTotalFilteredDelivery(status);
          }
+      // Number of page can have
+        int totalPages = (int) Math.ceil((double) totalDeliveries / pageSize);
      
       request.setAttribute("sort", sort);
       request.setAttribute("status", status);
       request.setAttribute("search", search);
+      request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
       request.setAttribute("accDAO", accDAO);
       request.setAttribute("orderDAO", orderDAO);
       request.setAttribute("listDelivery", listDelivery);
