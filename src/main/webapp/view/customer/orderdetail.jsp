@@ -95,7 +95,7 @@
                                                                                 <!-- section-content-right -->
                                                                                 <div class="section-content-right">
                                                                                     <!-- header-dashboard -->
-                                                                                <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                                <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>
 
                                                                                     <!-- /header-dashboard -->
                                                                                     <!-- main-content -->
