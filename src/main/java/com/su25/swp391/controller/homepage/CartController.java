@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -85,8 +87,15 @@ public class CartController extends HttpServlet {
                 showCheckout(request, response);
                 break;
             case "checkoutVNPay":
-                handleVNPayReturn(request, response);
+            {
+                try {
+                    handleVNPayReturn(request, response);
+                } catch (MessagingException ex) {
+                    Logger.getLogger(CartController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 break;
+
             default:
                 throw new AssertionError();
         }
@@ -724,7 +733,7 @@ public class CartController extends HttpServlet {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
             //Goi ham sendOrderViaEmail
-            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId);
+            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId,true);
             //tra ve homePage voi notification success
             request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
@@ -847,7 +856,8 @@ public class CartController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + totalPrice + "&orderId=" + orderId);
     }
 
-    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, 
+            ServletException, MessagingException {
         String responseCode = request.getParameter("vnp_ResponseCode");
         String transactionStatus = request.getParameter("vnp_TransactionStatus");
         //kiem tra trang thai don hang thanh cong chua
@@ -864,7 +874,7 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleOrderWithVNPaySuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleOrderWithVNPaySuccess(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException, ServletException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         String orderIdStr = request.getParameter("vnp_TxnRef");
@@ -876,10 +886,15 @@ public class CartController extends HttpServlet {
 
         if (account != null) {
             //Chuyen ve trang myOrder
-            //O day chuyen tam ve home de check
             response.sendRedirect("orderlist");
         } else {
-            response.sendRedirect("home");
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,true);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
+            request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
     }
 
@@ -927,7 +942,7 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleOrderWithVNPayFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleOrderWithVNPayFailed(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException, ServletException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         String orderIdStr = request.getParameter("vnp_TxnRef");
@@ -942,7 +957,13 @@ public class CartController extends HttpServlet {
             //O day chuyen tam ve home de check
             response.sendRedirect("orderlist");
         } else {
-            response.sendRedirect("home");
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,false);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
+            request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
     }
 
