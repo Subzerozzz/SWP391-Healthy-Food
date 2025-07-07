@@ -33,12 +33,14 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      * @param status Optional order status filter (e.g., "pending", "completed",
      * etc.)
      * @param paymentMethod Optional payment method filter (e.g., "Cash on
-     * Delivery", "Bank Transfer", etc.)
-     * @param page The current page number (starting from 1)
-     * @param pageSize The number of results to return per page
+     *                      Delivery", "Bank Transfer", etc.)
+     * @param paymentStatus get paid or unpaid
+     * @param page          The current page number (starting from 1)
+     * @param pageSize      The number of results to return per page
+     * @param sort          Sort desc or asc
      * @return List of filtered and paginated Order objects
      */
-    public List<Order> findOrdersWithFilters(String status, String paymentMethod, int paymentStatus, int page, int pageSize) {
+    public List<Order> findOrdersWithFilters(String sort, String status, String paymentMethod,int paymentStatus, int page, int pageSize) {
         List<Order> Order = new ArrayList<>();
         // Build the SQL query dynamically with optional filters
         StringBuilder sql = new StringBuilder(
@@ -46,6 +48,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 + "FROM `Order` "
                 + "WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
+        
         // Add status filter if provided
         if (status != null && !status.isEmpty()) {
             sql.append("AND status = ? ");
@@ -62,7 +65,11 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             params.add(paymentStatus);
         }
         // Append sorting and pagination
-        sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        if (sort != null && !sort.isEmpty()) {
+            sql.append("ORDER BY id " + sort + " LIMIT ? OFFSET ? ");
+        } else {
+            sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        }
         params.add(pageSize); // LIMIT
         params.add((page - 1) * pageSize); // OFFSET
 
@@ -80,13 +87,14 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 Order.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
-            System.out.println("Error finding filtered Order: " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
         }
         return Order;
     }
+    
 
     /**
      * Counts the total number of Order that match optional filters for status
@@ -134,7 +142,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
-            System.out.println("Error counting filtered Order: " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
             // Close ResultSet, Statement, Connection
             closeResources();
@@ -352,13 +360,14 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      * search keyword is matched against username, email, or order ID (cast to
      * string). Supports pagination through LIMIT and OFFSET.
      *
-     * @param search The keyword to search (matches user name, email, or order
-     * ID)
-     * @param status Optional order status filter (e.g., "pending", "completed")
-     * @param paymentMethod Optional payment method filter (e.g., "COD",
-     * "PayPal")
-     * @param page Page number for pagination (1-based)
-     * @param pageSize Number of results per page
+     * @param search        The keyword to search (matches user name, email, or
+     *                      order ID)
+     * @param status        Optional order status filter (e.g., "pending",
+     *                      "completed")
+     * @param paymentMethod Optional payment method filter (e.g., "COD", "PayPal")
+     * @param page          Page number for pagination (1-based)
+     * @param pageSize      Number of results per page
+     * @param sort          Sort id by desc or asc
      * @return A list of matching Order objects
      */
     public List<Order> searchOrders(String sort, String search, String status, String paymentMethod, int page, int pageSize) {
@@ -579,8 +588,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
             statement.setString(9, order.getFull_name());
             statement.setString(10, order.getMobile());
             statement.setString(11, order.getEmail());
-            statement.setInt(12, order.getPayment_status());
-            statement.setDouble(13, order.getDiscount_amount());
+            statement.setDouble(12, order.getDiscount_amount());
+            statement.setInt(13, order.getPayment_status());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
@@ -661,5 +670,25 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
         return success;
     }
+
+    public List<Order> findAllByUserId(int userId) {
+        String sql = "SELECT * FROM `Order` WHERE account_id = ?";
+        List<Order> order = new ArrayList<>();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId); // Gán giá trị userId vào ?
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                order.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return order;
+    }
+       
 
 }

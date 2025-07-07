@@ -73,7 +73,7 @@
                 display: block;
                 font-weight: bold;
             }
-            .payment-badge.VNPAY {
+            .payment-badge.vnpay {
                 background-color: #29a0dc;
                 color: white;                /* đổi màu chữ thành trắng */
                 padding: 4px 8px;
@@ -82,7 +82,7 @@
                 font-weight: 600;           /* tăng độ dày chữ */
                 font-size: 14px;
             }
-            .payment-badge.COD {
+            .payment-badge.cod {
                 background-color: #f7b80c;
                 color: white;                /* đổi màu chữ thành trắng */
                 padding: 4px 8px;
@@ -160,7 +160,7 @@
                                                                             <!-- section-content-right -->
                                                                             <div class="section-content-right">
                                                                                 <!-- header-dashboard -->
-                                                                            <jsp:include page = "/view/common/homePage/headerDashboardUser.jsp"></jsp:include>
+                                                                            <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>
                                                                                 <!-- /header-dashboard -->
                                                                                 <!-- main-content -->
                                                                                 <div class="main-content">
