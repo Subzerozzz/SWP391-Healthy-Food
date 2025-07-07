@@ -899,8 +899,22 @@ public class CartController extends HttpServlet {
         orderDao.update(order);
 
         if (account != null) {
+            //Them vao couponUsage neu co couponCode
+            if(order.getCoupon_code() != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(order.getUpdated_at())
+                        .discount_amount(order.getDiscount_amount())
+                        .build();
+                couponUsageDao.insert(couponUsage);
+            }
             //Chuyen ve trang myOrder
             response.sendRedirect("orderlist");
+            
         } else {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
@@ -967,8 +981,19 @@ public class CartController extends HttpServlet {
         orderDao.update(order);
 
         if (account != null) {
-            //Chuyen ve trang myOrder
-            //O day chuyen tam ve home de check
+            //Them vao couponUsage neu co couponCode
+            if(order.getCoupon_code() != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(order.getUpdated_at())
+                        .discount_amount(order.getDiscount_amount())
+                        .build();
+                couponUsageDao.insert(couponUsage);
+            }
             response.sendRedirect("orderlist");
         } else {
             //Lấy ra các OrderItem thông qua orderId
