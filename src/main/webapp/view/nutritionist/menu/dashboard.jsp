@@ -173,9 +173,17 @@
                         <!--Add new food--> 
                         </div>
                             <a class="tf-button style-1 w208"
-                              href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
-                              new
+                                href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
+                                new
                             </a>
+                            <form id="formInputExcel" action="${pageContext.request.contextPath}/manage-food?action=importExcel" 
+                                  method="post" enctype="multipart/form-data" style="display:flex">
+                                <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
+                                <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                                    Choose File Excel
+                                </a>
+                            </form>
+                            
                         </div>
                       <div class="wg-table table-product-list">
                           <c:choose>
@@ -645,8 +653,24 @@
              session.removeAttribute("isUpdate");
          %>
        </c:if>
-
-
+         
+         <!--Script cho viec chon file excel--> 
+        <script>
+            const fileInput = document.getElementById("excelFile")
+            const buttonExcelFile = document.getElementById("buttonExcelFile")
+            const formInputExcel = document.getElementById("formInputExcel")
+            
+            buttonExcelFile.addEventListener("click", (e) => {
+                e.preventDefault();
+                fileInput.click();
+            })
+            
+            fileInput.addEventListener("change", (e) => {
+                if(fileInput.files.length > 0){
+                    formInputExcel.submit();
+                }
+            })
+        </script>
     </body>
 
 
