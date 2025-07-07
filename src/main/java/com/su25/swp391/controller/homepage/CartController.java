@@ -20,6 +20,8 @@ import com.su25.swp391.entity.CouponUsage;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,6 +36,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -41,6 +46,9 @@ import java.util.Map;
  */
 @WebServlet(name = "CartController", urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
+
+    private static final Pattern REGEX_EMAIL = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern REGEX_PHONE = Pattern.compile("^(\\\\+84|0)[0-9]{9}$");
 
     CartDAO cartDao = new CartDAO();
     CartItemDAO cartItemDao = new CartItemDAO();
@@ -79,8 +87,15 @@ public class CartController extends HttpServlet {
                 showCheckout(request, response);
                 break;
             case "checkoutVNPay":
-                handleVNPayReturn(request, response);
+            {
+                try {
+                    handleVNPayReturn(request, response);
+                } catch (MessagingException ex) {
+                    Logger.getLogger(CartController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                 break;
+
             default:
                 throw new AssertionError();
         }
@@ -281,7 +296,6 @@ public class CartController extends HttpServlet {
                 }
                 count++;
             }
-
             // Chuyển về trang shopDetail và báo
             request.setAttribute("listRelated", listRelated);
             request.setAttribute("foodDetail", food);
@@ -519,11 +533,21 @@ public class CartController extends HttpServlet {
             String email = request.getParameter("email").trim();
             if (email == null || email.isEmpty()) {
                 errorMap.put("email", "Email không được để trống");
+            } else {
+                if (!REGEX_EMAIL.matcher(email).matches()) {
+                    errorMap.put("email", "Email sai định dạng");
+                }
             }
+
             // Lay ra phoneNumber
             String phoneNumber = request.getParameter("phoneNumber").trim();
             if (phoneNumber == null || phoneNumber.isEmpty()) {
                 errorMap.put("phoneNumber", "Số điện thoại không được để trống");
+            }
+            else{
+                if(!REGEX_PHONE.matcher(phoneNumber).matches()){
+                    errorMap.put("phoneNumber", "Số điện thoại sai định dạng");
+                }
             }
             // Lay ra address
             String address = request.getParameter("address").trim();
@@ -580,6 +604,7 @@ public class CartController extends HttpServlet {
                 request.setAttribute("errors", errorMap);
                 request.setAttribute("subTotal", subTotal);
                 request.setAttribute("totalPrice", totalPrice);
+                request.setAttribute("discountAmount", discountAmount);
                 request.setAttribute("paymentMethod", paymentMethod);
                 request.setAttribute("formData", request.getParameterMap());
                 request.getRequestDispatcher("view/homePage/checkout.jsp").forward(request, response);
@@ -596,14 +621,14 @@ public class CartController extends HttpServlet {
                 default:
                     throw new AssertionError();
             }
-
+            //Kiem tra neu co couponCode thi them
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void handleProcessCheckoutCOD(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, MessagingException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         List<CartItem> listCartItem = new ArrayList<>();
@@ -700,14 +725,31 @@ public class CartController extends HttpServlet {
             for (CartItem cartItem : listCartItem) {
                 cartItemDao.delete(cartItem);
             }
+            //Kiem tra xem co couponCode khong thi them 1 ban ghi vào couponUseage
+            if(couponCode != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(couponCode);
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(updated_at)
+                        .discount_amount(discountAmount)
+                        .build();
+                couponUsageDao.insert(couponUsage);
+                        
+            }
             //Sau do chuyen sang trang myOrder
-            // request.getRequestDispatcher("").forward(request, response);
+            response.sendRedirect("orderlist");
         } else {
             List<CartItem> listCartItem1 = new ArrayList<>();
             session.setAttribute("cart", listCartItem1);
-            //Dùng email để gửi 
-            //Có đoạn code dùng hàm gửi về email
-            request.setAttribute("notificationForEmail", true);
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId,true);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
 
@@ -828,7 +870,8 @@ public class CartController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + totalPrice + "&orderId=" + orderId);
     }
 
-    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, 
+            ServletException, MessagingException {
         String responseCode = request.getParameter("vnp_ResponseCode");
         String transactionStatus = request.getParameter("vnp_TransactionStatus");
         //kiem tra trang thai don hang thanh cong chua
@@ -845,7 +888,7 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleOrderWithVNPaySuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleOrderWithVNPaySuccess(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException, ServletException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         String orderIdStr = request.getParameter("vnp_TxnRef");
@@ -856,11 +899,30 @@ public class CartController extends HttpServlet {
         orderDao.update(order);
 
         if (account != null) {
+            //Them vao couponUsage neu co couponCode
+            if(order.getCoupon_code() != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(order.getUpdated_at())
+                        .discount_amount(order.getDiscount_amount())
+                        .build();
+                couponUsageDao.insert(couponUsage);
+            }
             //Chuyen ve trang myOrder
-            //O day chuyen tam ve home de check
-            response.sendRedirect("home");
+            response.sendRedirect("orderlist");
+            
         } else {
-            response.sendRedirect("home");
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,true);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
+            request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
     }
 
@@ -908,7 +970,7 @@ public class CartController extends HttpServlet {
 
     }
 
-    private void handleOrderWithVNPayFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleOrderWithVNPayFailed(HttpServletRequest request, HttpServletResponse response) throws IOException, MessagingException, ServletException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
         String orderIdStr = request.getParameter("vnp_TxnRef");
@@ -919,11 +981,28 @@ public class CartController extends HttpServlet {
         orderDao.update(order);
 
         if (account != null) {
-            //Chuyen ve trang myOrder
-            //O day chuyen tam ve home de check
-            response.sendRedirect("home");
+            //Them vao couponUsage neu co couponCode
+            if(order.getCoupon_code() != null){
+                Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
+                //Tao couponUseage
+                CouponUsage couponUsage = CouponUsage.builder()
+                        .coupon_id(coupon.getId())
+                        .account_id(account.getId())
+                        .order_id(orderId)
+                        .used_at(order.getUpdated_at())
+                        .discount_amount(order.getDiscount_amount())
+                        .build();
+                couponUsageDao.insert(couponUsage);
+            }
+            response.sendRedirect("orderlist");
         } else {
-            response.sendRedirect("home");
+            //Lấy ra các OrderItem thông qua orderId
+            List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
+            //Goi ham sendOrderViaEmail
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,false);
+            //tra ve homePage voi notification success
+            request.setAttribute("notificationForEmail", check);
+            request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
         }
     }
 

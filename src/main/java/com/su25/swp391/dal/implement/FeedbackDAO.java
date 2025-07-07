@@ -1,20 +1,17 @@
-
 package com.su25.swp391.dal.implement;
+
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
-import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Feedback;
-import com.su25.swp391.entity.Food;
-import com.su25.swp391.entity.OrderItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
+
     // Get Feedback by Id Feedback
     @Override
     public Feedback findById(Integer id) {
@@ -40,6 +37,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         // If don't have feedback 
         return null;
     }
+
     // Lấy tất cả feedback của một người dùng
     @Override
     public List<Feedback> findAll() {
@@ -78,7 +76,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     public Map<Integer, Feedback> findAllMap() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     // Update is_Visible for Feedback 
     @Override
     public boolean update(Feedback t) {
@@ -108,14 +106,40 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
     public boolean delete(Feedback t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+//mạnh
 
     @Override
     public int insert(Feedback t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "INSERT INTO Feedback (user_id, order_item_id, content, rating, is_visible) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setInt(1, t.getUser_id());
+            statement.setInt(2, t.getOrder_item_id());
+            statement.setString(3, t.getContent());
+            statement.setInt(4, t.getRating());
+            statement.setBoolean(5, t.isVisible());
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    return resultSet.getInt(1); // return the auto-generated ID
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding Feedback: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
     }
-    
+
     // Create a Feedback object from the current row of a ResultSet
-  @Override
+    @Override
     public Feedback getFromResultSet(ResultSet resultSet) throws SQLException {
         return new Feedback()
                 .builder() // Start building a new Feedback object
@@ -129,7 +153,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 .updatedAt(resultSet.getTimestamp("updated_at")) // Set timestamp for last feedback update
                 .build(); // Finish building and return the Feedback object
     }
-    
+
     public List<Feedback> searchFeedback(String search, String rating, String foodName, String sort, int page, int pageSize) {
         // Create a list to hold the feedback results
         List<Feedback> feedbacks = new ArrayList<>();
@@ -310,9 +334,11 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
                 feedbacks.add(getFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             // Handle any SQL exceptions that may occur
             System.out.println("Error finding filtered orders: " + ex.getMessage());
         } finally {
+            closeResources();
             // (Optional) Add resource cleanup here if you're not using try-with-resources
             closeResources();
         }
@@ -320,7 +346,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         // Return the list of matched feedbacks
         return feedbacks;
     }
-      
+
     public int getTotalFilteredFeedback(String rating, String foodName) {
         // Build the initial SQL query to count matching feedbacks
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) "
@@ -371,10 +397,118 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return 0;
     }
 
+    // Mạnh
+    public int getTotalFeedbackCountByUserIdAndRating(int userId, String rating) {
+        boolean filterByRating = rating != null
+                && !rating.trim().isEmpty()
+                && !rating.equalsIgnoreCase("all");
 
-    public static void main(String[] args) {
-        FeedbackDAO f = new FeedbackDAO();
-        System.out.println(f.findFeedbackWithFilters("", "", "", 1, 10));               
+        String sql = "SELECT COUNT(*) FROM Feedback WHERE user_id = ? AND is_visible = 1";
+        if (filterByRating) {
+            sql += " AND rating = ?";
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            if (filterByRating) {
+                statement.setInt(2, Integer.parseInt(rating));
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
     }
 
+    //Mạnh
+    public List<Feedback> feedbackByUserIdAndRatingWithPagination(int userId, String rating, int page, int pageSize) {
+        List<Feedback> list = new ArrayList<>();
+        boolean filterByRating = rating != null
+                && !rating.trim().isEmpty()
+                && !rating.equalsIgnoreCase("all");
+
+        String sql = "SELECT * FROM Feedback WHERE user_id = ? AND is_visible = 1";
+        if (filterByRating) {
+            sql += " AND rating = ?";
+        }
+        sql += " ORDER BY id DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByRating) {
+                statement.setInt(paramIndex++, Integer.parseInt(rating));
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+
+    // mạnh
+    public Feedback findByUserIdAndOrderItemId(int userId, int orderItemId) {
+        Feedback feedback = null;
+        String sql = "SELECT * FROM Feedback WHERE user_id = ? AND order_item_id = ? LIMIT 1";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            statement.setInt(2, orderItemId);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                feedback = getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return feedback;
+    }
+// mạnh
+    public boolean updateByUserIdAndOrderItemId(int userId, int orderItemId, String content, int rating) {
+        String sql = "UPDATE Feedback SET content = ?, rating = ? WHERE user_id = ? AND order_item_id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setString(1, content);
+            statement.setInt(2, rating);
+            statement.setInt(3, userId);
+            statement.setInt(4, orderItemId);
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating feedback by user_id and order_item_id: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+    
 }
