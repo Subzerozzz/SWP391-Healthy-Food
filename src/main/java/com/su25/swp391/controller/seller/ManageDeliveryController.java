@@ -5,6 +5,14 @@
 
 package com.su25.swp391.controller.seller;
 
+import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.DeliveryDAO;
+import com.su25.swp391.dal.implement.FeedbackDAO;
+import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.OrderApprovalDAO;
+import com.su25.swp391.dal.implement.OrderDAO;
+import com.su25.swp391.dal.implement.OrderItemDAO;
+import com.su25.swp391.entity.Delivery;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +20,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
  * @author Admin
  */
-@WebServlet(name="ManageDeliveryController", urlPatterns={"/manage-delivery"})
+@WebServlet(name="ManageDeliveryController", urlPatterns={"/seller/manage-delivery"})
 public class ManageDeliveryController extends HttpServlet {
+     
+     private DeliveryDAO deliveryDAO;
+     private OrderDAO orderDAO;
+     private AccountDAO accDAO;
+     @Override
+    public void init() throws ServletException {
+        deliveryDAO = new DeliveryDAO();
+        accDAO = new AccountDAO();
+        orderDAO = new OrderDAO();
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -79,8 +98,13 @@ public class ManageDeliveryController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void listDelivery(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      response.sendRedirect("manage-delivery-list");
+    private void listDelivery(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+      String sort = request.getParameter("sort");
+      List<Delivery> listDelivery = deliveryDAO.findDeliveryWithFilters(sort);
+      request.setAttribute("accDAO", accDAO);
+      request.setAttribute("orderDAO", orderDAO);
+      request.setAttribute("listDelivery", listDelivery);
+      request.getRequestDispatcher("/view/seller/manage-delivery-list.jsp").forward(request, response);
     }
 
 }

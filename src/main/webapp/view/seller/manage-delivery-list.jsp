@@ -392,7 +392,7 @@
             <!-- Filter Section -->
            <div class="card mb-24">
   <div class="card-body p-24">
-    <form action="${pageContext.request.contextPath}/seller/manage-order" method="GET">
+    <form action="${pageContext.request.contextPath}/seller/manage-delivery" method="GET">
       <!-- Thêm class filter-row -->
       <div class="filter-row">
           <!--Sort by id-->
@@ -411,20 +411,6 @@
           <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
 
-        <!-- Select Payment Method -->
-        <select    style="height: 40px;font-size: 15px; "
-            class="form-select" name="paymentMethod">
-          <option value="">All Payment Methods</option>
-          <option value="cod" ${paymentMethod == 'cod' ? 'selected' : ''}>Cash on Delivery</option>
-          <option value="vnpay"   ${paymentMethod == 'vnpay'   ? 'selected' : ''}>VN Pay</option>
-         </select>
-        
-          <!--select payment Status-->
-          <select name="paymentStatus"  class="form-select">
-              <option value="-1" >Payment Status</option>
-              <option value="1" ${paymentStatus == 1 ? 'selected' : ''}>Paid</option>
-              <option value="0" ${paymentStatus == 0 ? 'selected' : ''}>Unpaid</option>
-          </select>
          
         <!-- Ô Search -->
         <input type="text" class="form-control"
@@ -446,20 +432,16 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>ID Order</th>
                                     <th>Customer</th>
-                                    <th>Address</th>
-                                    <th>Total</th>
-                                    <th>Payment Method</th>
                                     <th>Status</th>
-                                    <th>Coupon Code</th>
-                                    <th>Paid Status</th>
+                                    <th>Shipper</th>
                                     <th>Actions</th>
                                    
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:if test="${empty orders}">
+                                <c:if test="${empty listDelivery}">
                                     <tr>
                                         <td colspan="8" class="text-center">
                                             <div class="py-4">
@@ -483,56 +465,28 @@
                                         </td>
                                     </tr>
                                 </c:if>
-                                    <c:forEach var="order" items="${orders}">
-                                        <c:set var="acc" value="${AccountMap[order.account_id]}"/>
+                                    <c:forEach var="de" items="${listDelivery}">
+                                      
                                         <tr>
+                                            <td>${de.order_id}</td>
                                          
-                                            <td>${order.id}</td>
-                                             
-                                            <td >
-                                                <c:choose>
-                                                    <c:when test="${not empty acc.full_name}">
-                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.full_name}
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i> ${order.full_name}
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </td>
 
                                             <td>
-                                                ${order.shipping_address}
-                                            </td>
-
-                                            
-                                           
-                                            <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                            <td>
-                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px;border-radius:15px ;border:solid #007bff"
-                                                      class="badge bg-info-glow">
-                                                    ${order.payment_method}
-                                                </span>
+                                                ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
                                             </td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
-                                                              order.status == 'pending' ? 'badge-pending' :
-                                                              order.status == 'accepted' ? 'badge-accepted' :
-                                                              order.status == 'completed' ? 'badge-completed' :
+                                                              de.status == 'pending' ? 'badge-pending' :
+                                                              de.status == 'accepted' ? 'badge-accepted' :
+                                                              de.status == 'reject' ? 'badge-completed' :
                                                               'badge-rejected'
                                                           }">
-                                                        ${order.status}
+                                                        ${de.status}
                                                     </span>
                                             </td>
-                                           
-                                             <td>${order.coupon_code}</td>
-                                            <td>
-                                                <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d"
-                                                          class="badge-modern ${
-                                                              order.payment_status == 0 ? 'badge-pending' :'badge-completed'
-                                                           }">
-                                                        ${order.payment_status == 0 ? 'Unpaid' : 'Paid'}
-                                                    </span>
+                                           <td>
+                                                ${de.shipper_id}
                                             </td>
                                             <td>
 
