@@ -26,28 +26,28 @@ import java.util.Locale;
 public class EmailUtils {
 
     public static boolean sendMail(String to, String subject, String content) throws AddressException, MessagingException {
-        Properties props = new Properties();
+        Properties props = new Properties(); // Properties là một lớp có sẵn trong Java dùng để lưu trữ các cặp khóa – giá trị, trong đó cả key và value đều là kiểu String.
         // Thiết lập các thuộc tính cho phiên gửi mail
         props.put("mail.smtp.host", "smtp.gmail.com");  // SMTP server của Gmail
-        props.put("mail.smtp.port", "587"); // Cổng TLS của Gmail
-        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587"); // Cổng TLS của Gmail  TLS (Transport Layer Security) là một giao thức bảo mật được thiết kế để mã hóa dữ liệu khi truyền qua Internet
+        props.put("mail.smtp.auth", "true");  // Xác thực email để gửi 
         props.put("mail.smtp.starttls.enable", "true"); // Bật STARTTLS để bảo mật
 
-        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() { //Session.getInstance đại diện cho 1 phiên gửi email và chứa các thông tin từ props và new jakarta.mail.Authenticator() là để ghi đè cho phương thức getPasswordAuthentication()
             @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication() { //Phương thức được gọi tự động khi cần xác thực với Gmail.
                 return new PasswordAuthentication(GlobalConfig.USERNAME_EMAIL, GlobalConfig.PASSWORD_APP_EMAIL);
             }
         });
 
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(GlobalConfig.USERNAME_EMAIL));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject, "UTF-8");
-        message.setHeader("Content-Type", "text/html; charset=UTF-8");
-        message.setContent(content, "text/html; charset=UTF-8");
+        MimeMessage message = new MimeMessage(session); //Tạo ra một email mới (đối tượng MimeMessage) dựa trên Session đã cấu hình trước đó.
+        message.setFrom(new InternetAddress(GlobalConfig.USERNAME_EMAIL)); //Thiết lập địa chỉ người gửi (From).
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); //Thiết lập người nhận (To).
+        message.setSubject(subject, "UTF-8"); //Thiết lập tiêu đề (subject) của email
+        message.setHeader("Content-Type", "text/html; charset=UTF-8"); //Thiết lập header cho email
+        message.setContent(content, "text/html; charset=UTF-8"); //Đặt nội dung chính cho email
 
-        Transport.send(message);
+        Transport.send(message); //Gửi email đi qua SMTP server. Dùng Session đã cấu hình và Authenticator để đăng nhập và gửi
         return true;
     }
 

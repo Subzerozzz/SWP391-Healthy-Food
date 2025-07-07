@@ -228,6 +228,31 @@ public class OrderItemDAO extends DBContext implements I_DAO<OrderItem> {
         return orderDetails;
     }
 
+    // Lấy danh sách items của một đơn hàng
+    public List<OrderItem> getOrderItemsByOrderId(int orderId) {
+        List<OrderItem> items = new ArrayList<>();
+
+        String sql = "SELECT * "
+                + "FROM OrderItem  "
+                + "WHERE order_id = ?";
+
+        try {
+
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, orderId);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                items.add(getFromResultSet(resultSet));
+            }
+        }catch(Exception e){
+            closeResources();
+      
+        }
+        return items;
+    }
+
     public static void main(String[] args) {
         for (OrderItem o : new OrderItemDAO().findAllOrderItemByOrderID(41)) {
             System.out.println(o);
