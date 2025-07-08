@@ -441,7 +441,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:if test="${empty listDelivery}">
+                                <c:if test="${empty shipperList}">
                                     <tr>
                                         <td colspan="8" class="text-center">
                                             <div class="py-4">
@@ -465,42 +465,46 @@
                                         </td>
                                     </tr>
                                 </c:if>
-                                    <c:forEach var="de" items="${listDelivery}">
+                                    <c:forEach var="shipper" items="${shipperList}">
                                       
                                         <tr>
-                                            <td>${de.order_id}</td>
+                                            <td>${shipper.user_name}</td>
                                          
 
                                             <td>
-                                                ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                                ${deliveryDAO.getNumberDeliveryOfShipper(shipper.id)}
                                             </td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
-                                                              de.status == 'pending' ? 'badge-pending' :
-                                                              de.status == 'delivering' ? 'badge-accepted' :
-                                                              de.status == 'success' ? 'badge-completed' :
-                                                              'badge-rejected'
+                                                              deliveryDAO.getNumberDeliveryOfShipper(shipper.id) > 0 ? 'badge-pending' :
+                                                              deliveryDAO.getNumberDeliveryOfShipper(shipper.id) > 0 ? 'badge-accepted' :
+                                                           'badge-rejected'
                                                           }">
-                                                        ${de.status}
+                                                       ${deliveryDAO.getNumberDeliveryOfShipper(shipper.id) > 0 ? 'Đang giao' : 'Rảnh'}
                                                     </span>
                                             </td>
-                                           <td>
-                                              ${de.shipper_id == 0 ? 'Don\'t have' : accDAO.findById(de.shipper_id).user_name}
-                                                
-                                            </td>
-                                            <td>
-
-                                                <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.id}"  title="View Detial">
-                                                        <i class="icon-eye"></i>
-                                               </a></div>
-                                                    <div class="item edit" style="margin-right: 10px !important">
-
-                                                        <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" title="Update Status"><i
-                                                                class="icon-edit-3"></i></a>
-                                                    </div>
-                                            </td>
+                                          
+                                       <td>
+  <c:choose>
+    <c:when test="${deliveryDAO.getNumberDeliveryOfShipper(shipper.id) == 0}">
+      <form action="manage-delivery" method="post">
+        <input type="hidden" name="action" value="add" />
+        <input type="hidden" name="orderId" value="${orderId}" />
+        <input type="hidden" name="shipperId" value="${shipper.id}" />
+        <button type="submit" class="btn btn-success btn-sm">✅ Giao đơn</button>
+      </form>
+    </c:when>
+    <c:otherwise>
+      <form action="manage-delivery" method="post">
+        <input type="hidden" name="action" value="add" />
+        <input type="hidden" name="orderId" value="${orderId}" />
+        <input type="hidden" name="shipperId" value="${shipper.id}" />
+        <button type="submit" class="btn btn-warning btn-sm">⚠ Vẫn giao</button>
+      </form>
+    </c:otherwise>
+  </c:choose>
+</td>
                                         </tr>
                                     </c:forEach>
                             </tbody>
