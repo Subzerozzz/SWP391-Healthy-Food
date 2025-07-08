@@ -433,10 +433,9 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID Order</th>
-                                    <th>Customer</th>
-                                    <th>Status</th>
                                     <th>Shipper</th>
+                                    <th>Delivery order number</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -498,8 +497,8 @@
                                                </a></div>
                                                     <div class="item edit" style="margin-right: 10px !important">
 
-                                                        <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
-                                                            <i class="fa-solid fa-motorcycle"></i></a>
+                                                        <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" title="Update Status"><i
+                                                                class="icon-edit-3"></i></a>
                                                     </div>
                                             </td>
                                         </tr>

@@ -278,18 +278,21 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
 
                 int approvalRowsAffected = statement.executeUpdate();
                 System.out.println("Insert approval rows affected: " + approvalRowsAffected);
-
-                if (approvalRowsAffected > 0) {
+                
+                if(newStatus.equalsIgnoreCase("accepted")){
                     String sqlDelivery = "INSERT INTO Delivery (order_id, status, assigned_at)\n" +
                       "VALUES (?, 'pending', NOW())";
                     statement = connection.prepareStatement(sqlDelivery);
                     statement.setInt(1, orderId);
                     statement.executeUpdate();
+                }
+                if (approvalRowsAffected > 0) {
+                    
                     // Commit transaction if all operations succeeded
                     connection.commit();
                     System.out.println("Transaction committed successfully");
                     return true;
-                }
+                } 
             }
             // Rollback if anything failed
             System.out.println("Rolling back transaction");
