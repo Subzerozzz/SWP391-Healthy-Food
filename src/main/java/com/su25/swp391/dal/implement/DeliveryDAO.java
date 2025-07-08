@@ -221,6 +221,24 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         // Return the list of matched feedback
         return 0;
     }
+    public int getNumberDeliveryOfShipper(int shipper_id){
+        String sql = "Select Count(*) from Delivery where shipper_id = ? ";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, shipper_id);
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt(1);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
     
     @Override
     public Map<Integer, Delivery> findAllMap() {
@@ -266,6 +284,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
             System.out.println(d);
         }
         System.out.println(new DeliveryDAO().getTotalFilteredDelivery(""));
+        System.out.println(new DeliveryDAO().getNumberDeliveryOfShipper(54));
     }
     
 }

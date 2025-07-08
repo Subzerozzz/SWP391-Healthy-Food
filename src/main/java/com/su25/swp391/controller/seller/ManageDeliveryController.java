@@ -12,6 +12,7 @@ import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Delivery;
 import com.su25.swp391.entity.Order;
 import java.io.IOException;
@@ -56,9 +57,9 @@ public class ManageDeliveryController extends HttpServlet {
 //                case "view":
 //                    viewOrderDetail(request, response);
 //                    break;
-//                case "viewUpdate":
-//                    viewUpdate(request, response);
-//                    break;
+                case "shipper":
+                    viewShipper(request, response);
+                    break;
                 default:
                     listDelivery(request, response);
                     break;
@@ -70,30 +71,30 @@ public class ManageDeliveryController extends HttpServlet {
         }
     }
 
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        // Get action from submit
-//        String action = request.getParameter("action");
-//        if (action == null) {
-//            action = "list";
-//        }
-//
-//        try {
-//            switch (action) {
-//                case "updateStatus":
-//                    updateOrderStatus(request, response);
-//                    break;
-//                default:
-//                    listOrders(request, response);
-//                    break;
-//            }
-//        } catch (Exception ex) {
-//            // Notification error
-//            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
-//            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
-//        }
-//    }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Get action from submit
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
+        }
+
+        try {
+            switch (action) {
+                case "add":
+                    selectShipper(request, response);
+                    break;
+                default:
+                    listDelivery(request, response);
+                    break;
+            }
+        } catch (Exception ex) {
+            // Notification error
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+    }
     @Override
     public String getServletInfo() {
         return "Short description";
@@ -139,6 +140,17 @@ public class ManageDeliveryController extends HttpServlet {
       request.setAttribute("orderDAO", orderDAO);
       request.setAttribute("listDelivery", listDelivery);
       request.getRequestDispatcher("/view/seller/manage-delivery-list.jsp").forward(request, response);
+    }
+
+    private void viewShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       List<Account> accountList = accDAO.findAccountByRole("shipper");
+       request.setAttribute("shipperList", accountList);
+       request.setAttribute("deliveryDAO", deliveryDAO);
+       request.getRequestDispatcher("/view/seller/select-shipper.jsp").forward(request, response);
+    }
+
+    private void selectShipper(HttpServletRequest request, HttpServletResponse response) {
+       
     }
 
 }
