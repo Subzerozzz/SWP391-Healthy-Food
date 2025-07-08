@@ -22,7 +22,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     @Override
     public List<OrderCombo> findAll() {
-List<OrderCombo> orderCombos = new ArrayList<>();
+        List<OrderCombo> orderCombos = new ArrayList<>();
         String sql = "SELECT * FROM OrderCombo";
         try {
             connection = getConnection();
@@ -47,19 +47,18 @@ List<OrderCombo> orderCombos = new ArrayList<>();
 
     @Override
     public boolean update(OrderCombo orderCombo) {
- String sql = "UPDATE OrderCombo SET order_id = ?, comboId = ?, comboName = ?, " +
-                "discountPrice = ?, quantity = ?, totalPrice = ? WHERE orderComboId = ?";
+        String sql = "UPDATE OrderCombo SET  comboId = ?, comboName = ?, "
+                + "discountPrice = ?, quantity = ?, totalPrice = ? WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderCombo.getOrder_id());
-            statement.setInt(2, orderCombo.getComboId());
-            statement.setString(3, orderCombo.getComboName());
-            statement.setDouble(4, orderCombo.getDiscountPrice());
-            statement.setInt(5, orderCombo.getQuantity());
-            statement.setDouble(6, orderCombo.getTotalPrice());
-            statement.setInt(7, orderCombo.getOrderComboId());
+            statement.setInt(1, orderCombo.getComboId());
+            statement.setString(2, orderCombo.getComboName());
+            statement.setDouble(3, orderCombo.getDiscountPrice());
+            statement.setInt(4, orderCombo.getQuantity());
+            statement.setDouble(5, orderCombo.getTotalPrice());
+            statement.setInt(6, orderCombo.getOrderComboId());
 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -69,11 +68,11 @@ List<OrderCombo> orderCombos = new ArrayList<>();
         } finally {
             closeResources();
         }
-    }    
+    }
 
     @Override
     public boolean delete(OrderCombo orderCombo) {
-  String sql = "DELETE FROM orderCombo WHERE orderComboId = ?";
+        String sql = "DELETE FROM orderCombo WHERE orderComboId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -85,23 +84,24 @@ List<OrderCombo> orderCombos = new ArrayList<>();
             return false;
         } finally {
             closeResources();
-        }    }
+        }
+    }
 
     @Override
-    public int insert(OrderCombo orderCombo ) {
-  String sql = "INSERT INTO OrderCombo (order_id, comboId, comboName, discountPrice, " +
-                "quantity, totalPrice,payment_status) VALUES (?, ?, ?, ?, ?, ?,?)";
+    public int insert(OrderCombo orderCombo) {
+        String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
+                + "quantity, totalPrice,payment_status) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, orderCombo.getOrder_id());
-            statement.setInt(2, orderCombo.getComboId());
-            statement.setString(3, orderCombo.getComboName());
-            statement.setDouble(4, orderCombo.getDiscountPrice());
-            statement.setInt(5, orderCombo.getQuantity());
-            statement.setDouble(6, orderCombo.getTotalPrice());
-            statement.setInt(7, orderCombo.getPayment_status());
+
+            statement.setInt(1, orderCombo.getComboId());
+            statement.setString(2, orderCombo.getComboName());
+            statement.setDouble(3, orderCombo.getDiscountPrice());
+            statement.setInt(4, orderCombo.getQuantity());
+            statement.setDouble(5, orderCombo.getTotalPrice());
+            statement.setInt(6, orderCombo.getPayment_status());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -122,12 +122,33 @@ List<OrderCombo> orderCombos = new ArrayList<>();
         }
     }
 
+    public static void main(String[] args) {
+        // Tạo DAO
+        OrderComboDAO dao = new OrderComboDAO();
+
+        // Tạo đối tượng OrderCombo
+        OrderCombo orderCombo = new OrderCombo();
+        orderCombo.setComboId(1); // comboId phải tồn tại trong bảng Combo
+        orderCombo.setComboName("Combo siêu tiết kiệm");
+        orderCombo.setDiscountPrice(1.222);
+        orderCombo.setQuantity(1);
+        orderCombo.setTotalPrice(124.920);
+        orderCombo.setPayment_status(0); // 0 = chưa thanh toán
+
+        // Gọi phương thức insert và in ra kết quả
+        int generatedId = dao.insert(orderCombo);
+        if (generatedId != -1) {
+            System.out.println("OrderCombo inserted successfully with ID: " + generatedId);
+        } else {
+            System.out.println("Insert failed.");
+        }
+    }
+
     @Override
     public OrderCombo getFromResultSet(ResultSet rs) throws SQLException {
         OrderCombo orderCombo = new OrderCombo();
         orderCombo.setOrderComboId(rs.getInt("orderComboId"));
         orderCombo.setComboId(rs.getInt("comboId"));
-        orderCombo.setOrder_id(rs.getInt("order_id"));
         orderCombo.setComboName(rs.getString("comboName"));
         orderCombo.setDiscountPrice(rs.getDouble("discountPrice"));
         orderCombo.setQuantity(rs.getInt("quantity"));
@@ -138,7 +159,7 @@ List<OrderCombo> orderCombos = new ArrayList<>();
 
     @Override
     public OrderCombo findById(Integer id) {
-  String sql = "SELECT * FROM OrderCombo WHERE orderComboId = ?";
+        String sql = "SELECT * FROM OrderCombo WHERE orderComboId = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -154,5 +175,5 @@ List<OrderCombo> orderCombos = new ArrayList<>();
         }
         return null;
     }
-    
+
 }

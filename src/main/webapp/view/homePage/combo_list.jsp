@@ -24,290 +24,292 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/theme-dark.css">
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
 
         <!--=== Title & Favicon ===-->
         <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
     </head>
-   <style>
-                .pagination li.disabled a {
-                    pointer-events: none;
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
+    <style>
+        .pagination li.disabled a {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-                /* Combo card styling */
-                .combo-product {
-                    background: #fff;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    margin-bottom: 30px;
-                    overflow: hidden;
-                }
+        /* Combo card styling */
+        .combo-product {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
 
-                .combo-product:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                }
+        .combo-product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
-                .combo-product .product-img {
-                    width: 100%;
-                    height: 280px;
-                    position: relative;
-                    overflow: hidden;
-                    padding: 20px;
-                    background: #fff;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
+        .combo-product .product-img {
+            width: 100%;
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-                .combo-product .product-img img {
-                    max-width: 100%;
-                    max-height: 100%;
-                    object-fit: contain;
-                    transition: transform 0.5s ease;
-                }
+        .combo-product .product-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
 
-                .combo-product:hover .product-img img {
-                    transform: scale(1.08);
-                }
+        .combo-product:hover .product-img img {
+            transform: scale(1.08);
+        }
 
-                .combo-product .product-content {
-                    padding: 15px;
-                    text-align: center;
-                    background: #fff;
-                }
+        .combo-product .product-content {
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+        }
 
-                .combo-product .product-content h2 {
-                    font-size: 16px;
-                    margin-bottom: 10px;
-                    font-weight: 500;
-                    height: 40px;
-                    overflow: hidden;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                }
+        .combo-product .product-content h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
 
-                .combo-product .product-content h2 a {
-                    color: #333;
-                    text-decoration: none;
-                }
+        .combo-product .product-content h2 a {
+            color: #333;
+            text-decoration: none;
+        }
 
-                .combo-product .product-price {
-                    margin: 10px 0;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
+        .combo-product .product-price {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-                .combo-product .original-price {
-                    font-size: 16px;
-                    color: #999;
-                    text-decoration: line-through;
-                    margin-bottom: 5px;
-                }
+        .combo-product .original-price {
+            font-size: 16px;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
 
-                .combo-product .discount-price {
-                    font-size: 18px;
-                    color: #80b435;
-                    font-weight: 600;
-                }
+        .combo-product .discount-price {
+            font-size: 18px;
+            color: #80b435;
+            font-weight: 600;
+        }
 
-                .combo-product .savings {
-                    font-size: 14px;
-                    color: #e74c3c;
-                    font-weight: 500;
-                    margin-top: 5px;
-                }
+        .combo-product .savings {
+            font-size: 14px;
+            color: #e74c3c;
+            font-weight: 500;
+            margin-top: 5px;
+        }
 
-                .combo-product .add-to-cart-btn {
-                    display: inline-block;
-                    padding: 8px 20px;
-                    background-color: #80b435;
-                    color: #fff;
-                    border-radius: 4px;
-                    font-weight: 500;
-                    transition: all 0.3s ease;
-                    border: none;
-                    cursor: pointer;
-                    margin-top: 10px;
-                    text-decoration: none;
-                }
+        .combo-product .add-to-cart-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #80b435;
+            color: #fff;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+        }
 
-                .combo-product .add-to-cart-btn:hover {
-                    background-color: #6a9c2a;
-                }
+        .combo-product .add-to-cart-btn:hover {
+            background-color: #6a9c2a;
+        }
 
-                .combo-product .view-details-btn {
-                    display: inline-block;
-                    padding: 8px 20px;
-                    background-color: #f8f9fa;
-                    color: #333;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    font-weight: 500;
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                    margin-top: 10px;
-                    margin-right: 5px;
-                    text-decoration: none;
-                }
+        .combo-product .view-details-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 5px;
+            text-decoration: none;
+        }
 
-                .combo-product .view-details-btn:hover {
-                    background-color: #e9ecef;
-                }
+        .combo-product .view-details-btn:hover {
+            background-color: #e9ecef;
+        }
 
-                .combo-badge {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background-color: #e74c3c;
-                    color: white;
-                    padding: 5px 10px;
-                    border-radius: 3px;
-                    font-size: 12px;
-                    font-weight: bold;
-                    z-index: 1;
-                }
+        .combo-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1;
+        }
 
-                .page-title {
-                    text-align: center;
-                    margin-bottom: 30px;
-                }
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-                .page-title h1 {
-                    font-size: 32px;
-                    color: #333;
-                    margin-bottom: 10px;
-                }
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
 
-                .page-title p {
-                    font-size: 16px;
-                    color: #666;
-                }
-            </style>
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
 
-            <style>
-                /* Remove old combo styles and add new coupon-like styles */
-                .combo-product {
-                    border: 2px dashed #f78600;
-                    padding: 20px;
-                    margin-bottom: 30px;
-                    border-radius: 8px;
-                    background-color: #fff;
-                    transition: all 0.3s ease;
-                }
+    <style>
+        /* Remove old combo styles and add new coupon-like styles */
+        .combo-product {
+            border: 2px dashed #f78600;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
 
-                .combo-product:hover {
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                    transform: translateY(-2px);
-                }
+        .combo-product:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
 
-                .combo-header {
-                    border-bottom: 1px solid #eee;
-                    padding-bottom: 15px;
-                    margin-bottom: 15px;
-                    text-align: center;
-                }
+        .combo-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
-                .combo-price {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 15px;
-                    font-size: 14px;
-                    color: #888;
-                }
+        .combo-price {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #888;
+        }
 
-                .combo-badge {
-                    background-color: #e74c3c;
-                    color: white;
-                    padding: 5px 10px;
-                    border-radius: 3px;
-                    font-size: 12px;
-                    font-weight: bold;
-                }
+        .combo-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-                /* Update product image styling */
-                .product-img {
-                    width: 100%;
-                    height: 200px;
-                    position: relative;
-                    overflow: hidden;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-bottom: 15px;
-                }
+        /* Update product image styling */
+        .product-img {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
 
-                /* Modify buttons to match coupon style */
-                .add-to-cart-btn {
-                    background-color: #f78600 !important;
-                    border: none !important;
-                    width: 100%;
-                    text-align: center;
-                }
+        /* Modify buttons to match coupon style */
+        .add-to-cart-btn {
+            background-color: #f78600 !important;
+            border: none !important;
+            width: 100%;
+            text-align: center;
+        }
 
-                .view-details-btn {
-                    background-color: #f8f9fa !important;
-                    border: 1px solid #ddd !important;
-                    color: #333 !important;
-                    width: 100%;
-                    margin-top: 10px !important;
-                }
-            </style>
+        .view-details-btn {
+            background-color: #f8f9fa !important;
+            border: 1px solid #ddd !important;
+            color: #333 !important;
+            width: 100%;
+            margin-top: 10px !important;
+        }
+    </style>
 
-            <style>
-                /* Add these pagination styles */
-                .pagination-area {
-                    display: flex;
-                    justify-content: center;
-                    margin-top: 40px;
-                }
+    <style>
+        /* Add these pagination styles */
+        .pagination-area {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
 
-                .pagination-content {
-                    display: flex;
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                    gap: 5px;
-                }
+        .pagination-content {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 5px;
+        }
 
-                .pagination-content li {
-                    display: inline-block;
-                }
+        .pagination-content li {
+            display: inline-block;
+        }
 
-                .pagination-content li a {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 40px;
-                    height: 40px;
-                    border: 1px solid #ddd;
-                    color: #666;
-                    border-radius: 4px;
-                    text-decoration: none;
-                    transition: all 0.3s ease;
-                }
+        .pagination-content li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            color: #666;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
 
-                .pagination-content li.active a {
-                    background-color: #80b435;
-                    border-color: #80b435;
-                    color: #fff;
-                }
+        .pagination-content li.active a {
+            background-color: #80b435;
+            border-color: #80b435;
+            color: #fff;
+        }
 
-                .pagination-content li a:hover:not(.active) {
-                    background-color: #f8f9fa;
-                    border-color: #80b435;
-                    color: #80b435;
-                }
+        .pagination-content li a:hover:not(.active) {
+            background-color: #f8f9fa;
+            border-color: #80b435;
+            color: #80b435;
+        }
 
-                .pagination-content li a i {
-                    font-size: 18px;
-                }
-            </style>
+        .pagination-content li a i {
+            font-size: 18px;
+        }
+    </style>
 
     <body>
         <!-- Pre Loader -->
@@ -395,109 +397,109 @@
         <!-- Inner Banner Area End -->
 
         <!-- Product Area -->
-         <!--Shop Area Start-->
-                <div class="shop-area mb-70">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="page-title">
-                                    <h1>Combo Sản Phẩm</h1>
-                                    <p>Tiết kiệm hơn với các combo sản phẩm đặc biệt của chúng tôi</p>
-                                </div>
-                                
-                                <!-- Add search form similar to coupons -->
-                                <div class="coupon-search mb-5">
-                                    <form action="${pageContext.request.contextPath}/comboController" method="get">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="search" value="${searchTerm}" placeholder="Tìm kiếm combo...">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+        <!--Shop Area Start-->
+        <div class="shop-area mb-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title">
+                            <h1>Combo Sản Phẩm</h1>
+                            <p>Tiết kiệm hơn với các combo sản phẩm đặc biệt của chúng tôi</p>
+                        </div>
 
-                                <div class="row">
-                                    <c:forEach items="${combos}" var="combo">
-                                        <div class="col-md-6 col-lg-4">
-                                            <div class="combo-product">
-                                                <div class="combo-header">
-                                                    <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}"/>đ</span>
-                                                    <h2 style="margin-top: 15px;">
-                                                        <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}">${combo.comboName}</a>
-                                                    </h2>
-                                                </div>
-                                                
-                                                <div class="product-img">
-                                                    <img src="" alt="" class="product-image">
-                                                </div>
-
-                                                <div class="combo-price">
-                                                    <div>
-                                                        <del><fmt:formatNumber value="${combo.originalPrice}"/>đ</del>
-                                                        <div class="text-success" style="font-size: 1.2em; font-weight: bold;">
-                                                            <fmt:formatNumber value="${combo.discountPrice}"/>đ
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-action">
-                                                        <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}" class="view-details-btn">Xem chi tiết</a>
-                                                        <a href="${pageContext.request.contextPath}/cart?action=add&comboId=${combo.comboId}&quantity=1" class="add-to-cart-btn">Thêm vào giỏ</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
-                                    
-                                    <c:if test="${empty combos}">
-                                        <div class="col-12 text-center">
-                                            <p>Không có combo nào được tìm thấy.</p>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </div>
-                            
-                            <!-- Replace the pagination HTML structure -->
-                            <c:if test="${totalPages > 1}">
-                                <div class="col-12">
-                                    <div class="pagination-area">
-                                        <ul class="pagination-content">
-                                            <c:if test="${currentPage > 1}">
-                                                <li>
-                                                    <a href="${pageContext.request.contextPath}/comboController?page=${currentPage - 1}${searchQueryString}">
-                                                        <i class="fa fa-angle-left"></i>
-                                                    </a>
-                                                </li>
-                                            </c:if>
-                                            
-                                            <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                                                <li class="${currentPage == i ? 'active' : ''}">
-                                                    <a href="${pageContext.request.contextPath}/comboController?page=${i}${searchQueryString}">${i}</a>
-                                                </li>
-                                            </c:forEach>
-                                            
-                                            <c:if test="${currentPage < totalPages}">
-                                                <li>
-                                                    <a href="${pageContext.request.contextPath}/comboController?page=${currentPage + 1}${searchQueryString}">
-                                                        <i class="fa fa-angle-right"></i>
-                                                    </a>
-                                                </li>
-                                            </c:if>
-                                        </ul>
+                        <!-- Add search form similar to coupons -->
+                        <div class="coupon-search mb-5">
+                            <form action="${pageContext.request.contextPath}/comboController" method="get">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" value="${searchTerm}" placeholder="Tìm kiếm combo...">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
                                     </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="row">
+                            <c:forEach items="${combos}" var="combo">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="combo-product">
+                                        <div class="combo-header">
+                                            <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}"/>đ</span>
+                                            <h2 style="margin-top: 15px;">
+                                                <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}">${combo.comboName}</a>
+                                            </h2>
+                                        </div>
+
+                                        <div class="product-img">
+                                            <img src="" alt="" class="product-image">
+                                        </div>
+
+                                        <div class="combo-price">
+                                            <div>
+                                                <del><fmt:formatNumber value="${combo.originalPrice}"/>đ</del>
+                                                <div class="text-success" style="font-size: 1.2em; font-weight: bold;">
+                                                    <fmt:formatNumber value="${combo.discountPrice}"/>đ
+                                                </div>
+                                            </div>
+                                            <div class="product-action">
+                                                <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}" class="view-details-btn">Xem chi tiết</a>
+                                                <a href="${pageContext.request.contextPath}/cart?action=add&comboId=${combo.comboId}&quantity=1" class="add-to-cart-btn">Thêm vào giỏ</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+
+                            <c:if test="${empty combos}">
+                                <div class="col-12 text-center">
+                                    <p>Không có combo nào được tìm thấy.</p>
                                 </div>
                             </c:if>
                         </div>
                     </div>
+
+                    <!-- Replace the pagination HTML structure -->
+                    <c:if test="${totalPages > 1}">
+                        <div class="col-12">
+                            <div class="pagination-area">
+                                <ul class="pagination-content">
+                                    <c:if test="${currentPage > 1}">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/comboController?page=${currentPage - 1}${searchQueryString}">
+                                                <i class="fa fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <li class="${currentPage == i ? 'active' : ''}">
+                                            <a href="${pageContext.request.contextPath}/comboController?page=${i}${searchQueryString}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${currentPage < totalPages}">
+                                        <li>
+                                            <a href="${pageContext.request.contextPath}/comboController?page=${currentPage + 1}${searchQueryString}">
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </div>
+                        </div>
+                    </c:if>
                 </div>
-                <!--Shop Area End-->
+            </div>
+        </div>
+        <!--Shop Area End-->
         <!-- Product Area End -->
 
         <!-- Footer Area -->
         <jsp:include page="../common/homePage/footerUser.jsp"></jsp:include>
-        <!-- Footer Area End -->
+            <!-- Footer Area End -->
 
             <!--=== Link of JS Files ===-->
-        <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/owl.carousel.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/jquery.nice-select.min.js"></script>
@@ -509,7 +511,20 @@
         <script src="${pageContext.request.contextPath}/js/contact-form-script.js"></script>
         <script src="${pageContext.request.contextPath}/js/mixitup.min.js"></script>
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+        <c:if test="${not empty sessionScope.toastMessage}">
+            <script>
+                                                                    iziToast.${sessionScope.toastType}({
+                                                                        title: '${sessionScope.toastType == "success" ? "Thành công" : "That bai"}',
+                                                                        message: '${sessionScope.toastMessage}',
+                                                                        position: 'topRight',
+                                                                        timeout: 3000,
+           color: '${sessionScope.toastType == "success" ? "green" : "red"}'
+              });
+            </script>
+            <c:remove var="toastMessage" scope="session"/>
+            <c:remove var="toastType" scope="session"/>
+        </c:if>
         <style>
             .product-img {
                 height: 250px;
@@ -629,27 +644,27 @@
         <script>
             //Xử lý price range 
             $(function () {
-                <% 
+            <%
                     Double min_price = (Double) request.getAttribute("minPrice"); // ví dụ 50000
                     Double max_price = (Double) request.getAttribute("maxPrice"); // ví dụ 200000
 
                     Double min_price_default = (Double) request.getAttribute("minPriceDefault"); // ví dụ 0
                     Double max_price_default = (Double) request.getAttribute("maxPriceDefault"); // ví dụ 500000
-                %>
+%>
 
                 // Đây là khoảng người dùng đã lọc
-                const min = <%= min_price %>;
-                const max = <%= max_price %>;
+                const min = <%= min_price%>;
+                const max = <%= max_price%>;
 
                 // Đây là giới hạn full cho thanh trượt
-                const minPrice = <%= min_price_default %>;
-                const maxPrice = <%= max_price_default %>;
+                const minPrice = <%= min_price_default%>;
+                const maxPrice = <%= max_price_default%>;
 
                 $("#range-slider").slider({
                     range: true,
-                    min: minPrice,     
-                    max: maxPrice,     
-                    values: [min, max], 
+                    min: minPrice,
+                    max: maxPrice,
+                    values: [min, max],
                     slide: function (event, ui) {
                         const minForm = ui.values[0].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
                         const maxForm = ui.values[1].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
@@ -695,9 +710,9 @@
                 if (maxVal !== "") {
                     params.append("selectedMax", maxVal);
                 }
-                
+
                 //Lấy min/max calo
-                
+
                 const minInputCalo = formSearch.querySelector('input[name="selectedMinCalo"]');
                 const maxInputCalo = formSearch.querySelector('input[name="selectedMaxCalo"]');
                 const minValCalo = minInputCalo ? minInputCalo.value.trim() : "";
@@ -724,14 +739,14 @@
                 const fullUrl = baseUrl + "?" + params.toString();
                 console.log(baseUrl);
                 window.location.href = fullUrl;
-                };
-            
+            };
+
             //Xử lý submitSort
             const submitSort = (e) => {
                 const sortType = e.value;
                 console.log(sortType);
-                
-                 // Lấy form
+
+                // Lấy form
                 const formSearch = document.querySelector("#formSearch");
 
                 // Tạo URLSearchParams
@@ -755,9 +770,9 @@
                 if (maxVal !== "") {
                     params.append("selectedMax", maxVal);
                 }
-                
+
                 //Lấy min/max calo
-                
+
                 const minInputCalo = formSearch.querySelector('input[name="selectedMinCalo"]');
                 const maxInputCalo = formSearch.querySelector('input[name="selectedMaxCalo"]');
                 const minValCalo = minInputCalo ? minInputCalo.value.trim() : "";
@@ -777,38 +792,38 @@
                 }
                 //Add sort type
                 params.append("sort", sortType);
-                
+
                 //Lấy fullForm + gửi
                 const baseUrl = formSearch.getAttribute("action");
                 const fullUrl = baseUrl + "?" + params.toString();
                 console.log(baseUrl);
                 window.location.href = fullUrl;
-                
+
             }
-            
+
             //Xử lý calo range
             $(function () {
-                <% 
+            <%
                     Double min_calo = (Double) request.getAttribute("minCalo"); // ví dụ 50000
                     Double max_calo = (Double) request.getAttribute("maxCalo"); // ví dụ 200000
 
                     Double min_calo_default = (Double) request.getAttribute("minCaloDefault"); // ví dụ 0
                     Double max_calo_default = (Double) request.getAttribute("maxCaloDefault"); // ví dụ 500000
-                %>
+%>
 
                 // Đây là khoảng người dùng đã lọc
-                const min = <%= min_calo %>;
-                const max = <%= max_calo %>;
+                const min = <%= min_calo%>;
+                const max = <%= max_calo%>;
 
                 // Đây là giới hạn full cho thanh trượt
-                const minCalo = <%= min_calo_default %>;
-                const maxCalo = <%= max_calo_default %>;
+                const minCalo = <%= min_calo_default%>;
+                const maxCalo = <%= max_calo_default%>;
 
                 $("#calo-slider").slider({
                     range: true,
-                    min: minCalo,     
-                    max: maxCalo,     
-                    values: [min, max], 
+                    min: minCalo,
+                    max: maxCalo,
+                    values: [min, max],
                     slide: function (event, ui) {
                         const minForm = ui.values[0];
                         const maxForm = ui.values[1];

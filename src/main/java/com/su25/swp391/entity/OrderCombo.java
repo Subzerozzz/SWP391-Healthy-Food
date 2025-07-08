@@ -15,7 +15,8 @@ import lombok.ToString;
 /**
  *
  * @author Hang
- */@ToString
+ */
+@ToString
 @Builder
 @Data
 @AllArgsConstructor
@@ -23,8 +24,8 @@ import lombok.ToString;
 @Getter
 @Setter
 public class OrderCombo {
-     private Integer orderComboId;
-     private Integer order_id;
+
+    private Integer orderComboId;
     private Integer comboId;
     private String comboName;
     private Double discountPrice;

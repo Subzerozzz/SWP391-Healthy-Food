@@ -47,7 +47,7 @@ public class AjaxServlet extends HttpServlet {
             if (amountParam == null || amountParam.isEmpty()) {
                 req.getSession().setAttribute("message", "Payment failed: Missing amount parameter");
                 req.getSession().setAttribute("messageType", "error");
-                resp.sendRedirect(req.getContextPath() + "/cart");
+                resp.sendRedirect(req.getContextPath() + "/comboController");
                 return;
             }
             String orderId = req.getParameter("orderId");
