@@ -157,7 +157,16 @@
                                             <input type="number" class="combo-quantity-input" value="1" min="1" id="combo-quantity">
                                             <button type="button" class="combo-quantity-btn increase-quantity">+</button>
                                         </div>
-                                        <button type="button" class="combo-add-to-cart-btn" onclick="buyComboNow(${combo.comboId})">Mua ngay</button>
+                                        <form action="${pageContext.request.contextPath}/process-vnpay" method="post" id="buy-now-form">
+                                            <input type="hidden" name="comboId" value="${combo.comboId}">
+                                            <input type="hidden" name="quantity" id="hidden-quantity" value="1">
+                                            <input type="hidden" name="amount" id="hidden-amount" value="${combo.discountPrice}">
+
+                                           
+
+                                            <button type="submit" class="combo-add-to-cart-btn">Mua ngay</button>
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -410,39 +419,32 @@
             margin-bottom: 15px;
         }
     </style>
-    
-      <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Xử lý tăng giảm số lượng
-                    const quantityInput = document.getElementById('combo-quantity');
-                    const decreaseBtn = document.querySelector('.decrease-quantity');
-                    const increaseBtn = document.querySelector('.increase-quantity');
 
-                    decreaseBtn.addEventListener('click', function () {
-                        let currentValue = parseInt(quantityInput.value);
-                        if (currentValue > 1) {
-                            quantityInput.value = currentValue - 1;
-                        }
-                    });
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Xử lý tăng giảm số lượng
+            const quantityInput = document.getElementById('combo-quantity');
+            const decreaseBtn = document.querySelector('.decrease-quantity');
+            const increaseBtn = document.querySelector('.increase-quantity');
 
-                    increaseBtn.addEventListener('click', function () {
-                        let currentValue = parseInt(quantityInput.value);
-                        quantityInput.value = currentValue + 1;
-                    });
-                });
-
-                // Hàm thêm combo vào giỏ hàng
-//                <!-- function addComboToCart(comboId) {
-//                    const quantity = document.getElementById('combo-quantity').value;
-//                    window.location.href = '${pageContext.request.contextPath}/cart?action=add&comboId=' + comboId + '&quantity=' + quantity;
-//                } -->
-                
-                // Hàm mua ngay combo
-                function buyComboNow(comboId) {
-                    const quantity = document.getElementById('combo-quantity').value;
-                    window.location.href = '${pageContext.request.contextPath}/buy-combo?action=buynow&comboId=' + comboId + '&quantity=' + quantity;
+            decreaseBtn.addEventListener('click', function () {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
                 }
-        </script>
+            });
+
+            increaseBtn.addEventListener('click', function () {
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+        });
+        // Hàm mua ngay combo
+        function buyComboNow(comboId) {
+            const quantity = document.getElementById('combo-quantity').value;
+            window.location.href = '${pageContext.request.contextPath}/buy-combo?action=buy-combo&comboId=' + comboId + '&quantity=' + quantity;
+        }
+    </script>
 
 </body>
 

@@ -142,7 +142,7 @@ public class ManagerCombo extends HttpServlet {
         foodJson.append("]");
         request.setAttribute("foodJson", foodJson.toString());
         request.setAttribute("foods", foods);
-        request.getRequestDispatcher("/view/nutritionist/combo/addCombo_1.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
