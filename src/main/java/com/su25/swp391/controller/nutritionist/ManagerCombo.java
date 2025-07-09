@@ -55,6 +55,12 @@ public class ManagerCombo extends HttpServlet {
             case "active":
                 active(request, response);
                 break;
+            case "find":
+                findCombo(request, response);
+                break;
+            case "filter":
+                filter(request, response);
+                break;
             case "list":
             default:
                 listCombo(request, response);
@@ -136,75 +142,94 @@ public class ManagerCombo extends HttpServlet {
         foodJson.append("]");
         request.setAttribute("foodJson", foodJson.toString());
         request.setAttribute("foods", foods);
-        request.getRequestDispatcher("/view/nutritionist/combo/addCombo_1.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        //lấy id combo cần edit
-        String comboIdStr = request.getParameter("comboId");
-        //kieem tra xem id co ton tại không
-        if (comboIdStr != null && !comboIdStr.isEmpty()) {
-            int comboId = Integer.parseInt(comboIdStr);
-            //lay du lieu combo
-            ComboDAO comboDao = new ComboDAO();
-            Combo combo = comboDao.findById(comboId);
+        try {
+            String comboIdStr = request.getParameter("comboId");
+            System.out.println(">> comboIdStr = " + comboIdStr);
 
-            if (combo != null) {
-                //lay food trong combo
-                ComboFoodDAO comboFoodDao = new ComboFoodDAO();
-                List<ComboFood> comboFood = (List<ComboFood>) comboFoodDao.findById(comboId);
-                //lay nhung food voiws trang thái active của nhưng cái đã chon trong combo
-                FoodDAO foodDao = new FoodDAO();
-                List<Food> allFoods = foodDao.findAllFoodActive();
+            if (comboIdStr != null && !comboIdStr.isEmpty()) {
+                int comboId = Integer.parseInt(comboIdStr);
+                System.out.println(">> Parsed comboId = " + comboId);
+                ComboDAO comboDao = new ComboDAO();
+                Combo combo = comboDao.findById(comboId);
+                System.out.println(">> combo = " + combo);
 
-                //chueyn đôi food thành json cho js
-                StringBuilder foodsJson = new StringBuilder("[");
-                for (int i = 0; i < allFoods.size(); i++) {
-                    Food food = allFoods.get(i);
-                    foodsJson.append("{")
-                            .append("\"id\":").append(food.getId()).append(",")
-                            .append("\"name\":\"").append(food.getName()).append(",")
-                            .append("\"price\":\"").append(food.getPrice()).append(",")
-                            .append("\"calo\":").append(food.getCalo())
-                            .append("}");
-                    if (i < allFoods.size() - 1) {
-                        foodsJson.append(",");
-                    }
-                }
-                foodsJson.append("]");
+                if (combo != null) {
+                    ComboFoodDAO comboFoodDao = new ComboFoodDAO();
+                    List<ComboFood> comboFood = comboFoodDao.findByIdList(comboId);
 
-                //Convert selected products to JSON for JavaScript
-                StringBuilder selectedFoodsJson = new StringBuilder("[");
-                for (int i = 0; i < comboFood.size(); i++) {
-                    ComboFood cbfood = comboFood.get(i);
-                    //lay tung food  theo comboid
-                    Food food = foodDao.findById(cbfood.getFoodId());
-                    if (food != null) {
-                        selectedFoodsJson.append("{")
+                    FoodDAO foodDao = new FoodDAO();
+                    List<Food> allFoods = foodDao.findAllFoodActive();
+
+                    // Convert all food to JSON
+                    System.out.println(">> Start converting food to JSON");
+                    StringBuilder foodsJson = new StringBuilder("[");
+                    for (int i = 0; i < allFoods.size(); i++) {
+                        Food food = allFoods.get(i);
+
+                        // Chống null gây lỗi
+                        String name = food.getName() != null ? food.getName() : "null";
+                        double price = food.getPrice() != null ? food.getPrice() : 0.0;
+                        double calo = food.getCalo() != null ? food.getCalo() : 0.0;
+
+                        foodsJson.append("{")
                                 .append("\"id\":").append(food.getId()).append(",")
-                                .append("\"name\":\"").append(food.getName()).append(",")
-                                .append("\"price\":\"").append(food.getPrice()).append(",")
-                                .append("\"quantity\":").append(food.getCalo())
+                                .append("\"name\":\"").append(name).append("\",")
+                                .append("\"price\":").append(price).append(",")
+                                .append("\"calo\":").append(calo)
                                 .append("}");
-                        if (i < comboFood.size() - 1) {
-                            selectedFoodsJson.append("]");
+                        if (i < allFoods.size() - 1) {
+                            foodsJson.append(",");
                         }
                     }
-                    //set attributes for jsp 
+                    foodsJson.append("]");
+                    System.out.println(">> Done. JSON: " + foodsJson);
+
+                    // Convert selected combo foods to JSON
+                    StringBuilder selectedFoodsJson = new StringBuilder("[");
+                    for (int i = 0; i < comboFood.size(); i++) {
+                        ComboFood cbfood = comboFood.get(i);
+                        Food food = foodDao.findById(cbfood.getFoodId());
+
+                        if (food != null) {
+                            String name = food.getName() != null ? food.getName() : "null";
+                            double price = food.getPrice() != null ? food.getPrice() : 0.0;
+
+                            selectedFoodsJson.append("{")
+                                    .append("\"id\":").append(food.getId()).append(",")
+                                    .append("\"name\":\"").append(name).append("\",")
+                                    .append("\"price\":").append(price).append(",")
+                                    .append("\"quantity\":").append(cbfood.getQuantityInCombo())
+                                    .append("}");
+                            if (i < comboFood.size() - 1) {
+                                selectedFoodsJson.append(",");
+                            }
+                        }
+                    }
+                    selectedFoodsJson.append("]");
+
+                    // Set attributes
                     request.setAttribute("combo", combo);
                     request.setAttribute("comboFood", comboFood);
                     request.setAttribute("allFoods", allFoods);
-                    request.setAttribute("foodJson", foodsJson);
-                    request.setAttribute("selectedFoodJson", selectedFoodsJson);
-
+                    request.setAttribute("foodJson", foodsJson.toString());
+                    request.setAttribute("selectedFoodJson", selectedFoodsJson.toString());
                     request.getRequestDispatcher("/view/nutritionist/combo/editCombo.jsp").forward(request, response);
                     return;
                 }
-
             }
+
+            // Nếu không hợp lệ thì redirect
+            response.sendRedirect(request.getContextPath() + "/managerCombo");
+
+        } catch (Exception e) {
+            System.out.println("Lỗi xảy ra khi hiển thị form chỉnh sửa combo:");
+            e.printStackTrace();  // Đây là dòng giúp bạn biết chính xác lỗi ở đâu
+            response.sendRedirect(request.getContextPath() + "/managerCombo?error=edit-fail");
         }
-    
-        response.sendRedirect(request.getContextPath() + "/view/nutritionist/combo/editCombo.jsp");
     }
 
     private void deactiveCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -364,14 +389,25 @@ public class ManagerCombo extends HttpServlet {
 
     private void updateCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int comboId = Integer.parseInt(request.getParameter("comboId"));
+
+            String comboIdStr = request.getParameter("comboId");
+            int comboId = Integer.parseInt(comboIdStr);
             String name = request.getParameter("comboName");
             String description = request.getParameter("description");
             Double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
             String status = request.getParameter("status");
 
             String foodIdsStr = request.getParameter("foodIds");
+            System.out.println(">> foodIdsStr = " + foodIdsStr);
             String quantitiesStr = request.getParameter("quantities");
+            System.out.println(">> quantitiesStr = " + quantitiesStr);
+            // Validate món ăn được chọn
+            if (foodIdsStr == null || foodIdsStr.isEmpty()
+                    || quantitiesStr == null || quantitiesStr.isEmpty()) {
+                setToastMessage(request, "Phải chọn ít nhất một món ăn!", "error");
+                response.sendRedirect(request.getContextPath() + "/managerCombo?action=edit&comboId=" + comboId);
+                return;
+            }
             String[] foodIds = foodIdsStr != null ? foodIdsStr.split(",") : null;
             String[] quantities = quantitiesStr != null ? quantitiesStr.split(",") : null;
 
@@ -380,8 +416,8 @@ public class ManagerCombo extends HttpServlet {
             if (!errors.isEmpty()) {
                 request.getSession().setAttribute("errors", errors);
                 request.getSession().setAttribute("formData", request.getParameterMap());
-                response.sendRedirect(request.getContextPath() + "/managerCombo?action=edit" + comboId);
-
+                response.sendRedirect(request.getContextPath() + "/managerCombo?action=edit&comboId=" + comboId);
+                return;
             }
             FoodDAO foodDao = new FoodDAO();
             Double originalPrice = calculateOriginalPrice(foodIds, quantities, foodDao);
@@ -422,11 +458,7 @@ public class ManagerCombo extends HttpServlet {
         } catch (NumberFormatException e) {
             setToastMessage(request, "Error: " + e.getMessage(), "error");
         }
-        String page = request.getParameter("page");
         String redirectUrl = request.getContextPath() + "/managerCombo?action=list";
-        if (page != null && !page.isEmpty()) {
-            redirectUrl += "&page=" + page;
-        }
         response.sendRedirect(redirectUrl);
     }
 
@@ -450,9 +482,9 @@ public class ManagerCombo extends HttpServlet {
 
         //validate name
         if (name == null || name.trim().isEmpty()) {
-            errors.put("name", "Tên combo không được để null");
-        } else if (!name.matches("^[a-zA-Z0-9_ ]+$")) {
-            errors.put("name", "combo không được chưa kí tự đặc biệt");
+            errors.put("name", "Tên combo không được để trống");
+        } else if (!name.matches("^[\\p{L}0-9 _.,-]+$")) {
+            errors.put("name", "Tên combo không được chứa ký tự đặc biệt");
         }
         //validate food
         if (foodId == null || foodId.length == 0) {
@@ -515,5 +547,89 @@ public class ManagerCombo extends HttpServlet {
     private void setToastMessage(HttpServletRequest request, String message, String type) {
         request.getSession().setAttribute("toastMessage", message);
         request.getSession().setAttribute("toastType", type);
+    }
+
+    private void findCombo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String searchKey = request.getParameter("find");
+        String pageStr = request.getParameter("page");
+
+        int page = 1;
+        int pageSize = 5;
+
+        // Xử lý phân trang
+        if (pageStr != null && !pageStr.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageStr);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        // Nếu không nhập gì thì redirect về list combo
+        if (searchKey == null || searchKey.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/managerCombo");
+            return;
+        }
+
+        searchKey = searchKey.trim();
+
+        ComboDAO comboDAO = new ComboDAO();
+        List<Combo> listComboSearch = comboDAO.searchCombos(searchKey, page, pageSize);
+        int totalCombos = comboDAO.countSearchResults(searchKey);
+        int totalPages = (int) Math.ceil((double) totalCombos / pageSize);
+
+        // Đẩy dữ liệu cho JSP
+        request.setAttribute("listCombo", listComboSearch);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("searchKey", searchKey);
+        //tinh toan pham vi the hien
+        int startRecord = (page - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalCombos);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+
+        // Forward tới trang JSP để hiển thị
+        request.getRequestDispatcher("/view/nutritionist/combo/listCombo.jsp").forward(request, response);
+    }
+
+    private void filter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String status = request.getParameter("status");
+        if (status != null && status.isEmpty()) {
+            status = null; // Không lọc theo status nếu chọn "All"
+        }
+        //lay tham so phan trang
+        String pageStr = request.getParameter("page");
+
+        int page = 1;
+        int pageSize = 5;
+
+        // Xử lý phân trang
+        if (pageStr != null && !pageStr.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageStr);
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+        ComboDAO comboDao = new ComboDAO();
+        //lay danh sach phan trang 
+        List<Combo> filterComboStatus = comboDao.filterComboPaging(status, page, pageSize);
+        //tinh toan thong tin phan trang
+        int totalCombos = comboDao.countByStatus(status);
+        int totalPages = (int) Math.ceil((double) totalCombos / pageSize);
+        // Đẩy dữ liệu cho JSP
+        request.setAttribute("listCombo", filterComboStatus);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("status", status);
+        //tinh toan pham vi the hien
+        int startRecord = (page - 1) * pageSize + 1;
+        int endRecord = Math.min(startRecord + pageSize - 1, totalCombos);
+        request.setAttribute("startRecord", startRecord);
+        request.setAttribute("endRecord", endRecord);
+
+        // Forward tới trang JSP để hiển thị
+        request.getRequestDispatcher("/view/nutritionist/combo/listCombo.jsp").forward(request, response);
     }
 }
