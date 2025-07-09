@@ -10,10 +10,12 @@ import com.su25.swp391.dal.implement.ComboFoodDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderComboDAO;
 import com.su25.swp391.dal.implement.OrderComboFoodDAO;
+import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Combo;
 import com.su25.swp391.entity.ComboFood;
 import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderCombo;
 import com.su25.swp391.entity.OrderComboFood;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -39,7 +42,7 @@ import java.util.TimeZone;
  *
  * @author Hang
  */
-@WebServlet(name = "BuyComboController", urlPatterns = {"/buy-combo", "/process-vnpay","/vnpay-return-combo"})
+@WebServlet(name = "BuyComboController", urlPatterns = {"/buy-combo", "/process-vnpay",})
 public class BuyComboController extends HttpServlet {
 
     ComboDAO combodao = new ComboDAO();
@@ -47,6 +50,9 @@ public class BuyComboController extends HttpServlet {
     FoodDAO fooddao = new FoodDAO();
     OrderComboDAO ordercombodao = new OrderComboDAO();
     OrderComboFoodDAO ordercomboFoodDao = new OrderComboFoodDAO();
+    OrderDAO orderDao = new OrderDAO();
+    private static final String COMBO_SERVLET_URL = "comboController";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -94,9 +100,9 @@ public class BuyComboController extends HttpServlet {
             case "/process-vnpay":
                 processVnpay(request, response);
                 break;
-            case "/vnpay-return-combo":
-                handleVNPayReturnForCombo(request, response);
-                break;
+//            case "/vnpay-return-combo":
+//                handleVNPayReturnForCombo(request, response);
+//                break;
             default:
                 response.sendRedirect(request.getContextPath() + "/home");
 
@@ -111,92 +117,110 @@ public class BuyComboController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-      String path = request.getServletPath();
-        switch (path) {
-            case "/buy-combo":
-                processBuyCombo(request, response);
-                break;
-            case "/process-vnpay":
-                processVnpay(request, response);
-                break;
-            case "/vnpay-return-combo":
-                handleVNPayReturnForCombo(request, response);
-                break;
-            default:
-                response.sendRedirect(request.getContextPath() + "/home");
+     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
 
+        if ("wholesale".equals(action)) {
+            handleWholesalePayment(req, resp); // 
+        } else {
+            // fallback nếu không có action
+            resp.sendRedirect(req.getContextPath() + "/comboController");
         }
     }
 
+private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            String amountParam = req.getParameter("amount");
+            if (amountParam == null || amountParam.isEmpty()) {
+                resp.sendRedirect(req.getContextPath() + "/comboController");
+                return;
+            }
+
+            long amount = (long) (Double.parseDouble(amountParam) * 100); // VNPAY cần nhân 100
+            String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // hoặc gọi VNPayConfig.buildUrl(...)
+            // build thêm tham số vào URL...
+            String redirectUrl = vnp_Url + "?vnp_Amount=" + amount + "&..."; // build đúng tham số bạn cần
+
+            resp.sendRedirect(redirectUrl); // 👈 chuyển người dùng tới VNPay
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/comboController");
+        }
+    }
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
-   private void processBuyCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+    private void processBuyCombo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
-    if (account == null) {
-        response.sendRedirect(request.getContextPath() + "/authen?action=login&message=Vui lòng đăng nhập để mua hàng");
-        return;
+        if (account == null) {
+            String message = URLEncoder.encode("Vui lòng đăng nhập để mua hàng", "UTF-8");
+            request.getRequestDispatcher("/view/authen/login.jsp").forward(request, response);
+            return;
+        }
+
+        String comboIdStr = request.getParameter("comboId");
+        String quantityStr = request.getParameter("quantity");
+
+        int comboId = 0;
+        int quantity = 0;
+        try {
+            comboId = Integer.parseInt(comboIdStr);
+            quantity = Integer.parseInt(quantityStr);
+            if (quantity <= 0) {
+                throw new NumberFormatException("Số lượng phải > 0");
+            }
+        } catch (NumberFormatException e) {
+
+            setToastMessage(request, "Không thể tạo đơn hàng", "error");
+            response.sendRedirect(request.getContextPath() + "/comboController");
+            return;
+        }
+
+        Combo combo = combodao.findById(comboId);
+        if (combo == null) {
+            setToastMessage(request, "Không tìm thấy combo.", "error");
+            response.sendRedirect(request.getContextPath() + "/comboController");
+            return;
+        }
+
+        List<ComboFood> comboFoods = combofoodDao.findByIdList(comboId);
+
+        double totalPrice = combo.getDiscountPrice() * quantity;
+
+        OrderCombo order = new OrderCombo();
+        order.setComboId(combo.getComboId());
+        order.setComboName(combo.getComboName());
+        order.setDiscountPrice(combo.getDiscountPrice());
+        order.setQuantity(quantity);
+        order.setTotalPrice(totalPrice);
+        order.setPayment_status(0);
+
+        int orderId = ordercombodao.insert(order);
+        if (orderId == -1) {
+            setToastMessage(request, "Không thể tạo đơn hàng", "error");
+            response.sendRedirect(request.getContextPath() + "/comboController");
+            return;
+        }
+
+        // Lưu vào session để thanh toán
+        session.setAttribute("combo", combo);
+        session.setAttribute("quantity", quantity);
+        session.setAttribute("comboFoods", comboFoods);
+        session.setAttribute("comboOrderId", orderId);
+        session.setAttribute("comboAmount", totalPrice);
+
+        // Chuyển sang trang tạo thanh toán
+        String url = request.getContextPath()
+                + "/ajaxServlet?amount=" + combo.getDiscountPrice()
+                + "&action=wholesale";
+        response.sendRedirect(url);
+
     }
-
-    String comboIdStr = request.getParameter("comboId");
-    String quantityStr = request.getParameter("quantity");
-
-    int comboId = 0;
-    int quantity = 0;
-    try {
-        comboId = Integer.parseInt(comboIdStr);
-        quantity = Integer.parseInt(quantityStr);
-        if (quantity <= 0) throw new NumberFormatException("Số lượng phải > 0");
-    } catch (NumberFormatException e) {
-        
-        setToastMessage(request, "Không thể tạo đơn hàng", "error");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-        return;
-    }
-
-    Combo combo = combodao.findById(comboId);
-    if (combo == null) {
-        setToastMessage(request, "Không tìm thấy combo.", "error");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-        return;
-    }
-
-    List<ComboFood> comboFoods = combofoodDao.findByIdList(comboId);
-
-    double totalPrice = combo.getDiscountPrice() * quantity;
-
-    OrderCombo order = new OrderCombo();
-    order.setComboId(combo.getComboId());
-    order.setComboName(combo.getComboName());
-    order.setDiscountPrice(combo.getDiscountPrice());
-    order.setQuantity(quantity);
-    order.setTotalPrice(totalPrice);
-    order.setPayment_status(0);
-
-    int orderId = ordercombodao.insert(order);
-    if (orderId == -1) {
-        setToastMessage(request, "Không thể tạo đơn hàng", "error");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-        return;
-    }
-
-    // Lưu vào session để thanh toán
-    session.setAttribute("combo", combo);
-    session.setAttribute("quantity", quantity);
-    session.setAttribute("comboFoods", comboFoods);
-    session.setAttribute("comboOrderId", orderId);
-    session.setAttribute("comboAmount", totalPrice);
-
-    // Chuyển sang servlet tạo thanh toán
-    response.sendRedirect(request.getContextPath() + "/process-vnpay");
-}
 
     @Override
     public String getServletInfo() {
@@ -209,116 +233,120 @@ public class BuyComboController extends HttpServlet {
         session.setAttribute("toastType", type);
     }
 
+    /**
+     * Xử lý thông tin khi VNPAY trả về
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void processVnpay(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    try {
-        Combo combo = (Combo) session.getAttribute("combo");
-        int quantity = (int) session.getAttribute("quantity");
-        List<ComboFood> comboFoods = (List<ComboFood>) session.getAttribute("comboFoods");
-        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-        int orderId = (int) session.getAttribute("comboOrderId");
-        double amount = (double) session.getAttribute("comboAmount");
+        //get combo info
+        HttpSession session = request.getSession();
+        try {
+            Combo combo = (Combo) session.getAttribute("combo");
+            int quantity = (int) session.getAttribute("quantity");
+            List<ComboFood> comboFoods = (List<ComboFood>) session.getAttribute("comboFood");
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
-        if (combo == null || quantity <= 0 || orderId <= 0) {
-            setToastMessage(request, "Thiếu dữ liệu đơn hàng", "error");
-            response.sendRedirect(request.getContextPath() + "/comboController");
-            return;
-        }
+            //get VNPAY info
+            String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
+            String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
 
-        // VNPay config
-        long amountVND = (long) (amount * 100); // chuyển sang đơn vị VNPay
-        String vnp_TxnRef = String.valueOf(orderId);
-        String vnp_OrderInfo = "Thanh toán combo #" + orderId;
-        String orderType = "other";
-        String vnp_Returnurl = VNPayConfig.vnp_ReturnUrl;
-        String vnp_IpAddr = request.getRemoteAddr();
+            //kiểm tra trạng thái thanh toán
+            if ("00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
+                // Thanh toán thành công
+                //STEP 1:  insert order
+                Order order = new Order();
+                order.setUserId(account.getId());
+                order.setStatus(GlobalConfig.ORDER_STATUS_PENDING);
+                order.setShippingAddress(account.getAddress());
+                order.setTotal(BigDecimal.valueOf(combo.getDiscountPrice()));
+                order.setPaymentMethod(GlobalConfig.PAYMENT_METHOD_VNPAY);
 
-        // Thời gian tạo đơn
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cal.getTime());
-        cal.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cal.getTime());
+                int orderIdAfterInsrt = orderDao.insert(order);
 
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", VNPayConfig.vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amountVND));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
-        vnp_Params.put("vnp_OrderType", orderType);
-        vnp_Params.put("vnp_ReturnUrl", vnp_Returnurl);
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_BankCode", "NCB");
+                //STEP2: insert order combo
+                OrderCombo orderCombo = OrderCombo
+                        .builder()
+                        .order_id(orderIdAfterInsrt)
+                        .comboId(combo.getComboId())
+                        .comboName(combo.getComboName())
+                        .discountPrice(Double.valueOf(combo.getDiscountPrice()))
+                        .quantity(quantity)
+                        .totalPrice(Double.valueOf(combo.getOriginalPrice()))
+                        .build();
 
-        // Sắp xếp & ký dữ liệu
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
+                int orderComboIdAfterInsert = ordercombodao.insert(orderCombo);
 
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
-        for (String name : fieldNames) {
-            String value = vnp_Params.get(name);
-            if (hashData.length() > 0) {
-                hashData.append('&');
-                query.append('&');
+                //STEP3 : insert order combo product
+                for (ComboFood cp : comboFoods) {
+                    Food food = fooddao.findById(cp.getFoodId());
+                    OrderComboFood orderComboFood = OrderComboFood
+                            .builder()
+                            .orderComboId(orderComboIdAfterInsert)
+                            .foodId(food.getId())
+                            .foodName(food.getName())
+                            .foodPrice(food.getPrice())
+                            .quantityInCombo(cp.getQuantityInCombo())
+                            .totalQuantity(cp.getQuantityInCombo() * quantity)
+                            .build();
+
+                    ordercomboFoodDao.insert(orderComboFood);
+
+                }
+                //Xóa session
+                session.removeAttribute("combo");
+                session.removeAttribute("quantity");
+                session.removeAttribute("comboProducts");
+
+                setToastMessage(request, "Order Successful !!", "success");
+                response.sendRedirect(COMBO_SERVLET_URL);
+            } else {
+                // Thanh toán không thành công hoặc lỗi
+                // Xử lý lỗi hoặc chuyển hướng đến trang thông báo lỗi
+                setToastMessage(request, "Order failed. Something Wrong!!", "error");
+                response.sendRedirect(COMBO_SERVLET_URL);
             }
-            hashData.append(name).append('=').append(value);
-            query.append(URLEncoder.encode(name, StandardCharsets.US_ASCII)).append('=')
-                    .append(URLEncoder.encode(value, StandardCharsets.US_ASCII));
+
+        } catch (Exception e) {
+            setToastMessage(request, "Order failed. Something Wrong!! " + e.getMessage(), "error");
+            response.sendRedirect(COMBO_SERVLET_URL);
         }
 
-        String secureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
-        query.append("&vnp_SecureHash=").append(secureHash);
-
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + query;
-        response.sendRedirect(paymentUrl);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        setToastMessage(request, "Có lỗi xảy ra khi xử lý thanh toán!", "error");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-    }
-}
-
-
-    private void handleVNPayReturnForCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String responseCode = request.getParameter("vnp_ResponseCode");
-        String transactionStatus = request.getParameter("vnp_TransactionStatus");
-
-        if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
-            handleComboOrderSuccess(request, response);
-        }  else {
-            handleComboOrderFailed(request, response);
-        }
     }
 
-    private void handleComboOrderSuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
-
-        OrderCombo ordercombo = ordercombodao.findById(orderId);
-        if (ordercombo != null) {
-            ordercombo.setPayment_status(1);
-            ordercombodao.update(ordercombo);
-        }
-        setToastMessage(request, "Thanh toán thành công!", "success");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-    }
-
-
-    private void handleComboOrderFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
-        OrderCombo order = ordercombodao.findById(orderId);
-        if (order != null) {
-            order.setPayment_status(0);
-            ordercombodao.update(order);
-        }
-        setToastMessage(request, "Thanh toán thất bại.", "error");
-        response.sendRedirect(request.getContextPath() + "/comboController");
-    }
+//    private void handleVNPayReturnForCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        String responseCode = request.getParameter("vnp_ResponseCode");
+//        String transactionStatus = request.getParameter("vnp_TransactionStatus");
+//
+//        if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
+//            handleComboOrderSuccess(request, response);
+//        } else {
+//            handleComboOrderFailed(request, response);
+//        }
+//    }
+//
+//    private void handleComboOrderSuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
+//
+//        OrderCombo ordercombo = ordercombodao.findById(orderId);
+//        if (ordercombo != null) {
+//            ordercombo.setPayment_status(1);
+//            ordercombodao.update(ordercombo);
+//        }
+//        setToastMessage(request, "Thanh toán thành công!", "success");
+//        response.sendRedirect(request.getContextPath() + "/comboController");
+//    }
+//
+//    private void handleComboOrderFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
+//        OrderCombo order = ordercombodao.findById(orderId);
+//        if (order != null) {
+//            order.setPayment_status(0);
+//            ordercombodao.update(order);
+//        }
+//        setToastMessage(request, "Thanh toán thất bại.", "error");
+//        response.sendRedirect(request.getContextPath() + "/comboController");
+//    }
 }

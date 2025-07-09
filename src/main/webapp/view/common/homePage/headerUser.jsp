@@ -35,7 +35,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="index-2.html" class="nav-link">
+                                        <a href="${pageContext.request.contextPath}/comboController" class="nav-link">
                                             Home Two
                                         </a>
                                     </li>
@@ -75,7 +75,7 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="shop-details-right-sidebar.html" class="nav-link">
+                                                <a href="" class="nav-link">
                                                     Shop Details Right Sidebar 
                                                 </a>
                                             </li>
