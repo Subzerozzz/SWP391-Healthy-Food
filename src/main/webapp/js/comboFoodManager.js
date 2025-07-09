@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Set up event listeners
     setupEventListeners();
+    updateHiddenInputs();
 });
 
 function initComboForm() {
@@ -144,18 +145,18 @@ function updateTotalPrice() {
         const select = row.querySelector('.food-select');
         const quantityInput = row.querySelector('.food-quantity');
 
-        if (select && select.value && quantityInput) {
+        if (select && select.value && quantityInput && quantityInput.value) {
             const selectedOption = select.options[select.selectedIndex];
             const price = parseFloat(selectedOption.dataset.price) || 0;
-            const quantity = parseInt(quantityInput.value) || 0;
+            const quantity = parseInt(quantityInput.value) || 1; // Mặc định là 1 nếu không nhập
 
             totalPrice += price * quantity;
         }
     });
 
-    // Update display and hidden input
+    // Cập nhật hiển thị giá và input ẩn
     const priceDisplay = document.getElementById('original-price-display');
-    const priceInput = document.getElementById('originalPrice');
+    const priceInput = document.getElementById('originalPrice'); // Chú ý tên ID phải khớp với form
 
     if (priceDisplay) {
         priceDisplay.textContent = totalPrice.toLocaleString('vi-VN');
@@ -165,20 +166,46 @@ function updateTotalPrice() {
         priceInput.value = totalPrice;
     }
 
-    // Update savings
+    // Cập nhật giá trị tối đa cho discount và savings
+    const discountInput = document.getElementById('discountPrice');
+    if (discountInput) {
+        discountInput.max = totalPrice;
+
+        // Tự động điều chỉnh nếu giá discount vượt quá giá mới
+        const currentDiscount = parseFloat(discountInput.value) || 0;
+        if (currentDiscount > totalPrice) {
+            discountInput.value = totalPrice;
+        }
+    }
+
+    // Luôn cập nhật savings khi giá thay đổi
     updateSavings();
 }
 
 function updateSavings() {
-    const originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
-    const discountPrice = parseFloat(document.getElementById('discountPrice').value) || 0;
-    const savings = originalPrice - discountPrice;
+    const originalPrice = parseFloat(document.getElementById('originalPrice')?.value) || 0;
+    const discountPrice = parseFloat(document.getElementById('discountPrice')?.value) || 0;
+    const savings = Math.max(0, originalPrice - discountPrice); // Đảm bảo không âm
 
     const savingsDisplay = document.getElementById('savings-display');
     if (savingsDisplay) {
-        savingsDisplay.textContent = savings >= 0 ? savings.toLocaleString('vi-VN') : '0';
+        savingsDisplay.textContent = savings.toLocaleString('vi-VN');
     }
 }
+
+// Thêm sự kiện cho các input
+document.querySelectorAll('.food-select, .food-quantity').forEach(input => {
+    input.addEventListener('change', updateTotalPrice);
+});
+
+document.getElementById('discountPrice')?.addEventListener('input', function () {
+    updateSavings();
+});
+
+// Gọi lần đầu khi trang tải
+document.addEventListener('DOMContentLoaded', function () {
+    updateTotalPrice();
+});
 
 function validateAtLeastOneFood() {
     const rows = document.querySelectorAll('.food-selection-row');

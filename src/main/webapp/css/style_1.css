@@ -407,39 +407,12 @@ del,
 }
 
 /* Table */
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/feature-manager-blog
-=======
->>>>>>> origin/feature-authen
-=======
->>>>>>> origin/feauture_manage_account
->>>>>>> origin/main
+
 table,
 th,
 td {
     border: 1px solid #343444;
 }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/manager-request
-=======
->>>>>>> origin/feature-manager-blog
-=======
->>>>>>> origin/feature-authen
-=======
->>>>>>> origin/feauture_manage_account
->>>>>>> origin/main
 
 table {
     border-collapse: separate;
@@ -1929,27 +1902,19 @@ a:hover, a:focus {
 }
 
 .list-icon-function {
-<<<<<<< HEAD
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-<<<<<<< HEAD
   align-items: center;
   justify-content: start;
   gap: 20px;
-=======
   gap:10px;
   align-items: center;
   justify-content: start;
-<<<<<<< HEAD
   gap: 20px;
-=======
   gap: 10px;
->>>>>>> origin/feauture_manage_account
-<<<<<<< HEAD
-=======
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -1958,10 +1923,6 @@ a:hover, a:focus {
     align-items: center;
     justify-content: start;
     gap: 20px;
->>>>>>> origin/feature-manager-coupon
-=======
->>>>>>> origin/main
->>>>>>> origin/manage-category
 }
 .list-icon-function .item {
     font-size: 20px;

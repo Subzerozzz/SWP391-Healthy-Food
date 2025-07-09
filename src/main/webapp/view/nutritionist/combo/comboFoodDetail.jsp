@@ -76,8 +76,8 @@
                                     </div>
                                     <div class="wg-table table-all-category">
                                         <ul class="table-title flex gap20 mb-14">
-                                            <li>
-                                                <div class="body-title">Food</div>
+                                            <li style="width: 220px;">
+                                                <div class="body-title" style="width: 200px">Food</div>
                                             </li>    
                                             <li>
                                                 <div class="body-title">Food ID</div>
@@ -95,39 +95,23 @@
                                                 <div class="body-title">Calo</div>
                                             </li>
                                            
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
                                         </ul>
                                         <ul class="flex flex-column">
                                             <c:forEach items = "${foodDetails}" var = "item">
                                                 <c:set var = "food" value = "${item.food}"/>
-                                                <li class="product-item gap14">
-                                                <div class="image no-bg">
+                                                <li class="product-item gap14" >
+<!--                                                <div class="image no-bg">
                                                     <img src="${food.image_url}" alt="">
-                                                </div>
+                                                </div>-->
                                                 <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name">
-                                                        <a href="product-list.html" class="body-title-2">${food.name}</a>
+                                                    <div class="body-text">
+                                                       ${food.name}
                                                     </div>
                                                     <div class="body-text">${food.id}</div>
                                                     <div class="body-text">${food.description}</div>
                                                     <div class="body-text">${food.price}</div>
-                                                    
                                                     <div class="body-text">${item.quantityInCombo}</div>
                                                     <div class="body-text">${food.calo}</div>
-                                                    
-                                                    <div class="list-icon-function">
-                                                        <div class="item eye">
-                                                            <i class="icon-eye"></i>
-                                                        </div>
-                                                        <div class="item edit">
-                                                            <i class="icon-edit-3"></i>
-                                                        </div>
-                                                        <div class="item trash">
-                                                            <i class="icon-trash-2"></i>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </li>
                                             </c:forEach>
@@ -137,39 +121,15 @@
                                     </div>
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
-<!--                                        <div class="text-tiny">Showing 10 entries</div>
-                                        <ul class="wg-pagination">
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-left"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#">1</a>
-                                            </li>
-                                            <li class="active">
-                                                <a href="#">2</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">3</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-right"></i></a>
-                                            </li>
-                                        </ul>-->
-                                    </div>
-                                </div>
-                                <!-- /order-list -->
+<!--                            
                             </div>
                             <!-- /main-content-wrap -->
                         </div>
                         <!-- /main-content-wrap -->
                         <!-- bottom-page -->
-                        <div class="bottom-page">
-                            <div class="body-text">Copyright © 2024 Remos. Design with</div>
-                            <i class="icon-heart"></i>
-                            <div class="body-text">by <a href="https://themeforest.net/user/themesflat/portfolio">Themesflat</a> All rights reserved.</div>
-                        </div>
+                           <jsp:include page="../../common/footer.jsp"></jsp:include>
                         <!-- /bottom-page -->
-                    </div>
+                    
                     <!-- /main-content -->
                 </div>
                 <!-- /section-content-right -->

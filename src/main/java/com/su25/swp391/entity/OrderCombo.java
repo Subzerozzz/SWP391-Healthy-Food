@@ -7,19 +7,30 @@ package com.su25.swp391.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.math.BigDecimal;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ *
+ * @author Hang
+ */
+@ToString
 @Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class OrderCombo {
+
     private Integer orderComboId;
-    private Integer orderId;
+    private Integer order_id;
     private Integer comboId;
     private String comboName;
-    private BigDecimal comboDiscountPrice;
+    private Double discountPrice;
     private Integer quantity;
-    private BigDecimal totalPrice;
+    private Double totalPrice;
+    private Integer payment_status;
 }
