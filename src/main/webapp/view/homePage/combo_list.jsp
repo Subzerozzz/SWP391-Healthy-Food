@@ -443,7 +443,7 @@
                                             </div>
                                             <div class="product-action">
                                                 <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}" class="view-details-btn">Xem chi tiết</a>
-                                                <a href="${pageContext.request.contextPath}/cart?action=add&comboId=${combo.comboId}&quantity=1" class="add-to-cart-btn">Thêm vào giỏ</a>
+                                                <!--<a href="${pageContext.request.contextPath}/cart?action=add&comboId=${combo.comboId}&quantity=1" class="add-to-cart-btn">Thêm vào giỏ</a>-->
                                             </div>
                                         </div>
                                     </div>

@@ -157,16 +157,7 @@
                                             <input type="number" class="combo-quantity-input" value="1" min="1" id="combo-quantity">
                                             <button type="button" class="combo-quantity-btn increase-quantity">+</button>
                                         </div>
-                                        <form action="${pageContext.request.contextPath}/process-vnpay" method="post" id="buy-now-form">
-                                            <input type="hidden" name="comboId" value="${combo.comboId}">
-                                            <input type="hidden" name="quantity" id="hidden-quantity" value="1">
-                                            <input type="hidden" name="amount" id="hidden-amount" value="${combo.discountPrice}">
-
-                                           
-
-                                            <button type="submit" class="combo-add-to-cart-btn">Mua ngay</button>
-                                        </form>
-
+                                            <button type="button" class="combo-add-to-cart-btn" onclick="buyComboNow(${combo.comboId})">Mua ngay</button>
                                     </div>
                                 </div>
                             </div>
@@ -439,11 +430,11 @@
                 quantityInput.value = currentValue + 1;
             });
         });
-        // Hàm mua ngay combo
-        function buyComboNow(comboId) {
-            const quantity = document.getElementById('combo-quantity').value;
-            window.location.href = '${pageContext.request.contextPath}/buy-combo?action=buy-combo&comboId=' + comboId + '&quantity=' + quantity;
-        }
+         // Hàm mua ngay combo
+                function buyComboNow(comboId) {
+                    const quantity = document.getElementById('combo-quantity').value;
+                    window.location.href = '${pageContext.request.contextPath}/buy-combo?comboId=' + comboId + '&quantity=' + quantity;
+                }
     </script>
 
 </body>
