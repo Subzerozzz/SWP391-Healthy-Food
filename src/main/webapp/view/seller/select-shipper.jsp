@@ -37,6 +37,10 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
     <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
+      <!-- iziToast CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
      <style>
                           .box-logo{
                               height: 100px;
@@ -119,8 +123,8 @@
             }
 .filter-row {
   display: grid;
-  grid-template-columns:  140px 140px  1fr 100px; /* 6 cột */
-  gap: 20px;
+  grid-template-columns:  150px 500px  100px ; /* 3 cột */
+  gap: 50px;
   align-items: center;
   width: 100%;
 }
@@ -366,20 +370,26 @@
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                    
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                         <li>
+                                            <a href="#"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Delivery Management</div></a>
+                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Deliveries List</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Delivery List</div>
+                                            <a href="#"><div class="text-tiny">Shipper List</div></a>
+                                        </li>
+                                        <li>
+                                            <i class="icon-chevron-right"></i>
+                                        </li>
+                                        <li>
+                                            <div class="text-tiny">Delivery Order ${de.order_id}</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -389,42 +399,37 @@
                                         <div class="">
                                          <div class="dashboard-main-body">
             
-            <!-- Filter Section -->
-           <div class="card mb-24">
-  <div class="card-body p-24">
-    <form action="${pageContext.request.contextPath}/seller/manage-delivery" method="GET">
-      <!-- Thêm class filter-row -->
-      <div class="filter-row">
-          <!--Sort by id-->
-          <select  name="sort"  class="form-select">
-              <option value="" ${param.sort == '' ? 'selected' : ''}>Sort ID</option> 
-              <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Increase</option>
-              <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Decrease</option>
-          </select> 
-          <!-- Select Status -->
-          <!--style="height: 40px;font-size: 15px;"-->
-        <select  
-            class="form-select" name="status">
-          <option value="">All Status</option>
-          <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
-          <option value="delivering"  ${status == 'accepted'  ? 'selected' : ''}>Delivering</option>
-          <option value="success" ${status == 'rejected' ? 'selected' : ''}>Success</option>
-          <option value="reject" ${status == 'rejected' ? 'selected' : ''}>Reject</option>
-        </select>
+                                             <!-- Filter Section -->
+                                             <div class="card mb-24">
+                                                 <div class="card-body p-24">
+                                                     <form action="${pageContext.request.contextPath}/seller/manage-delivery" method="GET">
+                                                         <input type="hidden" name="action" value="shipper" />
+                                                         <input type="hidden" name="id" value="${id}" />
 
-         
-        <!-- Ô Search -->
-        <input type="text" class="form-control"
-               name="search"
-               placeholder="Search by order ID, customer name, email..."
-               value="${search}"/>
+                                                         <div class="filter-row">
+                                                             <!-- Sort by name -->
+                                                             <select name="sort" class="form-select">
+                                                                 <option value="" ${sort == '' ? 'selected' : ''}>Sort by Name</option>
+                                                                 <option value="asc" ${sort == 'asc' ? 'selected' : ''}>A - Z</option>
+                                                                 <option value="desc" ${sort == 'desc' ? 'selected' : ''}>Z - A</option>
+                                                             </select>
 
-        <!-- Nút Filter -->
-        <button style="font-size:15px" type="submit" class="btn btn-primary">Filter <i class="fa-solid fa-filter "></i></button>
-      </div>
-    </form>
-  </div>
-</div>
+                                                             <!-- Search by shipper name -->
+                                                             <input type="text"
+                                                                    class="form-control"
+                                                                    name="search"
+                                                                    placeholder="Search by shipper name,email,..."
+                                                                    value="${search}" />
+
+                                                             <!-- Filter button -->
+                                                             <button type="submit" class="btn btn-primary">
+                                                                 Filter <i class="fa-solid fa-filter"></i>
+                                                             </button>
+
+                                                         </div>
+                                                     </form>
+                                                 </div>
+                                             </div>
 
             <!-- Orders Table -->
             <div class="card">
@@ -472,7 +477,7 @@
                                          
 
                                             <td>
-                                                ${deliveryDAO.getNumberDeliveryOfShipper(shipper.id)}
+                                                ${deliveryDAO.getNumberDeliveryOfShipperPending(shipper.id)}
                                             </td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
@@ -481,30 +486,27 @@
                                                               deliveryDAO.getNumberDeliveryOfShipper(shipper.id) > 0 ? 'badge-accepted' :
                                                            'badge-rejected'
                                                           }">
+                                                   
                                                        ${deliveryDAO.getNumberDeliveryOfShipper(shipper.id) > 0 ? 'Đang giao' : 'Rảnh'}
                                                     </span>
                                             </td>
                                           
                                        <td>
-  <c:choose>
-    <c:when test="${deliveryDAO.getNumberDeliveryOfShipper(shipper.id) == 0}">
-      <form action="manage-delivery" method="post">
-        <input type="hidden" name="action" value="add" />
-        <input type="hidden" name="orderId" value="${orderId}" />
-        <input type="hidden" name="shipperId" value="${shipper.id}" />
-        <button type="submit" class="btn btn-success btn-sm">✅ Giao đơn</button>
-      </form>
-    </c:when>
-    <c:otherwise>
-      <form action="manage-delivery" method="post">
-        <input type="hidden" name="action" value="add" />
-        <input type="hidden" name="orderId" value="${orderId}" />
-        <input type="hidden" name="shipperId" value="${shipper.id}" />
-        <button type="submit" class="btn btn-warning btn-sm">⚠ Vẫn giao</button>
-      </form>
-    </c:otherwise>
-  </c:choose>
-</td>
+                                           
+                                           <c:choose>
+                                               <c:when test="${deliveringCountMap[shipper.id] == 0 && de.status == 'pending'}">
+<!--                                                                                  </form>-->
+                                 <div class="item edit" style="margin-right: 10px !important">
+                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=add&id=${id}&shipper_id=${shipper.id}" 
+                                         onclick="handleAccept(event)" title="Choose Shipper"
+                                       >
+                                  <i class="fa-solid fa-motorcycle"></i>
+                                         </a>
+                                        </div>
+                                               </c:when>
+
+                                           </c:choose>
+                                       </td>
                                         </tr>
                                     </c:forEach>
                             </tbody>
@@ -519,21 +521,21 @@
                            <ul class="pagination-wrapper">
 
                                <li >
-                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=1&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=1&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
                                </li>
                                <c:choose>
                                    <c:when test="${currentPage <= totalPages - 2}">
                                        <c:if test="${currentPage > 1}">
                                            <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${currentPage - 1}&search=${search}&sort=${sort}">${currentPage - 1}</a>
                                            </li>
                                        </c:if>
                                        <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${currentPage}&search=${search}&sort=${sort}">${currentPage}</a>
                                        </li>
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${currentPage + 1}&search=${search}&sort=${sort}">${currentPage + 1}</a>
                                        </li>
 
                                        <c:if test="${currentPage < totalPages - 2}">
@@ -544,21 +546,21 @@
 
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${totalPages}</a>
+                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${totalPages}&search=${search}&sort=${sort}">${totalPages}</a>
                                        </li>
                                    </c:when>
 
                                    <c:otherwise>
                                        <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                            <li class="${currentPage == i ? 'active' : ''}">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${i}&status=${status}&search=${search}&sort=${sort}">${i}</a>
+                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${i}&search=${search}&sort=${sort}">${i}</a>
                                            </li>
                                        </c:forEach>
                                    </c:otherwise>
                                </c:choose>
 
                                <li>
-                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
+                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}&page=${totalPages}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
                                </li>
                            </ul>
                        </div>  
@@ -606,6 +608,7 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
             // Function to show toast
             function showToast(message, type) {
@@ -648,9 +651,38 @@
                     // Remove message from session
                     <% session.removeAttribute("errorMessage"); %>
                 });
-            </c:if>
-        </script>
-   
+//            </c:if>
+//        </script>
+    <script>//
+    function handleAccept(event) {
+      event.preventDefault(); // Ngăn hành vi mặc định
+
+      const url = event.currentTarget.href; // Lấy URL từ <a>
+
+      Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Accept',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: true,
+        customClass: {
+          popup: 'custom-swal-popup',
+          title: 'custom-swal-title',
+          confirmButton: 'custom-swal-confirm',
+          cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.setItem('showSuccessToast', 'true');
+          window.location.href = url + '&action=add';
+        }
+      });
+    }
+
+  </script>
 </body>
 
 
