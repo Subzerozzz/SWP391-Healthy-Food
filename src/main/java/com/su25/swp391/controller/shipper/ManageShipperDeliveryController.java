@@ -64,6 +64,9 @@ public class ManageShipperDeliveryController extends HttpServlet {
                 case "view":
                     viewDelivery(request, response);
                     break;
+                case "viewUpdate":
+                    viewUpdate(request, response);
+                    break;
                 case "update":
                     updateStatus(request, response);
                     break;
@@ -206,16 +209,16 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
         try {
             HttpSession session = request.getSession();
             int id = Integer.parseInt(request.getParameter("id"));
-            int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+            String newStatus =request.getParameter("newStatus");
+            String note =request.getParameter("note");
             Delivery delivery = deliveryDAO.findById(id);
-            delivery.setShipper_id(shipper_id);
-            Boolean checkUpdateShipperSuccess = deliveryDAO.update(delivery);
+            Boolean checkUpdateShipperSuccess = deliveryDAO.updateStatusShipper(delivery,newStatus,note);
             if(checkUpdateShipperSuccess){
                session.setAttribute("isSuccess", true);
             }else{
                session.setAttribute("errorMessage", true); 
             }
-            response.sendRedirect(request.getContextPath() + "/seller/manage-delivery");
+            response.sendRedirect(request.getContextPath() + "/shipper/manage-delivery");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -274,6 +277,27 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
+    }
+
+    private void viewUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            try {
+            HttpSession session = request.getSession();
+            int id = Integer.parseInt(request.getParameter("id"));
+            int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+            Delivery delivery = deliveryDAO.findById(id);
+            delivery.setShipper_id(shipper_id);
+                //Boolean checkUpdateShipperSuccess = deliveryDAO.update(delivery);
+//            if(checkUpdateShipperSuccess){
+//               session.setAttribute("isSuccess", true);
+//            }else{
+//               session.setAttribute("errorMessage", true); 
+//            }
+                request.setAttribute("order", delivery);
+            request.getRequestDispatcher("/view/shipper/update-status.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
     }
 
 }

@@ -289,6 +289,38 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     return false;
     }
+   
+    public boolean updateStatusShipper(Delivery t,String newStatus,String note) {
+        
+        String sql = "UPDATE Delivery SET shipper_id = ?, status = ? ";
+        List<Object> params = new ArrayList<>();
+        params.add(t.getShipper_id());
+        params.add(newStatus);
+        if (note != null && ! note.trim().isEmpty()) {
+            sql += ", note = ? ";
+            params.add(note);
+        }
+
+        sql += " WHERE id = ?";
+        try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        // Bind all parameters to the prepared statement
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+        int rowsAffected = statement.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return false;
+    }
 
     @Override
     public boolean delete(Delivery t) {

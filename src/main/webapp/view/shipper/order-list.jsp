@@ -506,8 +506,8 @@
                                                </a></div>
                                                     <div class="item edit" style="margin-right: 10px !important">
 
-                                                        <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=update&id=${de.id}&shipper_id=${de.shipper_id}"
-                                                           onclick="handleAccept(event) title="Update Status"><i
+                                                        <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewUpdate&id=${de.id}&shipper_id=${de.shipper_id}"
+                                                           onclick="handleAccept(event)" title="Update Status"><i
                                                                 class="icon-edit-3"></i></a>
                                                     </div>
                                                  
@@ -682,7 +682,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.setItem('showSuccessToast', 'true');
-          window.location.href = url + '&action=add';
+          window.location.href = url + '&action=update';
         }
       });
     }
