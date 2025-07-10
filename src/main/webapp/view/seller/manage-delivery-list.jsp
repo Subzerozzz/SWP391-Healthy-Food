@@ -473,7 +473,15 @@
                                          
 
                                             <td>
-                                                ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                                <c:choose>
+                                                    <c:when test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
+                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i> ${orderDAO.findById(de.order_id).full_name}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                              
                                             </td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "

@@ -473,7 +473,10 @@
                                     <c:forEach var="shipper" items="${shipperList}">
                                       
                                         <tr>
-                                            <td>${shipper.user_name}</td>
+                                            <td>
+                                                
+                                                ${shipper.user_name}
+                                            </td>
                                          
 
                                             <td>

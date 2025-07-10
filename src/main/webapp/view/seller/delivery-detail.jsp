@@ -241,13 +241,13 @@ textarea.form-control {
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-order"><div class="text-tiny">Order</div></a>
+                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Delivery List</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Order detail</div></a>
+                                            <a href="#"><div class="text-tiny">Delivery detail</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -370,8 +370,37 @@ textarea.form-control {
                                 <strong>Mobile:</strong> ${order.mobile}
                             </div>
                             <div class="mb-3">
-                                <strong>Shipping Address:</strong>${order.address}
+                                <strong>Shipping Address:</strong>${order.shipping_address}
                             </div>
+                        </div>  
+                              <div class="card-body">
+                                  <h5 style="color: blue">Shipper Information</h5>  
+                            <div class="mb-3">
+                                <strong>Name:</strong> ${accShipper.user_name}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> ${accShipper.email}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Mobile:</strong> ${accShipper.mobile}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Shipping Address:</strong>${accShipper.address}
+                            </div>
+                                  <c:choose>
+                                                        <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
+                                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
+                                                            <div class="item edit" style="margin-right: 10px !important " >
+                                                                <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper"
+                                                                   style="color:#FFB200">
+                                                                  Select Shipper  <i class="fa-solid fa-motorcycle"></i>
+                                                                </a>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+
+                                                        </c:otherwise>
+                                                    </c:choose>
                         </div>  
                              </c:otherwise>
                         </c:choose>
