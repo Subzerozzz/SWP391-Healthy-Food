@@ -222,7 +222,25 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         return 0;
     }
     public int getNumberDeliveryOfShipper(int shipper_id){
-        String sql = "Select Count(*) from Delivery where shipper_id = ? ";
+        String sql = "SELECT COUNT(*) FROM Delivery WHERE shipper_id = ? AND status = 'delivering'";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, shipper_id);
+            resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt(1);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+     public int getNumberDeliveryOfShipperPending(int shipper_id){
+        String sql = "SELECT COUNT(*) FROM Delivery WHERE shipper_id = ? ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -247,7 +265,29 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     @Override
     public boolean update(Delivery t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "UPDATE Delivery SET shipper_id = ?, status = 'pending'";
+
+        if ("pending".equalsIgnoreCase(t.getStatus())) {
+            sql += ", assigned_at = NOW()";
+        }
+
+        sql += " WHERE id = ?";
+        try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, t.getShipper_id());
+        statement.setInt(2, t.getId());
+
+        int rowsAffected = statement.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return false;
     }
 
     @Override
@@ -277,7 +317,21 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     @Override
     public Delivery findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "Select * from Delivery where id = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                return getFromResultSet(resultSet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return null;
     }
     public static void main(String[] args) {
         for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "",1,2 )) {
@@ -285,6 +339,8 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         }
         System.out.println(new DeliveryDAO().getTotalFilteredDelivery(""));
         System.out.println(new DeliveryDAO().getNumberDeliveryOfShipper(54));
+       
+        Delivery de = new DeliveryDAO().findById(4);
     }
     
 }

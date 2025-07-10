@@ -5,6 +5,7 @@
 
 package com.su25.swp391.controller.seller;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.DeliveryDAO;
 import com.su25.swp391.dal.implement.FeedbackDAO;
@@ -14,7 +15,9 @@ import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Delivery;
+import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderItem;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -22,7 +25,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -34,11 +40,15 @@ public class ManageDeliveryController extends HttpServlet {
      private DeliveryDAO deliveryDAO;
      private OrderDAO orderDAO;
      private AccountDAO accDAO;
+     private FoodDAO foodDAO;
+     private OrderItemDAO itemDAO;
      @Override
     public void init() throws ServletException {
         deliveryDAO = new DeliveryDAO();
         accDAO = new AccountDAO();
         orderDAO = new OrderDAO();
+        foodDAO = new FoodDAO();
+        itemDAO = new OrderItemDAO();
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,11 +64,14 @@ public class ManageDeliveryController extends HttpServlet {
                 case "list":
                     listDelivery(request, response);
                     break;
-//                case "view":
-//                    viewOrderDetail(request, response);
-//                    break;
+                case "view":
+                    viewDelivery(request, response);
+                    break;
                 case "shipper":
                     viewShipper(request, response);
+                    break;
+                case "add":
+                    selectShipper(request, response);
                     break;
                 default:
                     listDelivery(request, response);
@@ -143,14 +156,119 @@ public class ManageDeliveryController extends HttpServlet {
     }
 
     private void viewShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       List<Account> accountList = accDAO.findAccountByRole("shipper");
+       int id = Integer.parseInt(request.getParameter("id"));
+       String sort = request.getParameter("sort");
+       String search = request.getParameter("search");
+       // Pagination
+        int page = 1;
+        int pageSize = 2;
+         try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Keep default value
+        }
+       List<Account> accountList = accDAO.searchShippers(search, sort, page, pageSize);
+        int totalShipper = accDAO.getTotalShipperResults(search);
+       
+      // Number of page can have
+        int totalPages = (int) Math.ceil((double) totalShipper / pageSize);
+        
+       Delivery de = deliveryDAO.findById(id);
+       request.setAttribute("sort", sort);
+      request.setAttribute("search", search);
+      request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+       request.setAttribute("id", id);
        request.setAttribute("shipperList", accountList);
+       request.setAttribute("de", de);
+       
+        Map<Integer, Integer> deliveringCountMap = new HashMap<>();
+        for (Account shipper : accountList) {
+            int deliveringCount = deliveryDAO.getNumberDeliveryOfShipper(shipper.getId());
+            deliveringCountMap.put(shipper.getId(), deliveringCount);
+        }
+        request.setAttribute("deliveringCountMap", deliveringCountMap);
        request.setAttribute("deliveryDAO", deliveryDAO);
        request.getRequestDispatcher("/view/seller/select-shipper.jsp").forward(request, response);
     }
 
-    private void selectShipper(HttpServletRequest request, HttpServletResponse response) {
+    private void selectShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            int id = Integer.parseInt(request.getParameter("id"));
+            int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+            Delivery delivery = deliveryDAO.findById(id);
+            delivery.setShipper_id(shipper_id);
+            Boolean checkUpdateShipperSuccess = deliveryDAO.update(delivery);
+            if(checkUpdateShipperSuccess){
+               session.setAttribute("isSuccess", true);
+            }else{
+               session.setAttribute("errorMessage", true); 
+            }
+            response.sendRedirect(request.getContextPath() + "/seller/manage-delivery");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
        
+    }
+
+    private void viewDelivery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      
+       try {
+      int id = Integer.parseInt(request.getParameter("id"));
+      int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+      Delivery delivery = deliveryDAO.findById(id);
+      Order order = orderDAO.findById(delivery.getOrder_id());
+      Account accShipper = accDAO.findById(shipper_id);
+           
+//            // Get the seller account from session
+//            HttpSession session = request.getSession();
+//            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+//
+//            // Check if the seller is logged in
+//            if (account == null) {
+//                response.sendRedirect(request.getContextPath() + "/home");
+//                return;
+//            }
+             // If the order does not exist, forward to error page
+            if (order == null) {
+                request.setAttribute("errorMessage", "Order not found with ID: " + delivery.getOrder_id());
+                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+                return;
+            }
+
+            // Retrieve the account associated with the order
+            Account acc = accDAO.findById(order.getAccount_id());
+
+            // Retrieve the list of items in the order
+            List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
+
+            // Map food details for each order item
+            HashMap<Integer, Food> OrderItemMap = new HashMap<>();
+            for (OrderItem orderItem : orderItems) {
+                Food food = foodDAO.findById(orderItem.getFood_id());
+                OrderItemMap.put(orderItem.getFood_id(), food);
+            }
+
+            // Set attributes for JSP rendering
+            request.setAttribute("order", order);
+            request.setAttribute("account", acc);
+            request.setAttribute("OrderItems", orderItems);
+            request.setAttribute("OrderItemMap", OrderItemMap);
+            request.setAttribute("accShipper", accShipper);
+            request.setAttribute("de", delivery);
+            // Forward to the delivery detail JSP page
+            request.getRequestDispatcher("/view/seller/delivery-detail.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            // Handle invalid order ID format
+            request.setAttribute("errorMessage", "Invalid order ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
     }
 
 }

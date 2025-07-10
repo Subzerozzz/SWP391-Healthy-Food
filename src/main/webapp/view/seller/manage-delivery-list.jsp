@@ -367,13 +367,13 @@
                                    
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                            <a href="#"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Delivery Management</div></a>
+                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Delivery Management</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -416,7 +416,7 @@
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
-               placeholder="Search by order ID, customer name, email..."
+               placeholder="Search by shipper name, email..."
                value="${search}"/>
 
         <!-- Nút Filter -->
@@ -493,14 +493,23 @@
                                             <td>
 
                                                 <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-order?action=view&id=${order.id}"  title="View Detial">
+                                                    <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
                                                </a></div>
-                                                    <div class="item edit" style="margin-right: 10px !important">
+                                                    <c:choose>
+                                                        <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
+                                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
+                                                            <div class="item edit" style="margin-right: 10px !important">
+                                                                <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
+                                                                    <i class="fa-solid fa-motorcycle"></i>
+                                                                </a>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
 
-                                                        <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
-                                                            <i class="fa-solid fa-motorcycle"></i></a>
-                                                    </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                 
                                             </td>
                                         </tr>
                                     </c:forEach>

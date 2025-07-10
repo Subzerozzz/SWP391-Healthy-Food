@@ -280,8 +280,8 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 System.out.println("Insert approval rows affected: " + approvalRowsAffected);
                 
                 if(newStatus.equalsIgnoreCase("accepted")){
-                    String sqlDelivery = "INSERT INTO Delivery (order_id, status, assigned_at)\n" +
-                      "VALUES (?, 'pending', NOW())";
+                    String sqlDelivery = "INSERT INTO Delivery (order_id, status)\n" +
+                      "VALUES (?, 'pending')";
                     statement = connection.prepareStatement(sqlDelivery);
                     statement.setInt(1, orderId);
                     statement.executeUpdate();
