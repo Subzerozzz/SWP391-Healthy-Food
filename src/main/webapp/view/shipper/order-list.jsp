@@ -37,6 +37,10 @@
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
     <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
+    <!-- iziToast CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
      <style>
                           .box-logo{
                               height: 100px;
@@ -500,19 +504,12 @@
                                                     <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
                                                </a></div>
-                                                    <c:choose>
-                                                        <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
-                                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
-                                                            <div class="item edit" style="margin-right: 10px !important">
-                                                                <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
-                                                                    <i class="fa-solid fa-motorcycle"></i>
-                                                                </a>
-                                                            </div>
-                                                        </c:when>
-                                                        <c:otherwise>
+                                                    <div class="item edit" style="margin-right: 10px !important">
 
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                        <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=update&id=${de.id}&shipper_id=${de.shipper_id}"
+                                                           onclick="handleAccept(event) title="Update Status"><i
+                                                                class="icon-edit-3"></i></a>
+                                                    </div>
                                                  
                                             </td>
                                         </tr>
@@ -616,6 +613,7 @@
     <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
             // Function to show toast
             function showToast(message, type) {
@@ -660,7 +658,36 @@
                 });
             </c:if>
         </script>
-   
+         <script>//
+    function handleAccept(event) {
+      event.preventDefault(); // Ngăn hành vi mặc định
+
+      const url = event.currentTarget.href; // Lấy URL từ <a>
+
+      Swal.fire({
+        title: 'Are you sure?\nThis action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Accept',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        background: '#ffffff',
+        showCloseButton: true,
+        customClass: {
+          popup: 'custom-swal-popup',
+          title: 'custom-swal-title',
+          confirmButton: 'custom-swal-confirm',
+          cancelButton: 'custom-swal-cancel'
+        },
+        buttonsStyling: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.setItem('showSuccessToast', 'true');
+          window.location.href = url + '&action=add';
+        }
+      });
+    }
+
+  </script>
 </body>
 
 

@@ -64,11 +64,8 @@ public class ManageShipperDeliveryController extends HttpServlet {
                 case "view":
                     viewDelivery(request, response);
                     break;
-                case "shipper":
-                    viewShipper(request, response);
-                    break;
-                case "add":
-                    selectShipper(request, response);
+                case "update":
+                    updateStatus(request, response);
                     break;
                 default:
                     listDelivery(request, response);
@@ -92,9 +89,6 @@ public class ManageShipperDeliveryController extends HttpServlet {
 
         try {
             switch (action) {
-                case "add":
-                    selectShipper(request, response);
-                    break;
                 default:
                     listDelivery(request, response);
                     break;
@@ -208,7 +202,7 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
        request.getRequestDispatcher("/view/seller/select-shipper.jsp").forward(request, response);
     }
 
-    private void selectShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void updateStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
             int id = Integer.parseInt(request.getParameter("id"));

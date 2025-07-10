@@ -407,7 +407,7 @@ textarea.form-control {
                 </div>
             </div>                <div style="display:flex;justify-content:end;gap:40px">
                                 
-                                <a href="${pageContext.request.contextPath}/seller/manage-delivery" 
+                                <a href="${pageContext.request.contextPath}/shipper/manage-delivery" 
                                    class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
                                    ;">Go Back</a>
             </div>
