@@ -410,20 +410,29 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     return 0;
 }
-    public List<Delivery> searchDeliveryShipper(String search, String sort, String status, int page, int pageSize, int shipperId) {
+  public List<Delivery> searchDeliveryShipper(String search, String sort, String status, int page, int pageSize, int shipperId) {
     List<Delivery> list = new ArrayList<>();
 
-    // Build the base SQL query with necessary joins
-    StringBuilder sql = new StringBuilder("SELECT d.* "
-            + "FROM Delivery d "
-            + "JOIN Account a ON d.shipper_id = a.id "
-            + "WHERE d.shipper_id = ? "
-            + "AND (a.user_name LIKE ? OR a.email LIKE ?) ");
+    StringBuilder sql = new StringBuilder(
+        "SELECT d.* " +
+        "FROM Delivery d " +
+        "JOIN `Order` o ON d.order_id = o.id " +
+        "LEFT JOIN Account c ON o.account_id = c.id " +  // Customer (có thể null nếu guest)
+        "WHERE d.shipper_id = ? " +
+        "AND ( " +
+            "(o.account_id IS NOT NULL AND (c.full_name LIKE ? OR c.email LIKE ?)) " +
+            "OR (o.account_id IS NULL AND (o.full_name LIKE ? OR o.email LIKE ?)) " +
+        ") "
+    );
 
     List<Object> params = new ArrayList<>();
-    params.add(shipperId); // ràng buộc shipper_id
+    params.add(shipperId);
 
     String searchPattern = "%" + search.trim() + "%";
+    // Cho customer
+    params.add(searchPattern);
+    params.add(searchPattern);
+    // Cho guest
     params.add(searchPattern);
     params.add(searchPattern);
 
@@ -432,11 +441,10 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         params.add(status);
     }
 
-    if (sort != null && !sort.isEmpty()) {
-        sql.append(" ORDER BY d.order_id ").append(sort).append(" LIMIT ? OFFSET ?");
-    } else {
-        sql.append(" ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?");
-    }
+    sql.append(sort != null && !sort.isEmpty()
+        ? "ORDER BY d.order_id " + sort + " LIMIT ? OFFSET ?"
+        : "ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?"
+    );
 
     params.add(pageSize);
     params.add((page - 1) * pageSize);
@@ -461,20 +469,26 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     return list;
 }
-     public int getTotalDeliveryResultsShipper(String search, String status, int shipperId) {
+  public int getTotalDeliveryResultsShipper(String search, String status, int shipperId) {
     StringBuilder sql = new StringBuilder(
-        "SELECT COUNT(*) "
-        + "FROM Delivery d "
-        + "JOIN Account a ON d.shipper_id = a.id "
-        + "WHERE d.shipper_id = ? "
-        + "AND (a.user_name LIKE ? OR a.email LIKE ?) "
+        "SELECT COUNT(*) " +
+        "FROM Delivery d " +
+        "JOIN `Order` o ON d.order_id = o.id " +
+        "LEFT JOIN Account c ON o.account_id = c.id " +
+        "WHERE d.shipper_id = ? " +
+        "AND ( " +
+            "(o.account_id IS NOT NULL AND (c.full_name LIKE ? OR c.email LIKE ?)) " +
+            "OR (o.account_id IS NULL AND (o.full_name LIKE ? OR o.email LIKE ?)) " +
+        ") "
     );
 
     List<Object> params = new ArrayList<>();
-    params.add(shipperId); // lọc theo shipper đang đăng nhập
+    params.add(shipperId);
 
     String searchPattern = "%" + search.trim() + "%";
+    params.add(searchPattern); // customer
     params.add(searchPattern);
+    params.add(searchPattern); // guest
     params.add(searchPattern);
 
     if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
@@ -501,8 +515,8 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
     }
 
     return 0;
-}
-   public static void main(String[] args) {
+}  
+  public static void main(String[] args) {
         DeliveryDAO  dao = new DeliveryDAO();
         for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "",1,2 )) {
             System.out.println(d);

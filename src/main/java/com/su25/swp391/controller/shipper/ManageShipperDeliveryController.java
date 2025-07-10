@@ -274,7 +274,7 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
             request.setAttribute("accShipper", accShipper);
             request.setAttribute("de", delivery);
             // Forward to the delivery detail JSP page
-            request.getRequestDispatcher("/view/seller/delivery-detail.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/shipper/delivery-detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             // Handle invalid order ID format
             request.setAttribute("errorMessage", "Invalid order ID format");
