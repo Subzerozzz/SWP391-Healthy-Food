@@ -671,6 +671,44 @@
                 }
             })
         </script>
+         
+        <!--Thông báo về việc import tu excel--> 
+        
+        <c:if test="${successExcel == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.success({
+                        title: "Thông báo",
+                        message: "${messageExcel}",
+                        position: 'topRight',
+                        timeout: 5000,
+                        backgroundColor:"#d4edda"
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("successExcel");
+                session.removeAttribute("messageExcel");
+            %>
+        </c:if>
+        
+        <c:if test="${successExcel == false}">
+             <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.error({
+                        title: "Thông báo",
+                        message: "${messageExcel}",
+                        position: 'topRight',
+                        timeout: 5000,
+                        backgroundColor:"#d4edda"
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("successExcel");
+                session.removeAttribute("messageExcel");
+            %>
+        </c:if>
     </body>
 
 

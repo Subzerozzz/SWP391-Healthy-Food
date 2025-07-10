@@ -10,12 +10,13 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.apache.poi.ss.usermodel.*;
 
 public class DataExcelUtils {
 
-    public static List<Food> readFoods(InputStream is) {
+    public static List<Food> readFoods(InputStream is) throws Exception {
         List<Food> list = new ArrayList<>();
         try(Workbook wb = WorkbookFactory.create(is)) {
             Sheet sheet = wb.getSheetAt(0);
@@ -42,18 +43,19 @@ public class DataExcelUtils {
                 //get categoryid
                 newFood.setCategory_id(getInteger(row, 5));
                 //get create_at
-                newFood.setCreated_at(getTimestamp(row, 6));
+                newFood.setCreated_at(new Timestamp(System.currentTimeMillis()));
                 //get update_at
-                newFood.setUpdated_at(getTimestamp(row, 7));
+                newFood.setUpdated_at(new Timestamp(System.currentTimeMillis()));
                 //get nutri_id
-                newFood.setNutri_id(getInteger(row, 8));
+                newFood.setNutri_id(getInteger(row, 6));
                 //get calo
-                newFood.setCalo(getDouble(row, 9));
+                newFood.setCalo(getDouble(row, 7));
 
                 list.add(newFood);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            throw e;
         }
         return list;
     }
@@ -93,7 +95,7 @@ public class DataExcelUtils {
         }
 
         if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
-            Date d = cell.getDateCellValue(); // java.util.Date
+            Date d = cell.getDateCellValue();
             return new Timestamp(d.getTime());
         }
 
@@ -104,14 +106,9 @@ public class DataExcelUtils {
             }
 
             try {
-                LocalDateTime ldt = LocalDateTime.parse(txt); // định dạng: yyyy-MM-ddTHH:mm:ss
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime ldt = LocalDateTime.parse(txt,formatter);
                 return Timestamp.valueOf(ldt);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            try {
-                LocalDate ld = LocalDate.parse(txt); // định dạng: yyyy-MM-dd
-                return Timestamp.valueOf(ld.atStartOfDay());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

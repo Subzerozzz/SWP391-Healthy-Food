@@ -667,11 +667,11 @@ public class ManageFoodController extends HttpServlet {
 
     private void importDataExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Part fileExcel = request.getPart("excelFile");
-        String message;
-        boolean success = false;
+        String messageExcel;
+        boolean successExcel = false;
+        HttpSession session = request.getSession();
         
-        try {
-            InputStream is = fileExcel.getInputStream();
+        try(InputStream is = fileExcel.getInputStream()) {
             List<Food> listFood = DataExcelUtils.readFoods(is);
             System.out.println(is);
             System.out.println(listFood.size());
@@ -680,14 +680,14 @@ public class ManageFoodController extends HttpServlet {
                 foodDao.insert(food);
             }
             
-            message = "Đã import " + listFood.size() + " sản phẩm thành công!";
-            success = true;
+            messageExcel = "Đã import " + listFood.size() + " sản phẩm thành công!";
+            successExcel = true;
         } catch (Exception e) {
-            message = "Import thất bại !";
+            messageExcel = "Import thất bại !";
         }
-        request.setAttribute("message" , message);
-        request.setAttribute("success", success);
-        request.getRequestDispatcher("manager-dashboard").forward(request, response);
+        session.setAttribute("messageExcel" , messageExcel);
+        session.setAttribute("successExcel", successExcel);
+        response.sendRedirect("manager-dashboard");
     }
 
 }
