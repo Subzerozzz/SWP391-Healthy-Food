@@ -29,6 +29,8 @@ public class DataExcelUtils {
                 }
 
                 Food newFood = new Food();
+                
+                
 
                 //get Name
                 newFood.setName(getString(row, 0));
@@ -37,7 +39,8 @@ public class DataExcelUtils {
                 //get price
                 newFood.setPrice(getDouble(row, 2));
                 //get image
-                newFood.setImage_url(null);
+                String fileName = "uploads/products/" + getString(row, 3);
+                newFood.setImage_url(fileName);
                 //get status
                 newFood.setStatus(getString(row, 4));
                 //get categoryid
