@@ -373,7 +373,7 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Delivery Management</div></a>
+                                            <a href="${pageContext.request.contextPath}/shipper/manage-delivery"><div class="text-tiny">Delivery Management</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -392,7 +392,7 @@
             <!-- Filter Section -->
            <div class="card mb-24">
   <div class="card-body p-24">
-    <form action="${pageContext.request.contextPath}/seller/manage-delivery" method="GET">
+    <form action="${pageContext.request.contextPath}/shipper/manage-delivery" method="GET">
       <!-- Thêm class filter-row -->
       <div class="filter-row">
           <!--Sort by id-->
@@ -436,7 +436,6 @@
                                     <th>ID Order</th>
                                     <th>Customer</th>
                                     <th>Status</th>
-                                    <th>Shipper</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -453,7 +452,7 @@
                                                         <c:when test="${not empty status || not empty search}">
                                                             No deliveries match your search criteria. Try adjusting your filters.
                                                             <br>
-                                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery" class="btn btn-outline-primary mt-2">
+                                                            <a href="${pageContext.request.contextPath}/shipper/manage-delivery" class="btn btn-outline-primary mt-2">
                                                                 <i class="fas fa-times me-2"></i>Clear Filters
                                                             </a>
                                                         </c:when>
@@ -494,21 +493,18 @@
                                                         ${de.status}
                                                     </span>
                                             </td>
-                                           <td>
-                                              ${de.shipper_id == 0 ? 'Don\'t have' : accDAO.findById(de.shipper_id).user_name}
-                                                
-                                            </td>
+                                          
                                             <td>
 
                                                 <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detial">
+                                                    <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detial">
                                                         <i class="icon-eye"></i>
                                                </a></div>
                                                     <c:choose>
                                                         <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
                                                             <!-- Chỉ hiện icon nếu chưa có shipper -->
                                                             <div class="item edit" style="margin-right: 10px !important">
-                                                                <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
+                                                                <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
                                                                     <i class="fa-solid fa-motorcycle"></i>
                                                                 </a>
                                                             </div>
@@ -533,21 +529,21 @@
                            <ul class="pagination-wrapper">
 
                                <li >
-                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=1&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
+                                   <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=1&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-left"></i></a>
                                </li>
                                <c:choose>
                                    <c:when test="${currentPage <= totalPages - 2}">
                                        <c:if test="${currentPage > 1}">
                                            <li class="">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
+                                               <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${currentPage - 1}&status=${status}&search=${search}&sort=${sort}">${currentPage - 1}</a>
                                            </li>
                                        </c:if>
                                        <li class="active">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
+                                           <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${currentPage}&status=${status}&search=${search}&sort=${sort}">${currentPage}</a>
                                        </li>
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
+                                           <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${currentPage + 1}&status=${status}&search=${search}&sort=${sort}">${currentPage + 1}</a>
                                        </li>
 
                                        <c:if test="${currentPage < totalPages - 2}">
@@ -558,21 +554,21 @@
 
 
                                        <li class="">
-                                           <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${totalPages}</a>
+                                           <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}">${totalPages}</a>
                                        </li>
                                    </c:when>
 
                                    <c:otherwise>
                                        <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                            <li class="${currentPage == i ? 'active' : ''}">
-                                               <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${i}&status=${status}&search=${search}&sort=${sort}">${i}</a>
+                                               <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${i}&status=${status}&search=${search}&sort=${sort}">${i}</a>
                                            </li>
                                        </c:forEach>
                                    </c:otherwise>
                                </c:choose>
 
                                <li>
-                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
+                                   <a href="${pageContext.request.contextPath}/shipper/manage-delivery?page=${totalPages}&status=${status}&search=${search}&sort=${sort}"><i class="icon-chevron-right"></i></a>
                                </li>
                            </ul>
                        </div>  

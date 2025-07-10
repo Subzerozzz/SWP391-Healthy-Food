@@ -333,7 +333,177 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         }
         return null;
     }
-    public static void main(String[] args) {
+    
+   public List<Delivery> findDeliveryByShipper(int shipperId, String sort, String status, int page, int pageSize) {
+    List<Delivery> list = new ArrayList<>();
+
+    // Base query
+    StringBuilder sql = new StringBuilder("SELECT * FROM Delivery WHERE shipper_id = ? ");
+    List<Object> params = new ArrayList<>();
+    params.add(shipperId);
+
+    // Chỉ lọc status nếu thật sự có truyền vào
+    if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
+        sql.append("AND status = ? ");
+        params.add(status);
+    }
+
+    // Sort và phân trang
+    if (sort != null && !sort.isEmpty()) {
+        sql.append("ORDER BY order_id ").append(sort).append(" LIMIT ? OFFSET ?");
+    } else {
+        sql.append("ORDER BY assigned_at DESC LIMIT ? OFFSET ?");
+    }
+
+    params.add(pageSize);
+    params.add((page - 1) * pageSize);
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            list.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return list;
+} 
+   public int getTotalFilteredDeliveryByShipper(int shipperId, String status) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(*) FROM Delivery WHERE shipper_id = ? ");
+    List<Object> params = new ArrayList<>();
+    params.add(shipperId);
+
+    // Chỉ lọc status nếu khác null, không rỗng và không phải "all"
+    if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
+        sql.append("AND status = ? ");
+        params.add(status);
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return 0;
+}
+    public List<Delivery> searchDeliveryShipper(String search, String sort, String status, int page, int pageSize, int shipperId) {
+    List<Delivery> list = new ArrayList<>();
+
+    // Build the base SQL query with necessary joins
+    StringBuilder sql = new StringBuilder("SELECT d.* "
+            + "FROM Delivery d "
+            + "JOIN Account a ON d.shipper_id = a.id "
+            + "WHERE d.shipper_id = ? "
+            + "AND (a.user_name LIKE ? OR a.email LIKE ?) ");
+
+    List<Object> params = new ArrayList<>();
+    params.add(shipperId); // ràng buộc shipper_id
+
+    String searchPattern = "%" + search.trim() + "%";
+    params.add(searchPattern);
+    params.add(searchPattern);
+
+    if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
+        sql.append("AND d.status = ? ");
+        params.add(status);
+    }
+
+    if (sort != null && !sort.isEmpty()) {
+        sql.append(" ORDER BY d.order_id ").append(sort).append(" LIMIT ? OFFSET ?");
+    } else {
+        sql.append(" ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?");
+    }
+
+    params.add(pageSize);
+    params.add((page - 1) * pageSize);
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            list.add(getFromResultSet(resultSet));
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return list;
+}
+     public int getTotalDeliveryResultsShipper(String search, String status, int shipperId) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(*) "
+        + "FROM Delivery d "
+        + "JOIN Account a ON d.shipper_id = a.id "
+        + "WHERE d.shipper_id = ? "
+        + "AND (a.user_name LIKE ? OR a.email LIKE ?) "
+    );
+
+    List<Object> params = new ArrayList<>();
+    params.add(shipperId); // lọc theo shipper đang đăng nhập
+
+    String searchPattern = "%" + search.trim() + "%";
+    params.add(searchPattern);
+    params.add(searchPattern);
+
+    if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
+        sql.append("AND d.status = ? ");
+        params.add(status);
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return 0;
+}
+   public static void main(String[] args) {
+        DeliveryDAO  dao = new DeliveryDAO();
         for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "",1,2 )) {
             System.out.println(d);
         }
@@ -341,6 +511,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         System.out.println(new DeliveryDAO().getNumberDeliveryOfShipper(54));
        
         Delivery de = new DeliveryDAO().findById(4);
+       System.out.println(dao.getTotalFilteredDeliveryByShipper(48, ""));
     }
     
 }
