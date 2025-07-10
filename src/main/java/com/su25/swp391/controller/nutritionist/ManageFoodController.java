@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,7 +183,6 @@ public class ManageFoodController extends HttpServlet {
 
                 // Lưu file
                 String fullPath = uploadPath + File.separator + fileName;
-                System.out.println("Saving file to: " + fullPath);
                 filePart.write(fullPath);
 
                 // Đường dẫn tương đối để lưu vào database
@@ -671,10 +671,18 @@ public class ManageFoodController extends HttpServlet {
         boolean successExcel = false;
         HttpSession session = request.getSession();
         
+        //Lấy arrayFilImage
+        Collection<Part> parts = request.getParts();
+        Map<String, Part> imageFileMap = new HashMap<>();
+
+        for (Part part : parts) {
+            if ("image_url".equals(part.getName()) && part.getSubmittedFileName() != null) {
+                imageFileMap.put(part.getSubmittedFileName(), part); // key là tên ảnh trong Excel
+            }
+        }
+        
         try(InputStream is = fileExcel.getInputStream()) {
             List<Food> listFood = DataExcelUtils.readFoods(is);
-            System.out.println(is);
-            System.out.println(listFood.size());
             //ghi vao DB
             for(Food food : listFood){
                 foodDao.insert(food);

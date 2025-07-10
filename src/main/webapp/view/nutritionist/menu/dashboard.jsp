@@ -88,9 +88,19 @@
                   <div class="main-content-wrap">
                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Food List</h3>
-                    <c:if test="${empty listFood}">
-                        <div>1</div>
-                    </c:if>
+                      
+                      <form id="formInputExcel" action="${pageContext.request.contextPath}/manage-food?action=importExcel" 
+                            method="post" enctype="multipart/form-data" style="display:flex; gap:10px">
+                          <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
+                          <input id="fileImage" type="file" hidden multiple>
+                          <a id="buttonfileImage" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                              Choose File Image
+                          </a>
+                          <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                              Choose File Excel
+                          </a>
+                          <button type="submit" class="buttonImport"> Import</button>
+                      </form>
                     </div>
                     <!-- Thêm modal xác nhận xóa -->
                     <div id="customDeleteModal" class="custom-modal-overlay" style="display:none;">
@@ -176,13 +186,7 @@
                                 href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
                                 new
                             </a>
-                            <form id="formInputExcel" action="${pageContext.request.contextPath}/manage-food?action=importExcel" 
-                                  method="post" enctype="multipart/form-data" style="display:flex">
-                                <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
-                                <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
-                                    Choose File Excel
-                                </a>
-                            </form>
+                            
                             
                         </div>
                       <div class="wg-table table-product-list">
@@ -509,6 +513,27 @@
             text-align: center;
             border-radius: 10px
         }
+        
+        .buttonImport{
+            width: 100px;
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color:white;
+            background-color: #15803D
+        }
+        .buttonImport:hover{
+            color:#15803D;
+            background-color: white
+        }
+        
+        #buttonExcelFile{
+            display: inline-block;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
       </style>
       <!--Script-->
       <script>
@@ -667,7 +692,7 @@
             
             fileInput.addEventListener("change", (e) => {
                 if(fileInput.files.length > 0){
-                    formInputExcel.submit();
+                    buttonExcelFile.textContent = fileInput.files[0].name;
                 }
             })
         </script>
