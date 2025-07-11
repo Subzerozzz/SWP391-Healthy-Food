@@ -212,10 +212,9 @@ private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse 
         session.setAttribute("comboAmount", totalPrice);
 
         // Chuyển sang trang tạo thanh toán
-        String url = request.getContextPath()
-                + "/ajaxServlet?amount=" + combo.getDiscountPrice()
-                + "&action=wholesale";
-        response.sendRedirect(url);
+      
+        response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + combo.getDiscountPrice() 
+                + "&orderId=" + combo.getComboId() +"&combo=true" );
 
     }
 
@@ -293,38 +292,4 @@ private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse 
         }
 
     }
-
-//    private void handleVNPayReturnForCombo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String responseCode = request.getParameter("vnp_ResponseCode");
-//        String transactionStatus = request.getParameter("vnp_TransactionStatus");
-//
-//        if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
-//            handleComboOrderSuccess(request, response);
-//        } else {
-//            handleComboOrderFailed(request, response);
-//        }
-//    }
-//
-//    private void handleComboOrderSuccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
-//
-//        OrderCombo ordercombo = ordercombodao.findById(orderId);
-//        if (ordercombo != null) {
-//            ordercombo.setPayment_status(1);
-//            ordercombodao.update(ordercombo);
-//        }
-//        setToastMessage(request, "Thanh toán thành công!", "success");
-//        response.sendRedirect(request.getContextPath() + "/comboController");
-//    }
-//
-//    private void handleComboOrderFailed(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
-//        OrderCombo order = ordercombodao.findById(orderId);
-//        if (order != null) {
-//            order.setPayment_status(0);
-//            ordercombodao.update(order);
-//        }
-//        setToastMessage(request, "Thanh toán thất bại.", "error");
-//        response.sendRedirect(request.getContextPath() + "/comboController");
-//    }
 }
