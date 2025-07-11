@@ -430,9 +430,7 @@
                                             </h2>
                                         </div>
 
-                                        <div class="product-img">
-                                            <img src="" alt="" class="product-image">
-                                        </div>
+                                        
 
                                         <div class="combo-price">
                                             <div>

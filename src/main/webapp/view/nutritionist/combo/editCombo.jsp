@@ -109,8 +109,9 @@
                                                                                                                                    value="${combo.comboName}">
                                                                                                                         </div>
                                                                                                                         <div class="col-md-6">
-                                                                                                                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                                                                                                            <select class="form-select" id="status" name="status" required>
+                                                                                                                            <label for="status" class="form-label" >Status <span class="text-danger">*</span></label>
+                                                                                                                            <select class="form-select" style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
+                                                                                                                                    outline: none "id="status" name="status" required>
                                                                                                                                 <option value="active" ${combo.status == 'active' ? 'selected' : ''}>Active</option>
                                                                                                                                 <option value="inactive" ${combo.status == 'inactive' ? 'selected' : ''}>Inactive</option>
                                                                                                                             </select>
@@ -132,9 +133,9 @@
                                                                                                                             <div class="food-selection-container">
                                                                                                                                 <c:forEach items="${comboFood}" var="comboFood" varStatus="status">
                                                                                                                                     <div class="food-selection-row row mb-3">
-                                                                                                                                        <div class="col-md-8">
-                                                                                                                                            <select class="form-control food-select" required>
-                                                                                                                                                <option value="">Choose a food</option>
+                                                                                                                                        <div class="col-md-8" >
+                                                                                                                                            <select class="form-control food-select" style=" height: 47.1px;" required>
+                                                                                                                                                <option value="" >Choose a food</option>
                                                                                                                                                 <c:forEach items="${allFoods}" var="food">
                                                                                                                                                     <option value="${food.id}" 
                                                                                                                                                             data-price="${food.price}"
@@ -173,7 +174,10 @@
                                                                                                                                             <input type="number" class="form-control food-quantity" value="1" min="1" required>
                                                                                                                                         </div>
                                                                                                                                         <div class="col-md-1 d-flex align-items-end">
-                                                                                                                                            <button type="button" class="btn btn-danger remove-food" disabled title="Remove food">
+                                                                                                                                            <button type="button" class="btn btn-danger remove-food" style="
+                                                                                                                                                    width: 46.6px;
+                                                                                                                                                    height: 47.1px;
+                                                                                                                                                    " disabled title="Remove food">
                                                                                                                                                 <i class="fas fa-trash"></i>
                                                                                                                                             </button>
                                                                                                                                         </div>
@@ -230,7 +234,9 @@
                                                                                                                                 <div class="col-12 text-end">
                                                                                                                                     <a href="${pageContext.request.contextPath}/managerCombo" 
                                                                                                                                        class="btn btn-secondary me-2">
-                                                                                                                                        <i class="fas fa-times"></i> Cancel
+                                                                                                                                        <i class="fas fa-times" style="
+                                                                                                                                           height: 25px;
+                                                                                                                                           "></i> Cancel
                                                                                                                                     </a>
                                                                                                                                     <button type="submit" class="btn btn-primary">
                                                                                                                                         <i class="fas fa-save"></i> Save Changes
@@ -238,7 +244,97 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                             </form>
+                                                                                                                            <style>
+                                                                                                                                /* Tổng thể bảng */
+                                                                                                                                .table-responsive {
+                                                                                                                                    border: 1px solid #ddd;
+                                                                                                                                    border-radius: 5px;
+                                                                                                                                    padding: 15px;
+                                                                                                                                    background-color: #fff;
+                                                                                                                                }
 
+                                                                                                                                .table {
+                                                                                                                                    width: 100%;
+                                                                                                                                    margin-bottom: 0;
+                                                                                                                                    border-collapse: collapse;
+                                                                                                                                }
+
+                                                                                                                                /* Các hàng */
+                                                                                                                                .table th, .table td {
+                                                                                                                                    padding: 10px 15px;
+                                                                                                                                    vertical-align: middle;
+                                                                                                                                    border: 1px solid #dee2e6;
+                                                                                                                                }
+
+                                                                                                                                /* Tiêu đề */
+                                                                                                                                .table th {
+                                                                                                                                    width: 40%;
+                                                                                                                                    background-color: #f8f9fa;
+                                                                                                                                    font-weight: 600;
+                                                                                                                                }
+
+                                                                                                                                /* Số tiền hiển thị */
+                                                                                                                                #original-price-display,
+                                                                                                                                #savings-display {
+                                                                                                                                    font-weight: bold;
+                                                                                                                                    color: #333;
+                                                                                                                                }
+
+                                                                                                                                /* Ô nhập giá khuyến mãi */
+                                                                                                                                #discountPrice {
+                                                                                                                                    max-width: 200px;
+                                                                                                                                    display: inline-block;
+                                                                                                                                }
+
+                                                                                                                                /* Nút */
+                                                                                                                                button.btn {
+                                                                                                                                    padding: 8px 18px;
+                                                                                                                                    font-size: 14px;
+                                                                                                                                    margin-right: 5px;
+                                                                                                                                }
+
+                                                                                                                                /* Nút lưu và huỷ */
+                                                                                                                                button.btn-primary {
+                                                                                                                                    background-color: #007bff;
+                                                                                                                                    border-color: #007bff;
+                                                                                                                                    color: white;
+                                                                                                                                }
+
+                                                                                                                                button.btn-secondary {
+                                                                                                                                    background-color: #6c757d;
+                                                                                                                                    border-color: #6c757d;
+                                                                                                                                    color: white;
+                                                                                                                                }
+
+                                                                                                                                /* Căn nút về bên phải */
+                                                                                                                                .table-responsive {
+                                                                                                                                    position: relative;
+                                                                                                                                }
+
+                                                                                                                                /* Bọc hai nút cùng hàng */
+                                                                                                                                .table-responsive .btn {
+                                                                                                                                    min-width: 130px;
+                                                                                                                                    padding: 8px 16px;
+                                                                                                                                    font-size: 14px;
+                                                                                                                                    border-radius: 4px;
+                                                                                                                                    margin-left: 8px;
+                                                                                                                                }
+
+                                                                                                                                /* Nút Cancel giống Save nhưng khác màu */
+                                                                                                                                .table-responsive .btn-secondary {
+                                                                                                                                    background-color: #6c757d;
+                                                                                                                                    border-color: #6c757d;
+                                                                                                                                    color: white;
+                                                                                                                                }
+
+                                                                                                                                /* Căn hàng nút về bên phải */
+                                                                                                                                .table-responsive .btn-group {
+                                                                                                                                    text-align: right;
+                                                                                                                                    margin-top: 10px;
+                                                                                                                                }
+
+
+                                                                                                                            </style>
 
                                                                                                                             <script>
                                                                                                                                 document.addEventListener('DOMContentLoaded', function () {
@@ -305,7 +401,7 @@
                                                                                                                                     }
                                                                                                                                 });
                                                                                                                             </script>
-                                                                                                                           
+
                                                                                                                             </div>
                                                                                                                             </div>
                                                                                                                             </div>
