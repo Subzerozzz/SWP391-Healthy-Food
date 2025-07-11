@@ -53,13 +53,12 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setInt(1, orderCombo.getOrder_id());
-            statement.setInt(2, orderCombo.getComboId());
-            statement.setString(3, orderCombo.getComboName());
-            statement.setDouble(4, orderCombo.getDiscountPrice());
-            statement.setInt(5, orderCombo.getQuantity());
-            statement.setDouble(6, orderCombo.getTotalPrice());
-            statement.setInt(7, orderCombo.getOrderComboId());
+            statement.setInt(1, orderCombo.getComboId());
+            statement.setString(2, orderCombo.getComboName());
+            statement.setDouble(3, orderCombo.getDiscountPrice());
+            statement.setInt(4, orderCombo.getQuantity());
+            statement.setDouble(5, orderCombo.getTotalPrice());
+            statement.setInt(6, orderCombo.getOrderComboId());
 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -90,19 +89,19 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     @Override
     public int insert(OrderCombo orderCombo) {
-        String sql = "INSERT INTO OrderCombo (order_id, comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status) VALUES (?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
+                + "quantity, totalPrice,payment_status) VALUES ( ?, ?, ?, ?, ?,?)";
 
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, orderCombo.getOrder_id());
-            statement.setInt(2, orderCombo.getComboId());
-            statement.setString(3, orderCombo.getComboName());
-            statement.setDouble(4, orderCombo.getDiscountPrice());
-            statement.setInt(5, orderCombo.getQuantity());
-            statement.setDouble(6, orderCombo.getTotalPrice());
-            statement.setInt(7, orderCombo.getPayment_status());
+            
+            statement.setInt(1, orderCombo.getComboId());
+            statement.setString(2, orderCombo.getComboName());
+            statement.setDouble(3, orderCombo.getDiscountPrice());
+            statement.setInt(4, orderCombo.getQuantity());
+            statement.setDouble(5, orderCombo.getTotalPrice());
+            statement.setInt(6, orderCombo.getPayment_status());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -150,7 +149,6 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         OrderCombo orderCombo = new OrderCombo();
         
         orderCombo.setOrderComboId(rs.getInt("orderComboId"));
-        orderCombo.setOrder_id(rs.getInt("order_id"));
         orderCombo.setComboId(rs.getInt("comboId"));
         orderCombo.setComboName(rs.getString("comboName"));
         orderCombo.setDiscountPrice(rs.getDouble("discountPrice"));

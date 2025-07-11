@@ -4,7 +4,7 @@
  */
 package com.su25.swp391.dal.implement;
 
-import static com.su25.swp391.controller.homepage.ShopController.FOOD_PER_PAGE;
+import static com.su25.swp391.controller.homePage.ShopController.FOOD_PER_PAGE;
 import com.oracle.wls.shaded.org.apache.bcel.generic.AALOAD;
 import com.su25.swp391.dal.DBContext;
 import com.su25.swp391.dal.I_DAO;
