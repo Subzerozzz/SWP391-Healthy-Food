@@ -114,7 +114,7 @@ public class BuyComboController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
@@ -126,7 +126,7 @@ public class BuyComboController extends HttpServlet {
         }
     }
 
-private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String amountParam = req.getParameter("amount");
             if (amountParam == null || amountParam.isEmpty()) {
@@ -145,6 +145,7 @@ private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse 
             resp.sendRedirect(req.getContextPath() + "/comboController");
         }
     }
+
     /**
      * Returns a short description of the servlet.
      *
@@ -212,9 +213,10 @@ private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse 
         session.setAttribute("comboAmount", totalPrice);
 
         // Chuyển sang trang tạo thanh toán
-      
-        response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + combo.getDiscountPrice() 
-                + "&orderId=" + combo.getComboId() +"&combo=true" );
+        long amount = Math.round(combo.getDiscountPrice() * quantity * 1);
+
+        response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + amount
+                + "&orderId=" + combo.getComboId() + "&combo_payment=true");
 
     }
 
@@ -251,10 +253,10 @@ private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse 
 
             //kiểm tra trạng thái thanh toán
             if ("00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
-                // Thanh toán thành công
-              
-                
                 int orderComboIdAfterInsert = (int) session.getAttribute("comboOrderId");
+
+                // Cập nhật trạng thái đã thanh toán
+                ordercombodao.updatePaymentStatus(orderComboIdAfterInsert, 1);
 
                 //STEP3 : insert order combo product
                 for (ComboFood cp : comboFoods) {

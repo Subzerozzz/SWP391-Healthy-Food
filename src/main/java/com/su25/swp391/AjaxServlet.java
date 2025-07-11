@@ -23,6 +23,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  *
@@ -43,7 +44,7 @@ public class AjaxServlet extends HttpServlet {
             String vnp_Command = "pay";
             String orderType = "other";
             String amountParam = req.getParameter("amount");
-            String isCombo = req.getParameter("combo") != null ? "yes" : "";
+            String isCombo = req.getParameter("combo_payment") != null ? "yes" : "";
             if (amountParam == null || amountParam.isEmpty()) {
                 req.getSession().setAttribute("message", "Payment failed: Missing amount parameter");
                 req.getSession().setAttribute("messageType", "error");
@@ -55,7 +56,7 @@ public class AjaxServlet extends HttpServlet {
             long amount = (long) (Double.parseDouble(amountParam) * 100);
             String bankCode = req.getParameter("bankCode");
 
-            String vnp_TxnRef = orderId;
+            String vnp_TxnRef = UUID.randomUUID().toString().replace("-", "").substring(0, 15);
             String vnp_IpAddr = VNPayConfig.getIpAddress( req);
 
             String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
@@ -67,9 +68,9 @@ public class AjaxServlet extends HttpServlet {
             vnp_Params.put("vnp_Amount", String.valueOf(amount));
             vnp_Params.put("vnp_CurrCode", "VND");
 
-            if (bankCode != null && !bankCode.isEmpty()) {
-                vnp_Params.put("vnp_BankCode", bankCode);
-            }
+//            if (bankCode != null && !bankCode.isEmpty()) {
+//                vnp_Params.put("vnp_BankCode", bankCode);
+//            }
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
             vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
             vnp_Params.put("vnp_OrderType", orderType);
@@ -81,7 +82,7 @@ public class AjaxServlet extends HttpServlet {
                 vnp_Params.put("vnp_Locale", "vn");
             }
             if(isCombo.equals("yes")){
-                vnp_Params.put("vnp_ReturnComboUrl", VNPayConfig.vnp_ReturnComboUrl);
+                vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnComboUrl);
             }
             else{
                 vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
