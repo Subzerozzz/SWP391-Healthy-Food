@@ -302,6 +302,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         }
 
         sql += " WHERE id = ?";
+        params.add(t.getId());
         try {
         connection = getConnection();
         statement = connection.prepareStatement(sql);
@@ -558,6 +559,9 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
        
         Delivery de = new DeliveryDAO().findById(4);
        System.out.println(dao.getTotalFilteredDeliveryByShipper(48, ""));
+       Delivery del = new DeliveryDAO().findById(11);
+      // System.out.println(dao.updateStatusShipper(del, "deli", note));
+       
     }
     
 }
