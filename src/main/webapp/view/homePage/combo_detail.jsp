@@ -431,10 +431,11 @@
             });
         });
          // Hàm mua ngay combo
-                function buyComboNow(comboId) {
-                    const quantity = document.getElementById('combo-quantity').value;
-                    window.location.href = '${pageContext.request.contextPath}/buy-combo?comboId=' + comboId + '&quantity=' + quantity;
-                }
+               function buyComboNow(comboId) {
+        const quantity = document.getElementById('combo-quantity').value;
+        const contextPath = '<%= request.getContextPath() %>'; // 
+        window.location.href = contextPath + '/buy-combo?comboId=' + comboId + '&quantity=' + quantity;
+    }
     </script>
 
 </body>
