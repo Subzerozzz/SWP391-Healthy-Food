@@ -95,7 +95,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            
+
             statement.setInt(1, orderCombo.getComboId());
             statement.setString(2, orderCombo.getComboName());
             statement.setDouble(3, orderCombo.getDiscountPrice());
@@ -122,32 +122,10 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         }
     }
 
-    public static void main(String[] args) {
-        // Tạo DAO
-        OrderComboDAO dao = new OrderComboDAO();
-
-        // Tạo đối tượng OrderCombo
-        OrderCombo orderCombo = new OrderCombo();
-        orderCombo.setComboId(1); // comboId phải tồn tại trong bảng Combo
-        orderCombo.setComboName("Combo siêu tiết kiệm");
-        orderCombo.setDiscountPrice(1.222);
-        orderCombo.setQuantity(1);
-        orderCombo.setTotalPrice(124.920);
-        orderCombo.setPayment_status(0); // 0 = chưa thanh toán
-
-        // Gọi phương thức insert và in ra kết quả
-        int generatedId = dao.insert(orderCombo);
-        if (generatedId != -1) {
-            System.out.println("OrderCombo inserted successfully with ID: " + generatedId);
-        } else {
-            System.out.println("Insert failed.");
-        }
-    }
-
     @Override
     public OrderCombo getFromResultSet(ResultSet rs) throws SQLException {
         OrderCombo orderCombo = new OrderCombo();
-        
+
         orderCombo.setOrderComboId(rs.getInt("orderComboId"));
         orderCombo.setComboId(rs.getInt("comboId"));
         orderCombo.setComboName(rs.getString("comboName"));
@@ -176,4 +154,20 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         }
         return null;
     }
+
+    public void updatePaymentStatus(int orderComboId, int status) {
+        String sql = "UPDATE OrderCombo SET payment_status = ? WHERE orderComboId = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, status);
+            statement.setInt(2, orderComboId);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error updating payment status: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+    }
+    
 }
