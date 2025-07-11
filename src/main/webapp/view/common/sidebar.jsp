@@ -135,6 +135,12 @@
                   <div class="text">View Feedback</div>
                 </a>
               </li>
+                <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/seller/manage-delivery" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Delivery</div>
+                </a>
+              </li>
             </c:if>
             <c:if test="${sessionScope.account.role eq 'nutri'}">
               <li class="menu-item">
