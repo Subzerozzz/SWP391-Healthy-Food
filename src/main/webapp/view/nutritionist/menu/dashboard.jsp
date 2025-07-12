@@ -88,9 +88,19 @@
                   <div class="main-content-wrap">
                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                       <h3>Food List</h3>
-                    <c:if test="${empty listFood}">
-                        <div>1</div>
-                    </c:if>
+                      
+                      <form id="formInputExcel" action="${pageContext.request.contextPath}/manage-food?action=importExcel" 
+                            method="post" enctype="multipart/form-data" style="display:flex; gap:10px">
+                          <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
+                          <input id="fileImage" name="fileImage" type="file" hidden multiple webkitdirectory required>
+                          <a id="buttonImageFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                              Choose File Image
+                          </a>
+                          <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                              Choose File Excel
+                          </a>
+                          <button type="submit" class="buttonImport">Import</button>
+                      </form>
                     </div>
                     <!-- Thêm modal xác nhận xóa -->
                     <div id="customDeleteModal" class="custom-modal-overlay" style="display:none;">
@@ -173,9 +183,11 @@
                         <!--Add new food--> 
                         </div>
                             <a class="tf-button style-1 w208"
-                              href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
-                              new
+                                href="${pageContext.request.contextPath}/manage-food?action=add"><i class="icon-plus"></i>Add
+                                new
                             </a>
+                            
+                            
                         </div>
                       <div class="wg-table table-product-list">
                           <c:choose>
@@ -232,8 +244,8 @@
                                   <ul class="flex flex-column">
                                       <c:forEach items="${listFood}" var="item">
                                           <li class="product-item gap14">
-                                            <div class="image no-bg">
-                                                <img src="${item.getImage_url()}" alt="">
+                                            <div style="width: 50px !important; aspect-ratio: 1 / 1; overflow: hidden;" class="image no-bg">
+                                                <img src="${item.getImage_url()}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                                             </div>
                                             <div class="flex items-center justify-between gap20 flex-grow">
                                               <div class="name">
@@ -501,6 +513,27 @@
             text-align: center;
             border-radius: 10px
         }
+        
+        .buttonImport{
+            width: 100px;
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color:white;
+            background-color: #15803D
+        }
+        .buttonImport:hover{
+            color:#15803D;
+            background-color: white
+        }
+        
+        #buttonExcelFile{
+            display: inline-block;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
       </style>
       <!--Script-->
       <script>
@@ -645,8 +678,81 @@
              session.removeAttribute("isUpdate");
          %>
        </c:if>
-
-
+         
+         <!--Script cho viec chon file excel--> 
+        <script>
+            //file data 
+            const fileInput = document.getElementById("excelFile")
+            const buttonExcelFile = document.getElementById("buttonExcelFile")
+            const formInputExcel = document.getElementById("formInputExcel")
+            
+            buttonExcelFile.addEventListener("click", (e) => {
+                e.preventDefault();
+                fileInput.click();
+            })
+            
+            fileInput.addEventListener("change", (e) => {
+                if(fileInput.files.length > 0){
+                    buttonExcelFile.textContent = fileInput.files[0].name;
+                }
+            })
+            //file anh
+            const buttonImageFile = document.getElementById("buttonImageFile")
+            const fileImage = document.getElementById("fileImage")
+            
+            
+            buttonImageFile.addEventListener("click", (e) => {
+                e.preventDefault();
+                fileImage.click();
+            })
+            
+            fileImage.addEventListener("change", (e) => {
+                if(fileImage.files.length > 0){
+                    const firstFilePath = fileImage.files[0].webkitRelativePath;
+                    const folderName = firstFilePath.split("/")[0];
+                    buttonImageFile.textContent = folderName + " (" + fileImage.files.length + " images)";
+                }
+            })
+            
+            
+        </script>
+         
+        <!--Thông báo về việc import tu excel--> 
+        
+        <c:if test="${successExcel == true}">
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.success({
+                        title: "Thông báo",
+                        message: "${messageExcel}",
+                        position: 'topRight',
+                        timeout: 5000,
+                        backgroundColor:"#d4edda"
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("successExcel");
+                session.removeAttribute("messageExcel");
+            %>
+        </c:if>
+        
+        <c:if test="${successExcel == false}">
+             <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    iziToast.error({
+                        title: "Thông báo",
+                        message: "${messageExcel}",
+                        position: 'topRight',
+                        timeout: 5000
+                    });
+                });
+            </script>
+            <%
+                session.removeAttribute("successExcel");
+                session.removeAttribute("messageExcel");
+            %>
+        </c:if>
     </body>
 
 
