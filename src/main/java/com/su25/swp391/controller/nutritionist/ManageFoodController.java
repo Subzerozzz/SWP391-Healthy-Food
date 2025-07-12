@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -673,11 +674,37 @@ public class ManageFoodController extends HttpServlet {
         
         //Lấy arrayFilImage
         Collection<Part> parts = request.getParts();
-        Map<String, Part> imageFileMap = new HashMap<>();
+        for(Part filePart : parts){
+            System.out.println("Part name: " + filePart.getName());
+            System.out.println("Submitted file name: " + filePart.getSubmittedFileName());
+            System.out.println("Size: " + filePart.getSize());
+        }
 
-        for (Part part : parts) {
-            if ("image_url".equals(part.getName()) && part.getSubmittedFileName() != null) {
-                imageFileMap.put(part.getSubmittedFileName(), part); // key là tên ảnh trong Excel
+        for (Part filePart : parts) {
+            String fileName = null;
+            if (filePart != null && "fileImage".equals(filePart.getName()) && filePart.getSize() > 0) {
+                System.out.println("File received: " + filePart.getSubmittedFileName() + ", size: " + filePart.getSize());
+
+                // Lấy tên file gốc
+                String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                // Tạo tên file duy nhất
+                fileName = originalFileName;
+
+                // Đường dẫn lưu file
+                String uploadPath = request.getServletContext().getRealPath("/uploads/products/");
+
+                // Tạo thư mục nếu chưa tồn tại
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    boolean created = uploadDir.mkdirs();
+                }
+
+                // Lưu file
+                String fullPath = uploadPath + File.separator + fileName;
+                filePart.write(fullPath);
+
+                // Đường dẫn tương đối để lưu vào database
+                fileName = "uploads/products/" + fileName;
             }
         }
         
