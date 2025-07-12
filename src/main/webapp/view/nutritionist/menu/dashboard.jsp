@@ -93,7 +93,7 @@
                             method="post" enctype="multipart/form-data" style="display:flex; gap:10px">
                           <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
                           <input id="fileImage" type="file" hidden multiple>
-                          <a id="buttonfileImage" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
+                          <a id="buttonImageFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
                               Choose File Image
                           </a>
                           <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
@@ -681,6 +681,7 @@
          
          <!--Script cho viec chon file excel--> 
         <script>
+            //file data 
             const fileInput = document.getElementById("excelFile")
             const buttonExcelFile = document.getElementById("buttonExcelFile")
             const formInputExcel = document.getElementById("formInputExcel")
@@ -695,6 +696,23 @@
                     buttonExcelFile.textContent = fileInput.files[0].name;
                 }
             })
+            //file anh
+            const buttonImageFile = document.getElementById("buttonImageFile")
+            const fileImage = document.getElementById("fileImage")
+            
+            
+            buttonImageFile.addEventListener("click", (e) => {
+                e.preventDefault();
+                fileImage.click();
+            })
+            
+            fileImage.addEventListener("change", (e) => {
+                if(fileImage.files.length > 0){
+                    buttonImageFile.textContent = fileInput.files[0].name;
+                }
+            })
+            
+            
         </script>
          
         <!--Thông báo về việc import tu excel--> 
