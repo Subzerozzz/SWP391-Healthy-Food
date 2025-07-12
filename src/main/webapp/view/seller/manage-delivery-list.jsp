@@ -38,18 +38,18 @@
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon_1.png">
     <link rel="apple-touch-icon-precomposed" href="${pageContext.request.contextPath}/images/favicon_1.png">
      <style>
-                          .box-logo{
-                              height: 100px;
-                              overflow: hidden
-                          }
-                          .logo{
-                              max-width:100%;
-                              height: 100%;
-                              display:block
-                          }
-                          
-                          style for filter
-                           .fixed-width-btn {
+            .box-logo{
+                height: 100px;
+                overflow: hidden
+            }
+            .logo{
+                max-width:100%;
+                height: 100%;
+                display:block
+            }
+
+            style for filter
+             .fixed-width-btn {
                 min-width: 120px;
                 text-align: center;
             }
