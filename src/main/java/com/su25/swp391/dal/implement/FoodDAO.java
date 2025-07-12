@@ -166,7 +166,7 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
         List<Food> list = new ArrayList<>();
         String sql = "SELECT *\n"
                 + "FROM Food\n"
-                + "ORDER BY id\n"
+                + "ORDER BY id DESC\n"
                 + "LIMIT ? OFFSET ?;";
         // Tính số bản ghi cần bỏ qua
         Integer recordOffset = (i - 1) * limit;

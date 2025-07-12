@@ -137,7 +137,7 @@
         <!-- C�c dependency kh�c -->
     </dependencies>
     <build>
-        <finalName>SWP391-Healthy-Food</finalName>
+        <finalName>Test</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

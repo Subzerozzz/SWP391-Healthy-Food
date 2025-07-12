@@ -15,6 +15,7 @@ import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.FoodCategory;
 import com.su25.swp391.entity.FoodDraft;
 import com.su25.swp391.entity.Request;
+import com.su25.swp391.utils.DataExcelUtils;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -26,12 +27,18 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -106,6 +113,9 @@ public class ManageFoodController extends HttpServlet {
             case "update":
                 updateFood(request, response);
                 break;
+            case "importExcel":
+                importDataExcel(request, response);
+                break;
             default:
                 throw new AssertionError();
         }
@@ -177,7 +187,6 @@ public class ManageFoodController extends HttpServlet {
 
                 // Lưu file
                 String fullPath = uploadPath + File.separator + fileName;
-                System.out.println("Saving file to: " + fullPath);
                 filePart.write(fullPath);
 
                 // Đường dẫn tương đối để lưu vào database
@@ -471,7 +480,7 @@ public class ManageFoodController extends HttpServlet {
             Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
                     : totalOfRecord / RECORD_PER_PAGE + 1;
             // lấy ra 10 bản ghi đầu tiên
-            List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, 1,RECORD_PER_PAGE);
+            List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, 1, RECORD_PER_PAGE);
             // lấy ra listCategory
             List<FoodCategory> listCategory = categoryDao.findAll();
             // set giá trị
@@ -496,7 +505,7 @@ public class ManageFoodController extends HttpServlet {
         Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
                 : totalOfRecord / RECORD_PER_PAGE + 1;
         // Lấy ra 10 bản ghi đầu tiên
-        List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, 1,RECORD_PER_PAGE);
+        List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, 1, RECORD_PER_PAGE);
         // lấy ra listCategory
         List<FoodCategory> listCategory = categoryDao.findAll();
         // set gia tri vao request
@@ -522,7 +531,7 @@ public class ManageFoodController extends HttpServlet {
                 currentPage = 1;
             }
 
-            List<Food> listFood = foodDao.findRecordByPage(currentPage,RECORD_PER_PAGE);
+            List<Food> listFood = foodDao.findRecordByPage(currentPage, RECORD_PER_PAGE);
             List<FoodCategory> listCategory = categoryDao.findAll();
             request.setAttribute("totalPage", totalPage);
             request.setAttribute("listFood", listFood);
@@ -548,7 +557,7 @@ public class ManageFoodController extends HttpServlet {
                 currentPage = 1;
             }
 
-            List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, currentPage,RECORD_PER_PAGE);
+            List<Food> listFood = foodDao.findRecordByPageForCategory(categoryID, currentPage, RECORD_PER_PAGE);
             List<FoodCategory> listCategory = categoryDao.findAll();
             request.setAttribute("totalPage", totalPage);
             request.setAttribute("listFood", listFood);
@@ -575,7 +584,7 @@ public class ManageFoodController extends HttpServlet {
                 currentPage = 1;
             }
 
-            List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, currentPage,RECORD_PER_PAGE);
+            List<Food> listFood = foodDao.getRecordByPageForSearch(foodName, currentPage, RECORD_PER_PAGE);
             List<FoodCategory> listCategory = categoryDao.findAll();
             request.setAttribute("totalPage", totalPage);
             request.setAttribute("listFood", listFood);
@@ -627,7 +636,7 @@ public class ManageFoodController extends HttpServlet {
         try {
             Integer currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
             String categoryIdStr = request.getParameter("categoryID") == null ? null : request.getParameter("categoryID");
-            String foodName = request.getParameter("name")== null? "" : request.getParameter("name");
+            String foodName = request.getParameter("name") == null ? "" : request.getParameter("name");
             Integer categoryId = 0;
 
             //Xử lý categoryIdStr 
@@ -640,18 +649,17 @@ public class ManageFoodController extends HttpServlet {
             Integer totalOfRecord = listFood1.size();
             Integer totalPage = totalOfRecord % RECORD_PER_PAGE == 0 ? totalOfRecord / RECORD_PER_PAGE
                     : totalOfRecord / RECORD_PER_PAGE + 1;
-            
+
             List<Food> listFood = foodDao.filterChanning(categoryId, foodName, RECORD_PER_PAGE, currentPage);
             List<FoodCategory> listCategory = categoryDao.findAll();
-            
+
             request.setAttribute("totalPage", totalPage);
             request.setAttribute("listFood", listFood);
             request.setAttribute("listCategory", listCategory);
             request.setAttribute("foodName", foodName);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("categoryID", categoryId);
-            
-            
+
             request.getRequestDispatcher("view/nutritionist/menu/dashboard.jsp").forward(request, response);
 
             //Set dữ liệu trả ra giao diện 
@@ -661,5 +669,64 @@ public class ManageFoodController extends HttpServlet {
 
     }
 
+    private void importDataExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Part fileExcel = request.getPart("excelFile");
+        String messageExcel;
+        boolean successExcel = false;
+        HttpSession session = request.getSession();
+        
+        //Lấy arrayFilImage
+        Collection<Part> parts = request.getParts();
+        for (Part filePart : parts) {
+            String fileName = null;
+            if (filePart != null && "fileImage".equals(filePart.getName()) && filePart.getSize() > 0) {
+                System.out.println("File received: " + filePart.getSubmittedFileName() + ", size: " + filePart.getSize());
+
+                // Lấy tên file gốc
+                String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                // Tạo tên file duy nhất
+                fileName = originalFileName;
+
+                // Đường dẫn lưu file
+                String uploadPath = request.getServletContext().getRealPath("/uploads/products/");
+
+                // Tạo thư mục nếu chưa tồn tại
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    boolean created = uploadDir.mkdirs();
+                }
+
+                // Lưu file
+                String fullPath = uploadPath + File.separator + fileName;
+                filePart.write(fullPath);
+
+                // Đường dẫn tương đối để lưu vào database
+                fileName = "uploads/products/" + fileName;
+            }
+        }
+        
+        try(InputStream is = fileExcel.getInputStream()) {
+            List<Food> listFood = DataExcelUtils.readFoods(is);
+            
+            if(listFood.size() == 0){
+                session.setAttribute("messageExcel" , "Chưa có dữ liệu trong file excel !");
+                session.setAttribute("successExcel", successExcel);
+                response.sendRedirect("manager-dashboard");
+                return;
+            }
+            //ghi vao DB
+            for(Food food : listFood){
+                foodDao.insert(food);
+            }
+            
+            messageExcel = "Đã import " + listFood.size() + " sản phẩm thành công!";
+            successExcel = true;
+        } catch (Exception e) {
+            messageExcel = "Import thất bại !";
+        }
+        session.setAttribute("messageExcel" , messageExcel);
+        session.setAttribute("successExcel", successExcel);
+        response.sendRedirect("manager-dashboard");
+    }
 
 }
