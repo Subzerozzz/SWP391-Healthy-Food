@@ -5,6 +5,9 @@
 package com.su25.swp391.utils;
 
 import com.su25.swp391.entity.Food;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -18,8 +21,14 @@ public class DataExcelUtils {
 
     public static List<Food> readFoods(InputStream is) throws Exception {
         List<Food> list = new ArrayList<>();
+        
         try(Workbook wb = WorkbookFactory.create(is)) {
             Sheet sheet = wb.getSheetAt(0);
+            
+            if(sheet == null || sheet.getPhysicalNumberOfRows() == 0){
+                return list;
+            }
+           
 
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);

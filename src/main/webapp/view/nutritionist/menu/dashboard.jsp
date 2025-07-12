@@ -744,8 +744,7 @@
                         title: "Thông báo",
                         message: "${messageExcel}",
                         position: 'topRight',
-                        timeout: 5000,
-                        backgroundColor:"#d4edda"
+                        timeout: 5000
                     });
                 });
             </script>
