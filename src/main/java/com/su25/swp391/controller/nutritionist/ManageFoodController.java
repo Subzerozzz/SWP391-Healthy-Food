@@ -36,6 +36,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -674,12 +677,6 @@ public class ManageFoodController extends HttpServlet {
         
         //Lấy arrayFilImage
         Collection<Part> parts = request.getParts();
-        for(Part filePart : parts){
-            System.out.println("Part name: " + filePart.getName());
-            System.out.println("Submitted file name: " + filePart.getSubmittedFileName());
-            System.out.println("Size: " + filePart.getSize());
-        }
-
         for (Part filePart : parts) {
             String fileName = null;
             if (filePart != null && "fileImage".equals(filePart.getName()) && filePart.getSize() > 0) {
@@ -710,6 +707,13 @@ public class ManageFoodController extends HttpServlet {
         
         try(InputStream is = fileExcel.getInputStream()) {
             List<Food> listFood = DataExcelUtils.readFoods(is);
+            
+            if(listFood.size() == 0){
+                session.setAttribute("messageExcel" , "Chưa có dữ liệu trong file excel !");
+                session.setAttribute("successExcel", successExcel);
+                response.sendRedirect("manager-dashboard");
+                return;
+            }
             //ghi vao DB
             for(Food food : listFood){
                 foodDao.insert(food);
