@@ -69,7 +69,12 @@
                       <!-- main-content-wrap -->
                       <div class="main-content-wrap">
                         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                          <h3>Update Food</h3>
+                            <c:if test="${viewOrUpdate == 'update'}">
+                                <h3>Update Food</h3>
+                            </c:if>
+                            <c:if test="${viewOrUpdate == 'view'}">
+                                <h3>Food Detail</h3>
+                            </c:if>
                         </div>
                         <!-- form-add-product -->
                         <form class="tf-section-2 form-add-product"
@@ -165,9 +170,12 @@
                                 aria-required="true" required="">
                             </fieldset>
                             <!--Request-->
-                            <div class="cols gap10">
-                              <button class="tf-button w-full" type="submit">Make request</button>
-                            </div>
+                            <c:if test="${viewOrUpdate == 'update'}">
+                                <div class="cols gap10">
+                                    <button class="tf-button w-full" type="submit">Make request</button>
+                                </div>
+                            </c:if>
+                            
                           </div>
                         </form>
                         <!-- /form-add-product -->

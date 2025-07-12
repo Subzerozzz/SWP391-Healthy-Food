@@ -288,6 +288,12 @@
                                                   <i class="icon-trash-2 item-trash" style="color: red;" data-id="${item.getId()}"
                                                     data-name="${item.getName()}" onclick="showModalForm(event)"></i>
                                                 </div>
+                                                <div class="item eye">
+                                                    <a
+                                                    href="${pageContext.request.contextPath}/manage-food?action=detail&id=${item.id}">
+                                                        <i class="icon-eye" style="color:blue"></i>
+                                                  </a>
+                                                </div>
                                               </div>
                                             </div>
                                           </li>
