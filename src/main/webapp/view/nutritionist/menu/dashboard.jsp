@@ -92,14 +92,14 @@
                       <form id="formInputExcel" action="${pageContext.request.contextPath}/manage-food?action=importExcel" 
                             method="post" enctype="multipart/form-data" style="display:flex; gap:10px">
                           <input id="excelFile" hidden type="file" name="excelFile" accept=".xls,.xlsx" required />
-                          <input id="fileImage" type="file" hidden multiple>
+                          <input id="fileImage" name="fileImage" type="file" hidden multiple webkitdirectory required>
                           <a id="buttonImageFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
                               Choose File Image
                           </a>
                           <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
                               Choose File Excel
                           </a>
-                          <button type="submit" class="buttonImport"> Import</button>
+                          <button type="submit" class="buttonImport">Import</button>
                       </form>
                     </div>
                     <!-- Thêm modal xác nhận xóa -->
@@ -244,8 +244,8 @@
                                   <ul class="flex flex-column">
                                       <c:forEach items="${listFood}" var="item">
                                           <li class="product-item gap14">
-                                            <div class="image no-bg">
-                                                <img src="${item.getImage_url()}" alt="">
+                                            <div style="width: 50px !important; aspect-ratio: 1 / 1; overflow: hidden;" class="image no-bg">
+                                                <img src="${item.getImage_url()}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                                             </div>
                                             <div class="flex items-center justify-between gap20 flex-grow">
                                               <div class="name">
@@ -708,7 +708,9 @@
             
             fileImage.addEventListener("change", (e) => {
                 if(fileImage.files.length > 0){
-                    buttonImageFile.textContent = fileInput.files[0].name;
+                    const firstFilePath = fileImage.files[0].webkitRelativePath;
+                    const folderName = firstFilePath.split("/")[0];
+                    buttonImageFile.textContent = folderName + " (" + fileImage.files.length + " images)";
                 }
             })
             
