@@ -73,6 +73,9 @@ public class ManageFoodController extends HttpServlet {
             case "update":
                 showUpdateForm(request, response);
                 break;
+            case "detail":
+                viewDetail(request, response);
+                break;
             case "filter":
                 filterByCategory(request, response);
                 break;
@@ -148,6 +151,7 @@ public class ManageFoodController extends HttpServlet {
         request.setAttribute("listCategory", listCategory);
         request.setAttribute("foodUpdate", foodNeedUpdate);
         request.setAttribute("idUpdate", idUpdate);
+        request.setAttribute("viewOrUpdate", "update");
         // Chuyển về trang updateFood
         request.getRequestDispatcher("view/nutritionist/menu/updateFood.jsp").forward(request, response);
     }
@@ -470,6 +474,27 @@ public class ManageFoodController extends HttpServlet {
 
     }
 
+    private void viewDetail(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // Lấy ra id của food
+            Integer idUpdate = Integer.parseInt(request.getParameter("id"));
+            // lấy ra Food cần update
+            Food foodNeedUpdate = foodDao.findById(idUpdate);
+            // lấy ra danh sách category
+            List<FoodCategory> listCategory = new ArrayList<>();
+            listCategory = categoryDao.findAll();
+            // set các giá trị để gửi lên updateFood.jsp
+            request.setAttribute("listCategory", listCategory);
+            request.setAttribute("foodUpdate", foodNeedUpdate);
+            request.setAttribute("idUpdate", idUpdate);
+            request.setAttribute("viewOrUpdate", "view");
+            // Chuyển về trang updateFood
+            request.getRequestDispatcher("view/nutritionist/menu/updateFood.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void filterByCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             // lấy categoryID
@@ -674,7 +699,7 @@ public class ManageFoodController extends HttpServlet {
         String messageExcel;
         boolean successExcel = false;
         HttpSession session = request.getSession();
-        
+
         //Lấy arrayFilImage
         Collection<Part> parts = request.getParts();
         for (Part filePart : parts) {
@@ -704,27 +729,27 @@ public class ManageFoodController extends HttpServlet {
                 fileName = "uploads/products/" + fileName;
             }
         }
-        
-        try(InputStream is = fileExcel.getInputStream()) {
+
+        try (InputStream is = fileExcel.getInputStream()) {
             List<Food> listFood = DataExcelUtils.readFoods(is);
-            
-            if(listFood.size() == 0){
-                session.setAttribute("messageExcel" , "Chưa có dữ liệu trong file excel !");
+
+            if (listFood.size() == 0) {
+                session.setAttribute("messageExcel", "Chưa có dữ liệu trong file excel !");
                 session.setAttribute("successExcel", successExcel);
                 response.sendRedirect("manager-dashboard");
                 return;
             }
             //ghi vao DB
-            for(Food food : listFood){
+            for (Food food : listFood) {
                 foodDao.insert(food);
             }
-            
+
             messageExcel = "Đã import " + listFood.size() + " sản phẩm thành công!";
             successExcel = true;
         } catch (Exception e) {
             messageExcel = "Import thất bại !";
         }
-        session.setAttribute("messageExcel" , messageExcel);
+        session.setAttribute("messageExcel", messageExcel);
         session.setAttribute("successExcel", successExcel);
         response.sendRedirect("manager-dashboard");
     }
