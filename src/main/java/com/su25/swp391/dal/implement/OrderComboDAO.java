@@ -173,4 +173,97 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         }
     }
     
+    // Mạnh
+    public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
+    List<OrderCombo> list = new ArrayList<>();
+    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+
+    String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
+    if (filterByStatus) {
+        sql += " AND payment_status = ?";
+    }
+    sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
+
+    try {
+        int offset = (page - 1) * pageSize;
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, userId);
+        int paramIndex = 2;
+
+        if (filterByStatus) {
+            statement.setInt(paramIndex++, Integer.parseInt(status));
+        }
+
+        statement.setInt(paramIndex++, pageSize);
+        statement.setInt(paramIndex, offset);
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            list.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return list;
+}
+    // Mạnh
+    public int getTotalOrderComboCountByUserIdAndStatus(int userId, String status) {
+    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+    String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
+    if (filterByStatus) {
+        sql += " AND payment_status = ?";
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, userId);
+        if (filterByStatus) {
+            statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+        }
+
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return 0;
+}
+    
+    public Integer findComboIdByOrderComboId(int orderComboId) {
+    Integer comboId = null;
+    String sql = "SELECT comboId FROM OrderCombo WHERE orderComboId = ?";
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, orderComboId);
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            comboId = resultSet.getInt("comboId");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return comboId;
+}
+
+   
 }

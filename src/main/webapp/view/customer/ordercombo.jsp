@@ -73,7 +73,7 @@
                 display: block;
                 font-weight: bold;
             }
-            .payment-badge.vnpay {
+            .payment-badge {
                 background-color: #29a0dc;
                 color: white;                /* đổi màu chữ thành trắng */
                 padding: 4px 8px;
@@ -82,15 +82,7 @@
                 font-weight: 600;           /* tăng độ dày chữ */
                 font-size: 14px;
             }
-            .payment-badge.cod {
-                background-color: #f7b80c;
-                color: white;                /* đổi màu chữ thành trắng */
-                padding: 4px 8px;
-                border-radius: 6px;
-                display: inline-block;
-                font-weight: 600;           /* tăng độ dày chữ */
-                font-size: 14px;
-            }
+           
             .status-paid {
                 background-color: #28a745; /* Xanh lá cây */
                 color: white;
@@ -179,10 +171,8 @@
                                                                                                             <fieldset class="name">
                                                                                                                 <select name="status" required>
                                                                                                                     <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="pending"  ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
-                                                                                                                <option value="accepted"  ${param.status == 'accepted' ? 'selected' : ''}>Accepted</option>
-                                                                                                                <option value="cancelled"  ${param.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                                                                                                                <option value="completed"  ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
+                                                                                                                <option value="pending"  ${param.status == '0' ? 'selected' : ''}>Chưa Thanh Toán</option>
+                                                                                                                <option value="accepted"  ${param.status == '1' ? 'selected' : ''}>Đã Thanh Toán</option>
                                                                                                             </select>                                                                                                            </fieldset>
                                                                                                         <div class="button-submit">
                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -190,33 +180,27 @@
 
                                                                                                     </form>
                                                                                                 </div>
-                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/listordercombo"><i class="icon-file-text"></i>List Order Combo</a>
+                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/orderlist"><i class="icon-file-text"></i>List Order</a>
                                                                                             </div>
                                                                                             <div class="wg-table table-all-category">
                                                                                                 <ul class="table-title">
                                                                                                     <li>
-                                                                                                        <div class="body-title">Order ID</div>
+                                                                                                        <div class="body-title">Combo ID</div>
                                                                                                     </li>    
                                                                                                     <li>
-                                                                                                        <div class="body-title">Ship Address</div>
+                                                                                                        <div class="body-title">Combo Name</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Coupon</div>
+                                                                                                        <div class="body-title">Quantity</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Total</div>
+                                                                                                        <div class="body-title">Total Price</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left:4vh">Create At</div>
-                                                                                                    </li>
-                                                                                                    <li>
                                                                                                         <div class="body-title">Payment Method</div>
-                                                                                                    </li>
-                                                                                                    <li>
-                                                                                                        <div class="body-title" style="padding-left:7vh">Status</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title" style="padding-left:6vh">Active</div>
@@ -224,14 +208,14 @@
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
 
-                                                                                                    <c:forEach var="order" items="${orderList}">
+                                                                                                    <c:forEach var="order" items="${orderCombo}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="body-text format-view">#${order.id} </div>
-                                                                                                                <div class="body-text format-view">${order.shipping_address} </div>
-                                                                                                                <div class="body-text format-view">${order.coupon_code} </div>
+                                                                                                                <div class="body-text format-view">#${order.orderComboId} </div>
+                                                                                                                <div class="body-text format-view">${order.comboName}</div>
+                                                                                                                <div class="body-text format-view">${order.quantity} </div>
                                                                                                                 <div class="body-text format-view ">
-                                                                                                                    <fmt:formatNumber value="${order.total}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
+                                                                                                                    <fmt:formatNumber value="${order.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view">
                                                                                                                     <c:choose>
@@ -246,15 +230,11 @@
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose>   
                                                                                                                 </div>
-                                                                                                                <div class="body-text format-view">
-                                                                                                                    <fmt:formatDate value="${order.created_at}" pattern="dd-MM-yyyy HH:mm:ss" />
-                                                                                                                </div>
-                                                                                                                <div class="body-text format-view"><a class="payment-badge ${order.payment_method}">${order.payment_method}</a></div>
-                                                                                                                <div>
-                                                                                                                    <div class="block-available ${order.status}" ><a>${order.status}</a></div>
-                                                                                                                </div>
+                                                                                                                
+                                                                                                                <div class="body-text format-view"><a class="payment-badge">vnpay</a></div>
+
                                                                                                                 <div class="list-icon-function ">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderdetail?order_id=${order.id}" class="item eye">
+                                                                                                                    <a href="${pageContext.request.contextPath}/ordercombodetail?orderComboId=${order.orderComboId}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>
                                                                                                                 </div>
@@ -270,21 +250,21 @@
                                                                                                     <ul class="wg-pagination">
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=1&status=${param.status}"><i class="icon-chevron-left"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/listordercombo?page=1&status=${param.status}"><i class="icon-chevron-left"></i></a>
                                                                                                         </li>
                                                                                                         <c:choose>
                                                                                                             <c:when test="${currentPage <= totalPages - 2}">
                                                                                                                 <c:if test="${currentPage > 1}">
                                                                                                                     <li class="">
-                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage - 1}&status=${param.status}">${currentPage - 1}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage - 1}&status=${param.status}">${currentPage - 1}</a>
                                                                                                                     </li>
                                                                                                                 </c:if>
                                                                                                                 <li class="active">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage}&status=${param.status}">${currentPage}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage}&status=${param.status}">${currentPage}</a>
                                                                                                                 </li>
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${currentPage + 1}&status=${param.status}">${currentPage + 1}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage + 1}&status=${param.status}">${currentPage + 1}</a>
                                                                                                                 </li>
 
                                                                                                                 <c:if test="${currentPage < totalPages - 2}">
@@ -295,21 +275,21 @@
 
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}&status=${param.status}">${totalPages}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${totalPages}&status=${param.status}">${totalPages}</a>
                                                                                                                 </li>
                                                                                                             </c:when>
 
                                                                                                             <c:otherwise>
                                                                                                                 <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                                                                                                     <li class="${currentPage == i ? 'active' : ''}">
-                                                                                                                        <a href="${pageContext.request.contextPath}/orderlist?page=${i}&status=${param.status}">${i}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/listordercombo?page=${i}&status=${param.status}">${i}</a>
                                                                                                                     </li>
                                                                                                                 </c:forEach>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/orderlist?page=${totalPages}&status=${param.status}"><i class="icon-chevron-right"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/listordercombo?page=${totalPages}&status=${param.status}"><i class="icon-chevron-right"></i></a>
                                                                                                         </li>
                                                                                                     </ul>
 
