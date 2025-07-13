@@ -26,5 +26,5 @@ public class Delivery {
     private String status;
     private Timestamp assigned_at;
     private Timestamp delivered_at;
-    private String rejectReason;
+    private String note;
 }

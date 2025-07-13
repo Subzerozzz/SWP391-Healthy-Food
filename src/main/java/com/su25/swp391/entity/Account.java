@@ -1,5 +1,6 @@
 package com.su25.swp391.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Account {
+public class Account implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Integer id;
     private String email;
     private String password;
