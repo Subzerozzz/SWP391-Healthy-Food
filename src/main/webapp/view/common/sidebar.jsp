@@ -130,7 +130,7 @@
                 </a>
               </li>
               <li class="menu-item">
-                <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="menu-item-button">
+                <a href="${pageContext.request.contextPath}/seller/feedback" class="menu-item-button">
                   <div class="icon"><i class="icon-layers"></i></div>
                   <div class="text">View Feedback</div>
                 </a>
@@ -153,6 +153,14 @@
                 <a href="${pageContext.request.contextPath}/manageCategory" class="menu-item-button">
                   <div class="icon"><i class="icon-layers"></i></div>
                   <div class="text">All Category</div>
+                </a>
+              </li>
+            </c:if>
+                <c:if test="${sessionScope.account.role eq 'shipper'}">
+              <li class="menu-item">
+                <a href="${pageContext.request.contextPath}/shipper/manage-delivery" class="menu-item-button">
+                  <div class="icon"><i class="icon-layers"></i></div>
+                  <div class="text">View Deliveries</div>
                 </a>
               </li>
             </c:if>

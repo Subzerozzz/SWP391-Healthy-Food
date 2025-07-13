@@ -437,6 +437,8 @@
                                     <th>Customer</th>
                                     <th>Status</th>
                                     <th>Shipper</th>
+                                    <th>Note</th>
+                                    <th>Delivered_at</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -489,7 +491,7 @@
                                                               de.status == 'pending' ? 'badge-pending' :
                                                               de.status == 'delivering' ? 'badge-accepted' :
                                                               de.status == 'success' ? 'badge-completed' :
-                                                              'badge-rejected'
+                                                                  'badge-rejected'
                                                           }">
                                                         ${de.status}
                                                     </span>
@@ -498,6 +500,22 @@
                                               ${de.shipper_id == 0 ? 'Don\'t have' : accDAO.findById(de.shipper_id).user_name}
                                                 
                                             </td>
+                                            <c:choose>
+                                                    <c:when test="${not empty de.note}">
+                                                        <td>${de.note}</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td>No</td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                          <c:choose>
+                                                            <c:when test="${not empty de.delivered_at}">
+                                                                <td>${de.delivered_at}</td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td>No</td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                             <td>
 
                                                 <div class="item eye">

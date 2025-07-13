@@ -248,7 +248,7 @@
 
 
                                                                                             <div class="bot">
-                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/manage-feedback'">Back</button>
+                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/feedback'">Back</button>
                                                                                             </div>
 
                                                                                     </div>

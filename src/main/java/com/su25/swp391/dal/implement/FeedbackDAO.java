@@ -298,7 +298,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         // Filter by food name if provided
         if (foodName != null && !foodName.isEmpty()) {
             sql.append("AND fo.name LIKE ? ");
-            params.add(foodName);
+            params.add("%"+foodName+"%");
         }
 
         // Filter by rating if provided
@@ -309,9 +309,9 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
 
         // Apply sorting: by ID if specified, otherwise default to created_at DESC
         if (sort != null && !sort.isEmpty()) {
-            sql.append("ORDER BY id ").append(sort).append(" LIMIT ? OFFSET ?");
+            sql.append("ORDER BY f.id ").append(sort).append(" LIMIT ? OFFSET ?");
         } else {
-            sql.append("ORDER BY created_at DESC LIMIT ? OFFSET ?");
+            sql.append("ORDER BY f.created_at DESC LIMIT ? OFFSET ?");
         }
 
         // Add pagination parameters
@@ -340,7 +340,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         } finally {
             closeResources();
             // (Optional) Add resource cleanup here if you're not using try-with-resources
-            closeResources();
+            
         }
 
         // Return the list of matched feedbacks
@@ -367,7 +367,7 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         // Apply food name filter if it exists
         if (foodName != null && !foodName.isEmpty()) {
             sql.append("AND fo.name LIKE ? ");
-            params.add(foodName);
+            params.add("%"+foodName+"%");
         }
 
         try {
@@ -509,6 +509,14 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
             closeResources();
         }
         return false;
+    }
+    public static void main(String[] args) {
+        FeedbackDAO dao = new FeedbackDAO();
+        for (Feedback findFeedbackWithFilter : dao.findFeedbackWithFilters("", "",
+                "", 1, 10)) {
+            System.out.println(findFeedbackWithFilter);
+        }
+        System.out.println(dao.getTotalFilteredFeedback("", ""));
     }
     
 }

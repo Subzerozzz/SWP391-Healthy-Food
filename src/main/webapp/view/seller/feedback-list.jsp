@@ -523,15 +523,7 @@
                                                                                                                                 <thead>
                                                                                                                                     <tr>
                                                                                                                                         <th>
-                                                                                                                                            ID
-                                                                                                                                        </th>
-                                                                                                                                        <th>Food</th>
-                                                                                                                                        <th>Rating</th>
-                                                                                                                                        <th>Content</th>
-                                                                                                                                        <th>Customer Name</th>
-                                                                                                                                        <th>Status</th>
-                                                                                                                                        <th>Created At</th>
-                                                                                                                                        <th>Action</th>
+                                                                                                                                      
                                                                                                                                     </tr>
                                                                                                                                 </thead>
                                                                                                                                 <tbody>
@@ -546,7 +538,7 @@
                                                                                                                                                             <c:when test="${not empty status || not empty search}">
                                                                                                                                                                 No Feedback match your search criteria. Try adjusting your filters.
                                                                                                                                                                 <br>
-                                                                                                                                                                    <a href="${pageContext.request.contextPath}/seller/manage-feedback" class="btn btn-outline-primary mt-2"
+<a href="${pageContext.request.contextPath}/seller/manage-feedback?sort=${sort}&selectFood=${selectFood}&rating=${rating}" class="btn btn-outline-primary mt-2"
                                                                                                                                                                        style="margin-right:150px">
                                                                                                                                                                         <i class="fas fa-times me-2"></i>Clear Filters
                                                                                                                                                                     </a>
@@ -566,7 +558,7 @@
                                                                                                                                         <tr>
                                                                                                                                             <td>${feedback.id}</td>
                                                                                                                                             <td>
-                                                                                                                                                <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
+<form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get">
                                                                                                                                                     <input type="hidden" name="action" value="food" />
                                                                                                                                                     <input type="hidden" name="food_id" value="${food.id}" />
                                                                                                                                                     <button type="submit" style="all: unset; color: blue; text-decoration: none; cursor: pointer;">
@@ -590,7 +582,7 @@
                                                                                                                                                 </c:choose>
                                                                                                                                             </td>
                                                                                                                                             <td>
-                                                                                                                                                <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get" target="_blank">
+<form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get">
                                                                                                                                                     <input type="hidden" name="action" value="account" />
                                                                                                                                                     <input type="hidden" name="account_id" value="${account.id}" />
                                                                                                                                                     <button type="submit" style="all:unset; color:blue; text-decoration:none; cursor:pointer;">
@@ -614,10 +606,11 @@
                                                                                                                                                     <c:choose>
                                                                                                                                                         <c:when test="${feedback.visible}">
 
-                                                                                                                                                            <label class="switch">
-                                                                                                                                                                <input type="checkbox" onChange="handleReject(event, ${feedback.id})" checked>
-                                                                                                                                                                    <span class="slider"></span>
-                                                                                                                                                            </label>
+                                                                                                                                                        <label class="switch">
+                                                                                                                                                            <input type="checkbox" onchange="handleReject(event, '${feedback.id}')" 
+                                                                                                                                                                   <c:if test="${feedback.visible}">checked</c:if>>
+                                                                                                                                                            <span class="slider"></span>
+                                                                                                                                                        </label>
                                                                                                                                                         </c:when>
                                                                                                                                                     </c:choose>
 
@@ -801,9 +794,7 @@
 
                                                                                 }
                                                                             </script>
-                                                                            <script>
-                                                                                document.getElementById("myForm").submit();
-                                                                            </script>
+                                                                         
                                                                         </body>
 
                                                                         </html>

@@ -491,8 +491,8 @@
                                              
                                             <td >
                                                 <c:choose>
-                                                    <c:when test="${not empty acc.full_name}">
-                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.full_name}
+                                                    <c:when test="${not empty acc.user_name}">
+                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.user_name}
                                                     </c:when>
                                                     <c:otherwise>
                                                         <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i> ${order.full_name}
