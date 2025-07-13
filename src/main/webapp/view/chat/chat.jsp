@@ -166,7 +166,7 @@
     </div>
 
     <!-- Load chat.js for WebSocket handling -->
-    <script src="${pageContext.request.contextPath}/view/chat/js/chat.js"></script>
+    <script src="${pageContext.request.contextPath}/js/chat.js"></script>
     
     <!-- Setup button click handler after all scripts are loaded -->
     <script>
