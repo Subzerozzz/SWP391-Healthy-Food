@@ -56,7 +56,7 @@ public class AjaxServlet extends HttpServlet {
             long amount = (long) (Double.parseDouble(amountParam) * 100);
             String bankCode = req.getParameter("bankCode");
 
-            String vnp_TxnRef = UUID.randomUUID().toString().replace("-", "").substring(0, 15);
+            String vnp_TxnRef = orderId;
             String vnp_IpAddr = VNPayConfig.getIpAddress( req);
 
             String vnp_TmnCode = VNPayConfig.vnp_TmnCode;

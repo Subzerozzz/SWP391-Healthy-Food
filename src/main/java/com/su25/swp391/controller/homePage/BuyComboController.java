@@ -198,8 +198,8 @@ public class BuyComboController extends HttpServlet {
         order.setTotalPrice(totalPrice);
         order.setPayment_status(0);
 
-        int orderId = ordercombodao.insert(order);
-        if (orderId == -1) {
+        int orderComboId = ordercombodao.insert(order);
+        if (orderComboId == -1) {
             setToastMessage(request, "Không thể tạo đơn hàng", "error");
             response.sendRedirect(request.getContextPath() + "/comboController");
             return;
@@ -209,14 +209,14 @@ public class BuyComboController extends HttpServlet {
         session.setAttribute("combo", combo);
         session.setAttribute("quantity", quantity);
         session.setAttribute("comboFoods", comboFoods);
-        session.setAttribute("comboOrderId", orderId);
+        session.setAttribute("comboOrderId", orderComboId);
         session.setAttribute("comboAmount", totalPrice);
 
         // Chuyển sang trang tạo thanh toán
         long amount = Math.round(combo.getDiscountPrice() * quantity * 1);
 
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + amount
-                + "&orderId=" + combo.getComboId() + "&combo_payment=true");
+                + "&orderId=" + orderComboId + "&combo_payment=true");
 
     }
 
