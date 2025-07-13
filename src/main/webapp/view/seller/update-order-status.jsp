@@ -274,11 +274,11 @@ textarea.form-control {
                         <div class="card-body">
                             <c:choose>
                                 <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'completed' || order.status == 'cancelled'}">
+                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'}">
                                     <div class="mb-3">
                                         <label class="form-label">Current Status</label>
                                         <div class="d-flex align-items-center">
-                                            <span class="badge ${order.status == 'completed' ? 'bg-success' : 'bg-danger'} fs-6">
+                                            <span class="badge ${order.status == 'accepted' ? 'bg-success' : 'bg-danger'} fs-6">
                                                 ${order.status}
                                             </span>
                                         </div>
@@ -309,13 +309,9 @@ textarea.form-control {
                                                 <option value="">-- Select Status --</option>
                                                 <c:if test="${order.status == 'pending'}">
                                                     <option value="accepted">Accept Order</option>
-                                                    <option value="cancelled">Reject Order</option>
-                                                </c:if>
-                                                <c:if test="${order.status == 'accepted'}">
-                                                    <option value="completed">Complete Order</option>
                                                     <option value="cancelled">Cancel Order</option>
                                                 </c:if>
-                                            </select>
+                                             </select>
                                         </div>
                                         
                                         <div class="mb-3">

@@ -177,6 +177,9 @@
                   <c:if test="${sessionScope.account.role eq 'seller'}">
                     <span class="text-tiny">Seller</span>
                   </c:if>
+                    <c:if test="${sessionScope.account.role eq 'shipper'}">
+                    <span class="text-tiny">Shipper</span>
+                  </c:if>
                 </span>
               </span>
             </button>

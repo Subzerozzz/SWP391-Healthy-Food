@@ -420,7 +420,7 @@
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
-               placeholder="Search by shipper name, email..."
+               placeholder="Search by customer name, email..."
                value="${search}"/>
 
         <!-- Nút Filter -->
@@ -440,6 +440,8 @@
                                     <th>ID Order</th>
                                     <th>Customer</th>
                                     <th>Status</th>
+                                    <th>Note</th>
+                                    <th>Delivered_at</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -498,6 +500,23 @@
                                                     </span>
                                             </td>
                                           
+                                                <c:choose>
+                                                    <c:when test="${not empty de.note}">
+                                                        <td>${de.note}</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td>No</td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${not empty de.delivered_at}">
+                                                                <td>${de.delivered_at}</td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td>No</td>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                           
                                             <td>
 
                                                 <div class="item eye">
@@ -507,7 +526,7 @@
                                                     <div class="item edit" style="margin-right: 10px !important">
 
                                                         <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewUpdate&id=${de.id}&shipper_id=${de.shipper_id}"
-                                                           onclick="handleAccept(event)" title="Update Status"><i
+                                                            title="Update Status"><i
                                                                 class="icon-edit-3"></i></a>
                                                     </div>
                                                  
@@ -658,36 +677,7 @@
                 });
             </c:if>
         </script>
-         <script>//
-    function handleAccept(event) {
-      event.preventDefault(); // Ngăn hành vi mặc định
-
-      const url = event.currentTarget.href; // Lấy URL từ <a>
-
-      Swal.fire({
-        title: 'Are you sure?\nThis action cannot be undone.',
-        showCancelButton: true,
-        confirmButtonText: 'Accept',
-        cancelButtonText: 'Cancel',
-        reverseButtons: true,
-        background: '#ffffff',
-        showCloseButton: true,
-        customClass: {
-          popup: 'custom-swal-popup',
-          title: 'custom-swal-title',
-          confirmButton: 'custom-swal-confirm',
-          cancelButton: 'custom-swal-cancel'
-        },
-        buttonsStyling: false
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.setItem('showSuccessToast', 'true');
-          window.location.href = url + '&action=update';
-        }
-      });
-    }
-
-  </script>
+   
 </body>
 
 

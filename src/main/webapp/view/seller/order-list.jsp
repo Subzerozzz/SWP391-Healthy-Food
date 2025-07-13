@@ -407,7 +407,6 @@
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
-          <option value="completed" ${status == 'completed' ? 'selected' : ''}>Completed</option>
           <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
 
@@ -491,8 +490,8 @@
                                              
                                             <td >
                                                 <c:choose>
-                                                    <c:when test="${not empty acc.full_name}">
-                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.full_name}
+                                                    <c:when test="${not empty acc.user_name}">
+                                                        <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${acc.user_name}
                                                     </c:when>
                                                     <c:otherwise>
                                                         <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i> ${order.full_name}
@@ -517,8 +516,7 @@
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
                                                               order.status == 'pending' ? 'badge-pending' :
-                                                              order.status == 'accepted' ? 'badge-accepted' :
-                                                              order.status == 'completed' ? 'badge-completed' :
+                                                              order.status == 'accepted' ? 'badge-completed' :
                                                               'badge-rejected'
                                                           }">
                                                         ${order.status}

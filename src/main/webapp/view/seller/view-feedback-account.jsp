@@ -149,7 +149,7 @@
                                                                                                         <i class="icon-chevron-right"></i>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <a href="${pageContext.request.contextPath}/seller/manage-feedback"><div class="text-tiny">List Feedback</div></a>
+                                                                                                        <a href="${pageContext.request.contextPath}/seller/feedback"><div class="text-tiny">List Feedback</div></a>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <i class="icon-chevron-right"></i>
@@ -248,7 +248,7 @@
 
 
                                                                                             <div class="bot">
-                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/manage-feedback'">Back</button>
+                                                                                                <button type="button" onclick="window.location.href = '${pageContext.request.contextPath}/seller/feedback'">Back</button>
                                                                                             </div>
 
                                                                                     </div>

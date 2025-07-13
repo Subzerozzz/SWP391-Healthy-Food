@@ -308,7 +308,7 @@
   </div>
 
   <div class="wg-box gap10">
-    <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/seller/manage-feedback">
+    <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/seller/feedback">
       Back Feedback List
     </a>
   </div>
