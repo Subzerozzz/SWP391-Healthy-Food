@@ -100,36 +100,36 @@
 
                                                                                                             <div class="row g-3">
                                                                                                                 <div class="col-md-6">
-                                                                                                                    <label for="name" class="form-label">Combo Name <span class="text-danger">*</span></label>
+                                                                                                                    <label for="name" class="form-label combo-status">Combo Name <span class="text-danger">*</span></label>
                                                                                                                     <input type="text" class="form-control" id="name" name="comboName"
                                                                                                                            placeholder="Enter combo name" required
                                                                                                                            value="${param.comboName != null ? param.comboName : ''}">
                                                                                                                 </div>
                                                                                                                 <div class="col-md-6">
-                                                                                                                    <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                                                                                                    <select class="form-select "style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
+                                                                                                                    <label for="status" class="form-label combo-status">Status <span class="text-danger">*</span></label>
+                                                                                                                    <select class="form-select combo-status"style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
                                                                                                                             outline: none " id="status" name="status" required>
                                                                                                                         <option value="active" ${param.status == 'active' ? 'selected' : ''}>Active</option>
                                                                                                                         <option value="inactive" ${param.status == 'inactive' ? 'selected' : ''}>Inactive</option>
                                                                                                                     </select>
                                                                                                                 </div>
                                                                                                                 <div class="col-md-12">
-                                                                                                                    <label for="description" class="form-label">Combo Description</label>
-                                                                                                                    <textarea class="form-control" id="description" name="description"
+                                                                                                                    <label for="description" class="form-label combo-status">Combo Description</label>
+                                                                                                                    <textarea class="form-control combo-status" id="description" name="description"
                                                                                                                               rows="3" placeholder="Enter detailed description of the combo">${param.description != null ? param.description : ''}</textarea>
                                                                                                                 </div>
                                                                                                             </div>
 
                                                                                                             <!-- Product Selection Section -->
-                                                                                                            <div class="card border-info mt-4 mb-4">
-                                                                                                                <div class="card-header bg-info text-white">
+                                                                                                            <div class="card border-info mt-4 mb-4 ">
+                                                                                                                <div class="card-header bg-info text-white ">
                                                                                                                     <h6 class="mb-0"><i class="fas fa-boxes me-2"></i>Choose Food for Combo</h6>
                                                                                                                 </div>
                                                                                                                 <div class="card-body">
-                                                                                                                    <div class="food-selection-container">
+                                                                                                                    <div class="food-selection-container ">
                                                                                                                         <div class="food-selection-row row mb-3">
-                                                                                                                            <div class="col-md-8">
-                                                                                                                                <select class="form-control food-select" style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
+                                                                                                                            <div class="col-md-8 combo-status">
+                                                                                                                                <select class="form-control food-select combo-status" style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
                                                                                                                                         outline: none "required>
                                                                                                                                     <option value="">Choose a food</option>
                                                                                                                                     <c:forEach items="${foods}" var="food">
@@ -169,7 +169,7 @@
                                                                                                                         <div class="row mt-4">
                                                                                                                             <div class="col-md-6 offset-md-6">
                                                                                                                                 <div class="table-responsive">
-                                                                                                                                    <table class="table table-bordered mb-0">
+                                                                                                                                    <table class="table table-bordered mb-0 combo-status">
                                                                                                                                         <tr>
                                                                                                                                             <th>Original Total Price:</th>
                                                                                                                                             <td>
@@ -199,7 +199,7 @@
                                                                                                                                 <button type="submit" class="btn btn-primary">
                                                                                                                                     <i class="fas fa-save me-2"></i>Create Combo
                                                                                                                                 </button>
-                                                                                                                                <a href="${pageContext.request.contextPath}/managerCombo" class="btn btn-secondary ms-2">
+                                                                                                                                <a href="${pageContext.request.contextPath}/managerCombo" class="btn btn-secondary ms-2 combo-status">
                                                                                                                                     <i class="fas fa-times me-2"  style="
                                                                                                                                        height: 25px;
                                                                                                                                        "></i>Cancel
@@ -294,7 +294,9 @@
                                                                                                                                 text-align: right;
                                                                                                                                 margin-top: 10px;
                                                                                                                             }
-
+                                                                                                                            .combo-status {
+                                                                                                                                font-size: 14px; /* giữ size bình thường cho select */
+                                                                                                                            }
                                                                                                                         </style>
                                                                                                                         <!-- Combo Product Manager -->
                                                                                                                         <script src="${pageContext.request.contextPath}/js/comboFoodManager.js"></script>

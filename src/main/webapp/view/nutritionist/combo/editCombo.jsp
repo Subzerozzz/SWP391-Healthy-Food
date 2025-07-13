@@ -103,22 +103,22 @@
 
                                                                                                                     <div class="row g-3">
                                                                                                                         <div class="col-md-6">
-                                                                                                                            <label for="name" class="form-label">Combo Name <span class="text-danger">*</span></label>
+                                                                                                                            <label for="name" class="form-label combo-status">Combo Name <span class="text-danger">*</span></label>
                                                                                                                             <input type="text" class="form-control" id="name" name="comboName"
                                                                                                                                    placeholder="Enter combo name" required
                                                                                                                                    value="${combo.comboName}">
                                                                                                                         </div>
                                                                                                                         <div class="col-md-6">
-                                                                                                                            <label for="status" class="form-label" >Status <span class="text-danger">*</span></label>
-                                                                                                                            <select class="form-select" style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
+                                                                                                                            <label for="status" class="form-label combo-status" >Status <span class="text-danger">*</span></label>
+                                                                                                                            <select class="form-select combo-status" style="width: 531.6px;height: 47px ;border: none; border: 1px solid #ced4da;
                                                                                                                                     outline: none "id="status" name="status" required>
                                                                                                                                 <option value="active" ${combo.status == 'active' ? 'selected' : ''}>Active</option>
                                                                                                                                 <option value="inactive" ${combo.status == 'inactive' ? 'selected' : ''}>Inactive</option>
                                                                                                                             </select>
                                                                                                                         </div>
                                                                                                                         <div class="col-md-12">
-                                                                                                                            <label for="description" class="form-label">Combo Description</label>
-                                                                                                                            <textarea class="form-control" id="description" name="description"
+                                                                                                                            <label for="description" class="form-label combo-status">Combo Description</label>
+                                                                                                                            <textarea class="form-control combo-status" id="description" name="description"
                                                                                                                                       rows="3" placeholder="Enter detailed description of the combo">${combo.description}</textarea>
                                                                                                                         </div>
 
@@ -134,7 +134,7 @@
                                                                                                                                 <c:forEach items="${comboFood}" var="comboFood" varStatus="status">
                                                                                                                                     <div class="food-selection-row row mb-3">
                                                                                                                                         <div class="col-md-8" >
-                                                                                                                                            <select class="form-control food-select" style=" height: 47.1px;" required>
+                                                                                                                                            <select class="form-control food-select combo-status" style=" height: 47.1px;" required>
                                                                                                                                                 <option value="" >Choose a food</option>
                                                                                                                                                 <c:forEach items="${allFoods}" var="food">
                                                                                                                                                     <option value="${food.id}" 
@@ -203,7 +203,7 @@
                                                                                                                             <div class="row mt-4">
                                                                                                                                 <div class="col-md-6 offset-md-6">
                                                                                                                                     <div class="table-responsive">
-                                                                                                                                        <table class="table table-bordered">
+                                                                                                                                        <table class="table table-bordered combo-status">
                                                                                                                                             <tr>
                                                                                                                                                 <th>Total Original Price:</th>
                                                                                                                                                 <td>
@@ -233,7 +233,7 @@
                                                                                                                             <div class="row mt-4">
                                                                                                                                 <div class="col-12 text-end">
                                                                                                                                     <a href="${pageContext.request.contextPath}/managerCombo" 
-                                                                                                                                       class="btn btn-secondary me-2">
+                                                                                                                                       class="btn btn-secondary me-2 combo-status">
                                                                                                                                         <i class="fas fa-times" style="
                                                                                                                                            height: 25px;
                                                                                                                                            "></i> Cancel
@@ -332,7 +332,9 @@
                                                                                                                                     text-align: right;
                                                                                                                                     margin-top: 10px;
                                                                                                                                 }
-
+                                                                                                                                .combo-status {
+                                                                                                                                font-size: 14px; /* giữ size bình thường cho select */
+                                                                                                                            }
 
                                                                                                                             </style>
 
