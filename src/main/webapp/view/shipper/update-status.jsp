@@ -274,11 +274,11 @@ textarea.form-control {
                         <div class="card-body">
                             <c:choose>
                                 <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'completed' || order.status == 'cancelled'}">
+                                <c:when test="${order.status == 'success' || order.status == 'reject'}">
                                     <div class="mb-3">
                                         <label class="form-label">Current Status</label>
                                         <div class="d-flex align-items-center">
-                                            <span class="badge ${order.status == 'completed' ? 'bg-success' : 'bg-danger'} fs-6">
+                                            <span class="badge ${order.status == 'success' ? 'bg-success' : 'bg-danger'} fs-6">
                                                 ${order.status}
                                             </span>
                                         </div>
@@ -290,9 +290,9 @@ textarea.form-control {
                                         </small>
                                     </div>
                                     <div>
-                                        <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                                        <a href="${pageContext.request.contextPath}/shipper/manage-delivery" 
                                            class="btn btn-secondary">
-                                            Back to Order List
+                                            Back to Delivery List
                                         </a>
                                     </div>
                                 </c:when>
@@ -426,7 +426,7 @@ textarea.form-control {
             
             // Handle form submission with confirmation
             document.addEventListener('DOMContentLoaded', function() {
-                const orderForm = document.querySelector('form[action*="manage-order"]');
+                const orderForm = document.querySelector('form[action*="manage-delivery"]');
                 if (orderForm) {
                     orderForm.addEventListener('submit', function(e) {
                         e.preventDefault();

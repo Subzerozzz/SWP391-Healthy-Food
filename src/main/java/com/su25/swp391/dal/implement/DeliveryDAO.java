@@ -291,21 +291,21 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
     }
    
     public boolean updateStatusShipper(Delivery t,String newStatus,String note) {
-        
-        String sql = "UPDATE Delivery SET shipper_id = ?, status = ? ";
+       
+        StringBuilder sql = new StringBuilder("UPDATE Delivery SET  status = ?");
         List<Object> params = new ArrayList<>();
-        params.add(t.getShipper_id());
         params.add(newStatus);
-        if (note != null && ! note.trim().isEmpty()) {
-            sql += ", note = ? ";
+        
+        if (note != null && !note.trim().isEmpty()) {
+            sql.append(", note = ?, delivered_at = NOW()");
             params.add(note);
         }
 
-        sql += " WHERE id = ?";
+        sql.append(" WHERE id = ?");
         params.add(t.getId());
         try {
         connection = getConnection();
-        statement = connection.prepareStatement(sql);
+        statement = connection.prepareStatement(sql.toString());
         // Bind all parameters to the prepared statement
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
@@ -343,7 +343,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
              .status(resultSet.getString("status"))
              .assigned_at(resultSet.getTimestamp("assigned_at"))
              .delivered_at(resultSet.getTimestamp("delivered_at"))
-             .rejectReason(resultSet.getString("rejectReason"))
+             .note(resultSet.getString("note"))
              .build();
     
     }
@@ -559,9 +559,11 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
        
         Delivery de = new DeliveryDAO().findById(4);
        System.out.println(dao.getTotalFilteredDeliveryByShipper(48, ""));
-       Delivery del = new DeliveryDAO().findById(11);
-      // System.out.println(dao.updateStatusShipper(del, "deli", note));
-       
+       Delivery del = new DeliveryDAO().findById(1);
+       System.out.println(dao.updateStatusShipper(del, "reject", "no home"));
+       for (Delivery d : new DeliveryDAO().findDeliveryByShipper(57, "", "", 1, 5)) {
+            System.out.println(d);
+        }
     }
     
 }

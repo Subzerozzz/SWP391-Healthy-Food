@@ -112,10 +112,12 @@ public class ManageShipperDeliveryController extends HttpServlet {
 String status = request.getParameter("status");
 String search = request.getParameter("search");
 
-// Lấy thông tin shipper đăng nhập từ session
-//Account currentShipper = (Account) request.getSession().getAttribute("account");
-//int currentShipperId = currentShipper.getId();
-  int currentShipperId = 48;
+ //Lấy thông tin shipper đăng nhập từ session
+ HttpSession session = request.getSession();
+ Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+int currentShipperId = account.getId();
+ 
 // Phân trang
 int page = 1;
 int pageSize = 1;
@@ -213,12 +215,13 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
             String note =request.getParameter("note");
             Delivery delivery = deliveryDAO.findById(id);
             Boolean checkUpdateShipperSuccess = deliveryDAO.updateStatusShipper(delivery,newStatus,note);
+         
             if(checkUpdateShipperSuccess){
                session.setAttribute("isSuccess", true);
             }else{
                session.setAttribute("errorMessage", true); 
             }
-            response.sendRedirect(request.getContextPath() + "/shipper/manage-delivery");
+           response.sendRedirect(request.getContextPath() + "/shipper/manage-delivery");
         } catch (Exception e) {
             e.printStackTrace();
         }

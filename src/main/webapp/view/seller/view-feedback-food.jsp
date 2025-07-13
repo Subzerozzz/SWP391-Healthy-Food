@@ -172,7 +172,7 @@
                                     Nutritionist: ${accDAO.findById(foodD.nutri_id).user_name}
                                 </p>
 
-                                <form action="${pageContext.request.contextPath}/seller/manage-feedback" method="get">
+                                <form action="${pageContext.request.contextPath}/seller/feedback" method="get">
                                   <button type="submit" class="btn-modern btn-backHome">
                                     Back
                                   </button>
