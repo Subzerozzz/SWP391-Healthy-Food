@@ -57,6 +57,7 @@ public class AdminChatController extends HttpServlet {
             
         } catch (Exception e) {
             System.err.println("Error in AdminChatController: " + e.getMessage());
+            // Viet 
             request.setAttribute("error", "Could not load chat data");
         }
         
