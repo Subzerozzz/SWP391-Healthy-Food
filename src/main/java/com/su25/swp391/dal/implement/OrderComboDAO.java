@@ -48,7 +48,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public boolean update(OrderCombo orderCombo) {
         String sql = "UPDATE OrderCombo SET order_id = ?,  comboId = ?, comboName = ?, "
-                + "discountPrice = ?, quantity = ?, totalPrice = ? WHERE orderComboId = ?";
+                + "discountPrice = ?, quantity = ?, totalPrice = ? ,user_id=? WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
@@ -58,7 +58,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(3, orderCombo.getDiscountPrice());
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
-            statement.setInt(6, orderCombo.getOrderComboId());
+            statement.setInt(6, orderCombo.getUser_id());
+            statement.setInt(7, orderCombo.getOrderComboId());
 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -90,7 +91,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public int insert(OrderCombo orderCombo) {
         String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status) VALUES ( ?, ?, ?, ?, ?,?)";
+                + "quantity, totalPrice,payment_status,user_id) VALUES ( ?, ?, ?, ?, ?,?,?)";
 
         try {
             connection = getConnection();
@@ -102,6 +103,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6, orderCombo.getPayment_status());
+            statement.setInt(7, orderCombo.getUser_id());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -133,6 +135,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setQuantity(rs.getInt("quantity"));
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
         orderCombo.setPayment_status(rs.getInt("payment_status"));
+        orderCombo.setUser_id(rs.getInt("user_id"));
         return orderCombo;
     }
 
