@@ -160,6 +160,14 @@ public class BuyComboController extends HttpServlet {
             request.getRequestDispatcher("/view/authen/login.jsp").forward(request, response);
             return;
         }
+        if (!"customer".equalsIgnoreCase(account.getRole())) {
+            setToastMessage(request, "Chỉ Có Customer mới được mua hàng", "error");
+            request.getRequestDispatcher("/view/authen/login.jsp").forward(request, response);
+            return;
+        }
+        //lay id của khách hàng
+        int user_id = account.getId();
+        
 
         String comboIdStr = request.getParameter("comboId");
         String quantityStr = request.getParameter("quantity");
@@ -197,7 +205,8 @@ public class BuyComboController extends HttpServlet {
         order.setQuantity(quantity);
         order.setTotalPrice(totalPrice);
         order.setPayment_status(0);
-
+        order.setUser_id(user_id);
+        //them don hang 
         int orderComboId = ordercombodao.insert(order);
         if (orderComboId == -1) {
             setToastMessage(request, "Không thể tạo đơn hàng", "error");
@@ -211,6 +220,7 @@ public class BuyComboController extends HttpServlet {
         session.setAttribute("comboFoods", comboFoods);
         session.setAttribute("comboOrderId", orderComboId);
         session.setAttribute("comboAmount", totalPrice);
+        session.setAttribute("user_id", user_id);
 
         // Chuyển sang trang tạo thanh toán
         long amount = Math.round(combo.getDiscountPrice() * quantity * 1);
