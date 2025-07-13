@@ -123,23 +123,10 @@
                         <div class="combo-details-container">
                             <div class="row">
                                 <!-- Combo Image -->
-                                <div class="col-md-5">
-                                    <div class="tab-content single-product-img">
-                                        <div class="tab-pane fade show active" id="product1">
-                                            <div class="product-large-thumb img-full">
-                                                <div class="easyzoom easyzoom--overlay">
-                                                    <a href="">
-                                                        <img src="" alt="">
-                                                    </a>
-                                                    <a href="" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-search"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                                 <!-- Combo Info -->
-                                <div class="col-md-7">
+                                <div class="col-md-7 mx-auto">
                                     <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</span>
                                     <h1 class="combo-title">${combo.comboName}</h1>
                                     <p class="combo-description">${combo.description}</p>
@@ -157,7 +144,8 @@
                                             <input type="number" class="combo-quantity-input" value="1" min="1" id="combo-quantity">
                                             <button type="button" class="combo-quantity-btn increase-quantity">+</button>
                                         </div>
-                                            <button type="button" class="combo-add-to-cart-btn" onclick="buyComboNow(${combo.comboId})">Mua ngay</button>
+                                        <button type="button" class="combo-add-to-cart-btn" onclick="buyComboNow(${combo.comboId})">Mua ngay</button>
+                                        <button type="button" class="combo-add-to-cart-btn ms-2" style="background: blue " onclick="window.location.href = '${pageContext.request.contextPath}/comboController'">Back</button>
                                     </div>
                                 </div>
                             </div>
@@ -170,6 +158,7 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
+                                            <th>IMG</th>
                                             <th>Tên sản phẩm</th>
                                             <th>Giá</th>
                                             <th>Số lượng</th>
@@ -179,6 +168,9 @@
                                         <c:forEach var="item" items="${foodDetails}">
                                             <c:set var="food" value="${item.food}" />
                                             <tr>
+                                                <td><img src="${pageContext.request.contextPath}/${food.image_url}" width="60" height="60"/>
+                                                </td>
+
                                                 <td>${food.name}</td>
                                                 <td>
                                                     <fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ
@@ -412,29 +404,30 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Xử lý tăng giảm số lượng
-            const quantityInput = document.getElementById('combo-quantity');
-            const decreaseBtn = document.querySelector('.decrease-quantity');
-            const increaseBtn = document.querySelector('.increase-quantity');
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                // Xử lý tăng giảm số lượng
+                                                const quantityInput = document.getElementById('combo-quantity');
+                                                const decreaseBtn = document.querySelector('.decrease-quantity');
+                                                const increaseBtn = document.querySelector('.increase-quantity');
 
-            decreaseBtn.addEventListener('click', function () {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
+                                                decreaseBtn.addEventListener('click', function () {
+                                                    let currentValue = parseInt(quantityInput.value);
+                                                    if (currentValue > 1) {
+                                                        quantityInput.value = currentValue - 1;
+                                                    }
+                                                });
 
-            increaseBtn.addEventListener('click', function () {
-                let currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
-            });
-        });
-         // Hàm mua ngay combo
-                function buyComboNow(comboId) {
-                    const quantity = document.getElementById('combo-quantity').value;
-                    window.location.href = '${pageContext.request.contextPath}/buy-combo?comboId=' + comboId + '&quantity=' + quantity;
-                }
+                                                increaseBtn.addEventListener('click', function () {
+                                                    let currentValue = parseInt(quantityInput.value);
+                                                    quantityInput.value = currentValue + 1;
+                                                });
+                                            });
+                                            // Hàm mua ngay combo
+                                            function buyComboNow(comboId) {
+                                                const quantity = document.getElementById('combo-quantity').value;
+                                                const contextPath = '<%= request.getContextPath()%>'; // 
+                                                window.location.href = contextPath + '/buy-combo?comboId=' + comboId + '&quantity=' + quantity;
+                                            }
     </script>
 
 </body>

@@ -23,6 +23,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  *
@@ -43,6 +44,7 @@ public class AjaxServlet extends HttpServlet {
             String vnp_Command = "pay";
             String orderType = "other";
             String amountParam = req.getParameter("amount");
+            String isCombo = req.getParameter("combo_payment") != null ? "yes" : "";
             if (amountParam == null || amountParam.isEmpty()) {
                 req.getSession().setAttribute("message", "Payment failed: Missing amount parameter");
                 req.getSession().setAttribute("messageType", "error");
@@ -66,9 +68,9 @@ public class AjaxServlet extends HttpServlet {
             vnp_Params.put("vnp_Amount", String.valueOf(amount));
             vnp_Params.put("vnp_CurrCode", "VND");
 
-            if (bankCode != null && !bankCode.isEmpty()) {
-                vnp_Params.put("vnp_BankCode", bankCode);
-            }
+//            if (bankCode != null && !bankCode.isEmpty()) {
+//                vnp_Params.put("vnp_BankCode", bankCode);
+//            }
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
             vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
             vnp_Params.put("vnp_OrderType", orderType);
@@ -79,7 +81,12 @@ public class AjaxServlet extends HttpServlet {
             } else {
                 vnp_Params.put("vnp_Locale", "vn");
             }
-            vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+            if(isCombo.equals("yes")){
+                vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnComboUrl);
+            }
+            else{
+                vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+            }
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -123,7 +130,6 @@ public class AjaxServlet extends HttpServlet {
             job.addProperty("message", "success");
             job.addProperty("data", paymentUrl);
             Gson gson = new Gson();
-//            resp.getWriter().write(gson.toJson(job));
             resp.sendRedirect(paymentUrl);
         } catch (Exception e) {
             System.out.println(e.getMessage());
