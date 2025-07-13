@@ -264,9 +264,6 @@ public class ManagerOrderController extends HttpServlet {
                         case "accepted":
                             statusText = "accepted";
                             break;
-                        case "completed":
-                            statusText = "completed";
-                            break;
                         case "cancelled":
                             statusText = "cancelled";
                             break;

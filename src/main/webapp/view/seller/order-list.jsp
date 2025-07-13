@@ -407,7 +407,6 @@
           <option value="">All Status</option>
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
-          <option value="completed" ${status == 'completed' ? 'selected' : ''}>Completed</option>
           <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
 
@@ -517,8 +516,7 @@
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
                                                           class="badge-modern ${
                                                               order.status == 'pending' ? 'badge-pending' :
-                                                              order.status == 'accepted' ? 'badge-accepted' :
-                                                              order.status == 'completed' ? 'badge-completed' :
+                                                              order.status == 'accepted' ? 'badge-completed' :
                                                               'badge-rejected'
                                                           }">
                                                         ${order.status}
