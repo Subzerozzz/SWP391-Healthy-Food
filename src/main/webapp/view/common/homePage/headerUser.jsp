@@ -57,8 +57,8 @@
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="shop-details-left-sidebar.html" class="nav-link">
-                        Shop Details Left Sidebar
+                      <a href="${pageContext.request.contextPath}/comboController" class="nav-link">
+                        Shop Combo
                       </a>
                     </li>
                     <li class="nav-item">
