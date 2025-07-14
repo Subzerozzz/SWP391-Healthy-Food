@@ -86,15 +86,14 @@ public class CartController extends HttpServlet {
             case "checkout":
                 showCheckout(request, response);
                 break;
-            case "checkoutVNPay":
-            {
+            case "checkoutVNPay": {
                 try {
                     handleVNPayReturn(request, response);
                 } catch (MessagingException ex) {
                     Logger.getLogger(CartController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-                break;
+            break;
 
             default:
                 throw new AssertionError();
@@ -247,7 +246,7 @@ public class CartController extends HttpServlet {
                 List<CartItem> listCartItemByCartID = cartItemDao.findAllCartItemByCartId(cartId);
                 boolean check = true;
                 for (CartItem cartItem : listCartItemByCartID) {
-                    if (newCartItem.getFood_id() == cartItem.getFood_id()) {
+                    if (newCartItem.getFood_id().equals(cartItem.getFood_id())) {
                         check = false;
                         cartItem.setQuantity(cartItem.getQuantity() + quantity);
                         cartItemDao.update(cartItem);
@@ -271,7 +270,7 @@ public class CartController extends HttpServlet {
                 // Check xem trong listCartItem đã tồn tại sản phẩm này chưa
                 boolean check = true;
                 for (CartItem cartItem : listCartItem) {
-                    if (cartItem.getFood_id() == newCartItem.getFood_id()) {
+                    if (cartItem.getFood_id().equals(newCartItem.getFood_id())) {
                         check = false;
                         cartItem.setQuantity(cartItem.getQuantity() + quantity);
                     }
@@ -324,6 +323,7 @@ public class CartController extends HttpServlet {
             Integer quantity = Integer.parseInt(quantityList[i]);
             listID.add(foodId);
             map.put(foodId, quantity);
+            System.out.println(quantity);
         }
 
         List<CartItem> listCartItem = new ArrayList<>();
@@ -337,8 +337,9 @@ public class CartController extends HttpServlet {
             // Cap nhat lai quantiy cho nhung foodId nay trong listCartItem
             for (Integer id : listID) {
                 for (int i = 0; i < listCartItem.size(); i++) {
-                    if (listCartItem.get(i).getFood_id() == id) {
+                    if (listCartItem.get(i).getFood_id().equals(id)) {
                         listCartItem.get(i).setQuantity(map.get(id));
+                        cartItemDao.update(listCartItem.get(i));
                     }
                 }
             }
@@ -360,7 +361,7 @@ public class CartController extends HttpServlet {
             // Cap nhat lai quantiy cho nhung foodId nay trong listCartItem
             for (Integer id : listID) {
                 for (int i = 0; i < listCartItem.size(); i++) {
-                    if (listCartItem.get(i).getFood_id() == id) {
+                    if (listCartItem.get(i).getFood_id().equals(id)) {
                         listCartItem.get(i).setQuantity(map.get(id));
                     }
                 }
@@ -395,14 +396,14 @@ public class CartController extends HttpServlet {
             List<CartItem> listCartItem = cartItemDao.findAllCartItemByCartId(cartId);
             // Tim cartItemId theo deleteID do
             for (CartItem cartItem : listCartItem) {
-                if (cartItem.getFood_id() == deleteID) {
+                if (cartItem.getFood_id().equals(deleteID)) {
                     cartItemDao.delete(cartItem);
                 }
             }
         } else {
             List<CartItem> listCartItem = (List<CartItem>) session.getAttribute("cart");
             for (int i = 0; i < listCartItem.size(); i++) {
-                if (listCartItem.get(i).getFood_id() == deleteID) {
+                if (listCartItem.get(i).getFood_id().equals(deleteID)) {
                     listCartItem.remove(listCartItem.get(i));
                 }
             }
@@ -500,7 +501,7 @@ public class CartController extends HttpServlet {
                 //neu duoc di tiep
                 String discountType = coupon.getDiscount_type();
                 Double discountValue = null;
-                if (discountType == "percentage") {
+                if (discountType.equalsIgnoreCase("percentage")) {
                     discountValue = (subTotal * coupon.getDiscount_value()) / 100;
                 } else {
                     discountValue = coupon.getDiscount_value();
@@ -543,9 +544,8 @@ public class CartController extends HttpServlet {
             String phoneNumber = request.getParameter("phoneNumber").trim();
             if (phoneNumber == null || phoneNumber.isEmpty()) {
                 errorMap.put("phoneNumber", "Số điện thoại không được để trống");
-            }
-            else{
-                if(!REGEX_PHONE.matcher(phoneNumber).matches()){
+            } else {
+                if (!REGEX_PHONE.matcher(phoneNumber).matches()) {
                     errorMap.put("phoneNumber", "Số điện thoại sai định dạng");
                 }
             }
@@ -726,7 +726,7 @@ public class CartController extends HttpServlet {
                 cartItemDao.delete(cartItem);
             }
             //Kiem tra xem co couponCode khong thi them 1 ban ghi vào couponUseage
-            if(couponCode != null){
+            if (couponCode != null) {
                 Coupon coupon = couponDao.findCouponByCouponCode(couponCode);
                 //Tao couponUseage
                 CouponUsage couponUsage = CouponUsage.builder()
@@ -737,7 +737,7 @@ public class CartController extends HttpServlet {
                         .discount_amount(discountAmount)
                         .build();
                 couponUsageDao.insert(couponUsage);
-                        
+
             }
             //Sau do chuyen sang trang myOrder
             response.sendRedirect("orderlist");
@@ -747,7 +747,7 @@ public class CartController extends HttpServlet {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
             //Goi ham sendOrderViaEmail
-            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId,true);
+            boolean check = EmailUtils.sendOrderViaEmail(email, listOrderItem, orderId, true);
             //tra ve homePage voi notification success
             request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
@@ -870,7 +870,7 @@ public class CartController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + totalPrice + "&orderId=" + orderId);
     }
 
-    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException, 
+    private void handleVNPayReturn(HttpServletRequest request, HttpServletResponse response) throws IOException,
             ServletException, MessagingException {
         String responseCode = request.getParameter("vnp_ResponseCode");
         String transactionStatus = request.getParameter("vnp_TransactionStatus");
@@ -900,7 +900,7 @@ public class CartController extends HttpServlet {
 
         if (account != null) {
             //Them vao couponUsage neu co couponCode
-            if(order.getCoupon_code() != null){
+            if (order.getCoupon_code() != null) {
                 Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
                 //Tao couponUseage
                 CouponUsage couponUsage = CouponUsage.builder()
@@ -914,12 +914,12 @@ public class CartController extends HttpServlet {
             }
             //Chuyen ve trang myOrder
             response.sendRedirect("orderlist");
-            
+
         } else {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
             //Goi ham sendOrderViaEmail
-            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,true);
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId, true);
             //tra ve homePage voi notification success
             request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
@@ -982,7 +982,7 @@ public class CartController extends HttpServlet {
 
         if (account != null) {
             //Them vao couponUsage neu co couponCode
-            if(order.getCoupon_code() != null){
+            if (order.getCoupon_code() != null) {
                 Coupon coupon = couponDao.findCouponByCouponCode(order.getCoupon_code());
                 //Tao couponUseage
                 CouponUsage couponUsage = CouponUsage.builder()
@@ -999,7 +999,7 @@ public class CartController extends HttpServlet {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
             //Goi ham sendOrderViaEmail
-            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId,false);
+            boolean check = EmailUtils.sendOrderViaEmail(order.getEmail(), listOrderItem, orderId, false);
             //tra ve homePage voi notification success
             request.setAttribute("notificationForEmail", check);
             request.getRequestDispatcher("view/homePage/cart.jsp").forward(request, response);
