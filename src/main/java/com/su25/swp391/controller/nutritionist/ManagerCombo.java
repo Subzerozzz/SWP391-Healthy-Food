@@ -314,6 +314,8 @@ public class ManagerCombo extends HttpServlet {
 
     private void addCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            //tạo ra fooddao để láy dữ liệu trong dataFoodDao
+            FoodDAO fooddao = new FoodDAO();
             String name = request.getParameter("comboName");
             String description = request.getParameter("description");
             String status = request.getParameter("status");
@@ -327,24 +329,21 @@ public class ManagerCombo extends HttpServlet {
             //validate các dữ liệu nhập vào
             Map<String, String> errors = validateComboData(name, discountPrice, quantities, foodIds, null);
             //kiêm tra lỗi nếu không co lỗi đi tiếp
-            if (!errors.isEmpty()) {
+             if (!errors.isEmpty()) {
                 request.getSession().setAttribute("errors", errors);
-                // Lưu lại dữ liệu form để hiển thị lại
-                Map<String, String[]> formData = new HashMap<>();
-                formData.put("comboName", new String[]{name});
-                formData.put("description", new String[]{description});
-                formData.put("status", new String[]{status});
-                formData.put("discountPrice", new String[]{String.valueOf(discountPrice)});
-                formData.put("foodId", new String[]{foodIdStr});
-                formData.put("quantities", new String[]{quantitiesStr});
-                //giữ lại dữ liệu sai đau bắt người dùng nhậ lại thôi
-                request.getSession().setAttribute("formData", formData);
+                // Lưu lại dữ liệu form để hiển thị lại     
+                request.setAttribute("comboName", name);
+                request.setAttribute("description", description);
+                request.setAttribute("status", status);
+                request.setAttribute("discountPrice", discountPrice);
+                //xử lý luu food -load lại list food
+                List<Food> foods = fooddao.findAll();
+                request.setAttribute("foods", foods);
+                request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
 
-                response.sendRedirect(request.getContextPath() + "/managerCombo?action=add");
                 return;
             }
-            //tạo ra fooddao để láy dữ liệu trong dataFoodDao
-            FoodDAO fooddao = new FoodDAO();
+            
             //tính giá của các food
             Double originalPrice = calculateOriginalPrice(foodIds, quantities, fooddao);
 

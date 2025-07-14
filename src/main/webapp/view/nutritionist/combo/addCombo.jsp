@@ -153,11 +153,15 @@
                                                                                                                             </div>
 
                                                                                                                         </div>
-                                                                                                                        <button type="button" class="btn btn-success add-food" >
-                                                                                                                            <i class="fas fa-plus" ></i> Add Food
-                                                                                                                        </button>
-                                                                                                                    </div>
 
+                                                                                                                    </div>
+                                                                                                                    <div class="row mt-3">
+                                                                                                                        <div class="col-12">
+                                                                                                                            <button type="button" class="btn btn-success add-food">
+                                                                                                                                <i class="fas fa-plus"></i> Add Food
+                                                                                                                            </button>
+                                                                                                                        </div>
+                                                                                                                    </div>
                                                                                                                 </div>
                                                                                                             </div>
 
