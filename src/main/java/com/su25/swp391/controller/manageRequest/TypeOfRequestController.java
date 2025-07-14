@@ -64,9 +64,6 @@ public class TypeOfRequestController extends HttpServlet {
                     case "DELETE":
                         deleteToFood(request, response);
                         break;
-                    case "Pending":
-                        listPending(request,response);
-                        break;
                     default:
                         listTypeOfRequest(request, response);
                         break;
@@ -91,25 +88,6 @@ public class TypeOfRequestController extends HttpServlet {
                         break;
                 }
                 break;
-            case "option":
-                switch (select) {
-                    case "CREATE":
-                        listTypeOfCreate(request, response);
-                        break;
-                    case "UPDATE":
-                        listTypeOfUpdate(request, response);
-                        break;
-                    case "DELETE":
-                        listTypeOfDelete(request, response);
-                        break;
-                        case "Pending":
-                        listPending(request,response);
-                        break;
-                    default:
-                        listTypeOfRequest(request, response);
-                        break;
-                }
-                break;
             default:
                 listTypeOfRequest(request, response);
                 break;
@@ -124,12 +102,8 @@ public class TypeOfRequestController extends HttpServlet {
             action = "list"; // Default action
         }
         switch (action) {
-            case "search":
-                showFoodDraftList(request, response);
-                break;
             default:
-                // listTypeOfRequest(request,response);  
-                listTypeOfUpdate(request, response);
+                listTypeOfRequest(request, response);
                 break;
         }
     }
@@ -143,16 +117,30 @@ public class TypeOfRequestController extends HttpServlet {
     private void showViewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
+        // get select add by parameter
+        String select = request.getParameter("select");
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
         // Get list Food_Draft by Id
         FoodDraft foodDraft = foodDraftDAO.findById(id);
         // Set Attribut to page detail-food-draft.jsp
         request.setAttribute("foodD", foodDraft);
+        request.setAttribute("search", search);
+        request.setAttribute("select", select);
         // Come to page detail-food-draft.jsp
         request.getRequestDispatcher("/view/manager/detail-food-draft.jsp").forward(request, response);
     }
 
     // VIEW LIST ALL OF FOOD_DRAFT
     private void listTypeOfRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // get select add by parameter
+        String select = request.getParameter("select");
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
         // Default page 
         int page = 1;
         // Size in each page can have
@@ -166,10 +154,10 @@ public class TypeOfRequestController extends HttpServlet {
         } catch (Exception e) {
             page = 1;
         }
-        // Get list Food_Draft by filter page and page-size
-        List<FoodDraft> listF = foodDraftDAO.getFoodDraftByPage(page, pageSize);
+        // Get list Food_Draft by search, select page and page-size where r.statusRequest = 'Not done'
+        List<FoodDraft> listF = foodDraftDAO.findFoodDraftBySearchFilter(search, select,sort, page, pageSize);
         // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDraftCount();
+        int totalFoodDraft = foodDraftDAO.getTotalNumberFoodDraftBySearchFilter(search, select);
         // Split how many page can have in a brower
         int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
         // Set Attribut to page dashboard.jsp
@@ -178,455 +166,192 @@ public class TypeOfRequestController extends HttpServlet {
         request.setAttribute("currentPage", page);
         List<String> listType = foodDraftDAO.findAllType();
         request.setAttribute("type", listType);
+        request.setAttribute("search", search);
+        request.setAttribute("select", select);
+        request.setAttribute("sort", sort);
+        
         // come to dashboard.jsp
         request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
     }
 
-    // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF CREATE
-    private void listTypeOfCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        String select = request.getParameter("select");
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-        // Get list Food_Draft by filter select and page and page-size
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("currentPage", page);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("type", listType);
-        // Come to dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
+ 
 
-    // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF UPDATE
-    private void listTypeOfUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        String select = request.getParameter("select");
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-        // Get list Food_Draft by filter page and page-size
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("currentPage", page);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("type", listType);
-        // Come to dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
-    // VIEW LIST ALL OF FOOD_DRAFT BY TYPE OF DELETE
-    private void listTypeOfDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        String select = request.getParameter("select");
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-        // Get list Food_Draft by filter page and page-size
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("currentPage", page);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("type", listType);
-        // Come to dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
-    // INSERT A FOOD_DRAFT TO TABLE FOOD
     private void addToFood(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
         String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Get foodDraft By Id
-            FoodDraft food_D = foodDraftDAO.findById(id);
-            // After get foodDraft insert it into Food
-            Food food = foodDAO.getFromResultFood_Draft(food_D);
-            foodDAO.insert(food);
-            // Check after update Result in Request
-            Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
-            // If Update True have a massage
-            if (checkUpdateResultDone) {
-                Request req = requestDAO.findRequestByFoodDraftId(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
-                HttpSession session = request.getSession();
-                session.setAttribute("isSuccess", true);
-            }
-        }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
-    // UPDATE A FOOD_DRAFT TO TABLE FOOD FROM A FOOD_DRAFT GET BY ID_FOOD
-    private void updateToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get Id Food_Draft by parameter
-        int id = Integer.parseInt(request.getParameter("id"));
-        // get select add by parameter
-        String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Get foodDraft By Id
-            FoodDraft food_D = foodDraftDAO.findById(id);
-            // After get foodDraft insert it into Food
-            Food food = foodDAO.getFromResultFood_Draft(food_D);
-            Boolean checkUpdateFoodDone = foodDAO.update(food);
-            // Check after update Result
-            Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
-            // If Update True have a massage
-            if (checkUpdateFoodDone && checkUpdateResultDone) {
-                Request req = requestDAO.findRequestByFoodDraftId(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
-                HttpSession session = request.getSession();
-                session.setAttribute("isSuccess", true);
-            }
-        }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
-    // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
-    private void deleteToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get Id Food_Draft by parameter
-        int id = Integer.parseInt(request.getParameter("id"));
-        // get select add by parameter
-        String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
-        }
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Get foodDraft By Id
-            FoodDraft food_D = foodDraftDAO.findById(id);
-            // After get foodDraft insert it into Food
-            Food food = foodDAO.getFromResultFood_Draft(food_D);
-            Boolean checkDeleteFoodDone = foodDAO.delete(food);
-            // Check after update Result
-            Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // Get foodDraft By Id
+        FoodDraft food_D = foodDraftDAO.findById(id);
+        // After get foodDraft insert it into Food
+        Food food = foodDAO.getFromResultFood_Draft(food_D);
+        foodDAO.insert(food);
+        // Check after update Result in Request
+        Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
+        // If Update True have a massage
+        if (checkUpdateResultDone) {
             Request req = requestDAO.findRequestByFoodDraftId(id);
             LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
             logReqDAO.insert(logR);
             requestDAO.delete(req);
-            HttpSession session = request.getSession();
-            session.setAttribute("isSuccess", true);
+            session.setAttribute("isSuccess", "Approved and added to food successfully.");
+
+        } else {
+            session.setAttribute("isError", "Failed to update the request.");
 
         }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
+    }
+
+    // UPDATE A FOOD_DRAFT TO TABLE FOOD FROM A FOOD_DRAFT GET BY ID_FOOD
+    private void updateToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        // Get Id Food_Draft by parameter
+        int id = Integer.parseInt(request.getParameter("id"));
+        // get select add by parameter
+        String select = request.getParameter("select");
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // Get foodDraft By Id
+        FoodDraft food_D = foodDraftDAO.findById(id);
+        // After get foodDraft insert it into Food
+        Food food = foodDAO.getFromResultFood_Draft(food_D);
+        Boolean checkUpdateFoodDone = foodDAO.update(food);
+        // Check after update Result
+        Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
+        // If Update True have a massage
+        if (checkUpdateFoodDone && checkUpdateResultDone) {
+            Request req = requestDAO.findRequestByFoodDraftId(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
+            session.setAttribute("isSuccess", "Update to food successfully.");
+        } else {
+            session.setAttribute("isError", "Failed to update the request.");
+        }
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
+
+    }
+
+    // DELETE A FOOD TO TABLE FOOD BY ID_FOOD IN TABLE FOOOD_DRAFT
+    private void deleteToFood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        // Get Id Food_Draft by parameter
+        int id = Integer.parseInt(request.getParameter("id"));
+        // get select add by parameter
+        String select = request.getParameter("select");
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // Get foodDraft By Id
+        FoodDraft food_D = foodDraftDAO.findById(id);
+        // After get foodDraft insert it into Food
+        Food food = foodDAO.getFromResultFood_Draft(food_D);
+        Boolean checkDeleteFoodDone = foodDAO.delete(food);
+        // Check after update Result
+        Boolean checkUpdateResultDone = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_ACCEPT, id);
+        if (checkDeleteFoodDone && checkUpdateResultDone) {
+            Request req = requestDAO.findRequestByFoodDraftId(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
+            session.setAttribute("isSuccess", "Delete to food successfully.");
+        } else {
+            session.setAttribute("isError", "Failed to delete the request.");
+        }
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
     }
 
     // REJECT A FOOD_DRAFT BY TYPE CREATE OF FOOD
     private void rejectByCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
         String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // Check update Request status to Reject
+        Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
+        // if check update Request True
+        if (checkUpdateResult) {
+            Request req = requestDAO.findRequestByFoodDraftId(id);
+            FoodDraft food_D = foodDraftDAO.findById(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
+            session.setAttribute("isSuccess", "Reject to food successfully.");
+        } else {
+            session.setAttribute("isError", "Failed to Reject the request.");
         }
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Check update Request status to Reject
-            Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
-            // if check update Request True
-            if (checkUpdateResult) {
-                Request req = requestDAO.findRequestByFoodDraftId(id);
-                FoodDraft food_D = foodDraftDAO.findById(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
-                HttpSession session = request.getSession();
-                session.setAttribute("isSuccess", true);
-            }
-        }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
     }
 
     // REJECT A FOOD_DRAFT BY TYPE UPDATE OF FOOD
     private void rejectByUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id FoodDraft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
         String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // Check update Request status to Reject
+        Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
+        // if check update Request True
+        if (checkUpdateResult) {
+            Request req = requestDAO.findRequestByFoodDraftId(id);
+            FoodDraft food_D = foodDraftDAO.findById(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
+            session.setAttribute("isSuccess", "Reject to food successfully.");
+        } else {
+            session.setAttribute("isError", "Failed to Reject the request.");
         }
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Check update Request status to Reject
-            Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
-            // if check update Request True
-            if (checkUpdateResult) {
-                Request req = requestDAO.findRequestByFoodDraftId(id);
-                FoodDraft food_D = foodDraftDAO.findById(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
-                HttpSession session = request.getSession();
-                session.setAttribute("isSuccess", true);
-            }
-        }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
     }
     // REJECT A FOOD_DRAFT BY TYPE OF DELETE FOOD
 
     private void rejectByDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
         // Get Id Food_Draft by parameter
         int id = Integer.parseInt(request.getParameter("id"));
         // get select add by parameter
         String select = request.getParameter("select");
-        // Default page
-        int page = 1;
-        // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
-        try {
-            page = Integer.parseInt(request.getParameter("page"));
-            // check number of page
-            if (page < 1) {
-                page = 1;
-            }
-        } catch (Exception e) {
-            page = 1;
+        // get search add by parameter
+        String search = request.getParameter("search");
+        // get sort by id by parameter
+        String sort = request.getParameter("sort");
+        // update status request to Reject
+        Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
+        // if check update Request True
+        if (checkUpdateResult) {
+            Request req = requestDAO.findRequestByFoodDraftId(id);
+            FoodDraft food_D = foodDraftDAO.findById(id);
+            LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
+            logReqDAO.insert(logR);
+            requestDAO.delete(req);
+            session.setAttribute("isSuccess", "Reject to food successfully.");
+        } else {
+            session.setAttribute("isError", "Failed to Reject the request.");
         }
-        // Get total pages can have conditional where r.statusRequest = 'Not done'
-        int totalFoodDraft = foodDraftDAO.getTotalFoodDCountBySelect(select);
-        // Split how many page can have in a brower
-        int totalPages = (int) Math.ceil((double) totalFoodDraft / pageSize);
-        // Check if already handle don't do it again
-        if (requestDAO.checkReload(id)) {
-            // Check if already handle don't do it again
-            Boolean checkUpdateResult = requestDAO.updateResult(GlobalConfig.STATUS_RESULT_REJECT, id);
-            // if check update Request True
-            if (checkUpdateResult) {
-                Request req = requestDAO.findRequestByFoodDraftId(id);
-                FoodDraft food_D = foodDraftDAO.findById(id);
-                LogRequest logR = logReqDAO.getFromResultFoodDAndRequest(req, food_D);
-                logReqDAO.insert(logR);
-                requestDAO.delete(req);
-                HttpSession session = request.getSession();
-                session.setAttribute("isSuccess", true);
-            }
-        }
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("select", select);
-        request.setAttribute("currentPage", page);
-        List<FoodDraft> listF = foodDraftDAO.findAllByType(select, page, pageSize);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("listFoodDraft", listF);
-        request.setAttribute("type", listType);
-        // Come to page dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
+
+        response.sendRedirect(request.getContextPath() + "/type-of-request?action=list&select=" + select + "&search=" + search+"&sort"+sort);
     }
 
-    private void showFoodDraftList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get parameters for filtering 
-        String searchTitle = request.getParameter("name");
-        // Pagination parameters
-        int page = 1;
-        int pageSize = GlobalConfig.SIZE_PAGE; // Number of blogs per page
-        try {
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                if (page < 1) {
-                    page = 1;
-                }
-            }
-        } catch (NumberFormatException e) {
-            page = 1;
-        }
-        // Get FoodDraft from database
-        List<FoodDraft> food_D = foodDraftDAO.findFoodDraftWithFilter(searchTitle, page, pageSize);
-        int totalFood_D = foodDraftDAO.countFoodDraftWithFilter(searchTitle);
-        // Calculate total pages
-        int totalPages = (int) Math.ceil((double) totalFood_D / pageSize);
-        // Set Attribut to page dashboard.jsp
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("listFoodDraft", food_D);
-        request.setAttribute("currentPage", page);
-        List<String> listType = foodDraftDAO.findAllType();
-        request.setAttribute("type", listType);
-        // come to dashboard.jsp
-        request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
-    private void listPending(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          List<FoodDraft> listF = null;
-          request.setAttribute("listFoodDraft", listF);
-          request.getRequestDispatcher("/view/manager/dashboard.jsp").forward(request, response);
-    }
-
+   
 }

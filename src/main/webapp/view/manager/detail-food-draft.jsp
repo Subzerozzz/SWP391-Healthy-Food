@@ -127,39 +127,20 @@
                                                                                                     </p>
                                                                                                     <p>Black Fresh Berry is a delicious and nutritious fruit, rich in antioxidants and flavor. Perfect for a healthy snack or to add freshness to your desserts and smoothies.</p>
 
-                                                                                                    <div style="display: flex; gap: 40px">
-                                                                                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get">
-                                                                                                            <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                <input type="hidden" name="action" value="accept">
-                                                                                                                    <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                        <button type="submit" class="btn-modern btn-accept"
-                                                                                                                                onclick="handleAccept(event)">
-                                                                                                                            Accept
-                                                                                                                        </button>
-                                                                                                                        </form>
-
-                                                                                                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get">
-                                                                                                                            <input type="hidden" name="select" value="${foodD.type}">
-                                                                                                                                <input type="hidden" name="action" value="reject">
-                                                                                                                                    <input type="hidden" name="id" value="${foodD.id}">
-                                                                                                                                        <button type="submit" class="btn-modern btn-reject"
-                                                                                                                                                onclick="handleReject(event)">
-                                                                                                                                            Reject
-                                                                                                                                        </button>
-                                                                                                                                        </form>
-                                                                                                                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get">
-                                                                                                                                            <button type="submit" class="btn-modern btn-backHome" > Back
-                                                                                                                                            </button>
-                                                                                                                                        </form>
-                                                                                                                                        </div>
-                                                                                                                                        </div>
-                                                                                                                                        </div>
+                                                                    <div class="buttons">
+                                                                        <form action="${pageContext.request.contextPath}/type-of-request" method="get">
+                                                                            <input type="hidden" name="action" value="list" />
+                                                                            <input type="hidden" name="select" value="${select}" />
+                                                                            <input type="hidden" name="search" value="${search}" />
+                                                                            <button type="submit" class="btn-modern btn-backHome">Back</button>
+                                                                        </form>
+                                                                    </div>
+                                                                                                  </div>
+                                                                                              </div>
                                                                                                                                             
-                                                                                                                                        </div>
-                                                                                                                                            
-                                                                                                                                        
-                                                                                                                                        <!-- /main-content-wrap -->
-                                                                                                                                        </div>
+                                                                                              </div>
+                                                                                                  <!-- /main-content-wrap -->
+                                                                                                     </div>
                                                                                             <!-- /main-content-wrap -->
                                                                                             <!-- bottom-page -->
                                                                                                 <jsp:include page="../common/footer.jsp"></jsp:include>
@@ -272,5 +253,3 @@
 
                                                                                                                                         <!-- Mirrored from themesflat.co/html/remos/product-detail-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:47 GMT -->
                                                                                                                                         </html>
-
-
