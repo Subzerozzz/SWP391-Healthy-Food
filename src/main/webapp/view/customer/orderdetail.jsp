@@ -156,7 +156,7 @@
                                                                                                                                     <!-- Tên món -->
                                                                                                                                     <div class="name">
                                                                                                                                         <div class="text-tiny mb-1">Food name</div>
-                                                                                                                                        <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
+                                                                                                                                        <a class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
                                                                                                                                     </div>
 
                                                                                                                                     <!-- Số lượng -->

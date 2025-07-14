@@ -1,11 +1,13 @@
 package com.su25.swp391.controller.customer;
 
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.ComboDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderComboDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Combo;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.entity.Order;
@@ -24,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order", "/listordercombo","/ordercombodetail"})
+@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order", "/listordercombo", "/ordercombodetail"})
 public class OrderManage extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
@@ -32,6 +34,7 @@ public class OrderManage extends HttpServlet {
     private final OrderItemDAO orderDetailDAO = new OrderItemDAO();
     private final FoodDAO foodDAO = new FoodDAO();
     private final OrderComboDAO ordercomboDAO = new OrderComboDAO();
+    private final ComboDAO comboDAO = new ComboDAO();
 
     private final Order order = new Order();
 
@@ -56,7 +59,7 @@ public class OrderManage extends HttpServlet {
             case "/listordercombo":
                 orderCombo(request, response);
                 break;
-             case "/ordercombodetail":
+            case "/ordercombodetail":
                 orderComboDetail(request, response);
                 break;
             default:
@@ -124,10 +127,9 @@ public class OrderManage extends HttpServlet {
                 request.getRequestDispatcher(ORDER_DETAILS).forward(request, response);
                 return;
             } else {
-                   response.sendRedirect(ORDER_LIST);
+                response.sendRedirect(ORDER_LIST);
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             response.sendRedirect(HOME_PAGE);
         }
     }
@@ -236,7 +238,7 @@ public class OrderManage extends HttpServlet {
 
     }
 
-     private void orderCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    private void orderCombo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
         String search = request.getParameter("status");
@@ -313,17 +315,15 @@ public class OrderManage extends HttpServlet {
             int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
             request.setAttribute("startRecord", startRecord);
             request.setAttribute("endRecord", endRecord);
-
             // thực hiện xong hàm if sẽ trả về trang order list
             request.getRequestDispatcher(ORDER_COMBO).forward(request, response);
             return;
         } else {
             response.sendRedirect(HOME_PAGE);
         }
-
     }
-    
-     private void orderComboDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+    private void orderComboDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         //lay tham so order id khi nguoi dung chon 
         String comboIdStr = request.getParameter("orderComboId");
@@ -332,12 +332,26 @@ public class OrderManage extends HttpServlet {
             response.sendRedirect(HOME_PAGE);
             return;
         }
-         try {
-             
-         } catch (Exception e) {
-         }
+        int comboId = Integer.parseInt(comboIdStr);
+        try {
+            OrderCombo orderCombo = ordercomboDAO.findById(comboId);
+            if (orderCombo != null) {
+                int comboID = orderCombo.getComboId();
+                Combo combo = comboDAO.findById(comboID);
+                if (combo != null) {
+                    double subtotalcombo = calculateOriginalTotalPrice(combo, orderCombo);
+                    request.setAttribute("orderCombo", orderCombo);
+                    request.setAttribute("combo", combo);
+                    request.setAttribute("subtotalcombo", subtotalcombo);
+                    request.getRequestDispatcher(ORDER_COMBO_DETAILS).forward(request, response);
+                    return;
+                }
+            }
+        } catch (NumberFormatException e) {
+            response.sendRedirect(HOME_PAGE);
+        }
     }
-     
+
     public BigDecimal calculateSubtotal(List<OrderItem> orderDetails, Map<Integer, Food> foodMap) {
         BigDecimal subtotal = BigDecimal.ZERO;
 
@@ -353,8 +367,14 @@ public class OrderManage extends HttpServlet {
         return subtotal;
     }
 
-    
+    public double calculateOriginalTotalPrice(Combo combo, OrderCombo orderCombo) {
+        if (combo == null || orderCombo == null) {
+            return 0.0;
+        }
+        double price = combo.getOriginalPrice();
+        int quantity = orderCombo.getQuantity();
 
-   
+        return price * quantity;
+    }
 
 }

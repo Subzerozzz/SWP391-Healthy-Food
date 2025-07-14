@@ -241,29 +241,4 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     return 0;
 }
-    
-    public Integer findComboIdByOrderComboId(int orderComboId) {
-    Integer comboId = null;
-    String sql = "SELECT comboId FROM OrderCombo WHERE orderComboId = ?";
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setInt(1, orderComboId);
-        resultSet = statement.executeQuery();
-
-        if (resultSet.next()) {
-            comboId = resultSet.getInt("comboId");
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
-    }
-
-    return comboId;
-}
-
-   
 }

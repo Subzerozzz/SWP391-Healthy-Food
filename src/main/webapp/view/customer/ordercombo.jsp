@@ -167,12 +167,12 @@
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form class="form-search" action="orderlist" method="get">
+                                                                                                        <form class="form-search" action="listordercombo" method="get">
                                                                                                             <fieldset class="name">
                                                                                                                 <select name="status" required>
                                                                                                                     <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="pending"  ${param.status == '0' ? 'selected' : ''}>Chưa Thanh Toán</option>
-                                                                                                                <option value="accepted"  ${param.status == '1' ? 'selected' : ''}>Đã Thanh Toán</option>
+                                                                                                                <option value="0"  ${param.status == "0" ? 'selected' : ''}>Chưa Thanh Toán</option>
+                                                                                                                <option value="1"  ${param.status == "1" ? 'selected' : ''}>Đã Thanh Toán</option>
                                                                                                             </select>                                                                                                            </fieldset>
                                                                                                         <div class="button-submit">
                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -197,13 +197,13 @@
                                                                                                         <div class="body-title">Total Price</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Payment Status</div>
+                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Payment Method</div>
+                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Method</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left:6vh">Active</div>
+                                                                                                        <div class="body-title" style="padding-left: 100px">Active</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
@@ -212,9 +212,9 @@
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                 <div class="body-text format-view">#${order.orderComboId} </div>
-                                                                                                                <div class="body-text format-view">${order.comboName}</div>
-                                                                                                                <div class="body-text format-view">${order.quantity} </div>
-                                                                                                                <div class="body-text format-view ">
+                                                                                                                <div class="body-text format-view" style="padding-left: 70px">${order.comboName}</div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 20px">${order.quantity} </div>
+                                                                                                                <div class="body-text format-view " style="padding-right: 100px">
                                                                                                                     <fmt:formatNumber value="${order.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view">

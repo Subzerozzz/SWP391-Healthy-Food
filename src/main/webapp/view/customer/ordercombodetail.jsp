@@ -71,7 +71,7 @@
                                                             <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
 
                                                                 </head>
-                                                                <body class="body">
+                                                                <body class="body">More actions
 
                                                                     <!-- #wrapper -->
                                                                     <div id="wrapper">
@@ -102,84 +102,68 @@
                                                                                                 <!-- main-content-wrap -->
                                                                                                 <div class="main-content-wrap">
                                                                                                     <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                    <c:forEach var="orderItem" items="${orderItemList}" varStatus="status">
-                                                                                                        <c:if test="${status.first}">
-                                                                                                            <h3>Order #${order.id}</h3>
-                                                                                                        </c:if>
-                                                                                                        <!-- Thông tin chi tiết -->
-                                                                                                    </c:forEach>
-                                                                                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                                                                                        <li>
-                                                                                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <i class="icon-chevron-right"></i>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <a href="#"><div class="text-tiny">Order</div></a>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <i class="icon-chevron-right"></i>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <a href="#"><div class="text-tiny">Order detail</div></a>
-                                                                                                        </li>
-                                                                                                        <li>
-                                                                                                            <i class="icon-chevron-right"></i>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </div>
-                                                                                                <!-- order-detail -->
-                                                                                                <div class="wg-order-detail">
-                                                                                                    <div class="left flex-grow">
-                                                                                                        <div class="wg-box mb-20">
-                                                                                                            <div class="wg-table table-order-detail">
-                                                                                                                <ul class="table-title flex items-center justify-between gap20 mb-24">
-                                                                                                                    <li>
-                                                                                                                        <div class="body-title">All item</div>
-                                                                                                                    </li>    
+                                                                                                        <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                                                                                            <li>
+                                                                                                                <a href="index.html"><div class="text-tiny">Dashboard</div></a>
+                                                                                                            </li>
+                                                                                                            <li>
+                                                                                                                <i class="icon-chevron-right"></i>
+                                                                                                            </li>
+                                                                                                            <li>
+                                                                                                                <a href="#"><div class="text-tiny">Order</div></a>
+                                                                                                            </li>
+                                                                                                            <li>
+                                                                                                                <i class="icon-chevron-right"></i>
+                                                                                                            </li>
+                                                                                                            <li>
+                                                                                                                <a href="#"><div class="text-tiny">Order detail</div></a>
+                                                                                                            </li>
+                                                                                                            <li>
+                                                                                                                <i class="icon-chevron-right"></i>
+                                                                                                            </li>
+                                                                                                        </ul>
+                                                                                                    </div>
+                                                                                                    <!-- order-detail -->
+                                                                                                    <div class="wg-order-detail">
+                                                                                                        <div class="left flex-grow">
+                                                                                                            <div class="wg-box mb-20">
+                                                                                                                <div class="wg-table table-order-detail">
+                                                                                                                    <ul class="table-title flex items-center justify-between gap20 mb-24">
+                                                                                                                        <li>
+                                                                                                                            <div class="body-title">All item</div>
+                                                                                                                        </li>    
 
-                                                                                                                </ul>
-                                                                                                                <div class="order-items-container">
-                                                                                                                    <ul class="flex flex-column">
-                                                                                                                        <c:forEach var="orderItem" items="${orderItemList}" varStatus="status">
+                                                                                                                    </ul>
+                                                                                                                    <div class="order-items-container">
+                                                                                                                        <ul class="flex flex-column">
+
                                                                                                                             <li class="product-item gap14">
-                                                                                                                                <div class="image no-bg">
-                                                                                                                                    <img src="${foodDAO.findById(orderItem.food_id).image_url}" alt="">
-                                                                                                                                </div>
+
                                                                                                                                 <div class="flex items-center justify-between gap40 flex-grow">
                                                                                                                                     <!-- Tên món -->
                                                                                                                                     <div class="name">
-                                                                                                                                        <div class="text-tiny mb-1">Food name</div>
-                                                                                                                                        <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
-                                                                                                                                    </div>
+                                                                                                                                        <div class="text-tiny mb-1">Combo Name</div>
+                                                                                                                                        <a class="body-title-2">${orderCombo.comboName}</a>
+                                                                                                                                </div>
 
-                                                                                                                                    <!-- Số lượng -->
-                                                                                                                                    <div class="name">
-                                                                                                                                        <div class="text-tiny mb-1">Quantity</div>
-                                                                                                                                        <div class="body-title-2">${orderItem.quantity}</div>
-                                                                                                                                    </div>
+                                                                                                                                <!-- Số lượng -->
+                                                                                                                                <div class="name">
+                                                                                                                                    <div class="text-tiny mb-1">Quantity</div>
+                                                                                                                                    <div class="body-title-2">${orderCombo.quantity}</div>
+                                                                                                                                </div>
 
-                                                                                                                                    <!-- Giá -->
-                                                                                                                                    <div class="name">
-                                                                                                                                        <div class="text-tiny mb-1">Price</div>
-                                                                                                                                        <div class="body-title-2">
-                                                                                                                                            <fmt:formatNumber value="${foodDAO.findById(orderItem.food_id).price}" type="number" groupingUsed="true" /> VND
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-
-                                                                                                                                    <!-- Cột Feedback -->
-                                                                                                                                    <div class="name">
-                                                                                                                                        <div class="text-tiny mb-1">Feedback</div>
-                                                                                                                                        <c:if test="${order.payment_status == 1 && order.status == 'completed'}">
-                                                                                                                                            <a href="createfeedback?order_item_id=${orderItem.id}&source=orderdetail&order_id=${order.id}" title="Write Feedback">
-                                                                                                                                                <i class="fa fa-pencil-alt" style="font-size: 15px; color: #595959;"></i>
-                                                                                                                                            </a>
-                                                                                                                                        </c:if>
+                                                                                                                                <!-- Giá -->
+                                                                                                                                <div class="name">
+                                                                                                                                    <div class="text-tiny mb-1">Price</div>
+                                                                                                                                    <div class="body-title-2">
+                                                                                                                                        <fmt:formatNumber value="${combo.originalPrice}" type="number" groupingUsed="true" /> VND
                                                                                                                                     </div>
                                                                                                                                 </div>
-                                                                                                                            </li>
-                                                                                                                        </c:forEach>
+
+
+                                                                                                                            </div>
+                                                                                                                        </li>
+
                                                                                                                     </ul>
                                                                                                                 </div>
                                                                                                             </div>
@@ -194,126 +178,38 @@
                                                                                                                         <div class="body-title">Price</div>
                                                                                                                     </li>    
                                                                                                                 </ul>
-                                                                                                                <c:forEach var="orderItem" items="${orderItemList}" varStatus="status">
-                                                                                                                    <c:if test="${status.first}">
-                                                                                                                        <ul class="flex flex-column gap14">
-                                                                                                                            <li class="cart-totals-item">
-                                                                                                                                <span class="body-text">Subtotal:</span>
-                                                                                                                                <span class="body-title-2">
-                                                                                                                                    <fmt:formatNumber value="${subtotal}" type="number" groupingUsed="true"/> VND
-                                                                                                                                </span>
-                                                                                                                            </li>
-                                                                                                                            <li class="divider"></li>
-                                                                                                                            <li class="cart-totals-item">
-                                                                                                                                <span class="body-text">Coupon</span>
-                                                                                                                                <span class="body-title-2">${order.coupon_code}</span>
-                                                                                                                            </li>
-                                                                                                                            <li class="divider"></li>
-                                                                                                                            <li class="cart-totals-item">
-                                                                                                                                <span class="body-text">Payment Status</span>
-                                                                                                                                <span class="body-title-2">
-                                                                                                                                    <c:choose>
-                                                                                                                                        <c:when test="${order.payment_status == 0}"><i style="color: red">Chưa thanh toán</i></c:when>
-                                                                                                                                        <c:when test="${order.payment_status == 1}"><i style="color: green">Đã thanh toán</i></c:when>
-                                                                                                                                        <c:otherwise>Không xác định</c:otherwise>
-                                                                                                                                    </c:choose>
-                                                                                                                                </span>
-                                                                                                                            </li>
 
-                                                                                                                            <li class="divider"></li>
-                                                                                                                            <li class="cart-totals-item">
-                                                                                                                                <span class="body-title">Total price:</span>
-                                                                                                                                <span class="body-title tf-color-1">
-                                                                                                                                    <fmt:formatNumber value="${order.total}" type="number" groupingUsed="true"/> VND
-                                                                                                                                </span>
-                                                                                                                            </li>
-                                                                                                                        </ul>
-                                                                                                                    </c:if>
-                                                                                                                    <!-- Thông tin chi tiết -->
-                                                                                                                </c:forEach>
+                                                                                                                <ul class="flex flex-column gap14">
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-text">Subtotal:</span>
+                                                                                                                        <span class="body-title-2">
+                                                                                                                            <fmt:formatNumber value="${subtotalcombo}" type="number" groupingUsed="true"/> VND
+                                                                                                                        </span>
+                                                                                                                    </li>
+                                                                                                                    <li class="divider"></li>
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-text">Discount Price</span>
+                                                                                                                        <span class="body-title-2">
+                                                                                                                            <fmt:formatNumber value="${combo.discountPrice}" type="number" groupingUsed="true"/> VND
+                                                                                                                        </span>
+
+                                                                                                                    </li>
+                                                                                                                    <li class="divider"></li>
+                                                                                                                    <li class="cart-totals-item">
+                                                                                                                        <span class="body-title">Total price</span>
+                                                                                                                        <span class="body-title tf-color-1">
+                                                                                                                            <fmt:formatNumber value="${orderCombo.totalPrice}" type="number" groupingUsed="true"/> VND
+                                                                                                                        </span>
+                                                                                                                    </li>
+                                                                                                                </ul>
                                                                                                             </div>
+                                                                                                                        <div class="wg-box">
+                                                                                                                            <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/listordercombo">Back to Order List</a>
+                                                                                                                        </div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <c:forEach var="orderItem" items="${orderItemList}" varStatus="status">
-                                                                                                        <c:if test="${status.first}">
-                                                                                                            <div class="right">
-                                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                                    <div class="body-title">Summary</div>
-                                                                                                                    <div class="summary-item">
-                                                                                                                        <div class="body-text">Order ID</div>
-                                                                                                                        <div class="body-title-2">#${order.id}</div>
-                                                                                                                    </div>
-                                                                                                                    <div class="summary-item">
-                                                                                                                        <div class="body-text">Create At</div>
-                                                                                                                        <div class="body-title-2">
-                                                                                                                            <fmt:formatDate value="${order.created_at}" pattern="dd-MM-yyyy HH:mm:ss" />
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <div class="summary-item">
-                                                                                                                        <div class="body-text">Total</div>
-                                                                                                                        <div class="body-title-2 tf-color-1">
-                                                                                                                            <fmt:formatNumber value="${order.total}" type="number" groupingUsed="true"/> VND
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                                    <div class="body-title">Shipping Address</div>
-                                                                                                                    <div class="body-text">${order.shipping_address}</div>
-                                                                                                                </div>
-                                                                                                                <div class="wg-box mb-20 gap10">
-                                                                                                                    <div class="body-title">Payment Method</div>
-                                                                                                                    <div class="body-text">${order.payment_method} -  <c:choose>
-                                                                                                                            <c:when test="${order.payment_status == 0}">
-                                                                                                                                <span class="">Chưa thanh toán</span>
-                                                                                                                            </c:when>
-                                                                                                                            <c:when test="${order.payment_status == 1}">
-                                                                                                                                <span class="">Đã thanh toán</span>
-                                                                                                                            </c:when>
-                                                                                                                            <c:otherwise>
-                                                                                                                                <span class="">Không xác định</span>
-                                                                                                                            </c:otherwise>
-                                                                                                                        </c:choose> 
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div class="wg-box gap10">
-                                                                                                                    <div class="body-title">Expected Date Of Delivery</div>
-                                                                                                                    <c:choose>
-                                                                                                                        <c:when test="${order.status == 'pending'}">
-                                                                                                                            <div class="body-title-2 tf-color-2">Your order needs seller confirmation</div>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when test="${order.status == 'accepted'}">
-                                                                                                                            <div class="body-title-2 tf-color-2">Your order has been accepted by the seller, please wait.</div>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when test="${order.status == 'cancelled'}">
-                                                                                                                            <div class="body-title-2 tf-color-2">Your order has been rejected by the seller.</div>
-                                                                                                                        </c:when>
-                                                                                                                        <c:when test="${order.status == 'completed'}">
-                                                                                                                            <div class="body-title-2 tf-color-2">Your order is on its way to your address.</div>
-                                                                                                                        </c:when>
-                                                                                                                        <c:otherwise>
-                                                                                                                            <div class="body-title-2 tf-color-2">Status unknown. Please contact support.</div>
-                                                                                                                        </c:otherwise>
-                                                                                                                    </c:choose>
-                                                                                                                </div>
-                                                                                                                <c:if test="${order.payment_method == 'VNPAY' and order.payment_status == 0}">
-                                                                                                                    <a class="tf-button style-1 w-full" href="#" style="  margin-top: 20px">Thanh toán ngay</a>
-                                                                                                                </c:if>
-                                                                                                                <c:choose>
-                                                                                                                    <c:when test="${order.status == 'completed' and order.payment_status == 1}">
-                                                                                                                        <a style="margin-top: 20px; margin-bottom: 20px;" class="tf-button style-1 w-full"
-                                                                                                                           href="feedback">Feedback Order</a>
-                                                                                                                    </c:when>
-                                                                                                                    <c:otherwise>
-                                                                                                                        <a style=" margin-top: 20px;    margin-bottom: 20px;    " class="tf-button style-1 w-full"
-                                                                                                                           onclick="cancelOrder(${order.id}, '${order.status}')">Cancel Order</a>
-                                                                                                                    </c:otherwise>
-                                                                                                                </c:choose>
+                                                                                                    
 
-                                                                                                                <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/orderlist">Back to Order List</a>
-                                                                                                            </div>
-                                                                                                        </c:if>
-                                                                                                        <!-- Thông tin chi tiết -->
-                                                                                                    </c:forEach>
                                                                                                 </div>
                                                                                                 <!-- /order-detail -->
                                                                                             </div>
@@ -332,61 +228,9 @@
                                                                             </div>
                                                                             <!-- /#page -->
                                                                         </div>
-                                                                        <!-- /#wrapper -->
+                                                                        <!-- /#wrapper -->                                                                       
 
-                                                                        <!-- Javascript -->
-                                                                        <script>
-                                                                            function cancelOrder(orderId, status) {
-                                                                                if (status.toLowerCase() !== 'pending') {
-                                                                                    alert("Chỉ có thể hủy đơn hàng khi trạng thái là 'pending'");
-                                                                                    return;
-                                                                                }
-
-                                                                                if (!confirm("Bạn có chắc muốn hủy đơn hàng này không?"))
-                                                                                    return;
-
-                                                                                fetch('cancel-order', {
-                                                                                    method: 'POST',
-                                                                                    headers: {
-                                                                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                                                                    },
-                                                                                    body: 'orderId=' + orderId
-                                                                                })
-                                                                                        .then(response => {
-                                                                                            if (response.ok) {
-                                                                                                alert("Đơn hàng đã được hủy.");
-                                                                                                location.reload(); // reload để cập nhật UI
-                                                                                            } else {
-                                                                                                alert("Không thể hủy đơn hàng. Đơn hàng có thể đã được xử lý.");
-                                                                                            }
-                                                                                        })
-                                                                                        .catch(error => {
-                                                                                            console.error("Lỗi:", error);
-                                                                                            alert("Có lỗi xảy ra khi hủy đơn.");
-                                                                                        });
-                                                                            }
-
-                                                                        </script>
-                                                                    <c:if test="${sessionScope.toastType == 'success'}">
-                                                                        <script>
-                                                                            document.addEventListener("DOMContentLoaded", function () {
-                                                                                iziToast.success({
-                                                                                    title: "Thông báo",
-                                                                                    message: '<c:out value="${sessionScope.toastMessage}" />',
-                                                                                    position: 'topRight',
-                                                                                    timeout: 5000,
-                                                                                    backgroundColor: "#28a745"
-                                                                                });
-                                                                            });
-                                                                        </script>
-                                                                        <!--Xóa đi biến isDelete sau khi đã thông báo--> 
-                                                                        <%
-                                                                            session.removeAttribute("toastType");
-                                                                            session.removeAttribute("toastMessage");
-                                                                        %>
-                                                                    </c:if>
-
-                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                     <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                     <script src="${pageContext.request.contextPath}/js/zoom.js"></script>

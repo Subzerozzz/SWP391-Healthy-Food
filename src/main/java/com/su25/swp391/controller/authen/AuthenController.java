@@ -468,7 +468,7 @@ public class AuthenController extends HttpServlet {
 
         if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
-            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
             url = HOME_PAGE;
         } else {
             session.setAttribute("toastMessage", "Email incorect!");
