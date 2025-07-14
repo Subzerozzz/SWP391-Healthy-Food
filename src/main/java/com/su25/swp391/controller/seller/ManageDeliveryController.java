@@ -119,7 +119,7 @@ public class ManageDeliveryController extends HttpServlet {
       String search = request.getParameter("search");
       // Pagination
         int page = 1;
-        int pageSize = 2;
+        int pageSize = 10;
          try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
@@ -161,7 +161,7 @@ public class ManageDeliveryController extends HttpServlet {
        String search = request.getParameter("search");
        // Pagination
         int page = 1;
-        int pageSize = 2;
+        int pageSize = 10;
          try {
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));

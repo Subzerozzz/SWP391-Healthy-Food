@@ -120,7 +120,7 @@ int currentShipperId = account.getId();
  
 // Phân trang
 int page = 1;
-int pageSize = 1;
+int pageSize = 10;
 try {
     if (request.getParameter("page") != null) {
         page = Integer.parseInt(request.getParameter("page"));
