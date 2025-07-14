@@ -117,7 +117,7 @@
                                                                                                         <fieldset class="name mb-24">
                                                                                                             <div class="body-title mb-10">User_Name</div>
                                                                                                             <input class="flex-grow" type="text" placeholder="User name" name="user_name"
-                                                                                                                   value="${user_name != null ? user_name : ''}" required >
+                                                                                                                   value="${pageScope.user_name != null ? pageScope.user_name : ''}" required >
                                                                                                         </fieldset>
 
                                                                                                         <fieldset class="email mb-24">
