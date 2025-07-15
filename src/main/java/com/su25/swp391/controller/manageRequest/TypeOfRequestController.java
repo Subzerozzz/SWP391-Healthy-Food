@@ -144,7 +144,7 @@ public class TypeOfRequestController extends HttpServlet {
         // Default page 
         int page = 1;
         // Size in each page can have
-        int pageSize = GlobalConfig.SIZE_PAGE;
+        int pageSize = 10;
         try {
             page = Integer.parseInt(request.getParameter("page"));
             // check number of page

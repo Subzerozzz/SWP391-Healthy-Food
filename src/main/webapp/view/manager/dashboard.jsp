@@ -141,7 +141,7 @@
                                       No Food Draft Request match your search criteria. Try adjusting your filters.
                                     </c:when>
                                     <c:otherwise>
-                                      There are no orders in the system yet.
+                                      There are no food draft in the system yet.
                                       
                                     </c:otherwise>
                                   </c:choose>
