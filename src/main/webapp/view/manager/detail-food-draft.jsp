@@ -114,7 +114,7 @@
                                                                                                     <div class="product-info">
                                                                                                         <h2>${foodD.name}</h2>
                                                                                                     <h3>Created at: ${foodD.created_at}</h3>
-                                                                                                    <div class="price">
+                                                                                                    <div class="price" >
                                                                                                         <span class="current">Price: <fmt:formatNumber value="${foodD.getPrice()}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ</span>
                                                                                                         <!--                                            <span class="original">$330.00</span>-->
                                                                                                     </div>
