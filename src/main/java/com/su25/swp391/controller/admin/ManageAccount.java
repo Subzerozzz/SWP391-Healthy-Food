@@ -331,7 +331,6 @@ public class ManageAccount extends HttpServlet {
                 request.setAttribute("hasValidateErr", true);
                 // Gán lại các giá trị đã nhập vào request để hiện lại trên form
                 request.setAttribute("full_name", full_name);
-                request.setAttribute("user_name", user_name);
                 request.setAttribute("emails", email);
                 request.setAttribute("address", address);
                 request.setAttribute("role", role);

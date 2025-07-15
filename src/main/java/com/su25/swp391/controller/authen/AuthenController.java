@@ -468,7 +468,7 @@ public class AuthenController extends HttpServlet {
 
         if (accFoundByUsernamePass != null) {
             accountDAO.updatePasswordByEmail(account);
-            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, account);
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, accFoundByUsernamePass);
             url = HOME_PAGE;
         } else {
             session.setAttribute("toastMessage", "Email incorect!");
@@ -477,79 +477,81 @@ public class AuthenController extends HttpServlet {
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
-    
-    
 
-     private void myaccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       String url = null;
-       HttpSession session = request.getSession();
+    private void myaccountDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String url = null;
+        HttpSession session = request.getSession();
 
-       String full_name = request.getParameter("full_name");
-       String birth_date = request.getParameter("birth_date");
-       String gender = request.getParameter("gender");
-       String mobile = request.getParameter("mobile");
-       String address = request.getParameter("address");
-       String email = (String) session.getAttribute("email");
+        String full_name = request.getParameter("full_name");
+        String birth_date = request.getParameter("birth_date");
+        String gender = request.getParameter("gender");
+        String mobile = request.getParameter("mobile");
+        String address = request.getParameter("address");
+        String email = (String) session.getAttribute("email");
 
-       Date date = null;
-       if (birth_date != null && !birth_date.isEmpty()) {
-           try {
-               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-               java.util.Date utilDate = sdf.parse(birth_date);
-               date = new java.sql.Date(utilDate.getTime());
+        Date date = null;
+        if (birth_date != null && !birth_date.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date utilDate = sdf.parse(birth_date);
+                date = new java.sql.Date(utilDate.getTime());
 
-               //tính tuổi
-               LocalDate birtDate = date.toLocalDate();
-               LocalDate now = LocalDate.now();
-               int age = Period.between(birtDate, now).getYears();
-               if (age < 18 || age > 80) {
-                   session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
-                   session.setAttribute("toastType", "error");
-                   return;
-               }
+                //tính tuổi
+                LocalDate birtDate = date.toLocalDate();
+                LocalDate now = LocalDate.now();
+                int age = Period.between(birtDate, now).getYears();
+                if (age < 18 || age > 80) {
+                    session.setAttribute("toastMessage", "tuổi trong khoảng 18 đến 80 tuổi");
+                    session.setAttribute("toastType", "error");
+                    url = MYACCOUNT_PAGE;
+                    request.getRequestDispatcher(url).forward(request, response);
+                    return;
+                }
 
-           } catch (ParseException e) {
-               session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
-               session.setAttribute("toastType", "error");
-               return;
-           }
-       }
-       if (!isValidPhoneNumber(mobile)) {
-           session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
-           session.setAttribute("toastType", "error");
-           url = MYACCOUNT_PAGE;
-           request.getRequestDispatcher(url).forward(request, response);
-           return;
-       }
+            } catch (ParseException e) {
+                session.setAttribute("toastMessage", "Định dạng k đúng, vui lòng thử lại");
+                session.setAttribute("toastType", "error");
+                url = MYACCOUNT_PAGE;
+                request.getRequestDispatcher(url).forward(request, response);
+                return;
+            }
+        }
+        if (!isValidPhoneNumber(mobile)) {
+            session.setAttribute("toastMessage", "không sử dụng kí tự đặc biệt");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+            request.getRequestDispatcher(url).forward(request, response);
+            return;
+        }
 
-       Account account = Account.builder()
-               .email(email)
-               .full_name(full_name)
-               .gender(gender)
-               .birth_date(date)
-               .address(address)
-               .mobile(mobile)
-               .build();
+        Account account = Account.builder()
+                .email(email)
+                .full_name(full_name)
+                .gender(gender)
+                .birth_date(date)
+                .address(address)
+                .mobile(mobile)
+                .build();
 
-       // Kiểm tra xem email đã tồn tại trong database chưa
-       Account accountFoundByEmail = accountDAO.findByEmail(account);
+        // Kiểm tra xem email đã tồn tại trong database chưa
+        Account accountFoundByEmail = accountDAO.findByEmail(account);
 
-       if (accountFoundByEmail != null) {
-           // tránh để sau khi update, database sẽ xóa role và active
-           account.setRole(accountFoundByEmail.getRole());
-           account.setStatus(accountFoundByEmail.getStatus());
-           accountDAO.update(account);
-           Account newAccount = accountDAO.findByEmail(account);
-           session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
-           url = MYACCOUNT_PAGE;
-       } else {
-           session.setAttribute("toastMessage", "Email incorect!");
-           session.setAttribute("toastType", "error");
-           url = MYACCOUNT_PAGE;
-       }
-       request.getRequestDispatcher(url).forward(request, response);
+        if (accountFoundByEmail != null) {
+            // tránh để sau khi update, database sẽ xóa role và active
+            account.setRole(accountFoundByEmail.getRole());
+            account.setStatus(accountFoundByEmail.getStatus());
+            accountDAO.update(account);
+            Account newAccount = accountDAO.findByEmail(account);
+            session.setAttribute(GlobalConfig.SESSION_ACCOUNT, newAccount);
+            url = MYACCOUNT_PAGE;
+        } else {
+            session.setAttribute("toastMessage", "Email incorect!");
+            session.setAttribute("toastType", "error");
+            url = MYACCOUNT_PAGE;
+        }
+        request.getRequestDispatcher(url).forward(request, response);
 
-   }
+    }
 
     /**
      * Kiểm tra định dạng email.
@@ -586,7 +588,7 @@ public class AuthenController extends HttpServlet {
         }
         return false;
     }
-    
+
     public boolean isValidPhoneNumber(String phone) {
         // Loại bỏ khoảng trắng, dấu gạch, ngoặc, v.v. nếu có
         phone = phone.replaceAll("[\\s\\-()]", "");
@@ -597,5 +599,4 @@ public class AuthenController extends HttpServlet {
         return phone.matches(regex);
     }
 
- 
 }
