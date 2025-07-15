@@ -18,8 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Account implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Account {
     private Integer id;
     private String email;
     private String password;

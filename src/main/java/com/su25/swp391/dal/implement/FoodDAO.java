@@ -342,7 +342,6 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
             statement.setInt(1, t.getId());
-            statement.executeUpdate();
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

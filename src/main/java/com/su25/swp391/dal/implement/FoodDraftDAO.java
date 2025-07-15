@@ -124,7 +124,82 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
         }
         return list;
     }
+   // new find List FoodDraft by seach or status
+    public List<FoodDraft> findFoodDraftBySearchFilter(String search, String status,String sort, int page,int pageSize){
+        List<FoodDraft> list = new ArrayList<>();
+        try {
+            List<Object> params = new ArrayList<>();
+            StringBuilder sql = new StringBuilder("Select * from FoodDraft as f inner join Request as r on f.id = r.foodDraftId where r.statusRequest = 'Not done' ");
+            if(status != null && !status.trim().isEmpty()){
+                sql.append(" and f.type = ? ");
+                params.add(status);
+            }
+            if(search != null && !search.trim().isEmpty()){
+            sql.append(" and f.name like ? ");
+            params.add("%"+search.trim()+"%");
+            }
+            // Append sorting and pagination
+            if (sort != null && !sort.isEmpty()) {
+                sql.append(" ORDER BY f.id " + sort + " LIMIT ? OFFSET ?");
+            } else {
+                sql.append(" ORDER BY f.name DESC LIMIT ? OFFSET ?");
+            }
+           
+            params.add(pageSize);
+            params.add((page-1)*pageSize);
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+               for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i+1, params.get(i));
+            }
+            resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return list;
+    }
+    public int getTotalNumberFoodDraftBySearchFilter(String search, String status) {
+    int total = 0;
+    try {
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM FoodDraft AS f ");
+        sql.append("INNER JOIN Request AS r ON f.id = r.foodDraftId where r.statusRequest = 'Not done' ");
 
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND f.type = ? ");
+            params.add(status);
+        }
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND f.name LIKE ? ");
+            params.add("%" + search.trim() + "%");
+        }
+
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            statement.setObject(i + 1, params.get(i));
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            total = resultSet.getInt(1);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+    return total;
+} 
+    
+    //
     public List< FoodDraft> getFoodDraftByPage(int page, int pageSize) {
         String sql = "select * from  FoodDraft as f inner join Request as r on f.id = r.foodDraftId "
                 + "where r.statusRequest = ? LIMIT ? OFFSET ?";
@@ -365,4 +440,10 @@ public class FoodDraftDAO extends DBContext implements I_DAO<FoodDraft> {
 //        List<FoodDraft> l = dao.getFoodDraftByPage(1, 10);
 //        System.out.println(l);
 //    }
+    public static void main(String[] args) {
+        FoodDraftDAO dao = new FoodDraftDAO();
+        for (FoodDraft object : dao.findFoodDraftBySearchFilter("", "","DESC", 1, 10)) {
+            System.out.println(object);
+        }
+    }
 }
