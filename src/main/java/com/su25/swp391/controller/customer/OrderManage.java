@@ -352,7 +352,7 @@ public class OrderManage extends HttpServlet {
         }
     }
 
-    public BigDecimal calculateSubtotal(List<OrderItem> orderDetails, Map<Integer, Food> foodMap) {
+    public BigDecimal calculateSubtotal(List<OrderItem> orderDetails, Map<Integer, Food> foodMap) { //tính tiền order
         BigDecimal subtotal = BigDecimal.ZERO;
 
         for (OrderItem od : orderDetails) {
@@ -367,7 +367,7 @@ public class OrderManage extends HttpServlet {
         return subtotal;
     }
 
-    public double calculateOriginalTotalPrice(Combo combo, OrderCombo orderCombo) {
+    public double calculateOriginalTotalPrice(Combo combo, OrderCombo orderCombo) { // tính tiền combo
         if (combo == null || orderCombo == null) {
             return 0.0;
         }
