@@ -49,7 +49,6 @@ public class ManageAccount extends HttpServlet {
             case "add":
                 showAddForm(request, response);
                 break;
-
             case "viewDetail":
                 viewDetail(request, response);
                 break;
@@ -101,7 +100,6 @@ public class ManageAccount extends HttpServlet {
             case "add":
                 addAccount(request, response);
                 break;
-
             default:
                 listAccount(request, response);
                 break;

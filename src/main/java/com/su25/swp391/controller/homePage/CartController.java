@@ -735,7 +735,6 @@ public class CartController extends HttpServlet {
                         .discount_amount(discountAmount)
                         .build();
                 couponUsageDao.insert(couponUsage);
-
             }
             //Sau do chuyen sang trang myOrder
             response.sendRedirect("orderlist");
@@ -912,7 +911,6 @@ public class CartController extends HttpServlet {
             }
             //Chuyen ve trang myOrder
             response.sendRedirect("orderlist");
-
         } else {
             //Lấy ra các OrderItem thông qua orderId
             List<OrderItem> listOrderItem = orderItemDao.findAllOrderItemByOrderID(orderId);
