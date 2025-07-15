@@ -25,6 +25,10 @@ import java.util.Map;
  */
 public class ComboDAO extends DBContext implements I_DAO<Combo> {
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<Combo> findAll() {
         List<Combo> combos = new ArrayList<>();
@@ -46,6 +50,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
     }
 
     //lay tông sô combo
+
+    /**
+     *
+     * @return
+     */
     public int getTotalComboCount() {
         String sql = "SELECT COUNT(*) FROM Combo";
         try {
@@ -63,6 +72,12 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         return 0;
     }
 
+    /**
+     *
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public List<Combo> findAllWithPagination(int page, int pageSize) {
         List<Combo> combo = new ArrayList<>();
         String sql = "SELECT * FROM Combo ORDER BY comboId LIMIT ?, ?";
@@ -87,6 +102,10 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         return combo;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Map<Integer, Combo> findAllMap() {
         Map<Integer, Combo> comboMap = new HashMap<>();
@@ -138,8 +157,15 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         }
     }
 
+    /**
+     *
+     */
     public class ComboDAOTest {
 
+        /**
+         *
+         * @param args
+         */
         public static void main(String[] args) {
             ComboDAO dao = new ComboDAO();
 
@@ -161,6 +187,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         }
     }
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     @Override
     public boolean delete(Combo t) {
         String sql = "DELETE From Combo WHERE comboId = ?";
@@ -178,6 +209,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         }
     }
 
+    /**
+     *
+     * @param t
+     * @return
+     */
     @Override
     public int insert(Combo t) {
         String sql = "INSERT INTO Combo (comboName, description, originalPrice, discountPrice, status) VALUES (?, ?, ?, ?, ?)";
@@ -211,6 +247,12 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         }
     }
 
+    /**
+     *
+     * @param resultSet
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Combo getFromResultSet(ResultSet resultSet) throws SQLException {
         Combo combo = new Combo();
@@ -223,6 +265,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         return combo;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @Override
     public Combo findById(Integer id) {
         String sql = "Select *from Combo Where ComboId = ? ";
@@ -243,6 +290,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
     }
     //get food detai trong combo 
 
+    /**
+     *
+     * @param comboId
+     * @return
+     */
     public List<ComboFoodDetails> getComboFoodDetails(int comboId) {
         List<ComboFoodDetails> foodDetails = new ArrayList<>();
         String sql = "SELECT \n"
@@ -305,6 +357,11 @@ public class ComboDAO extends DBContext implements I_DAO<Combo> {
         }
     }
 
+    /**
+     *
+     * @param comboId
+     * @return
+     */
     public boolean deactivateAccount(int comboId) {
         String sql = "UPDATE Combo SET status = 'inactive' WHERE comboId=?";
         try {

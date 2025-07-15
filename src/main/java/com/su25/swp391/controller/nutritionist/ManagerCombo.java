@@ -139,7 +139,7 @@ public class ManagerCombo extends HttpServlet {
                 foodJson.append(",");
             }
         }
-        foodJson.append("]");
+        foodJson.append("}");
         request.setAttribute("foodJson", foodJson.toString());
         request.setAttribute("foods", foods);
         request.getRequestDispatcher("/view/nutritionist/combo/addCombo.jsp").forward(request, response);
@@ -148,14 +148,12 @@ public class ManagerCombo extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             String comboIdStr = request.getParameter("comboId");
-            System.out.println(">> comboIdStr = " + comboIdStr);
 
             if (comboIdStr != null && !comboIdStr.isEmpty()) {
                 int comboId = Integer.parseInt(comboIdStr);
-                System.out.println(">> Parsed comboId = " + comboId);
                 ComboDAO comboDao = new ComboDAO();
                 Combo combo = comboDao.findById(comboId);
-                System.out.println(">> combo = " + combo);
+                
 
                 if (combo != null) {
                     ComboFoodDAO comboFoodDao = new ComboFoodDAO();
@@ -322,7 +320,7 @@ public class ManagerCombo extends HttpServlet {
             double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
             //lay id food
             String foodIdStr = request.getParameter("foodId");
-            //lay so luong food tư database
+            //lay so luong food 
             String quantitiesStr = request.getParameter("quantities");
             String[] foodIds = (foodIdStr != null && !foodIdStr.isEmpty()) ? foodIdStr.split(",") : null;
             String[] quantities = (quantitiesStr != null && !quantitiesStr.isEmpty()) ? quantitiesStr.split(",") : null;
@@ -377,7 +375,7 @@ public class ManagerCombo extends HttpServlet {
                 request.getSession().setAttribute("toastType", "error");
             }
         } catch (Exception e) {
-            System.out.println("❌ Lỗi khi tạo combo:");
+            System.out.println(" Lỗi khi tạo combo:");
             e.printStackTrace();
             request.getSession().setAttribute("toastMessage", "Error: " + e.getMessage());
             request.getSession().setAttribute("toastType", "error");

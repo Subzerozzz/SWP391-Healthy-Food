@@ -165,7 +165,7 @@
                                                                                                                 <option value="shipper" ${role == 'shipper' ? 'selected' : ''}>Shipper</option>
                                                                                                                 <option value="nutri" ${role == 'nutri' ? 'selected' : ''}>Nutritionist</option>
                                                                                                                 <option value="saler" ${role == 'saler' ? 'selected' : ''}>Saler</option>
-                                                                                                                <option value="customer" ${role == 'customer' ? 'selected' : ''}>Customer</option>
+                                                                                                                
                                                                                                             </select>
                                                                                                         </fieldset>
 

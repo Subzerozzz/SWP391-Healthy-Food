@@ -137,12 +137,12 @@ public boolean delete(FoodCategory t) {
         connection = getConnection();
         connection.setAutoCommit(false); // Bắt đầu transaction
 
-        // 1. Gỡ liên kết giữa Food và Category
+        //  Gỡ liên kết giữa Food và Category
         PreparedStatement stmtUnlink = connection.prepareStatement(unlinkFoodSql);
         stmtUnlink.setInt(1, t.getId());
         stmtUnlink.executeUpdate();
 
-        // 2. Xóa category
+        //  Xóa category
         PreparedStatement stmtDelete = connection.prepareStatement(deleteCategorySql);
         stmtDelete.setInt(1, t.getId());
         int rows = stmtDelete.executeUpdate();
@@ -150,11 +150,11 @@ public boolean delete(FoodCategory t) {
         connection.commit(); // Hoàn tất nếu không có lỗi
         return rows > 0;
     } catch (Exception e) {
-        System.out.println("❌ Lỗi khi xóa category: " + e.getMessage());
+        System.out.println(" Lỗi khi xóa category: " + e.getMessage());
         try {
             if (connection != null) connection.rollback();
         } catch (Exception ex) {
-            System.out.println("❌ Rollback lỗi: " + ex.getMessage());
+            System.out.println(" lỗi: " + ex.getMessage());
         }
     } finally {
         closeResources();
@@ -162,26 +162,6 @@ public boolean delete(FoodCategory t) {
     return false;
 }
 
-public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-    FoodCategoryDAO dao = new FoodCategoryDAO();
-
-    System.out.print("Nhập ID của FoodCategory muốn xóa: ");
-    int id = scanner.nextInt();
-
-    FoodCategory category = new FoodCategory();
-    category.setId(id);
-
-    boolean result = dao.delete(category);
-
-    if (result) {
-        System.out.println("✅ Đã xóa category và gỡ liên kết với món ăn.");
-    } else {
-        System.out.println("❌ Xóa thất bại.");
-    }
-
-    scanner.close();
-}
     @Override
     public int insert(FoodCategory t) {
         String sql = "INSERT INTO FoodCategory "
