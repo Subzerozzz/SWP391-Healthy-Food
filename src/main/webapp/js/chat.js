@@ -1,63 +1,115 @@
-let username;
-// WebSocket will be stored in window.ws for global access
 
-// Debug: Confirm that sendMessage function is being defined
-console.log('chat.js loaded, sendMessage should already be defined:', typeof sendMessage);
+let ws;
+let chatBox;
+let messageInput;
+let sendBtn;
+let currentUser;
+let receiver;
+let isUserChat = false;
 
-window.onload = function () {
-    console.log('window.onload executed');
-    
-    // Get username from JSP variables (global scope)
-    username = currentUser;
-    
-    // Check receiver variable
-    if (typeof receiver === 'undefined' || !receiver) {
-        receiver = "admin";
-    }
+function init(options) {
+    chatBox = document.getElementById(options.chatBoxId);
+    messageInput = document.getElementById(options.messageInputId);
+    sendBtn = document.getElementById(options.sendBtnId);
+    currentUser = options.currentUser;
+    receiver = options.receiver;
+    isUserChat = options.isUserChat;
 
-    if (!username) {
-        alert("Lỗi: Không thể lấy thông tin người dùng. Vui lòng đăng nhập lại.");
-        window.location.href = "/login";
-        return;
-    }
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${wsProtocol}//${window.location.host}${options.contextPath}/chat?username=${encodeURIComponent(currentUser)}`;
 
-    console.log("Initializing chat for user:", username, "to receiver:", receiver);
+    ws = new WebSocket(wsUrl);
 
-    // Initialize WebSocket connection and store in window.ws for global access
-    window.ws = new WebSocket("ws://" + window.location.host + "/SWP391-Healthy-Food/chat?username=" + encodeURIComponent(username));
-
-    window.ws.onopen = function() {
-        console.log("WebSocket connection opened");
+    ws.onopen = function() {
+        console.log("WebSocket connection opened.");
     };
 
-    window.ws.onmessage = function (event) {
-        const chatBox = document.getElementById("chatBox");
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message";
-        
-        // Check if message is from current user
-        if (event.data.startsWith("You: ")) {
-            messageDiv.className += " my-message";
-            messageDiv.innerHTML = "<strong>Bạn:</strong> " + event.data.substring(5);
-        } else {
-            messageDiv.className += " other-message";
-            messageDiv.innerHTML = "<strong>Admin:</strong> " + event.data.substring(event.data.indexOf(": ") + 2);
-        }
-        
-        chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+    ws.onmessage = function(event) {
+        displayMessage(event.data);
     };
 
-    window.ws.onclose = function() {
-        console.log("WebSocket connection closed");
+    ws.onclose = function() {
+        console.log("WebSocket connection closed.");
     };
 
-    window.ws.onerror = function(error) {
+    ws.onerror = function(error) {
         console.log("WebSocket error:", error);
     };
-    
-    // Debug: Check WebSocket and sendMessage status
-    console.log('WebSocket initialized:', typeof window.ws);
-    console.log('sendMessage function available:', typeof sendMessage);
-    console.log('window.sendMessage available:', typeof window.sendMessage);
-};
+
+    sendBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+}
+
+function sendMessage() {
+    const msg = messageInput.value.trim();
+    if (msg) {
+        const destination = isUserChat ? 'admin' : receiver;
+        if (!destination) {
+            console.error("No receiver selected.");
+            return;
+        }
+        ws.send(`${destination}|${msg}`);
+        messageInput.value = '';
+    }
+}
+
+function displayMessage(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message';
+
+    let sender = 'Unknown';
+    let content = message;
+    let messageClass = 'other-message'; // Default for incoming messages
+
+    if (message.startsWith("You: ")) {
+        sender = 'You';
+        content = message.substring(5);
+        messageClass = 'my-message';
+    } else {
+        const parts = message.split(': ');
+        if (parts.length > 1) {
+            sender = parts[0];
+            content = parts.slice(1).join(': ');
+        }
+    }
+
+    if (sender === currentUser) {
+        messageClass = 'my-message';
+        sender = 'Bạn';
+    } else if (currentUser === 'admin' && sender !== 'admin') {
+        messageClass = 'user-message';
+    } else if (currentUser !== 'admin' && sender === 'admin') {
+        messageClass = 'other-message';
+        sender = 'Admin';
+    }
+
+    messageDiv.classList.add(messageClass);
+
+    // Create message bubble structure
+    const messageBubble = document.createElement('div');
+    messageBubble.className = 'message-bubble';
+
+    const senderDiv = document.createElement('div');
+    senderDiv.className = 'message-sender';
+    senderDiv.textContent = sender;
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = content;
+
+    const timeDiv = document.createElement('div');
+    timeDiv.className = 'message-time';
+    timeDiv.textContent = 'Vừa gửi';
+
+    messageBubble.appendChild(senderDiv);
+    messageBubble.appendChild(contentDiv);
+    messageBubble.appendChild(timeDiv);
+    messageDiv.appendChild(messageBubble);
+
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}

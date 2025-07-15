@@ -7,45 +7,126 @@
 </c:if>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Admin Chat System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Chat System - GreenBite</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fonts/flaticon.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/boxicons.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
+    
     <style>
+        .admin-chat-page {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
         .admin-chat-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
             display: flex;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            height: 80vh;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .admin-header h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
         }
         
         .user-list {
-            width: 300px;
-            border-right: 1px solid #ddd;
+            width: 350px;
             background-color: #f8f9fa;
-            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
         }
         
-        .user-list h3 {
-            margin-top: 0;
+        .user-list-header {
+            padding: 20px;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .user-list-header h4 {
+            margin: 0;
             color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .user-list-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
         }
         
         .user-item {
-            padding: 10px;
+            padding: 15px;
             margin: 5px 0;
             background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
         }
         
         .user-item:hover {
-            background-color: #e9ecef;
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateY(-2px);
         }
         
         .user-item.selected {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            border-color: #667eea;
+        }
+        
+        .user-item i {
+            margin-right: 10px;
+            font-size: 16px;
         }
         
         .chat-area {
@@ -55,76 +136,121 @@
         }
         
         .chat-header {
-            background-color: #007bff;
-            color: white;
-            padding: 15px;
+            background: #fff;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
             text-align: center;
+        }
+        
+        .chat-header h4 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
         }
         
         .chat-messages {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #f9f9f9;
+            background: #fafafa;
         }
         
         .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 15px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.admin-message {
+            justify-content: flex-end;
+        }
+        
+        .message-bubble {
             max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            position: relative;
+            word-wrap: break-word;
         }
         
-        .admin-message {
-            background-color: #007bff;
+        .admin-message .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            text-align: right;
-            margin-left: auto;
+            border-bottom-right-radius: 5px;
         }
         
-        .user-message {
-            background-color: #e9ecef;
+        .user-message .message-bubble {
+            background: white;
             color: #333;
-            text-align: left;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
         }
         
         .message-sender {
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 5px;
+            font-size: 12px;
+            opacity: 0.8;
         }
         
         .message-time {
-            font-size: 0.8em;
+            font-size: 11px;
             opacity: 0.7;
             margin-top: 5px;
         }
         
+        .message-input-container {
+            background: white;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
         .message-input {
             display: flex;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-            background-color: white;
+            gap: 15px;
+            align-items: center;
         }
         
         .message-input input {
             flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-right: 10px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .message-input input:focus {
+            border-color: #667eea;
+        }
+        
+        .message-input input:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
         }
         
         .message-input button {
-            padding: 10px 20px;
-            background-color: #28a745;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 80px;
         }
         
-        .message-input button:hover {
-            background-color: #218838;
+        .message-input button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .message-input button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .no-user-selected {
@@ -134,202 +260,183 @@
             height: 100%;
             color: #666;
             font-size: 18px;
+            flex-direction: column;
+        }
+        
+        .no-user-selected i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
         
         .error-message {
-            color: red;
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
             text-align: center;
-            padding: 20px;
+            border-left: 4px solid #c62828;
+            margin: 20px;
+        }
+        
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar,
+        .user-list-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track,
+        .user-list-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb,
+        .user-list-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb:hover,
+        .user-list-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-chat-container {
+                margin: 10px;
+                height: 90vh;
+                flex-direction: column;
+            }
+            
+            .user-list {
+                width: 100%;
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .user-list-content {
+                display: flex;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 10px;
+            }
+            
+            .user-item {
+                min-width: 150px;
+                margin-right: 10px;
+            }
         }
     </style>
-    
-    <!-- JavaScript variables and functions -->
-    <script>
-        // Global variables
-        var currentUser = '${requestScope.currentUser}';
-        var selectedUser = '${not empty requestScope.selectedUser ? requestScope.selectedUser : ""}';
-        var ws;
-        
-        console.log('Admin chat initialized with user:', currentUser, 'chatting with:', selectedUser);
-        
-        // Define sendAdminMessage function globally
-        function sendAdminMessage() {
-            console.log('sendAdminMessage called');
-            
-            const messageInput = document.getElementById("messageInput");
-            const message = messageInput.value.trim();
-            
-            console.log('Attempting to send message:', message, 'to:', selectedUser);
-            
-            if (message && selectedUser && ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(selectedUser + "|" + message);
-                messageInput.value = "";
-                console.log('Message sent via WebSocket');
-            } else {
-                console.error('Cannot send message. WebSocket state:', ws ? ws.readyState : 'undefined');
-                alert('Kết nối chat chưa sẵn sàng. Vui lòng đợi một chút và thử lại.');
-            }
-        }
-        
-        // Initialize WebSocket connection
-        function initWebSocket() {
-            if (selectedUser && selectedUser !== "" && currentUser === "admin") {
-                console.log('Initializing admin WebSocket for user:', selectedUser);
-                
-                ws = new WebSocket("ws://" + window.location.host + "/SWP391-Healthy-Food/chat?username=" + encodeURIComponent(currentUser));
-                
-                ws.onopen = function() {
-                    console.log("Admin WebSocket connection opened for chatting with:", selectedUser);
-                };
-                
-                ws.onmessage = function(event) {
-                    console.log("Admin received WebSocket message:", event.data);
-                    
-                    const chatMessages = document.getElementById("chatMessages");
-                    const messageDiv = document.createElement("div");
-                    messageDiv.className = "message";
-                    
-                    if (event.data.startsWith("You: ")) {
-                        // Message sent by admin (confirmation)
-                        messageDiv.className += " admin-message";
-                        messageDiv.innerHTML = 
-                            "<div class='message-sender'>Admin (Bạn)</div>" +
-                            "<div>" + event.data.substring(5) + "</div>" +
-                            "<div class='message-time'>Vừa gửi</div>";
-                    } else {
-                        // Message from user
-                        const senderEnd = event.data.indexOf(": ");
-                        if (senderEnd > 0) {
-                            const sender = event.data.substring(0, senderEnd);
-                            const messageContent = event.data.substring(senderEnd + 2);
-                            messageDiv.className += " user-message";
-                            messageDiv.innerHTML = 
-                                "<div class='message-sender'>" + sender + "</div>" +
-                                "<div>" + messageContent + "</div>" +
-                                "<div class='message-time'>Vừa nhận</div>";
-                        }
-                    }
-                    
-                    chatMessages.appendChild(messageDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                };
-                
-                ws.onclose = function() {
-                    console.log("Admin WebSocket connection closed");
-                };
-                
-                ws.onerror = function(error) {
-                    console.log("Admin WebSocket error:", error);
-                };
-            }
-        }
-        
-        function selectUser(username) {
-            console.log('Selecting user:', username);
-            window.location.href = window.location.pathname + "?user=" + encodeURIComponent(username);
-        }
-        
-        // Make functions globally available
-        window.sendAdminMessage = sendAdminMessage;
-        window.initWebSocket = initWebSocket;
-        window.selectUser = selectUser;
-    </script>
 </head>
 <body>
-    <div class="admin-chat-container">
-        <!-- User List -->
-        <div class="user-list">
-            <h3>Danh sách người dùng</h3>
-            <c:choose>
-                <c:when test="${not empty requestScope.chatUsers}">
-                    <c:forEach var="user" items="${requestScope.chatUsers}">
-                        <div class="user-item ${requestScope.selectedUser eq user ? 'selected' : ''}" 
-                             onclick="selectUser('${user}')">
-                            <c:out value="${user}" escapeXml="true"/>
-                        </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div style="text-align: center; color: #666; margin-top: 20px;">
-                        Chưa có cuộc trò chuyện nào
-                    </div>
-                </c:otherwise>
-            </c:choose>
+    <div class="admin-chat-page">
+        <div class="admin-header">
+            <a href="${pageContext.request.contextPath}/admin/dashboard" class="back-btn">
+                <i class='bx bx-arrow-back'></i>
+            </a>
+            <h3>Admin Chat System</h3>
         </div>
         
-        <!-- Chat Area -->
-        <div class="chat-area">
-            <c:choose>
-                <c:when test="${not empty requestScope.selectedUser}">
-                    <div class="chat-header">
-                        <h3>Chat với <c:out value="${requestScope.selectedUser}" escapeXml="true"/></h3>
-                    </div>
-                    
-                    <c:if test="${not empty requestScope.error}">
-                        <div class="error-message">
-                            <c:out value="${requestScope.error}" escapeXml="true"/>
-                        </div>
-                    </c:if>
-                    
-                    <div id="chatMessages" class="chat-messages">
-                        <c:if test="${not empty requestScope.messages}">
-                            <c:forEach var="message" items="${requestScope.messages}">
-                                <div class="message ${message.sender eq 'admin' ? 'admin-message' : 'user-message'}">
-                                    <div class="message-sender">
-                                        <c:out value="${message.sender eq 'admin' ? 'Admin (Bạn)' : message.sender}" escapeXml="true"/>
-                                    </div>
-                                    <div><c:out value="${message.message}" escapeXml="true"/></div>
-                                    <div class="message-time">${message.timestamp}</div>
+        <div class="admin-chat-container">
+            <!-- User List -->
+            <div class="user-list">
+                <div class="user-list-header">
+                    <h4><i class='bx bx-users'></i> Danh sách người dùng</h4>
+                </div>
+                <div class="user-list-content">
+                    <c:choose>
+                        <c:when test="${not empty requestScope.chatUsers}">
+                            <c:forEach var="user" items="${requestScope.chatUsers}">
+                                <div class="user-item ${requestScope.selectedUser eq user ? 'selected' : ''}" 
+                                     onclick="selectUser('${user}')">
+                                    <i class='bx bx-user'></i>
+                                    <c:out value="${user}" escapeXml="true"/>
                                 </div>
                             </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div style="text-align: center; padding: 20px; color: #666;">
+                                <i class='bx bx-chat' style="font-size: 32px; margin-bottom: 10px;"></i>
+                                <p>Chưa có cuộc trò chuyện nào</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+            
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <c:choose>
+                    <c:when test="${not empty requestScope.selectedUser}">
+                        <div class="chat-header">
+                            <h4><i class='bx bx-message-dots'></i> Chat với ${requestScope.selectedUser}</h4>
+                        </div>
+                        
+                        <c:if test="${not empty requestScope.error}">
+                            <div class="error-message">
+                                <i class='bx bx-error-circle'></i> ${requestScope.error}
+                            </div>
                         </c:if>
-                    </div>
-                    
-                    <div class="message-input">
-                        <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
-                        <button type="button" id="sendBtn">Gửi</button>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="no-user-selected">
-                        Chọn một người dùng để bắt đầu chat
-                    </div>
-                </c:otherwise>
-            </c:choose>
+                        
+                        <div id="chatMessages" class="chat-messages">
+                            <c:if test="${not empty requestScope.messages}">
+                                <c:forEach var="message" items="${requestScope.messages}">
+                                    <div class="message ${message.sender eq 'admin' ? 'admin-message' : 'user-message'}">
+                                        <div class="message-bubble">
+                                            <div class="message-sender">
+                                                ${message.sender eq 'admin' ? 'Admin (Bạn)' : message.sender}
+                                            </div>
+                                            <div class="message-content">
+                                                <c:out value="${message.message}" escapeXml="true"/>
+                                            </div>
+                                            <div class="message-time">${message.timestamp}</div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </div>
+                        
+                        <div class="message-input-container">
+                            <div class="message-input">
+                                <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." 
+                                       <c:if test="${empty requestScope.selectedUser}">disabled</c:if> />
+                                <button id="sendBtn" type="button" <c:if test="${empty requestScope.selectedUser}">disabled</c:if>>
+                                    <i class='bx bx-send'></i> Gửi
+                                </button>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="no-user-selected">
+                            <i class='bx bx-chat'></i>
+                            <p>Chọn một người dùng để bắt đầu chat</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
 
-    <!-- Setup event handlers after DOM is loaded -->
+    <script src="${pageContext.request.contextPath}/js/chat.js"></script>
     <script>
+        function selectUser(username) {
+            window.location.href = window.location.pathname + "?user=" + encodeURIComponent(username);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, setting up event handlers');
-            
-            const messageInput = document.getElementById("messageInput");
-            const sendBtn = document.getElementById("sendBtn");
-            
-            if (sendBtn) {
-                sendBtn.addEventListener('click', function() {
-                    console.log('Send button clicked');
-                    sendAdminMessage();
+            const selectedUser = '${requestScope.selectedUser}';
+            if (selectedUser) {
+                init({
+                    chatBoxId: 'chatMessages',
+                    messageInputId: 'messageInput',
+                    sendBtnId: 'sendBtn',
+                    currentUser: 'admin',
+                    receiver: selectedUser,
+                    isUserChat: false,
+                    contextPath: '${pageContext.request.contextPath}'
                 });
             }
-            
-            if (messageInput) {
-                messageInput.addEventListener("keypress", function(event) {
-                    if (event.key === "Enter") {
-                        console.log('Enter key pressed');
-                        sendAdminMessage();
-                    }
-                });
-            }
-            
-            // Initialize WebSocket if user is selected
-            if (selectedUser && selectedUser !== "") {
-                console.log('Initializing WebSocket for selected user:', selectedUser);
-                initWebSocket();
-            }
-            
-            console.log('Event handlers setup complete');
         });
     </script>
 </body>
