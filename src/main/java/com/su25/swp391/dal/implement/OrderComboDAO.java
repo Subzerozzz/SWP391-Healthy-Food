@@ -48,7 +48,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public boolean update(OrderCombo orderCombo) {
         String sql = "UPDATE OrderCombo SET order_id = ?,  comboId = ?, comboName = ?, "
-                + "discountPrice = ?, quantity = ?, totalPrice = ? WHERE orderComboId = ?";
+                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ? WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
@@ -58,7 +58,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(3, orderCombo.getDiscountPrice());
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
-            statement.setInt(6, orderCombo.getOrderComboId());
+            statement.setInt(6,orderCombo.getUser_id());
+            statement.setInt(7, orderCombo.getOrderComboId());
 
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
@@ -90,7 +91,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public int insert(OrderCombo orderCombo) {
         String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status) VALUES ( ?, ?, ?, ?, ?,?)";
+                + "quantity, totalPrice,payment_status,user_id) VALUES ( ?, ?, ?, ?, ?,?,?)";
 
         try {
             connection = getConnection();
@@ -102,6 +103,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6, orderCombo.getPayment_status());
+            statement.setInt(7, orderCombo.getUser_id());
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -133,6 +135,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setQuantity(rs.getInt("quantity"));
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
         orderCombo.setPayment_status(rs.getInt("payment_status"));
+        orderCombo.setUser_id(rs.getInt("user_id"));
         return orderCombo;
     }
 
@@ -170,4 +173,72 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         }
     }
     
+    // Mạnh
+    public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
+    List<OrderCombo> list = new ArrayList<>();
+    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+
+    String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
+    if (filterByStatus) {
+        sql += " AND payment_status = ?";
+    }
+    sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
+
+    try {
+        int offset = (page - 1) * pageSize;
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, userId);
+        int paramIndex = 2;
+
+        if (filterByStatus) {
+            statement.setInt(paramIndex++, Integer.parseInt(status));
+        }
+
+        statement.setInt(paramIndex++, pageSize);
+        statement.setInt(paramIndex, offset);
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            list.add(getFromResultSet(resultSet));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return list;
+}
+    // Mạnh
+    public int getTotalOrderComboCountByUserIdAndStatus(int userId, String status) {
+    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+    String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
+    if (filterByStatus) {
+        sql += " AND payment_status = ?";
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+
+        statement.setInt(1, userId);
+        if (filterByStatus) {
+            statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+        }
+
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return 0;
+}
 }

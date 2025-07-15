@@ -436,7 +436,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
     }
 
     public boolean isEmailExists(String email) {
-        String sql = "SELECT COUNT (*) FROM Account WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM Account WHERE email = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -453,6 +453,20 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
             closeResources();
         }
         return false;
+    }
+      public static void main(String[] args) {
+        AccountDAO dao = new AccountDAO();
+
+        // Nhập email muốn test
+        String testEmail = "checkcart2@infobuzzsite.com";
+
+        boolean exists = dao.isEmailExists(testEmail);
+
+        if (exists) {
+            System.out.println("✅ Email đã tồn tại trong hệ thống.");
+        } else {
+            System.out.println("❌ Email chưa tồn tại.");
+        }
     }
     // Phương thức phân trang với bộ lọc
 
@@ -646,25 +660,5 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
     return 0;
 }
-public static void main(String[] args) {
-        // Tạo đối tượng DAO
-        AccountDAO dao = new AccountDAO();
 
-        // Tạo đối tượng Account với email cần tìm
-        Account acc = new Account();
-        acc.setEmail("test@example.com"); // <-- thay bằng email tồn tại trong DB
-
-        // Gọi hàm findByEmail
-        Account found = dao.findByEmail(acc);
-
-        // In kết quả
-        if (found != null) {
-            System.out.println("Tìm thấy tài khoản:");
-            System.out.println("ID: " + found.getId());
-            System.out.println("Username: " + found.getUser_name());
-            System.out.println("Role: " + found.getRole());
-        } else {
-            System.out.println("Không tìm thấy tài khoản với email này.");
-        }
-    }
 }

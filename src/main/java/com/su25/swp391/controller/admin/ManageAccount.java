@@ -49,9 +49,7 @@ public class ManageAccount extends HttpServlet {
             case "add":
                 showAddForm(request, response);
                 break;
-            case "edit":
-                showEditForm(request, response);
-                break;
+
             case "viewDetail":
                 viewDetail(request, response);
                 break;
@@ -59,25 +57,23 @@ public class ManageAccount extends HttpServlet {
             case "delete":
                 deleteAccount(request, response);
                 break;
-            case "deactive":
-            {
+            case "deactive": {
                 try {
                     deactivateAccount(request, response);
                 } catch (MessagingException ex) {
                     Logger.getLogger(ManageAccount.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-                break;
+            break;
 
-            case "activate":
-            {
+            case "activate": {
                 try {
                     activateAccount(request, response);
                 } catch (MessagingException ex) {
                     Logger.getLogger(ManageAccount.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-                break;
+            break;
 
             case "list":
                 listAccount(request, response);
@@ -105,9 +101,7 @@ public class ManageAccount extends HttpServlet {
             case "add":
                 addAccount(request, response);
                 break;
-            case "edit":
-                updateAccount(request, response);
-                break;
+
             default:
                 listAccount(request, response);
                 break;
@@ -296,8 +290,8 @@ public class ManageAccount extends HttpServlet {
             String gender = request.getParameter("gender");
             //khởi tạo map chung để chứa tất cả các lỗi
             Map<String, String> errors = new HashMap<>();
-            errors.putAll(validateAccountData(full_name, email, password, mobile, 0));
-            //
+            errors.putAll(validateAccountData(full_name, email, password, mobile));
+
             if (user_name != null && email != null && user_name.equalsIgnoreCase(email)) {
                 errors.put("user_name", "Tên đăng nhập không được trùng với email");
             }
@@ -337,7 +331,6 @@ public class ManageAccount extends HttpServlet {
                 request.setAttribute("hasValidateErr", true);
                 // Gán lại các giá trị đã nhập vào request để hiện lại trên form
                 request.setAttribute("full_name", full_name);
-                request.setAttribute("user_name", user_name);
                 request.setAttribute("emails", email);
                 request.setAttribute("address", address);
                 request.setAttribute("role", role);
@@ -388,109 +381,7 @@ public class ManageAccount extends HttpServlet {
         }
     }
 
-    private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            int accountId = Integer.parseInt(request.getParameter("id"));
-            String full_name = request.getParameter("full_name");
-            String user_name = request.getParameter("user_name");
-            String email = request.getParameter("email");
-            String role = request.getParameter("role");
-            String address = request.getParameter("address");
-            String status = request.getParameter("status");
-            String mobile = request.getParameter("mobile");
-            String gender = request.getParameter("gender");
-            //lay account tu database 
-            AccountDAO accountDao = new AccountDAO();
-            Account account = accountDao.findById(accountId);
-            //validate gia trị nhập vào
-            Map<String, String> errors = new HashMap<>();
-            //validate full_name
-            if (full_name == null || full_name.trim().isEmpty()) {
-                errors.put("full_name", "Username is required");
-            } else if (!full_name.equals(full_name.trim())) {
-                errors.put("full_name", "Username must not start or end with a space");
-            } else if (full_name.length() < 3 || full_name.length() > 50) {
-                errors.put("full_name", "Username must be between 3 and 50 characters");
-            } else if (!Pattern.matches("^[a-zA-Z0-9_ ]+$", full_name)) {
-                errors.put("full_name", "Username can only contain letters, numbers, underscores, and spaces");
-            }
-            //validate dia chi
-            if (address == null || address.trim().isEmpty()) {
-                errors.put("address", "Address is required");
-            } else if (!address.equals(address.trim())) {
-                errors.put("address", "Address must not start or end with a space");
-            } else if (address.length() < 3 || address.length() > 100) {
-                errors.put("address", "Address must be between 3 and 100 characters");
-            } else if (!Pattern.matches("^[\\p{L}\\p{N}_ ,.-]+$", address)) {
-                errors.put("address", "Address can only contain letters (with accents), numbers, commas, dots, hyphens, and spaces");
-            }
-            //validate mobile
-            if (mobile == null || mobile.trim().isEmpty()) {
-                errors.put("mobile", "Số điện thoại không được để trống");
-            } else {
-                // Regex số điện thoại Việt Nam: 10 hoặc 11 số, bắt đầu bằng 0 hoặc +84
-                String phoneRegex = "^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-9]|9[0-9])\\d{7}$";
-                if (!mobile.matches(phoneRegex)) {
-                    errors.put("mobile", "Số điện thoại không hợp lệ (ví dụ: 0912345678 hoặc +84912345678)");
-                }
-            }
-
-            if (!errors.isEmpty()) {
-                Map<String, String> formData = new HashMap<>();
-                formData.put("full_name", full_name);
-                formData.put("user_name", user_name);
-                formData.put("address", address);
-                formData.put("email", email);
-                formData.put("role", role);
-                formData.put("mobile", mobile);
-                formData.put("gender", gender);
-                formData.put("status", status);
-                System.out.println("Form data: " + formData);
-                request.setAttribute("errors", errors);
-                request.setAttribute("formData", formData);
-                request.setAttribute("account", account); // dùng nếu cần giá trị gốc
-
-                request.getRequestDispatcher("/view/admin/edit_account.jsp").forward(request, response);
-                return;
-            }
-            //cap nhap nhung thong tin co the thay doi
-            account.setFull_name(full_name);
-            account.setEmail(email);
-            account.setUser_name(user_name);
-            account.setAddress(address);
-            account.setRole(role);
-            account.setStatus(status);
-            account.setMobile(mobile);
-            account.setGender(gender);
-            //thuc hien update
-            boolean isSuccess = accountDao.updateAdmin(account);
-            //xu ly ket qua 
-            if (isSuccess) {
-                //hiển thị trên toát 
-                request.getSession().setAttribute("isUpdate", true); 
-                response.sendRedirect(request.getContextPath() + "/manage-account?action=list");
-                return;
-            } else {
-                setToastMessage(request, "totalMess", "Fail to update Account");
-                setToastMessage(request, "totalType", "Err");
-                request.setAttribute("error", "Update failed");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
-                dispatcher.forward(request, response);
-                return;
-            }
-        } catch (Exception e) {
-            request.getSession().setAttribute("totalMess", "Fail to Update Account");
-            request.getSession().setAttribute("totalType", "Err" + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
-            dispatcher.forward(request, response);
-            e.printStackTrace();
-            return;
-
-        }
-
-    }
-
-    private Map<String, String> validateAccountData(String full_name, String email, String password, String mobile, int id) {
+    private Map<String, String> validateAccountData(String full_name, String email, String password, String mobile) {
         Map<String, String> errors = new HashMap<>();
         AccountDAO accountdao = new AccountDAO();
 
@@ -523,13 +414,11 @@ public class ManageAccount extends HttpServlet {
             }
         }
 
-        // Validate password (only if provided)
-        if ((id == 0 && (password == null || password.isEmpty())) || (password != null && !password.isEmpty())) {
-            if (password == null || password.length() < 8) {
-                errors.put("password", "Password must be at least 8 characters");
-            } else if (!Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", password)) {
-                errors.put("password", "Password must contain at least one uppercase letter, one lowercase letter, and one number");
-            }
+        // Validate password
+        if (password == null || password.length() < 8) {
+            errors.put("password", "Password must be at least 8 characters");
+        } else if (!Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", password)) {
+            errors.put("password", "Password must contain at least one uppercase, one lowercase, and one number");
         }
         //validate mobile
         if (mobile == null || mobile.isEmpty()) {
@@ -550,15 +439,6 @@ public class ManageAccount extends HttpServlet {
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/add_account.jsp");
-        dispatcher.forward(request, response);
-    }
-
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int accountId = Integer.parseInt(request.getParameter("id"));
-        Account account = new AccountDAO().findById(accountId);
-
-        request.setAttribute("account", account);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/admin/edit_account.jsp");
         dispatcher.forward(request, response);
     }
 

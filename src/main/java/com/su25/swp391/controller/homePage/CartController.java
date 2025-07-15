@@ -806,7 +806,7 @@ public class CartController extends HttpServlet {
                     .status("pending")
                     .total(totalPrice)
                     .shipping_address(address)
-                    .payment_method(GlobalConfig.PAYMENT_METHOD_COD)
+                    .payment_method(GlobalConfig.PAYMENT_METHOD_VNPAY)
                     .created_at(created_at)
                     .updated_at(updated_at)
                     .coupon_code(couponCode)

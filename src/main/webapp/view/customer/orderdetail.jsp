@@ -76,7 +76,7 @@
                                                             <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
 
                                                                 </head>
-                                                                <body class="body">More actions
+                                                                <body class="body">
 
                                                                     <!-- #wrapper -->
                                                                     <div id="wrapper">
@@ -156,7 +156,7 @@
                                                                                                                                     <!-- Tên món -->
                                                                                                                                     <div class="name">
                                                                                                                                         <div class="text-tiny mb-1">Food name</div>
-                                                                                                                                        <a href="product-list.html" class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
+                                                                                                                                        <a class="body-title-2">${foodDAO.findById(orderItem.food_id).name}</a>
                                                                                                                                     </div>
 
                                                                                                                                     <!-- Số lượng -->
@@ -300,7 +300,7 @@
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose>
                                                                                                                 </div>
-                                                                                                                <c:if test="${order.payment_method == 'VNPAY' and order.payment_status == 0}">
+                                                                                                                <c:if test="${order.payment_method == 'vnpay' and order.payment_status == 0}">
                                                                                                                     <a class="tf-button style-1 w-full" href="#" style="  margin-top: 20px">Thanh toán ngay</a>
                                                                                                                 </c:if>
                                                                                                                 <c:choose>

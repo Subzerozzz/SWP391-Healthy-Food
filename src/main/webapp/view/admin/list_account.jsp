@@ -172,7 +172,7 @@
                 .list-icon-function .item.edit i {
                     color: #FF3B3B;
                     margin-right: 10px
-                    /* đỏ tươi */
+                        /* đỏ tươi */
                 }
 
                 .wg-pagination {
@@ -570,7 +570,7 @@
                                                                                                                         <option value="shipper" ${param.role=='shipper' ? 'selected' : '' }>Shipper</option>
                                                                                                                         <option value="nutri" ${param.role=='nutri' ? 'selected' : '' }>Nutritionist</option>
                                                                                                                         <option value="saler" ${param.role=='saler' ? 'selected' : '' }>Saler</option>
-                                                                                                                        
+
                                                                                                                     </select>
 
                                                                                                                     <select name="status" class="form-control">
@@ -579,7 +579,7 @@
                                                                                                                         <option value="banned" ${param.status == 'banned' ? 'selected' : ''}>Banned</option>
                                                                                                                     </select>
 
-                                                                                                                    <button type="submit" class="filter-button">Filter</button>
+                                                                                                                    <button type="submit" class="filter-button" style="background: green">Filter</button>
 
                                                                                                             </form>
 
@@ -589,14 +589,15 @@
                                                                                                                     <input type="hidden" name="action" value="search">
                                                                                                                         <button type="submit"><i class="fa fa-search"></i></button>
                                                                                                                         </form>
-                                                                                                                        </div>
-
-                                                                                                                        <!-- Add new -->
-
                                                                                                                         <a style="margin-left: 250px" class="tf-button style-1 w208 add-btn"
                                                                                                                            href="${pageContext.request.contextPath}/manage-account?action=add">
                                                                                                                             <i class="icon-plus"></i>Add new
                                                                                                                         </a>
+                                                                                                                        </div>
+
+                                                                                                                        <!-- Add new -->
+
+
                                                                                                                         </div>
                                                                                                                         </div>
                                                                                                                         <div class="wg-table table-all-user">
@@ -634,52 +635,49 @@
                                                                                                                                     <c:if test="${account.getRole() != 'admin'}">
                                                                                                                                         <li class="user-item gap14">
 
-                                                                                                                                        <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                                            <div class="name">
-                                                                                                                                                <a href="#" class="body-title-2">${account.user_name == null ? 'null' : account.user_name}</a>
-                                                                                                                                                <div class="text-tiny mt-3">${account.full_name == null ? 'null' : account.full_name}</div>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="body-text">${account.address == null ? 'null' : account.address}</div>
-                                                                                                                                            <div class="body-text">${account.email == null ? 'null' : account.email}</div>
-                                                                                                                                            <div class="body-text">${account.mobile == null ? 'null' : account.mobile}</div>
-                                                                                                                                            <div class="body-text">${account.gender == null ? 'null' : account.gender}</div>
-                                                                                                                                            <div class="body-text">${account.role == null ? 'null' : account.role}</div>
-                                                                                                                                            <div class="body-text">
-                                                                                                                                                <c:choose>
-                                                                                                                                                    <c:when test="${account.status == 'active'}">
-                                                                                                                                                        <span class="status-badge active">Active</span>
-                                                                                                                                                    </c:when>
-                                                                                                                                                    <c:when test="${account.status == 'banned'}">
-                                                                                                                                                        <span class="status-badge deactive">Banned</span>
-                                                                                                                                                    </c:when>
-                                                                                                                                                </c:choose>
-
-                                                                                                                                            </div>
-                                                                                                                                            <div class="list-icon-function">
-                                                                                                                                                <div class="item eye">
-                                                                                                                                                    <a
-                                                                                                                                                        href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">
-                                                                                                                                                        <i class="icon-eye"></i>
+                                                                                                                                            <div class="flex items-center justify-between gap20 flex-grow">
+                                                                                                                                                <div class="name">
+                                                                                                                                                    <a href="#" class="body-title-2">${account.user_name == null ? 'null' : account.user_name}</a>
+                                                                                                                                                    <div class="text-tiny mt-3">${account.full_name == null ? 'null' : account.full_name}</div>
                                                                                                                                                 </div>
-
-                                                                                                                                                <div class="item edit" style="margin-right: 10px !important">
-
-                                                                                                                                                    <a href="${pageContext.request.contextPath}/manage-account?action=edit&id=${account.id}"><i
-                                                                                                                                                            class="icon-edit-3"></i></a>
-                                                                                                                                                </div>
-                                                                                                                                                <label class="switch"
-                                                                                                                                                       title="${account.status eq 'active' ? 'Deactivate' : 'Activate'}">
-                                                                                                                                                    <input type="checkbox"
-                                                                                                                                                           onchange="location.href = '${pageContext.request.contextPath}/manage-account?action=${account.status eq 'active' ? 'deactive' : 'activate'}&id=${account.id}'"
-                                                                                                                                                           <c:if test='${account.status eq "active"}'>checked</c:if>>
-                                                                                                                                                               <span class="slider"></span>
-                                                                                                                                                    </label>
+                                                                                                                                                <div class="body-text">${account.address == null ? 'null' : account.address}</div>
+                                                                                                                                                <div class="body-text">${account.email == null ? 'null' : account.email}</div>
+                                                                                                                                                <div class="body-text">${account.mobile == null ? 'null' : account.mobile}</div>
+                                                                                                                                                <div class="body-text">${account.gender == null ? 'null' : account.gender}</div>
+                                                                                                                                                <div class="body-text">${account.role == null ? 'null' : account.role}</div>
+                                                                                                                                                <div class="body-text">
+                                                                                                                                                    <c:choose>
+                                                                                                                                                        <c:when test="${account.status == 'active'}">
+                                                                                                                                                            <span class="status-badge active">Active</span>
+                                                                                                                                                        </c:when>
+                                                                                                                                                        <c:when test="${account.status == 'banned'}">
+                                                                                                                                                            <span class="status-badge deactive">Banned</span>
+                                                                                                                                                        </c:when>
+                                                                                                                                                    </c:choose>
 
                                                                                                                                                 </div>
-                                                                                                                                            </div>
-                                                                                                                                        </li>
+                                                                                                                                                <div class="list-icon-function">
+                                                                                                                                                    <div class="item eye">
+                                                                                                                                                        <a
+                                                                                                                                                            href="${pageContext.request.contextPath}/manage-account?action=viewDetail&id=${account.id}">
+                                                                                                                                                            <i class="icon-eye"></i>
+                                                                                                                                                        </a>
+                                                                                                                                                    </div>
+
+
+                                                                                                                                                    <label class="switch"
+                                                                                                                                                           title="${account.status eq 'active' ? 'Banned' : 'Activate'}">
+                                                                                                                                                        <input type="checkbox"
+                                                                                                                                                               onchange="location.href = '${pageContext.request.contextPath}/manage-account?action=${account.status eq 'active' ? 'deactive' : 'activate'}&id=${account.id}'"
+                                                                                                                                                               <c:if test='${account.status eq "active"}'>checked</c:if>>
+                                                                                                                                                                   <span class="slider"></span>
+                                                                                                                                                        </label>
+
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                            </li>
                                                                                                                                     </c:if>
-                                                                                                                                    
+
                                                                                                                                 </c:forEach>
                                                                                                                             </ul>
                                                                                                                         </div>
@@ -713,7 +711,6 @@
                                                                                                                                                     ${currentPage}
                                                                                                                                                 </a>
                                                                                                                                             </li>
-
                                                                                                                                             <li>
                                                                                                                                                 <a href="?action=${param.action}&role=${param.role}&status=${param.status}&page=${currentPage + 1}&pageSize=${pageSize}">
                                                                                                                                                     ${currentPage + 1}
@@ -759,24 +756,24 @@
                                                                                                                         <!-- /main-content-wrap -->
                                                                                                                         </div>
                                                                                                                         <!-- /main-content-wrap -->
-                                                                                                                        
-                                                                                                                        
-                                                                                                                        <!-- bottom-page -->
-                                                                                                                            <jsp:include page="../common/footer.jsp"></jsp:include>
-                                                                                                                        <!-- /bottom-page -->
-                                                                                                                        </div>
-                                                                                                                        <!-- /main-content -->
-                                                                                                                        </div>
-                                                                                                                        <!-- /section-content-right -->
-                                                                                                                        </div>
-                                                                                                                        <!-- /layout-wrap -->
-                                                                                                                        </div>
-                                                                                                                        <!-- /#page -->
-                                                                                                                        </div>
-                                                                                                                        <!-- /#wrapper -->
 
-                                                                                                                        <!-- Javascript -->
-                                                                                                                        <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
+
+                                                                                                                        <!-- bottom-page -->
+                                                                                                                        <jsp:include page="../common/footer.jsp"></jsp:include>
+                                                                                                                            <!-- /bottom-page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /main-content -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /section-content-right -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /layout-wrap -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#wrapper -->
+
+                                                                                                                            <!-- Javascript -->
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                                                                         <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
                                                                                                                         <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
                                                                                                                         <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
@@ -785,21 +782,18 @@
                                                                                                                         <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
                                                                                                                         </body>
-                                                                                                                        
-                                                                                                                       
 
-
-                                                                                                                        <c:if test="${sessionScope.isDelete == true}">
-                                                                                                                            <script>
-                                                                                                                                                               document.addEventListener("DOMContentLoaded", function () {
-                                                                                                                                                               iziToast.success({
-                                                                                                                                                               title: "Thông báo",
-                                                                                                                                                                       message: "Tài khoản đã được xóa thành công!",
-                                                                                                                                                                       position: 'topRight',
-                                                                                                                                                                       timeout: 5000,
-                                                                                                                                                                       backgroundColor: "#d4edda"
-                                                                                                                                                               });
-                                                                                                                                                               });
+                                                                                                                                                                  <c:if test="${sessionScope.isDelete == true}">
+                                                                                                                                                                    <script>
+                                                                                                                                                                   document.addEventListener("DOMContentLoaded", function () {
+                                                                                                                                                                   iziToast.success({
+                                                                                                                                                                   title: "Thông báo",
+                                                                                                                                                                           message: "Tài khoản đã được xóa thành công!",
+                                                                                                                                                                           position: 'topRight',
+                                                                                                                                                                           timeout: 5000,
+                                                                                                                                                                           backgroundColor: "#d4edda"
+                                                                                                                                                                   });
+                                                                                                                                                                   });
                                                                                                                             </script>
                                                                                                                             <% session.removeAttribute("isDelete"); %>
                                                                                                                         </c:if>
