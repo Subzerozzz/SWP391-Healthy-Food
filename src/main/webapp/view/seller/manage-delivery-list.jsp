@@ -190,88 +190,142 @@
     color: #fff;
     box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4); /* Đổ bóng nhẹ */
 }
-/* ======= TABLE ========== */
+/* ======= TABLE V3 (Final) ========== */
 .table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* spacing giữa các dòng cho hiện đại */
-  background-color: transparent;
+  border-spacing: 0 10px;
   font-family: 'Segoe UI', sans-serif;
-}
-
-.table thead {
-  background-color: transparent;
+  table-layout: fixed; /* Quan trọng: Giữ cho các cột đều nhau */
 }
 
 .table thead th {
-  padding: 14px 18px;
-  background-color: #f1f5f9;
-  color: #334155;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  color: #495057;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   border: none;
   white-space: nowrap;
+  text-align: left;
 }
 
 .table tbody tr {
   background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  border-radius: 8px;
+  transition: all 0.25s ease-in-out;
 }
 
 .table tbody tr:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 .table tbody td {
-   padding: 8px 10px;
-  color: #000;
+  padding: 16px 20px;
+  color: #212529;
   font-size: 14px;
   border: none;
   vertical-align: middle;
-  white-space: nowrap;
-}
-
-.table td:nth-child(2) {
   white-space: normal;
-  line-height: 1.5;
-  font-weight: 500;
+  line-height: 1.6;
+  word-wrap: break-word; /* Xuống dòng cho nội dung dài */
 }
 
-.table td small {
-  display: block;
-  color: #000;
-  font-size: 12px;
-  margin-top: 2px;
+/* Căn lề cho tiêu đề và nội dung cột */
+.table th, .table td {
+    text-align: left; /* Mặc định căn trái */
+    vertical-align: middle;
 }
 
-/* ===== COLUMN WIDTH TUNING ===== */
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 60px;
+/* Căn giữa cho các cột cần thiết */
+.table th:nth-child(1), .table td:nth-child(1), /* ID */
+.table th:nth-child(3), .table td:nth-child(3), /* Status */
+.table th:nth-child(6), .table td:nth-child(6), /* Delivered_at */
+.table th:nth-child(7), .table td:nth-child(7) { /* Actions */
   text-align: center;
 }
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 220px;
+
+/* Điều chỉnh độ rộng cột - Final tuning */
+.table th:nth-child(1) { width: 8%; }  /* ID Order */
+.table th:nth-child(2) { width: 22%; } /* Customer */
+.table th:nth-child(3) { width: 12%; } /* Status */
+.table th:nth-child(4) { width: 16%; } /* Shipper */
+.table th:nth-child(5) { width: 22%; } /* Note */
+.table th:nth-child(6) { width: 12%; } /* Delivered_at */
+.table th:nth-child(7) { width: 8%; }  /* Actions */
+
+/* Word wrapping for specific columns */
+.customer-cell, .shipper-cell, .note-cell {
+    word-break: break-all; /* Force break for long strings like emails */
 }
-.table th:nth-child(4),
-.table td:nth-child(4),
-.table th:nth-child(5),
-.table td:nth-child(5),
-.table th:nth-child(6),
-.table td:nth-child(6) {
-  text-align: center;
+
+/* Delivered At Styling */
+.delivered-at .date {
+    display: block;
+    font-weight: 500;
+    white-space: nowrap; /* Không xuống dòng cho ngày */
 }
-.table th:nth-child(7),
-.table td:nth-child(7),
-.table th:nth-child(8),
-.table td:nth-child(8) {
-  text-align: center;
-  width: 100px;
+.delivered-at .time {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.table td .fa-user-check {
+    color: #28a745;
+}
+
+.table td .fa-user {
+    color: #6c757d;
+}
+
+/* Actions icons styling V2 */
+.actions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.table .item a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    transition: all 0.2s ease;
+}
+
+.table .item a:hover {
+    background-color: #e2e8f0;
+    transform: scale(1.1);
+}
+
+.table .item i {
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.table .item.eye i {
+    color: #4e73df;
+}
+
+.table .item.edit i {
+    color: #1cc88a;
+}
+
+.table .item.eye a:hover i {
+    color: #224abe;
+}
+
+.table .item.edit a:hover i {
+    color: #13855c;
 }
 
 /* ======= BADGE ========== */
@@ -474,7 +528,7 @@
                                             <td>${de.order_id}</td>
                                          
 
-                                            <td>
+                                            <td class="customer-cell">
                                                 <c:choose>
                                                     <c:when test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
                                                         <i class="fa-solid fa-user-check" style="color:green; margin-right: 5px;"></i> ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
@@ -496,46 +550,47 @@
                                                         ${de.status}
                                                     </span>
                                             </td>
-                                           <td>
+                                           <td class="shipper-cell">
                                               ${de.shipper_id == 0 ? 'Don\'t have' : accDAO.findById(de.shipper_id).user_name}
                                                 
                                             </td>
                                             <c:choose>
                                                     <c:when test="${not empty de.note}">
-                                                        <td>${de.note}</td>
+                                                        <td class="note-cell">${de.note}</td>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <td>No</td>
+                                                        <td class="note-cell">No</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                          <c:choose>
+                                                        <c:choose>
                                                             <c:when test="${not empty de.delivered_at}">
-                                                                <td>${de.delivered_at}</td>
+                                                                <td class="delivered-at">
+                                                                    <fmt:formatDate value="${de.delivered_at}" pattern="yyyy-MM-dd" var="formattedDate" />
+                                                                    <fmt:formatDate value="${de.delivered_at}" pattern="HH:mm:ss" var="formattedTime" />
+                                                                    <span class="date">${formattedDate}</span>
+                                                                    <span class="time">${formattedTime}</span>
+                                                                </td>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <td>No</td>
                                                             </c:otherwise>
                                                         </c:choose>
                                             <td>
-
-                                                <div class="item eye">
-                                                    <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detial">
-                                                        <i class="icon-eye"></i>
-                                               </a></div>
-                                                    <c:choose>
-                                                        <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
-                                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
-                                                            <div class="item edit" style="margin-right: 10px !important">
-                                                                <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
-                                                                    <i class="fa-solid fa-motorcycle"></i>
-                                                                </a>
-                                                            </div>
-                                                        </c:when>
-                                                        <c:otherwise>
-
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                 
+                                                <div class="actions-container">
+                                                    <div class="item eye">
+                                                        <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"  title="View Detail">
+                                                            <i class="icon-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                    <c:if test="${de.shipper_id == 0 && de.status == 'pending'}">
+                                                        <!-- Chỉ hiện icon nếu chưa có shipper -->
+                                                        <div class="item edit">
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper">
+                                                                <i class="fa-solid fa-motorcycle"></i>
+                                                            </a>
+                                                        </div>
+                                                    </c:if>
+                                                </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -639,49 +694,55 @@
     <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
-            // Function to show toast
-            function showToast(message, type) {
-                const toastEl = document.getElementById('orderToast');
-                const toastTitle = document.getElementById('toast-title');
-                const toastBody = document.getElementById('toast-body');
-                const header = document.getElementById('toast-header');
-                
-                // Set content
-                toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
-                toastBody.textContent = message;
-                
-                // Set header color
-                header.className = 'toast-header';
-                if(type === 'success') {
-                    header.classList.add('bg-success', 'text-white');
-                } else if(type === 'error') {
-                    header.classList.add('bg-danger', 'text-white');
-                } else {
-                    header.classList.add('bg-info', 'text-white');
-                }
-                
-                // Show toast
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
+        // Use JSP to set JS variables to avoid linter errors
+        const successMessage = "${sessionScope.successMessage}";
+        const errorMessage = "${sessionScope.errorMessage}";
+
+        // Function to show toast
+        function showToast(message, type) {
+            const toastEl = document.getElementById('orderToast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastBody = document.getElementById('toast-body');
+            const header = document.getElementById('toast-header');
+            
+            // Set content
+            toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
+            toastBody.textContent = message;
+            
+            // Set header color
+            header.className = 'toast-header';
+            if(type === 'success') {
+                header.classList.add('bg-success', 'text-white');
+            } else if(type === 'error') {
+                header.classList.add('bg-danger', 'text-white');
+            } else {
+                header.classList.add('bg-info', 'text-white');
             }
             
-            // Check for messages in session
-            <c:if test="${not empty sessionScope.successMessage}">
-                document.addEventListener('DOMContentLoaded', function() {
-                    showToast("${sessionScope.successMessage}", "success");
-                    // Remove message from session
-                    <% session.removeAttribute("successMessage"); %>
-                });
-            </c:if>
-            
-            <c:if test="${not empty sessionScope.errorMessage}">
-                document.addEventListener('DOMContentLoaded', function() {
-                    showToast("${sessionScope.errorMessage}", "error");
-                    // Remove message from session
-                    <% session.removeAttribute("errorMessage"); %>
-                });
-            </c:if>
-        </script>
+            // Show toast
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+        
+        // Check for messages after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (successMessage) {
+                showToast(successMessage, "success");
+            }
+            if (errorMessage) {
+                showToast(errorMessage, "error");
+            }
+        });
+    </script>
+        
+    <%-- Remove session attributes after rendering the script to show them --%>
+    <% if (session.getAttribute("successMessage") != null) {
+            session.removeAttribute("successMessage");
+       }
+       if (session.getAttribute("errorMessage") != null) {
+            session.removeAttribute("errorMessage");
+       }
+    %>
    
 </body>
 

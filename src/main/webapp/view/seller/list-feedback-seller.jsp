@@ -276,6 +276,36 @@
             color: #cc0000;
             border-color: #cc0000;
         }
+
+        /* No Feedback Message Styling */
+        .no-feedback-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            text-align: center;
+            width: 100%;
+            min-height: 250px;
+            color: #6c757d;
+        }
+        .no-feedback-container i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+            color: #adb5bd;
+        }
+        .no-feedback-container h5 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .no-feedback-container p {
+            font-size: 16px;
+            margin-top: 8px;
+        }
+        .no-feedback-container .btn {
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body class="body">
@@ -340,6 +370,28 @@
                                             <div class="col col-date">Created At</div>
                                             <div class="col col-action">Action</div>
                                         </div>
+                                        <c:if test="${empty feedbacks}">
+                                            <div class="no-feedback-container">
+                                                <div>
+                                                    <i class="fas fa-search"></i>
+                                                    <h5>No Feedback found</h5>
+                                                    <p>
+                                                        <c:choose>
+                                                            <c:when test="${not empty rating || not empty search}">
+                                                                No feedback matches your filters.
+                                                                <br/>
+                                                                <a href="${pageContext.request.contextPath}/seller/feedback" class="btn btn-sm btn-link text-primary fw-bold">
+                                                                    Clear Filters
+                                                                </a>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                There is no feedback in the system yet.
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </c:if>
                                         <c:forEach items="${feedbacks}" var="feedback">
                                             <div class="table-row">
                                                 <div class="col col-id">${feedback.id}</div>

@@ -194,88 +194,96 @@
     color: #fff;
     box-shadow: 0 2px 8px rgba(0, 115, 255, 0.4); /* Đổ bóng nhẹ */
 }
-/* ======= TABLE ========== */
+/* ======= TABLE V2 (Modern) ========== */
 .table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* spacing giữa các dòng cho hiện đại */
-  background-color: transparent;
+  border-spacing: 0 10px;
   font-family: 'Segoe UI', sans-serif;
-}
-
-.table thead {
-  background-color: transparent;
+  table-layout: fixed;
 }
 
 .table thead th {
-  padding: 14px 18px;
-  background-color: #f1f5f9;
-  color: #334155;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  color: #495057;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   border: none;
   white-space: nowrap;
+  text-align: left;
 }
 
 .table tbody tr {
   background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  border-radius: 8px;
+  transition: all 0.25s ease-in-out;
 }
 
 .table tbody tr:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 .table tbody td {
-   padding: 8px 10px;
-  color: #000;
+  padding: 16px 20px;
+  color: #212529;
   font-size: 14px;
   border: none;
   vertical-align: middle;
-  white-space: nowrap;
-}
-
-.table td:nth-child(2) {
   white-space: normal;
-  line-height: 1.5;
-  font-weight: 500;
+  line-height: 1.6;
+  word-wrap: break-word;
 }
 
-.table td small {
-  display: block;
-  color: #000;
-  font-size: 12px;
-  margin-top: 2px;
+/* Column Alignment */
+.table th, .table td {
+    text-align: left;
+    vertical-align: middle;
+}
+.table th:nth-child(2), .table td:nth-child(2),
+.table th:nth-child(3), .table td:nth-child(3),
+.table th:nth-child(4), .table td:nth-child(4) {
+  text-align: center;
 }
 
-/* ===== COLUMN WIDTH TUNING ===== */
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 60px;
-  text-align: center;
+/* Column Widths */
+.table th:nth-child(1) { width: 40%; } /* Shipper */
+.table th:nth-child(2) { width: 25%; } /* Delivery order number */
+.table th:nth-child(3) { width: 15%; } /* Status */
+.table th:nth-child(4) { width: 20%; } /* Actions */
+
+/* Actions icons styling */
+.actions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 220px;
+.table .item a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    transition: all 0.2s ease;
 }
-.table th:nth-child(4),
-.table td:nth-child(4),
-.table th:nth-child(5),
-.table td:nth-child(5),
-.table th:nth-child(6),
-.table td:nth-child(6) {
-  text-align: center;
+.table .item a:hover {
+    background-color: #e2e8f0;
+    transform: scale(1.1);
 }
-.table th:nth-child(7),
-.table td:nth-child(7),
-.table th:nth-child(8),
-.table td:nth-child(8) {
-  text-align: center;
-  width: 100px;
+.table .item i {
+    font-size: 16px;
+    color: #1cc88a;
+    transition: color 0.2s;
+}
+.table .item a:hover i {
+    color: #13855c;
 }
 
 /* ======= BADGE ========== */
@@ -451,18 +459,18 @@
                                         <td colspan="8" class="text-center">
                                             <div class="py-4">
                                                 <i class="fas fa-search fs-1 text-muted mb-3"></i>
-                                                <h5>No deliveries found</h5>
+                                                <h5>No Shipper found</h5>
                                                 <p class="text-muted">
                                                     <c:choose>
                                                         <c:when test="${not empty status || not empty search}">
-                                                            No deliveries match your search criteria. Try adjusting your filters.
+                                                            No shipper found. Try adjusting your filters.
                                                             <br>
-                                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery" class="btn btn-outline-primary mt-2">
+                                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" class="btn btn-outline-primary mt-2">
                                                                 <i class="fas fa-times me-2"></i>Clear Filters
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            There are no deliveries in the system yet.
+                                                            There are no shipper in the system yet.
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </p>
@@ -495,20 +503,16 @@
                                             </td>
                                           
                                        <td>
-                                           
-                                           <c:choose>
-                                               <c:when test="${deliveringCountMap[shipper.id] == 0 && de.status == 'pending'}">
-<!--                                                                                  </form>-->
-                                 <div class="item edit" style="margin-right: 10px !important">
-                                   <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=add&id=${id}&shipper_id=${shipper.id}" 
-                                         onclick="handleAccept(event)" title="Choose Shipper"
-                                       >
-                                  <i class="fa-solid fa-motorcycle"></i>
-                                         </a>
-                                        </div>
-                                               </c:when>
-
-                                           </c:choose>
+                                            <div class="actions-container">
+                                                <c:if test="${deliveringCountMap[shipper.id] == 0 && de.status == 'pending'}">
+                                                    <div class="item edit">
+                                                        <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=add&id=${id}&shipper_id=${shipper.id}" 
+                                                           onclick="handleAccept(event)" title="Choose Shipper">
+                                                            <i class="fa-solid fa-motorcycle"></i>
+                                                        </a>
+                                                    </div>
+                                                </c:if>
+                                            </div>
                                        </td>
                                         </tr>
                                     </c:forEach>
@@ -640,22 +644,27 @@
             }
             
             // Check for messages in session
-            <c:if test="${not empty sessionScope.successMessage}">
-                document.addEventListener('DOMContentLoaded', function() {
-                    showToast("${sessionScope.successMessage}", "success");
-                    // Remove message from session
-                    <% session.removeAttribute("successMessage"); %>
-                });
-            </c:if>
-            
-            <c:if test="${not empty sessionScope.errorMessage}">
-                document.addEventListener('DOMContentLoaded', function() {
-                    showToast("${sessionScope.errorMessage}", "error");
-                    // Remove message from session
-                    <% session.removeAttribute("errorMessage"); %>
-                });
-//            </c:if>
-//        </script>
+            const successMessage = "${sessionScope.successMessage}";
+            const errorMessage = "${sessionScope.errorMessage}";
+
+            document.addEventListener('DOMContentLoaded', function() {
+                if (successMessage) {
+                    showToast(successMessage, "success");
+                }
+                if (errorMessage) {
+                    showToast(errorMessage, "error");
+                }
+            });
+        </script>
+        
+        <%-- Remove session attributes after rendering the script to show them --%>
+        <% if (session.getAttribute("successMessage") != null) {
+                session.removeAttribute("successMessage");
+           }
+           if (session.getAttribute("errorMessage") != null) {
+                session.removeAttribute("errorMessage");
+           }
+        %>
     <script>//
     function handleAccept(event) {
       event.preventDefault(); // Ngăn hành vi mặc định
