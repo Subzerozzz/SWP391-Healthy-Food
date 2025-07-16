@@ -588,7 +588,6 @@ public class AuthenController extends HttpServlet {
         }
         return false;
     }
-
     public boolean isValidPhoneNumber(String phone) {
         // Loại bỏ khoảng trắng, dấu gạch, ngoặc, v.v. nếu có
         phone = phone.replaceAll("[\\s\\-()]", "");
