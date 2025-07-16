@@ -127,14 +127,14 @@
 
                                 <!-- Combo Info -->
                                 <div class="col-md-7 mx-auto">
-                                    <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</span>
+                                    <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</span>
                                     <h1 class="combo-title">${combo.comboName}</h1>
                                     <p class="combo-description">${combo.description}</p>
 
                                     <div class="combo-price-container">
                                         <div class="combo-original-price">Giá gốc: <fmt:formatNumber value="${combo.originalPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</div>
-                                        <div class="combo-discount-price">Giá ưu đãi: <fmt:formatNumber value="${combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</div>
-                                        <div class="combo-savings">Tiết kiệm: <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</div>
+                                        <div class="combo-discount-price">Giá ưu đãi: <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</div>
+                                        <div class="combo-savings">Tiết kiệm: <fmt:formatNumber value="${ combo.discountPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/>đ</div>
                                     </div>
 
                                     <div class="combo-add-to-cart">

@@ -424,7 +424,7 @@
                                 <div class="col-md-6 col-lg-4">
                                     <div class="combo-product">
                                         <div class="combo-header">
-                                            <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}"/>đ</span>
+                                            <span class="combo-badge">Tiết kiệm <fmt:formatNumber value="${combo.discountPrice}"/>đ</span>
                                             <h2 style="margin-top: 15px;">
                                                 <a href="${pageContext.request.contextPath}/comboController?action=details&id=${combo.comboId}">${combo.comboName}</a>
                                             </h2>
@@ -436,7 +436,7 @@
                                             <div>
                                                 <del><fmt:formatNumber value="${combo.originalPrice}"/>đ</del>
                                                 <div class="text-success" style="font-size: 1.2em; font-weight: bold;">
-                                                    <fmt:formatNumber value="${combo.discountPrice}"/>đ
+                                                    <fmt:formatNumber value="${combo.originalPrice - combo.discountPrice}"/>đ
                                                 </div>
                                             </div>
                                             <div class="product-action">
