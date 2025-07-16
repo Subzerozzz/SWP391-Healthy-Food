@@ -223,14 +223,9 @@
                                     <div class="col-lg-4 col-sm-6">
                                         <div class="product-item">
                                             <div class="product-img">
-                                                <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
+                                                <a style="width: '100%'" href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
                                                     <img src="${item.getImage_url()}" alt="Product Images">
                                                 </a>
-                                                <ul class="product-item-action">
-                                                    <li><a href="#"><i class='bx bx-repost'></i></a></li>
-                                                    <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
-                                                    <li><a href="cart.html"><i class='bx bx-cart'></i></a></li>
-                                                </ul>
                                             </div>
 
                                             <div class="content">
@@ -336,7 +331,8 @@
 
             .product-img a {
                 height: 100%;
-                width: auto;
+                width: 100%; /* Sửa từ auto thành 100% */
+                display: block; /* Thêm dòng này */
             }
 
             .product-img img {
@@ -344,6 +340,7 @@
                 width: 100%;
                 object-fit: cover;
                 padding: 0px !important;
+                display: block; /* Thêm dòng này để loại bỏ khoảng trắng */
             }
             /*formSearch*/
             .formSearchByName{

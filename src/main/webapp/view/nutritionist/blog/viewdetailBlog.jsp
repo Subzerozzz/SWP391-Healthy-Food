@@ -1,9 +1,4 @@
-<<<<<<< HEAD=======>>>>>>> origin/feature-chat
-  <%-- 
-    Document   : addBlog
-    Created on : May 30, 2025, 3:32:10 PM
-    Author     : Predator
---%>
+
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <%@page contentType="text/html" pageEncoding="UTF-8"%>
   <!DOCTYPE html>
