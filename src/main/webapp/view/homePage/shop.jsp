@@ -331,8 +331,8 @@
 
             .product-img a {
                 height: 100%;
-                width: 100%; /* Sửa từ auto thành 100% */
-                display: block; /* Thêm dòng này */
+                width: 100%;
+                display: block;
             }
 
             .product-img img {
@@ -340,7 +340,7 @@
                 width: 100%;
                 object-fit: cover;
                 padding: 0px !important;
-                display: block; /* Thêm dòng này để loại bỏ khoảng trắng */
+                display: block;
             }
             /*formSearch*/
             .formSearchByName{
