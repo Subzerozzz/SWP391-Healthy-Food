@@ -86,7 +86,7 @@ public class ManagerOrderComboController extends HttpServlet {
         } catch (Exception ex) {
             // Notification error
             request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
-            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+//            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
 
@@ -370,7 +370,11 @@ public class ManagerOrderComboController extends HttpServlet {
             HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
             for (OrderApproval orderApproval : approvals) {
                 Account accApproval = accDAO.findById(orderApproval.getApproved_by());
-                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+                if (accApproval != null) {
+                    OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+                } else {
+                    System.out.println("❗ Không tìm thấy account với id: " + orderApproval.getApproved_by());
+                }
             }
 
             // Set attributes for JSP rendering
@@ -382,7 +386,10 @@ public class ManagerOrderComboController extends HttpServlet {
             request.getRequestDispatcher("/view/seller/update_status_orderCombo.jsp").forward(request, response);
         } catch (Exception e) {
             // Handle invalid order ID format or unexpected errors
-            request.setAttribute("errorMessage", "Invalid order ID format");
+            e.printStackTrace(); // ⬅️ IN RA CONSOLE
+            request.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+//
+//            request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }

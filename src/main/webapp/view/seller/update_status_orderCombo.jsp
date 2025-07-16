@@ -247,7 +247,7 @@
                                                                                                     <i class="icon-chevron-right"></i>
                                                                                                 </li>
                                                                                                 <li>
-                                                                                                    <div class="text-tiny">Order #${order.id}</div>
+                                                                                                    <div class="text-tiny">Order #${order.orderComboId}</div>
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
@@ -470,7 +470,7 @@
 
                                                                                                                                     // Handle form submission with confirmation
                                                                                                                                     document.addEventListener('DOMContentLoaded', function () {
-                                                                                                                                        const orderForm = document.querySelector('form[action*="manage-order"]');
+                                                                                                                                        const orderForm = document.querySelector('form[action*="manage-ordercombo"]');
                                                                                                                                         if (orderForm) {
                                                                                                                                             orderForm.addEventListener('submit', function (e) {
                                                                                                                                                 e.preventDefault();
