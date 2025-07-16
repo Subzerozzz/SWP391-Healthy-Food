@@ -5,6 +5,7 @@
 package com.su25.swp391.controller.homePage;
 
 import com.su25.swp391.config.GlobalConfig;
+import static com.su25.swp391.controller.customer.OrderManage.ORDER_LIST;
 import com.su25.swp391.dal.implement.ComboDAO;
 import com.su25.swp391.dal.implement.ComboFoodDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
@@ -196,7 +197,7 @@ public class BuyComboController extends HttpServlet {
 
         List<ComboFood> comboFoods = combofoodDao.findByIdList(comboId);
 
-        double totalPrice = combo.getDiscountPrice() * quantity;
+        double totalPrice = (combo.getOriginalPrice()-combo.getDiscountPrice()) * quantity;
 
         OrderCombo order = new OrderCombo();
         order.setComboId(combo.getComboId());
@@ -223,7 +224,7 @@ public class BuyComboController extends HttpServlet {
         session.setAttribute("user_id", user_id);
 
         // Chuyển sang trang tạo thanh toán
-        long amount = Math.round(combo.getDiscountPrice() * quantity * 1);
+        long amount = Math.round(((combo.getOriginalPrice()* quantity) -combo.getDiscountPrice())* 1);
 
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + amount
                 + "&orderId=" + orderComboId + "&combo_payment=true");
@@ -290,7 +291,7 @@ public class BuyComboController extends HttpServlet {
                 session.removeAttribute("comboProducts");
 
                 setToastMessage(request, "Order Successful !!", "success");
-                response.sendRedirect(COMBO_SERVLET_URL);
+                response.sendRedirect(ORDER_LIST);
             } else {
                 // Thanh toán không thành công hoặc lỗi
                 // Xử lý lỗi hoặc chuyển hướng đến trang thông báo lỗi

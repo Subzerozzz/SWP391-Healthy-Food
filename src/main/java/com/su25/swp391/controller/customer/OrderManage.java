@@ -38,7 +38,7 @@ public class OrderManage extends HttpServlet {
 
     private final Order order = new Order();
 
-    private static final String ORDER_LIST = "view/customer/orderlist.jsp";
+    public static final String ORDER_LIST = "view/customer/orderlist.jsp";
     private static final String ORDER_DETAILS = "view/customer/orderdetail.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
