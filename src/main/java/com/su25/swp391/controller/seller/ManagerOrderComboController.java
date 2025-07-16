@@ -1,0 +1,390 @@
+package com.su25.swp391.controller.seller;
+
+import com.su25.swp391.config.GlobalConfig;
+import static com.su25.swp391.controller.customer.OrderManage.ORDER_LIST;
+import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.OrderApprovalDAO;
+
+import com.su25.swp391.dal.implement.OrderComboDAO;
+
+import com.su25.swp391.dal.implement.OrderDAO;
+import com.su25.swp391.dal.implement.OrderItemDAO;
+import com.su25.swp391.entity.Account;
+import com.su25.swp391.entity.Combo;
+import com.su25.swp391.entity.Food;
+import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderApproval;
+import com.su25.swp391.entity.OrderCombo;
+import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
+import java.io.IOException;
+import java.util.List;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ *
+ * @author FPTSHOP
+ */
+@WebServlet(name = "ManagerOrderController", urlPatterns = {"/manage-ordercombo"})
+public class ManagerOrderComboController extends HttpServlet {
+
+    // Declare properties for DAO 
+    private final AccountDAO accountDAO = new AccountDAO();
+    private final OrderDAO orderListDAO = new OrderDAO();
+    private AccountDAO accDAO = new AccountDAO();
+    private final FoodDAO foodDAO = new FoodDAO();
+    private final OrderComboDAO ordercomboDAO = new OrderComboDAO();
+    private final ComboDAO comboDAO = new ComboDAO();
+    private OrderApprovalDAO approvalDAO = new OrderApprovalDAO();
+
+    private final Order order = new Order();
+    public static final String ORDER_LIST = "view/seller/order_combo_list.jsp";
+    private static final String ORDER_COMBO_DETAILS = "view/seller/order_combo_detail.jsp";
+    private static final String HOME_PAGE = "view/homePage/home.jsp";
+//    private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
+//    private static final String ORDER_COMBO_DETAILS = "view/customer/ordercombodetail.jsp";
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Get action from submit
+        String action = request.getParameter("action");
+        // If action == null
+        if (action == null) {
+            action = "list";
+        }
+        try {
+            switch (action) {
+                case "list":
+                    listOrdersCombo(request, response);
+                    break;
+                case "view":
+                    viewOrderDetail(request, response);
+                    break;
+                case "viewUpdate":
+                    viewUpdate(request, response);
+                    break;
+                default:
+                    listOrdersCombo(request, response);
+                    break;
+            }
+        } catch (Exception ex) {
+            // Notification error
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Get action from submit
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "list";
+        }
+
+        try {
+            switch (action) {
+                case "updateStatus":
+                    updateOrderStatus(request, response);
+                    break;
+                default:
+                    listOrdersCombo(request, response);
+                    break;
+            }
+        } catch (Exception ex) {
+            // Notification error
+            request.setAttribute("errorMessage", "Database error: " + ex.getMessage());
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+    }
+
+    // View Orders List
+    private void listOrdersCombo(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        String email = (String) session.getAttribute("email");
+        String username = (String) session.getAttribute("user_name");
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
+        int currentPage = 1;
+        int pageSize = 10;
+
+        if (email == null && username == null) {
+            response.sendRedirect(HOME_PAGE);
+            return;
+        }
+
+        // phân trang
+        try {
+            // khi page == null. Gán giá trị mặc định là 1
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+            // page size đã mặc định cho web chỉ xuất hiện 10 sản phẩm
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
+        }
+
+        // tạo Account chứa các thuộc tính email, user_name trong bảng account
+        Account acc = Account.builder()
+                .email(email)
+                .user_name(username)
+                .build();
+
+        //Dùng hàm DAO để tìm kiếm tai khoản đó có trong database hay k?
+        Account accountFoundByEmail = accountDAO.findByEmail(acc);
+        Account accountFoundByUsername = accountDAO.findByUsername(acc);
+
+        // nếu tồn tại 1 trong 2 điều kiện thì lập tức if đc thực thi
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
+            // nếu k tìm thấy id account bằng email sẽ chuyển qua tìm kiếm id account bằng user_name để gán giá trị cho biến userId
+            int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
+            // list chứa các order của 1 account cụ thể (Id account), search để có thể phân trang khi filter
+
+            List<OrderCombo> orderCombo = ordercomboDAO.findAllWithPagination(currentPage, pageSize);
+            // đếm số order của 1 người dùng cụ thể (account id), search để có thể phân trang khi filter
+            int totalOrder = ordercomboDAO.getTotalOrderComboCount();
+            // lấy tổng số lượng order chia cho kích thức trang (10) để biết tổng số trang
+            int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
+
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("orderCombo", orderCombo);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalOrder", totalOrder);
+
+            // Gán vào session để sử dụng khi quay lại
+            session.setAttribute("currentPage", currentPage);
+            session.setAttribute("pageSize", pageSize);
+
+            // Tính toán phạm vi hiển thị
+            int startRecord = (currentPage - 1) * pageSize + 1;
+            int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
+            request.setAttribute("startRecord", startRecord);
+            request.setAttribute("endRecord", endRecord);
+            // thực hiện xong hàm if sẽ trả về trang order list
+            request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+            return;
+        } else {
+            response.sendRedirect(HOME_PAGE);
+        }
+    }
+
+    /**
+     * Handles updating the status of a specific order.
+     *
+     * - Validates input parameters. - Updates the order status in the database.
+     * - Records the seller's approval note. - Sends an email notification to
+     * guest customers (if applicable). - Sets success or error messages for
+     * user feedback.
+     *
+     * @param request The HttpServletRequest containing client request data.
+     * @param response The HttpServletResponse used to redirect or respond.
+     */
+    private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // Get the orderId from request parameter
+            int orderComboId = Integer.parseInt(request.getParameter("orderComboId"));
+
+            // Get the new status from request
+            String newStatus = request.getParameter("newStatus");
+
+            // Get seller's note from request
+            String note = request.getParameter("note");
+
+            // Validate that the new status is not empty
+            if (newStatus == null || newStatus.trim().isEmpty()) {
+                request.getSession().setAttribute("errorMessage", "Status cannot be empty");
+                response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
+                return;
+            }
+
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (acc == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+
+            // Retrieve the order from the database
+            OrderCombo ordercombo = ordercomboDAO.findById(orderComboId);
+            if (ordercombo == null) {
+                session.setAttribute("errorMessage", "Order not found");
+                response.sendRedirect(request.getContextPath() + "/manage-ordercombo");
+                return;
+            }
+
+            // Store the old status for logging
+            String oldStatus = ordercombo.getStatus();
+
+            // Update the order status
+            boolean update = ordercomboDAO.updateOrderStatus(orderComboId, newStatus);
+
+            if (update) {
+                // If the order was just accepted, show success message
+                if ("accepted".equals(newStatus) && !"accepted".equals(oldStatus)) {
+                    String statusText = newStatus;
+                    switch (newStatus) {
+                        case "accepted":
+                            statusText = "accepted";
+                            break;
+                        case "cancelled":
+                            statusText = "cancelled";
+                            break;
+                        case "abc":
+                            statusText = newStatus;
+                            break;
+                        default:
+                            statusText = newStatus;
+                    }
+                    session.setAttribute("successMessage",
+                            "Order #" + orderComboId + " has been " + statusText + " successfully.");
+                }
+            } else {
+                session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
+            }
+
+            // Redirect to the order update detail page
+            response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&id=" + orderComboId);
+        } catch (Exception e) {
+            // Handle unexpected exceptions
+            e.printStackTrace(); // Consider replacing with logger
+        }
+    }
+
+    /**
+     * Handles displaying the detailed information of a specific order. This
+     * method: - Retrieves the order by its ID from the request parameter. -
+     * Loads the related account and order items. - Maps food details for each
+     * order item. - Forwards the data to the order detail JSP page for
+     * rendering. - Handles invalid or missing order cases.
+     *
+     * @param request The HttpServletRequest containing client request data
+     * @param response The HttpServletResponse for sending the response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws SQLException if a database access error occurs
+     */
+    private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        //lay tham so order id khi nguoi dung chon 
+        String comboIdStr = request.getParameter("orderComboId");
+
+        if (comboIdStr == null || comboIdStr.isEmpty()) {
+            response.sendRedirect(HOME_PAGE);
+            return;
+        }
+        int comboId = Integer.parseInt(comboIdStr);
+        try {
+            OrderCombo orderCombo = ordercomboDAO.findById(comboId);
+            if (orderCombo != null) {
+                int comboID = orderCombo.getComboId();
+                Combo combo = comboDAO.findById(comboID);
+                if (combo != null) {
+                    double subtotalcombo = calculateOriginalTotalPrice(combo, orderCombo);
+                    request.setAttribute("orderCombo", orderCombo);
+                    request.setAttribute("combo", combo);
+                    request.setAttribute("subtotalcombo", subtotalcombo);
+                    request.getRequestDispatcher(ORDER_COMBO_DETAILS).forward(request, response);
+                    return;
+                }
+            }
+        } catch (NumberFormatException e) {
+            response.sendRedirect(HOME_PAGE);
+        }
+    }
+
+    public double calculateOriginalTotalPrice(Combo combo, OrderCombo orderCombo) { // tính tiền combo
+        if (combo == null || orderCombo == null) {
+            return 0.0;
+        }
+        double price = combo.getOriginalPrice();
+        int quantity = orderCombo.getQuantity();
+        double discountPricer = combo.getDiscountPrice();
+
+        return (price * quantity) - discountPricer;
+    }
+
+    private void viewUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+            // Get orderId from the "id" request parameter
+            int orderId = Integer.parseInt(request.getParameter("orderComboId"));
+
+            // Retrieve the order by its ID
+            OrderCombo order = ordercomboDAO.findById(orderId);
+
+            // If the order does not exist, forward to error page
+            if (order == null) {
+                request.setAttribute("errorMessage", "Order not found with ID: " + orderId);
+                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+                return;
+            }
+
+            // Retrieve approval records related to this order
+            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
+
+            // Map each approver's account information
+            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
+            for (OrderApproval orderApproval : approvals) {
+                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
+                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
+            }
+
+            // Set attributes for JSP rendering
+            request.setAttribute("order", order);
+            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
+            request.setAttribute("approvals", approvals);
+
+            // Forward to the update order status JSP page
+            request.getRequestDispatcher("/view/seller/update_status_orderCombo.jsp").forward(request, response);
+        } catch (Exception e) {
+            // Handle invalid order ID format or unexpected errors
+            request.setAttribute("errorMessage", "Invalid order ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+    }
+
+}

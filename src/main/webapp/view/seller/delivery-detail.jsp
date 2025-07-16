@@ -286,6 +286,7 @@ textarea.form-control {
                                 <strong>Status:</strong>
                                 <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
                                                     order.status == 'accepted' ? 'bg-info' : 
+                                                    order.status == 'abc'? 'bg-info':
                                                     order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
                                     ${order.status}
                                 </span>

@@ -48,7 +48,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public boolean update(OrderCombo orderCombo) {
         String sql = "UPDATE OrderCombo SET order_id = ?,  comboId = ?, comboName = ?, "
-                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ? WHERE orderComboId = ?";
+                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ?"
+                + " status=?  WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
@@ -59,8 +60,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6,orderCombo.getUser_id());
-            statement.setInt(7, orderCombo.getOrderComboId());
-
+            statement.setString(7, orderCombo.getStatus());
+            statement.setInt(8, orderCombo.getOrderComboId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException ex) {
@@ -91,7 +92,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public int insert(OrderCombo orderCombo) {
         String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status,user_id) VALUES ( ?, ?, ?, ?, ?,?,?)";
+                + "quantity, totalPrice,payment_status,user_id,status) VALUES ( ?, ?, ?, ?, ?,?,?,?)";
 
         try {
             connection = getConnection();
@@ -104,6 +105,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6, orderCombo.getPayment_status());
             statement.setInt(7, orderCombo.getUser_id());
+            statement.setString(8, orderCombo.getStatus());
+
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -136,6 +139,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
         orderCombo.setPayment_status(rs.getInt("payment_status"));
         orderCombo.setUser_id(rs.getInt("user_id"));
+        orderCombo.setStatus(rs.getString("status"));
+      
         return orderCombo;
     }
 
@@ -240,5 +245,85 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     }
 
     return 0;
+}
+    //hang
+    
+    // Phương thức phân trang cho tất cả tài khoản
+    public List<OrderCombo> findAllWithPagination(int page, int pageSize) {
+        List<OrderCombo> orderCombo = new ArrayList<>();
+        String sql = "SELECT * FROM OrderCombo ORDER BY orderComboId LIMIT ?, ?";
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, (page - 1) * pageSize);
+            statement.setInt(2, pageSize);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orderCombo.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error finding OrderCombo with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return orderCombo;
+    }
+     public static void main(String[] args) {
+        OrderComboDAO dao = new OrderComboDAO();
+        
+        // Giả sử muốn lấy trang 1 với 5 phần tử mỗi trang
+        int page = 1;
+        int pageSize = 5;
+
+        List<OrderCombo> combos = dao.findAllWithPagination(page, pageSize);
+
+        System.out.println("Danh sách OrderCombo - Trang " + page + ":");
+        for (OrderCombo combo : combos) {
+            System.out.println(combo); // Đảm bảo lớp OrderCombo có override toString()
+        }
+    }
+
+    // Đếm tổng số tài khoản
+    public int getTotalOrderComboCount() {
+        String sql = "SELECT COUNT(*) FROM OrderCombo";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting OrderCombo: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+    //hang 
+    public boolean updateOrderStatus(int orderComboId, String newStatus) {
+    String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
+    boolean updated = false;
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setString(1, newStatus);
+        statement.setInt(2, orderComboId);
+
+        int rowsAffected = statement.executeUpdate();
+        updated = (rowsAffected > 0);
+    } catch (Exception e) {
+        System.out.println("Error updating order status: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return updated;
 }
 }

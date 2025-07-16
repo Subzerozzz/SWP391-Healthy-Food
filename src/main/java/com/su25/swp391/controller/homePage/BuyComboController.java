@@ -168,8 +168,6 @@ public class BuyComboController extends HttpServlet {
         }
         //lay id của khách hàng
         int user_id = account.getId();
-        
-
         String comboIdStr = request.getParameter("comboId");
         String quantityStr = request.getParameter("quantity");
 
@@ -207,6 +205,7 @@ public class BuyComboController extends HttpServlet {
         order.setTotalPrice(totalPrice);
         order.setPayment_status(0);
         order.setUser_id(user_id);
+        order.setStatus("pending");
         //them don hang 
         int orderComboId = ordercombodao.insert(order);
         if (orderComboId == -1) {
@@ -222,6 +221,7 @@ public class BuyComboController extends HttpServlet {
         session.setAttribute("comboOrderId", orderComboId);
         session.setAttribute("comboAmount", totalPrice);
         session.setAttribute("user_id", user_id);
+       
 
         // Chuyển sang trang tạo thanh toán
         long amount = Math.round(((combo.getOriginalPrice()* quantity) -combo.getDiscountPrice())* 1);
