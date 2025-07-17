@@ -467,6 +467,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         } else {
             System.out.println("❌ Email chưa tồn tại.");
         }
+          System.out.println(dao.findById(0));
     }
     // Phương thức phân trang với bộ lọc
 
@@ -660,4 +661,5 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
     return 0;
 }
+     
 }

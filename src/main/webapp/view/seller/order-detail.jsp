@@ -311,16 +311,16 @@ textarea.form-control {
                             <h6 class="card-title mb-0">Customer Information</h6>
                         </div>
                         <c:choose>
-                            <c:when test="${not empty account}">
+                            <c:when test="${acc != null && acc.id != 0}">
                                   <div class="card-body">
                             <div class="mb-3">
-                                <strong>Name:</strong> ${account.user_name}
+                                <strong>Name:</strong> ${acc.user_name}
                             </div>
                             <div class="mb-3">
-                                <strong>Email:</strong> ${account.email}
+                                <strong>Email:</strong> ${acc.email}
                             </div>
                             <div class="mb-3">
-                                <strong>Mobile:</strong> ${account.mobile}
+                                <strong>Mobile:</strong> ${acc.mobile}
                             </div>
                             <div class="mb-3">
                                 <strong>Shipping Address:</strong>
@@ -340,7 +340,7 @@ textarea.form-control {
                                 <strong>Mobile:</strong> ${order.mobile}
                             </div>
                             <div class="mb-3">
-                                <strong>Shipping Address:</strong>${order.address}
+                                <strong>Shipping Address:</strong>${order.shipping_address}
                             </div>
                         </div>  
                             </c:otherwise>

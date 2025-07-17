@@ -697,6 +697,12 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
         return order;
     }
-       
+       public static void main(String[] args) {
+           OrderDAO dao = new OrderDAO();
+           AccountDAO a = new AccountDAO();
+           System.out.println(dao.findById(30));
+           Account acc = a.findById(dao.findById(30).getAccount_id());
+           System.out.println(acc);
+    }
 
 }
