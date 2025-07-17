@@ -7,7 +7,6 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.FeedbackDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
-import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
@@ -31,7 +30,6 @@ import java.util.List;
 public class FeedbackController extends HttpServlet {
 
     private OrderDAO orderDAO;
-    private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
     private FeedbackDAO feedbackDAO;
     private AccountDAO accDAO;
@@ -40,7 +38,6 @@ public class FeedbackController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
-        approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
         feedbackDAO = new FeedbackDAO();
         accDAO = new AccountDAO();

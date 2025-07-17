@@ -648,15 +648,6 @@
                                               <i class="icon-eye"></i>
                                             </a>
                                           </div>
-                                          <c:if test="${de.shipper_id == 0 && de.status == 'pending'}">
-                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
-                                            <div class="item edit">
-                                              <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}"
-                                                title="Select Shipper">
-                                                <i class="fa-solid fa-motorcycle"></i>
-                                              </a>
-                                            </div>
-                                          </c:if>
                                         </div>
                                       </td>
                                     </tr>

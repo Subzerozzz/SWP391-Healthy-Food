@@ -518,7 +518,9 @@
                               <table class="table table-hover">
                                 <thead>
                                   <tr>
+                                    <th>ID</th>
                                     <th>ID Order</th>
+                                    <th>ID ComboOrder</th>
                                     <th>Customer</th>
                                     <th>Status</th>
                                     <th>Note</th>
@@ -556,8 +558,9 @@
                                   <c:forEach var="de" items="${listDelivery}">
 
                                     <tr>
+                                      <td>${de.id}</td>
                                       <td>${de.order_id}</td>
-
+                                      <td>${de.order_combo_id}</td>
 
                                       <td>
                                         <c:choose>
@@ -620,7 +623,7 @@
                                             </a>
                                           </div>
                                           <div class="item edit">
-                                            <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewUpdate&id=${de.id}&shipper_id=${de.shipper_id}"
+                                            <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewUpdate&id=${de.id}"
                                               title="Update Status">
                                               <i class="icon-edit-3"></i>
                                             </a>

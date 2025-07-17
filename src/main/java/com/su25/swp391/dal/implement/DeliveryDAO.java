@@ -221,24 +221,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         // Return the list of matched feedback
         return 0;
     }
-    public int getNumberDeliveryOfShipper(int shipper_id){
-        String sql = "SELECT COUNT(*) FROM Delivery WHERE shipper_id = ? AND status = 'delivering'";
-        try {
-            connection = getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, shipper_id);
-            resultSet = statement.executeQuery();
-            if(resultSet.next()){
-                return resultSet.getInt(1);
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources();
-        }
-        return 0;
-    }
+   
      public int getNumberDeliveryOfShipperPending(int shipper_id){
         String sql = "SELECT COUNT(*) FROM Delivery WHERE shipper_id = ? ";
         try {
@@ -265,64 +248,24 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     @Override
     public boolean update(Delivery t) {
-        String sql = "UPDATE Delivery SET shipper_id = ?, status = 'pending'";
-
-        if ("pending".equalsIgnoreCase(t.getStatus())) {
-            sql += ", assigned_at = NOW()";
-        }
-
-        sql += " WHERE id = ?";
+       String sql = "UPDATE Delivery SET status = ?, delivered_at = NOW(), note = ?";
         try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setInt(1, t.getShipper_id());
-        statement.setInt(2, t.getId());
-
-        int rowsAffected = statement.executeUpdate();
-        return rowsAffected > 0;
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
-    }
-
-    return false;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, t.getStatus());
+            if(t.getStatus().equalsIgnoreCase("success") || t.getStatus().equalsIgnoreCase("reject")){
+                statement.setString(2, t.getNote());
+            }else{
+                statement.setString(2, "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
     }
    
-    public boolean updateStatusShipper(Delivery t,String newStatus,String note) {
-       
-        StringBuilder sql = new StringBuilder("UPDATE Delivery SET  status = ?");
-        List<Object> params = new ArrayList<>();
-        params.add(newStatus);
-        
-        if (note != null && !note.trim().isEmpty()) {
-            sql.append(", note = ?, delivered_at = NOW()");
-            params.add(note);
-        }
-
-        sql.append(" WHERE id = ?");
-        params.add(t.getId());
-        try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-        // Bind all parameters to the prepared statement
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-        int rowsAffected = statement.executeUpdate();
-        return rowsAffected > 0;
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
-    }
-
-    return false;
-    }
-
     @Override
     public boolean delete(Delivery t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -339,6 +282,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
              .builder()
              .id(resultSet.getInt("id"))
              .order_id(resultSet.getInt("order_id"))
+             .order_combo_id(resultSet.getInt("order_combo_id"))
              .shipper_id(resultSet.getInt("shipper_id"))
              .status(resultSet.getString("status"))
              .assigned_at(resultSet.getTimestamp("assigned_at"))
@@ -383,7 +327,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     // Sort và phân trang
     if (sort != null && !sort.isEmpty()) {
-        sql.append("ORDER BY order_id ").append(sort).append(" LIMIT ? OFFSET ?");
+        sql.append("ORDER BY id ").append(sort).append(" LIMIT ? OFFSET ?");
     } else {
         sql.append("ORDER BY assigned_at DESC LIMIT ? OFFSET ?");
     }
@@ -475,7 +419,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
     }
 
     sql.append(sort != null && !sort.isEmpty()
-        ? "ORDER BY d.order_id " + sort + " LIMIT ? OFFSET ?"
+        ? "ORDER BY d.id " + sort + " LIMIT ? OFFSET ?"
         : "ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?"
     );
 
@@ -571,12 +515,12 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
             System.out.println(d);
         }
         System.out.println(new DeliveryDAO().getTotalFilteredDelivery(""));
-        System.out.println(new DeliveryDAO().getNumberDeliveryOfShipper(54));
+       
        
         Delivery de = new DeliveryDAO().findById(4);
        System.out.println(dao.getTotalFilteredDeliveryByShipper(48, ""));
        Delivery del = new DeliveryDAO().findById(1);
-       System.out.println(dao.updateStatusShipper(del, "reject", "no home"));
+      
        for (Delivery d : new DeliveryDAO().findDeliveryByShipper(57, "", "", 1, 5)) {
             System.out.println(d);
         }

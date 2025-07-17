@@ -160,58 +160,22 @@ public class ManageShipperDeliveryController extends HttpServlet {
         request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, response);
     }
 
-    private void viewShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       int id = Integer.parseInt(request.getParameter("id"));
-       String sort = request.getParameter("sort");
-       String search = request.getParameter("search");
-       // Pagination
-        int page = 1;
-        int pageSize = 2;
-         try {
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                if (page < 1) {
-                    page = 1;
-                }
-            }
-        } catch (NumberFormatException e) {
-            // Keep default value
-        }
-       List<Account> accountList = accDAO.searchShippers(search, sort, page, pageSize);
-        int totalShipper = accDAO.getTotalShipperResults(search);
-       
-      // Number of page can have
-        int totalPages = (int) Math.ceil((double) totalShipper / pageSize);
-        
-       Delivery de = deliveryDAO.findById(id);
-       request.setAttribute("sort", sort);
-      request.setAttribute("search", search);
-      request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-       request.setAttribute("id", id);
-       request.setAttribute("shipperList", accountList);
-       request.setAttribute("de", de);
-       
-        Map<Integer, Integer> deliveringCountMap = new HashMap<>();
-        for (Account shipper : accountList) {
-            int deliveringCount = deliveryDAO.getNumberDeliveryOfShipper(shipper.getId());
-            deliveringCountMap.put(shipper.getId(), deliveringCount);
-        }
-        request.setAttribute("deliveringCountMap", deliveringCountMap);
-       request.setAttribute("deliveryDAO", deliveryDAO);
-       request.getRequestDispatcher("/view/seller/select-shipper.jsp").forward(request, response);
-    }
 
     private void updateStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
-            int id = Integer.parseInt(request.getParameter("id"));
+            int delivery_id = Integer.parseInt(request.getParameter("delivery_id"));
+            
             String newStatus =request.getParameter("newStatus");
+            
             String note =request.getParameter("note");
-            Delivery delivery = deliveryDAO.findById(id);
-            Boolean checkUpdateShipperSuccess = deliveryDAO.updateStatusShipper(delivery,newStatus,note);
-         
-            if(checkUpdateShipperSuccess){
+            
+            Delivery delivery = deliveryDAO.findById(delivery_id);
+            delivery.setStatus(newStatus);
+            delivery.setNote(note);
+            Boolean checkUpdateSuccess = deliveryDAO.update(delivery);
+        
+            if(checkUpdateSuccess){
                session.setAttribute("isSuccess", true);
             }else{
                session.setAttribute("errorMessage", true); 
@@ -226,21 +190,27 @@ public class ManageShipperDeliveryController extends HttpServlet {
     private void viewDelivery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       
        try {
+           // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+            
            int id = Integer.parseInt(request.getParameter("id"));
+           
            int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+           
            Delivery delivery = deliveryDAO.findById(id);
+           
            Order order = orderDAO.findById(delivery.getOrder_id());
+           
            Account accShipper = accDAO.findById(shipper_id);
            
-//            // Get the seller account from session
-//            HttpSession session = request.getSession();
-//            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-//
-//            // Check if the seller is logged in
-//            if (account == null) {
-//                response.sendRedirect(request.getContextPath() + "/home");
-//                return;
-//            }
+            
              // If the order does not exist, forward to error page
             if (order == null) {
                 request.setAttribute("errorMessage", "Order not found with ID: " + delivery.getOrder_id());
@@ -263,7 +233,7 @@ public class ManageShipperDeliveryController extends HttpServlet {
 
             // Set attributes for JSP rendering
             request.setAttribute("order", order);
-            request.setAttribute("account", acc);
+            request.setAttribute("acc", acc);
             request.setAttribute("OrderItems", orderItems);
             request.setAttribute("OrderItemMap", OrderItemMap);
             request.setAttribute("accShipper", accShipper);
@@ -281,16 +251,8 @@ public class ManageShipperDeliveryController extends HttpServlet {
             try {
             HttpSession session = request.getSession();
             int id = Integer.parseInt(request.getParameter("id"));
-            int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
             Delivery delivery = deliveryDAO.findById(id);
-            delivery.setShipper_id(shipper_id);
-                //Boolean checkUpdateShipperSuccess = deliveryDAO.update(delivery);
-//            if(checkUpdateShipperSuccess){
-//               session.setAttribute("isSuccess", true);
-//            }else{
-//               session.setAttribute("errorMessage", true); 
-//            }
-                request.setAttribute("order", delivery);
+            request.setAttribute("delivery", delivery);
             request.getRequestDispatcher("/view/shipper/update-status.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

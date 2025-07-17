@@ -22,6 +22,7 @@ import lombok.ToString;
 public class Delivery {
     private Integer id;
     private Integer order_id;
+    private Integer order_combo_id;
     private Integer shipper_id;
     private String status;
     private Timestamp assigned_at;

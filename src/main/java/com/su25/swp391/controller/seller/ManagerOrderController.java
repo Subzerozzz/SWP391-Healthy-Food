@@ -3,9 +3,7 @@ package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
-import com.su25.swp391.dal.implement.CouponDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
-import com.su25.swp391.dal.implement.OrderApprovalDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
@@ -33,7 +31,6 @@ import com.su25.swp391.dal.implement.DeliveryDAO;
 public class ManagerOrderController extends HttpServlet {
     // Declare properties for DAO 
     private OrderDAO orderDAO;
-    private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
     private AccountDAO accDAO = new AccountDAO();
     private FoodDAO foodDAO;
@@ -42,7 +39,6 @@ public class ManagerOrderController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
-        approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
         accDAO = new AccountDAO();
         deliveryDAO = new DeliveryDAO();
@@ -405,21 +401,9 @@ public class ManagerOrderController extends HttpServlet {
             }
             // List Shipper
             List<Account> accShipper = accDAO.findAccountByRole("shipper");
-            
-            // Retrieve approval records related to this order
-            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-
-            // Map each approver's account information
-            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
-            for (OrderApproval orderApproval : approvals) {
-                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
-                OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
-            }
-
+           
             // Set attributes for JSP rendering
             request.setAttribute("order", order);
-            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
-            request.setAttribute("approvals", approvals);
             request.setAttribute("accShipper", accShipper);
             // Forward to the update order status JSP page
             request.getRequestDispatcher("/view/seller/update-order-status.jsp").forward(request, response);

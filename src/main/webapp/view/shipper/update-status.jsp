@@ -247,7 +247,7 @@ textarea.form-control {
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Order #${order.id}</div>
+                                            <div class="text-tiny">Order #${delivery.id}</div>
                                         </li>
                                     </ul>
                                 </div>
@@ -274,12 +274,12 @@ textarea.form-control {
                         <div class="card-body">
                             <c:choose>
                                 <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'success' || order.status == 'reject'}">
+                                <c:when test="${delivery.status == 'success' || delivery.status == 'reject'}">
                                     <div class="mb-3">
                                         <label class="form-label">Current Status</label>
                                         <div class="d-flex align-items-center">
-                                            <span class="badge ${order.status == 'success' ? 'bg-success' : 'bg-danger'} fs-6">
-                                                ${order.status}
+                                            <span class="badge ${delivery.status == 'success' ? 'bg-success' : 'bg-danger'} fs-6">
+                                                ${delivery.status}
                                             </span>
                                         </div>
                                     </div>
@@ -301,23 +301,23 @@ textarea.form-control {
                                 <c:otherwise>
                                     <form action="${pageContext.request.contextPath}/shipper/manage-delivery" method="get">
                                         <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="id" value="${order.id}">
+                                        <input type="hidden" name="delivery_id" value="${delivery.id}">
                                         
                                         <div class="mb-3">
                                             <label class="form-label">New Status</label>
                                             <select class="form-select" name="newStatus" required>
                                                 <option value="">-- Select Status --</option>
-                                                <c:if test="${order.status == 'pending'}">
+                                                <c:if test="${delivery.status == 'pending'}">
                                                     <option value="delivering">Delivering</option>
                                                </c:if>
-                                                <c:if test="${order.status == 'delivering'}">
+                                                <c:if test="${delivery.status == 'delivering'}">
                                                     <option value="success">Successful delivery</option>
                                                     <option value="reject">Reject delivery</option>
                                                 </c:if>
                                                
                                             </select>
                                         </div>
-                                        <c:if test="${order.status == 'delivering'}">
+                                        <c:if test="${delivery.status == 'delivering'}">
                                            <div class="mb-3">
                                             <label class="form-label">Note</label>
                                             <textarea class="form-control" name="note" rows="3" 
