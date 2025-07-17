@@ -660,5 +660,4 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
 
     return 0;
 }
-
 }

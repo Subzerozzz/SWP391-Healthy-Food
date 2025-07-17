@@ -45,12 +45,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/izi-toast.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
-      <!-- Bootstrap 5 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css" />
 
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body class="body">
@@ -94,14 +94,14 @@
                   <form class="filter-form" action="${pageContext.request.contextPath}/type-of-request" method="get">
                     <input type="hidden" name="action" value="list">
                     <select name="sort" class="form-select">
-                      <option value="" ${param.sort == '' ? 'selected' : ''}>Sort ID</option>
-                      <option value="ASC" ${param.sort == 'ASC' ? 'selected' : ''}>Increase</option>
-                      <option value="DESC" ${param.sort == 'DESC' ? 'selected' : ''}>Decrease</option>
+                      <option value="" ${param.sort=='' ? 'selected' : '' }>Sort ID</option>
+                      <option value="ASC" ${param.sort=='ASC' ? 'selected' : '' }>Increase</option>
+                      <option value="DESC" ${param.sort=='DESC' ? 'selected' : '' }>Decrease</option>
                     </select>
                     <select name="select" class="form-select">
-                      <option value="" ${param.select=='' ? 'selected' : ''}>All Request</option>
+                      <option value="" ${param.select=='' ? 'selected' : '' }>All Request</option>
                       <c:forEach items="${type}" var="t">
-                        <option value="${t}" ${param.select==t ? 'selected' : ''}>${t}</option>
+                        <option value="${t}" ${param.select==t ? 'selected' : '' }>${t}</option>
                       </c:forEach>
                     </select>
                     <input type="text" name="search" placeholder="Search by name food..." value="${param.search}" />
@@ -129,11 +129,12 @@
                       <tbody>
                         <c:if test="${empty listFoodDraft}">
                           <tr>
-                             <td colspan="8" class="text-center">
+                            <td colspan="8" class="text-center">
                               <div class="py-4">
-                                <a href="${pageContext.request.contextPath}/type-of-request" class="btn btn-outline-primary mt-2">
-                                                                <i class="fas fa-times me-2"></i>Clear Filters
-                                                            </a>
+                                <a href="${pageContext.request.contextPath}/type-of-request"
+                                  class="btn btn-outline-primary mt-2">
+                                  <i class="fas fa-times me-2"></i>Clear Filters
+                                </a>
                                 <h5>No Food Draft Request found</h5>
                                 <p class="text-muted">
                                   <c:choose>
@@ -142,10 +143,10 @@
                                     </c:when>
                                     <c:otherwise>
                                       There are no food draft in the system yet.
-                                      
+
                                     </c:otherwise>
                                   </c:choose>
-                                      
+
                                 </p>
                               </div>
                             </td>
@@ -153,7 +154,7 @@
                         </c:if>
                         <c:forEach items="${listFoodDraft}" var="foodD">
                           <tr>
-                              <td>${foodD.id}</td>
+                            <td>${foodD.id}</td>
                             <td><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
                             <td>${foodD.getName()}</td>
                             <td>${foodD.getType()}</td>
@@ -244,16 +245,16 @@
                   <!--End Pagination-->
                   <!-- Toast layout đặt ở cuối trang -->
                   <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-                      <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                          <div id="toast-header" class="toast-header">
-                              <strong class="me-auto" id="toast-title">Notification</strong>
-                              <small class="text-muted">now</small>
-                              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                          </div>
-                          <div class="toast-body" id="toast-body">
-                              <!-- Nội dung toast -->
-                          </div>
+                    <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                      <div id="toast-header" class="toast-header">
+                        <strong class="me-auto" id="toast-title">Notification</strong>
+                        <small class="text-muted">now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                       </div>
+                      <div class="toast-body" id="toast-body">
+                        <!-- Nội dung toast -->
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <!--end table-->
@@ -305,48 +306,52 @@
   <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />
   <!--Alert Information about AccpetFood-->
- <script>
+  <script>
     // Function to show toast
     function showToast(message, type) {
-        if (!message) return;
-        const toastEl = document.getElementById('orderToast');
-        const toastTitle = document.getElementById('toast-title');
-        const toastBody = document.getElementById('toast-body');
-        const header = document.getElementById('toast-header');
+      if (!message) return;
+      const toastEl = document.getElementById('orderToast');
+      const toastTitle = document.getElementById('toast-title');
+      const toastBody = document.getElementById('toast-body');
+      const header = document.getElementById('toast-header');
 
-        // Set content
-        toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
-        toastBody.textContent = message;
+      // Set content
+      toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
+      toastBody.textContent = message;
 
-        // Set header color
-        header.className = 'toast-header';
-        if(type === 'success') {
-            header.classList.add('bg-success', 'text-white');
-        } else if(type === 'error') {
-            header.classList.add('bg-danger', 'text-white');
-        } else {
-            header.classList.add('bg-info', 'text-white');
-        }
+      // Set header color
+      header.className = 'toast-header';
+      if (type === 'success') {
+        header.classList.add('bg-success', 'text-white');
+      } else if (type === 'error') {
+        header.classList.add('bg-danger', 'text-white');
+      } else {
+        header.classList.add('bg-info', 'text-white');
+      }
 
-        // Show toast
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
+      // Show toast
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
     }
 
     const successMessage = "${sessionScope.isSuccess}";
     const errorMessage = "${sessionScope.isError}";
 
-    document.addEventListener('DOMContentLoaded', function() {
-        if (successMessage) {
-            showToast(successMessage, "success");
-            <c:remove var="isSuccess" scope="session"/>
-        }
-        if (errorMessage) {
-            showToast(errorMessage, "error");
-            <c:remove var="isError" scope="session"/>
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+      if (successMessage) {
+        showToast(successMessage, "success"); <
+        c: remove
+        var = "isSuccess"
+        scope = "session" / >
+      }
+      if (errorMessage) {
+        showToast(errorMessage, "error"); <
+        c: remove
+        var = "isError"
+        scope = "session" / >
+      }
     });
-</script>
+  </script>
 
   <!--Message Error-->
   <script>
