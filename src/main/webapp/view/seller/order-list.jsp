@@ -447,12 +447,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Customer</th>
-                                    <th>Address</th>
                                     <th>Total</th>
                                     <th>Payment Method</th>
                                     <th>Status</th>
-                                    <th>Coupon Code</th>
-                                    <th>Paid Status</th>
+                                    <th>Paid</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -499,11 +497,6 @@
                                                 </c:choose>
                                             </td>
 
-                                            <td>
-                                                ${order.shipping_address}
-                                            </td>
-
-                                            
                                            
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
@@ -522,8 +515,7 @@
                                                         ${order.status}
                                                     </span>
                                             </td>
-                                           
-                                             <td>${order.coupon_code}</td>
+                                         
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d"
                                                           class="badge-modern ${

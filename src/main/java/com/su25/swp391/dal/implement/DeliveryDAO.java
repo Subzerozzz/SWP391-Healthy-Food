@@ -549,6 +549,22 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     return 0;
 }  
+   public boolean insertDelivery(int order_id,int shipper_id){
+       String sql = "Insert INTO Delivery(order_id,shipper_id,status,assigned_at) VALUES(?,?,'pending',NOW()) ";
+       try {
+           connection = getConnection();
+           statement = connection.prepareStatement(sql);
+           statement.setInt(1, order_id);
+           statement.setInt(2, shipper_id);
+           int row = statement.executeUpdate();
+           return (row > 0);
+       } catch (Exception e) {
+           e.printStackTrace();
+       } finally {
+           closeResources();
+       }
+       return false;
+   }
   public static void main(String[] args) {
         DeliveryDAO  dao = new DeliveryDAO();
         for (Delivery d : new DeliveryDAO().searchDelivery("hung", "asc", "",1,2 )) {

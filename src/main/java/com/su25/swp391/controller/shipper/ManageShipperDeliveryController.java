@@ -25,10 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Admin
- */
+
 @WebServlet(name="ManageShipperDeliveryController", urlPatterns={"/shipper/manage-delivery"})
 public class ManageShipperDeliveryController extends HttpServlet {
      
@@ -106,61 +103,61 @@ public class ManageShipperDeliveryController extends HttpServlet {
     }// </editor-fold>
 
     private void listDelivery(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-     String sort = request.getParameter("sort");
-String status = request.getParameter("status");
-String search = request.getParameter("search");
+        String sort = request.getParameter("sort");
+        String status = request.getParameter("status");
+        String search = request.getParameter("search");
 
- //Lấy thông tin shipper đăng nhập từ session
- HttpSession session = request.getSession();
- Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+        //Lấy thông tin shipper đăng nhập từ session
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
-int currentShipperId = account.getId();
- 
-// Phân trang
-int page = 1;
-int pageSize = 10;
-try {
-    if (request.getParameter("page") != null) {
-        page = Integer.parseInt(request.getParameter("page"));
-        if (page < 1) {
-            page = 1;
+        int currentShipperId = account.getId();
+
+        // Phân trang
+        int page = 1;
+        int pageSize = 10;
+        try {
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+                if (page < 1) {
+                    page = 1;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // giữ page = 1
         }
-    }
-} catch (NumberFormatException e) {
-    // giữ page = 1
-}
 
-// Lấy danh sách đơn hàng theo shipper
-List<Delivery> listDelivery;
-int totalDeliveries = 0;
+        // Lấy danh sách đơn hàng theo shipper
+        List<Delivery> listDelivery;
+        int totalDeliveries = 0;
 
-if (search != null && !search.trim().isEmpty()) {
-    // Nếu có tìm kiếm => vẫn dùng searchDelivery và getTotalDeliveryResults như cũ (có JOIN với Account)
-    listDelivery = deliveryDAO.searchDeliveryShipper(search, sort, status, page, pageSize,currentShipperId);
-    totalDeliveries = deliveryDAO.getTotalDeliveryResultsShipper(search, status,currentShipperId);
-    
-    // Nếu muốn search riêng của shipper thì phải sửa cả searchDelivery(...) => chưa nên sửa nếu chưa cần
-} else {
-    // Dùng method mới cho shipper
-    listDelivery = deliveryDAO.findDeliveryByShipper(currentShipperId, sort, status, page, pageSize);
-    totalDeliveries = deliveryDAO.getTotalFilteredDeliveryByShipper(currentShipperId, status);
-}
+        if (search != null && !search.trim().isEmpty()) {
+            // Nếu có tìm kiếm => vẫn dùng searchDelivery và getTotalDeliveryResults như cũ (có JOIN với Account)
+            listDelivery = deliveryDAO.searchDeliveryShipper(search, sort, status, page, pageSize, currentShipperId);
+            totalDeliveries = deliveryDAO.getTotalDeliveryResultsShipper(search, status, currentShipperId);
 
-// Tính tổng số trang
-int totalPages = (int) Math.ceil((double) totalDeliveries / pageSize);
+            // Nếu muốn search riêng của shipper thì phải sửa cả searchDelivery(...) => chưa nên sửa nếu chưa cần
+        } else {
+            // Dùng method mới cho shipper
+            listDelivery = deliveryDAO.findDeliveryByShipper(currentShipperId, sort, status, page, pageSize);
+            totalDeliveries = deliveryDAO.getTotalFilteredDeliveryByShipper(currentShipperId, status);
+        }
 
-// Set attribute cho JSP
-request.setAttribute("sort", sort);
-request.setAttribute("status", status);
-request.setAttribute("search", search);
-request.setAttribute("currentPage", page);
-request.setAttribute("totalPages", totalPages);
-request.setAttribute("accDAO", accDAO);
-request.setAttribute("orderDAO", orderDAO);
-request.setAttribute("listDelivery", listDelivery);
+        // Tính tổng số trang
+        int totalPages = (int) Math.ceil((double) totalDeliveries / pageSize);
 
-// Điều hướng tới JSP
-request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, response);
+        // Set attribute cho JSP
+        request.setAttribute("sort", sort);
+        request.setAttribute("status", status);
+        request.setAttribute("search", search);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("accDAO", accDAO);
+        request.setAttribute("orderDAO", orderDAO);
+        request.setAttribute("listDelivery", listDelivery);
+
+        // Điều hướng tới JSP
+        request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, response);
     }
 
     private void viewShipper(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -229,11 +226,11 @@ request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, re
     private void viewDelivery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       
        try {
-      int id = Integer.parseInt(request.getParameter("id"));
-      int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
-      Delivery delivery = deliveryDAO.findById(id);
-      Order order = orderDAO.findById(delivery.getOrder_id());
-      Account accShipper = accDAO.findById(shipper_id);
+           int id = Integer.parseInt(request.getParameter("id"));
+           int shipper_id = Integer.parseInt(request.getParameter("shipper_id"));
+           Delivery delivery = deliveryDAO.findById(id);
+           Order order = orderDAO.findById(delivery.getOrder_id());
+           Account accShipper = accDAO.findById(shipper_id);
            
 //            // Get the seller account from session
 //            HttpSession session = request.getSession();

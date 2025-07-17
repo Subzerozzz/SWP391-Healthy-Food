@@ -233,97 +233,21 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
      * @param note Optional note explaining the reason for status change
      * @return true if update and logging were successful, false otherwise
      */
-    public boolean updateOrderStatus(int orderId, String newStatus, int sellerId, String note) {
-        // Get current status
-        String currentStatus = null;
-        try {
-            // Begin transaction
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+         String sql = "UPDATE `Order` SET status = ? , updated_at = NOW() where id = ?";
+         try {
             connection = getConnection();
-            connection.setAutoCommit(false);// Disable auto-commit for transaction control
-            // Step 1: Fetch current status of the order
-            String getStatusSql = "SELECT status FROM `Order` WHERE id = ?";
-            statement = connection.prepareStatement(getStatusSql);
-            //
-            statement.setInt(1, orderId);
-            resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                currentStatus = resultSet.getString("status");
-                System.out.println("Current status: " + currentStatus);
-            } else {
-                // Order not found
-                System.out.println("Order not found with ID: " + orderId);
-                return false;
-            }
-
-            // Step 2: Update order status and timestamp
-            String updateSql = "UPDATE `Order` SET status = ?, updated_at = NOW() WHERE id = ?";
-            statement = connection.prepareStatement(updateSql);
+            statement = connection.prepareStatement(sql);
             statement.setString(1, newStatus);
             statement.setInt(2, orderId);
-
-            int rowsAffected = statement.executeUpdate();
-            System.out.println("Update order status rows affected: " + rowsAffected);
-
-            if (rowsAffected > 0) {
-                // Step 3: Log status change into OrderApproval table
-                String approvalSql = "INSERT INTO OrderApproval (order_id, approved_by, status_before, status_after, note) "
-                        + "VALUES (?, ?, ?, ?, ?)";
-                statement = connection.prepareStatement(approvalSql);
-                statement.setInt(1, orderId);
-                statement.setInt(2, sellerId);
-                statement.setString(3, currentStatus);
-                statement.setString(4, newStatus);
-                statement.setString(5, note);
-
-                int approvalRowsAffected = statement.executeUpdate();
-                System.out.println("Insert approval rows affected: " + approvalRowsAffected);
-                
-                if(newStatus.equalsIgnoreCase("accepted")){
-                    String sqlDelivery = "INSERT INTO Delivery (order_id, status)\n" +
-                      "VALUES (?, 'pending')";
-                    statement = connection.prepareStatement(sqlDelivery);
-                    statement.setInt(1, orderId);
-                    statement.executeUpdate();
-                }
-                if (approvalRowsAffected > 0) {
-                    
-                    // Commit transaction if all operations succeeded
-                    connection.commit();
-                    System.out.println("Transaction committed successfully");
-                    return true;
-                } 
-            }
-            // Rollback if anything failed
-            System.out.println("Rolling back transaction");
-            connection.rollback();
-            return false;
-
-        } catch (SQLException ex) {
-            // Rollback on exception
-            try {
-                if (connection != null) {
-                    System.out.println("Exception occurred, rolling back: " + ex.getMessage());
-                    connection.rollback();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error rolling back transaction: " + e.getMessage());
-            }
-            System.out.println("Error updating order status: " + ex.getMessage());
-            ex.printStackTrace();
-            return false;
+            int row = statement.executeUpdate();
+            return (row > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            // Ensure auto-commit is reset
-            try {
-                if (connection != null) {
-                    connection.setAutoCommit(true);
-                }
-            } catch (SQLException e) {
-                System.out.println("Error resetting auto-commit: " + e.getMessage());
-            }
-            // Close connection, statement, and result set
-            closeResources();
+             closeResources();
         }
+         return false;
     }
 
     public List<Order> findOrdersByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {

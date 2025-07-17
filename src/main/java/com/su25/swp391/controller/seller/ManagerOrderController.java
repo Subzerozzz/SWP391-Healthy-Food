@@ -27,10 +27,8 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-/**
- *
- * @author FPTSHOP
- */
+
+import com.su25.swp391.dal.implement.DeliveryDAO;
 @WebServlet(name = "ManagerOrderController", urlPatterns = { "/seller/manage-order" })
 public class ManagerOrderController extends HttpServlet {
     // Declare properties for DAO 
@@ -38,8 +36,8 @@ public class ManagerOrderController extends HttpServlet {
     private OrderApprovalDAO approvalDAO;
     private OrderItemDAO itemDAO;
     private AccountDAO accDAO = new AccountDAO();
-    private CouponDAO couponDAO;
     private FoodDAO foodDAO;
+    private DeliveryDAO deliveryDAO;
     // Method in Servlet Container call only 1 time in lifecycle
     @Override
     public void init() throws ServletException {
@@ -47,7 +45,7 @@ public class ManagerOrderController extends HttpServlet {
         approvalDAO = new OrderApprovalDAO();
         itemDAO = new OrderItemDAO();
         accDAO = new AccountDAO();
-        couponDAO = new CouponDAO();
+        deliveryDAO = new DeliveryDAO();
         foodDAO = new FoodDAO();
     }
 
@@ -93,7 +91,7 @@ public class ManagerOrderController extends HttpServlet {
 
         try {
             switch (action) {
-                case "updateStatus":
+                case "update":
                     updateOrderStatus(request, response);
                     break;
                 default:
@@ -213,7 +211,10 @@ public class ManagerOrderController extends HttpServlet {
 
             // Get the new status from request
             String newStatus = request.getParameter("newStatus");
-
+            
+            // Get id Shipper
+            Integer idShipper = Integer.parseInt(request.getParameter("idShipper"));
+            
             // Get seller's note from request
             String note = request.getParameter("note");
 
@@ -242,9 +243,12 @@ public class ManagerOrderController extends HttpServlet {
                 return;
             }
             // Update the order status
-            boolean update = orderDAO.updateOrderStatus(orderId, newStatus, acc.getId(), note);
-
-            if (update) {
+            boolean update = orderDAO.updateOrderStatus(orderId, newStatus);
+            
+            if(newStatus.equalsIgnoreCase("accepted")){
+                boolean checkInsertDelivery = deliveryDAO.insertDelivery(orderId,idShipper );
+            }
+             if (update) {
                 session.setAttribute("successMessage","Success Order: "+orderId);
               } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
@@ -252,10 +256,30 @@ public class ManagerOrderController extends HttpServlet {
 
             // If this is a guest order (account_id = 0), send an email notification
             if (order.getAccount_id() == 0 || order.getAccount_id() == null) {
-                String customerEmail = order.getEmail();
-                String customerName = order.getFull_name();
+                String guestEmail = order.getEmail();
+                String guestName = order.getFull_name();
                 String subject = "Order Status Update";
-                String content = "<h3>Hello " + customerName + ",</h3>"
+                if(guestName == null){
+                    guestName = "";
+                }
+                String content = "<h3>Hello you " + guestName + ",</h3>"
+                        + "<p>Your order has been <strong>" + newStatus +" "+ note+"</strong>.</p>"
+                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
+                        + "<br><em>Best regards,</em><br>Customer Support Team";
+                try {
+                    EmailUtils.sendMail(guestEmail, subject, content);
+                } catch (MessagingException ex) {
+                    ex.printStackTrace(); // Consider replacing with logger
+                }
+            }else{
+                Account accCustomer = accDAO.findById(order.getAccount_id());
+                String customerEmail = accCustomer.getEmail();
+                 String customerName = accCustomer.getFull_name();
+                 if(customerName == null){
+                    customerName = "";
+                }
+                String subject = "Order Status Update";
+                String content = "<h3>Hello you " + customerName + ",</h3>"
                         + "<p>Your order has been <strong>" + newStatus +" "+ note+"</strong>.</p>"
                         + "<p>Thank you for shopping at Healthy Food Store!</p>"
                         + "<br><em>Best regards,</em><br>Customer Support Team";
@@ -379,7 +403,9 @@ public class ManagerOrderController extends HttpServlet {
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-
+            // List Shipper
+            List<Account> accShipper = accDAO.findAccountByRole("shipper");
+            
             // Retrieve approval records related to this order
             List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
 
@@ -394,7 +420,7 @@ public class ManagerOrderController extends HttpServlet {
             request.setAttribute("order", order);
             request.setAttribute("OrderApprovalMap", OrderApprovalMap);
             request.setAttribute("approvals", approvals);
-
+            request.setAttribute("accShipper", accShipper);
             // Forward to the update order status JSP page
             request.getRequestDispatcher("/view/seller/update-order-status.jsp").forward(request, response);
         } catch (Exception e) {

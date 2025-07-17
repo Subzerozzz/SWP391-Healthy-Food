@@ -274,7 +274,7 @@ textarea.form-control {
                         <div class="card-body">
                             <c:choose>
                                 <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'}">
+                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'|| order.status == 'completed'}">
                                     <div class="mb-3">
                                         <label class="form-label">Current Status</label>
                                         <div class="d-flex align-items-center">
@@ -300,7 +300,7 @@ textarea.form-control {
                                 <%-- For pending or accepted orders - Allow updates --%>
                                 <c:otherwise>
                                     <form action="${pageContext.request.contextPath}/seller/manage-order" method="post">
-                                        <input type="hidden" name="action" value="updateStatus">
+                                        <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderId" value="${order.id}">
                                         
                                         <div class="mb-3">
@@ -313,6 +313,16 @@ textarea.form-control {
                                                 </c:if>
                                              </select>
                                         </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Choose Shipper</label>
+                                                <select class="form-select" name="idShipper" required>
+                                                    <option value="">-- Select Shipper --</option>
+                                                    <c:forEach items="${accShipper}" var="accShip">
+                                                        <option value="${accShip.id}">${accShip.full_name}</option>
+                                                    </c:forEach>
+                                                    
+                                                </select>
+                                            </div>
                                         
                                         <div class="mb-3">
                                             <label class="form-label">Note</label>
@@ -332,57 +342,7 @@ textarea.form-control {
                     </div>
                 </div>
                         </div>
-                      
-                   <!-- Order History -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Order History</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Updated By</th>
-                                    <th>Date</th>
-                                    <th>Previous Status</th>
-                                    <th>New Status</th>
-                                    <th>Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="approval" items="${approvals}">
-                                    <c:set var="ItemAccount" value="${OrderApprovalMap[approval.approved_by]}"/>
-                                    <tr>
-                                        <td>${ItemAccount.user_name}</td>
-                                        <td><fmt:formatDate value="${approval.approved_at}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                        <td>
-                                            <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
-                                                                approval.statusBefore == 'accepted' ? 'bg-info' : 
-                                                                approval.statusBefore == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusBefore}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge ${approval.statusAfter == 'pending' ? 'bg-warning' : 
-                                                                approval.statusAfter == 'accepted' ? 'bg-info' : 
-                                                                approval.statusAfter == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusAfter}
-                                            </span>
-                                        </td>
-                                        <td>${approval.note}</td>
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${empty approvals}">
-                                    <tr>
-                                        <td colspan="5" class="text-center">No update history</td>
-                                    </tr>
-                                </c:if>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+               
              </div>
                                 <!--end fix-->
                                  <!-- Toast Container -->
