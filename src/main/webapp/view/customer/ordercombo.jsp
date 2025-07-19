@@ -161,7 +161,7 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                <h3>Order List</h3>
+                                                                                                <h3>Order Combo List</h3>
                                                                                             </div>
                                                                                             <!-- order-list -->
                                                                                             <div class="wg-box">

@@ -59,7 +59,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(3, orderCombo.getDiscountPrice());
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
-            statement.setInt(6,orderCombo.getUser_id());
+            statement.setInt(6, orderCombo.getUser_id());
             statement.setString(7, orderCombo.getStatus());
             statement.setInt(8, orderCombo.getOrderComboId());
             int affectedRows = statement.executeUpdate();
@@ -140,7 +140,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setPayment_status(rs.getInt("payment_status"));
         orderCombo.setUser_id(rs.getInt("user_id"));
         orderCombo.setStatus(rs.getString("status"));
-      
+
         return orderCombo;
     }
 
@@ -177,77 +177,78 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             closeResources();
         }
     }
-    
+
     // Mạnh
     public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
-    List<OrderCombo> list = new ArrayList<>();
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        List<OrderCombo> list = new ArrayList<>();
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
 
-    String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND payment_status = ?";
-    }
-    sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
-
-    try {
-        int offset = (page - 1) * pageSize;
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
-        int paramIndex = 2;
-
+        String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-            statement.setInt(paramIndex++, Integer.parseInt(status));
+            sql += " AND payment_status = ?";
+        }
+        sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByStatus) {
+                statement.setInt(paramIndex++, Integer.parseInt(status));
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
 
-        statement.setInt(paramIndex++, pageSize);
-        statement.setInt(paramIndex, offset);
-
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            list.add(getFromResultSet(resultSet));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+        return list;
     }
 
-    return list;
-}
     // Mạnh
     public int getTotalOrderComboCountByUserIdAndStatus(int userId, String status) {
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
-    String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND payment_status = ?";
-    }
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-            statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+            sql += " AND payment_status = ?";
         }
 
-        resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
 
-        if (resultSet.next()) {
-            return resultSet.getInt(1);
+            statement.setInt(1, userId);
+            if (filterByStatus) {
+                statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+
+        return 0;
     }
-
-    return 0;
-}
     //hang
-    
+
     // Phương thức phân trang cho tất cả tài khoản
     public List<OrderCombo> findAllWithPagination(int page, int pageSize) {
         List<OrderCombo> orderCombo = new ArrayList<>();
@@ -272,9 +273,10 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
         return orderCombo;
     }
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
         OrderComboDAO dao = new OrderComboDAO();
-        
+
         // Giả sử muốn lấy trang 1 với 5 phần tử mỗi trang
         int page = 1;
         int pageSize = 5;
@@ -304,26 +306,108 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         }
         return 0;
     }
+
     //hang 
-    public boolean updateOrderStatus(int orderComboId, String newStatus) {
-    String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
-    boolean updated = false;
+   public List<OrderCombo> findAllWithPaginationAndFilters(int page, int pageSize, String status, String paymentStatus) {
+    List<OrderCombo> orderCombos = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("SELECT * FROM OrderCombo WHERE 1=1");
+
+    // Dùng StringBuilder để build điều kiện WHERE động
+    if (status != null && !status.isEmpty()) {
+        sql.append(" AND status = ?");
+    }
+    if (paymentStatus != null && !paymentStatus.isEmpty()) {
+        sql.append(" AND payment_status = ?");
+    }
+
+    sql.append(" ORDER BY orderComboId DESC LIMIT ?, ?");
 
     try {
         connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setString(1, newStatus);
-        statement.setInt(2, orderComboId);
+        statement = connection.prepareStatement(sql.toString());
 
-        int rowsAffected = statement.executeUpdate();
-        updated = (rowsAffected > 0);
+        int paramIndex = 1;
+
+        if (status != null && !status.isEmpty()) {
+            statement.setString(paramIndex++, status);
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            statement.setString(paramIndex++, paymentStatus);
+        }
+
+        statement.setInt(paramIndex++, (page - 1) * pageSize);
+        statement.setInt(paramIndex, pageSize);
+
+        resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            orderCombos.add(getFromResultSet(resultSet));
+        }
+
     } catch (Exception e) {
-        System.out.println("Error updating order status: " + e.getMessage());
+        System.out.println("Error fetching filtered OrderCombos: " + e.getMessage());
         e.printStackTrace();
     } finally {
         closeResources();
     }
 
-    return updated;
+    return orderCombos;
 }
+public int getOrderComboCountByFilters(String status, String paymentStatus) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM OrderCombo WHERE 1=1");
+
+    if (status != null && !status.isEmpty()) {
+        sql.append(" AND status = ?");
+    }
+    if (paymentStatus != null && !paymentStatus.isEmpty()) {
+        sql.append(" AND payment_status = ?");
+    }
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql.toString());
+
+        int paramIndex = 1;
+
+        if (status != null && !status.isEmpty()) {
+            statement.setString(paramIndex++, status);
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            statement.setString(paramIndex++, paymentStatus);
+        }
+
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+
+    } catch (Exception e) {
+        System.out.println("Error counting filtered OrderCombos: " + e.getMessage());
+    } finally {
+        closeResources();
+    }
+
+    return 0;
+}
+
+    public boolean updateOrderStatus(int orderComboId, String newStatus) {
+        String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
+        boolean updated = false;
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, newStatus);
+            statement.setInt(2, orderComboId);
+
+            int rowsAffected = statement.executeUpdate();
+            updated = (rowsAffected > 0);
+        } catch (Exception e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return updated;
+    }
 }

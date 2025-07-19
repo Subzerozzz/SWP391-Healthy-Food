@@ -299,7 +299,7 @@
 
                                                                                                                 <%-- For pending or accepted orders - Allow updates --%>
                                                                                                                 <c:otherwise>
-                                                                                                                    <form action="${pageContext.request.contextPath}/manage-ordercombo" method="post">
+                                                                                                                    <form action="${pageContext.request.contextPath}/manage-ordercombo" method="Post">
                                                                                                                         <input type="hidden" name="action" value="update">
                                                                                                                             <input type="hidden" name="orderComboId" value="${orderCombo.orderComboId}">
 

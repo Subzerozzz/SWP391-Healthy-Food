@@ -167,17 +167,31 @@
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form class="form-search" action="listordercombo" method="get">
-                                                                                                            <fieldset class="name">
-                                                                                                                <select name="status" required>
-                                                                                                                    <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="0"  ${param.status == "0" ? 'selected' : ''}>Chưa Thanh Toán</option>
-                                                                                                                <option value="1"  ${param.status == "1" ? 'selected' : ''}>Đã Thanh Toán</option>
-                                                                                                            </select>                                                                                                            </fieldset>
-                                                                                                        <div class="button-submit">
-                                                                                                            <button class="" type="submit"><i class="icon-search"></i></button>
-                                                                                                        </div>
+                                                                                                        <form class="form-search d-flex align-items-center gap-2" action="${pageContext.request.contextPath}/manage-ordercombo" method="get">
+                                                                                                        <fieldset class="name">
+                                                                                                            <select name="payment_status" required>
+                                                                                                                <option value="all" ${param.payment_status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="0"  ${param.payment_status == "0" ? 'selected' : ''}>Chưa Thanh Toán</option>
+                                                                                                                <option value="1"  ${param.payment_status == "1" ? 'selected' : ''}>Đã Thanh Toán</option>
+                                                                                                                <option value="22"  ${param.payment_status == "" ? 'selected' : ''}>ngoại Lệ</option>
+                                                                                                            </select>   
+                                                                                                        </fieldset>
 
+                                            
+
+                                                                                                        <fieldset class="name">
+                                                                                                            <select name="status" required>
+                                                                                                                <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="accepted"  ${param.status == "accepted" ? 'selected' : ''}>accepted</option>
+                                                                                                                <option value="pending"  ${param.status == "pending" ? 'selected' : ''}>pending</option>
+                                                                                                                <option value="cancelled"  ${param.status == "cancelled" ? 'selected' : ''}>cancelled</option>
+
+                                                                                                            </select>   
+                                                                                                        </fieldset>
+
+                                                                                                                <button type="submit" class="btn btn-outline-primary" style="width: 86.6px; height: 49.1px;border-radius: 10px; border: 1.5px solid gray;  " title="Lọc">
+                                                                                                            <i class="fas fa-filter" style="font-size: 24px "></i> <!-- Biểu tượng lọc -->
+                                                                                                        </button>
                                                                                                     </form>
                                                                                                 </div>
                                                                                                 <!--<a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/orderlist"><i class="icon-file-text"></i>List Order</a>-->
@@ -233,6 +247,7 @@
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose>   
                                                                                                                 </div>
+
                                                                                                                 <div class="body-text format-view">
                                                                                                                     <c:choose>
                                                                                                                         <c:when test="${orderCombo.status == 'pending'}">
@@ -298,21 +313,21 @@
 
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=list?page=${totalPages}">${totalPages}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${totalPages}&status=${param.status}&payment_status=${param.payment_status}">${totalPages}</a>
                                                                                                                 </li>
                                                                                                             </c:when>
 
                                                                                                             <c:otherwise>
                                                                                                                 <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                                                                                                     <li class="${currentPage == i ? 'active' : ''}">
-                                                                                                                        <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${i}&status=${param.status}">${i}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${i}&status=${param.status}&payment_status=${param.payment_status}">${i}</a>
                                                                                                                     </li>
                                                                                                                 </c:forEach>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${totalPages}&status=${param.status}"><i class="icon-chevron-right"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${totalPages}&status=${param.status}&payment_status=${param.payment_status}"><i class="icon-chevron-right"></i></a>
                                                                                                         </li>
                                                                                                     </ul>
 

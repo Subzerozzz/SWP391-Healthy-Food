@@ -52,6 +52,8 @@ public class BuyComboController extends HttpServlet {
     OrderComboFoodDAO ordercomboFoodDao = new OrderComboFoodDAO();
     OrderDAO orderDao = new OrderDAO();
     private static final String COMBO_SERVLET_URL = "comboController";
+        private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -291,7 +293,7 @@ public class BuyComboController extends HttpServlet {
                 session.removeAttribute("comboProducts");
 
                 setToastMessage(request, "Order Successful !!", "success");
-                response.sendRedirect(ORDER_LIST);
+                response.sendRedirect(request.getContextPath() +"/listordercombo");
             } else {
                 // Thanh toán không thành công hoặc lỗi
                 // Xử lý lỗi hoặc chuyển hướng đến trang thông báo lỗi
