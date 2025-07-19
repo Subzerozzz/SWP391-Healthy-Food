@@ -303,34 +303,32 @@ textarea.form-control {
                                         <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderId" value="${order.id}">
                                         
-                                        <div class="mb-3">
-                                            <label class="form-label">New Status</label>
-                                            <select class="form-select" name="newStatus" required>
+
+                                            <select class="form-select" name="newStatus" id="newStatusSelect" required onchange="toggleFieldsByStatus()"  style="margin: 10px 0">
                                                 <option value="">-- Select Status --</option>
                                                 <c:if test="${order.status == 'pending'}">
                                                     <option value="accepted">Accept Order</option>
                                                     <option value="cancelled">Cancel Order</option>
                                                 </c:if>
-                                             </select>
-                                        </div>
-                                            <div class="mb-3">
+                                            </select>
+
+                                            <div class="mb-3" id="shipperSelectGroup" style="display: none;">
                                                 <label class="form-label">Choose Shipper</label>
-                                                <select class="form-select" name="idShipper" required>
+                                                <select class="form-select" name="idShipper">
                                                     <option value="">-- Select Shipper --</option>
                                                     <c:forEach items="${accShipper}" var="accShip">
                                                         <option value="${accShip.id}">${accShip.full_name}</option>
                                                     </c:forEach>
-                                                    
                                                 </select>
                                             </div>
+
+                                            <div class="mb-3" id="noteGroup" style="display: none;">
+                                                <label class="form-label">Note</label>
+                                                <textarea class="form-control" name="note" rows="3" 
+                                                          placeholder="Enter note..."></textarea>
+                                            </div>
                                         
-                                        <div class="mb-3">
-                                            <label class="form-label">Note</label>
-                                            <textarea class="form-control" name="note" rows="3" 
-                                                      placeholder="Enter note..."></textarea>
-                                        </div>
-                                        
-                                        <div class="d-flex gap-2">
+<div class="d-flex gap-2" style="margin: 10px 0">
                                             <button type="submit" class="btn btn-primary">Update</button>
                                             <a href="${pageContext.request.contextPath}/seller/manage-order" 
                                                class="btn btn-secondary">Back</a>
@@ -475,6 +473,34 @@ textarea.form-control {
                 </c:if>
             });
         </script>
+ <script>
+ function toggleFieldsByStatus() {
+     const status = document.getElementById("newStatusSelect").value;
+     const shipperGroup = document.getElementById("shipperSelectGroup");
+     const noteGroup = document.getElementById("noteGroup");
+
+     // Xử lý Shipper
+     if (status === "accepted") {
+         shipperGroup.style.display = "block";
+         shipperGroup.querySelector('select').setAttribute('required', 'required');
+     } else {
+         shipperGroup.style.display = "none";
+         shipperGroup.querySelector('select').removeAttribute('required');
+     }
+
+     // Xử lý Note
+     if (status === "cancelled") {
+         noteGroup.style.display = "block";
+         noteGroup.querySelector('textarea').setAttribute('required', 'required');
+     } else {
+         noteGroup.style.display = "none";
+         noteGroup.querySelector('textarea').removeAttribute('required');
+     }
+ }
+
+ // Gọi khi trang load để đảm bảo đúng trạng thái ban đầu
+ document.addEventListener("DOMContentLoaded", toggleFieldsByStatus);
+ </script>
 </body>
 
 

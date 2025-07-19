@@ -519,8 +519,8 @@
                                 <thead>
                                   <tr>
                                     <th>ID</th>
-                                    <th>ID Order</th>
-                                    <th>ID ComboOrder</th>
+                                  
+                                   
                                     <th>Customer</th>
                                     <th>Status</th>
                                     <th>Note</th>
@@ -559,8 +559,7 @@
 
                                     <tr>
                                       <td>${de.id}</td>
-                                      <td>${de.order_id}</td>
-                                      <td>${de.order_combo_id}</td>
+                                   
 
                                       <td>
                                         <c:choose>
