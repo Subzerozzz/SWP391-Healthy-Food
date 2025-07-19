@@ -104,7 +104,7 @@
                   <div class="inner-content">
                     <h2>Shop Details</h2>
                     <ul>
-                      <li><a href="index.html">Home</a></li>
+                        <li><a href="${pageContext.request.contextPath}/home">Home</a></li>
                       <li>Shop Details</li>
                     </ul>
                   </div>
@@ -162,12 +162,22 @@
 
                     <!--Order-->
                     <div class="product-add-btn">
-                      <button type="submit" class="default-btn btn-bg-three">
-                        <i class="fas fa-cart-plus"></i> Buy Now!
-                      </button>
-                      <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
-                        <i class="fas fa-cart-plus"></i> Add To Cart
-                      </button>
+                        <c:choose>
+                            <c:when test="${sessionScope.account.role eq 'customer' }">
+                                <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
+                                    <i class="fas fa-cart-plus"></i> Add To Cart
+                                </button>
+                            </c:when>
+                            <c:when test="${sessionScope.account eq null}"> 
+                                <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
+                                    <i class="fas fa-cart-plus"></i> Add To Cart
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <strong style="color: red">Tính năng mua hàng chỉ áp dụng với tài khoản là khách hàng hoặc khách vãng lai</strong>
+                            </c:otherwise>
+                        </c:choose>
+                      
                     </div>
 
                   </div>
@@ -191,11 +201,6 @@
                         <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
                           <img src="${item.getImage_url()}" alt="Product Images">
                         </a>
-                        <ul class="product-item-action">
-                          <li><a href="#"><i class='bx bx-repost'></i></a></li>
-                          <li><a href="wishlist.html"><i class='bx bx-heart'></i></a></li>
-                          <li><a href="cart.html"><i class='bx bx-cart'></i></a></li>
-                        </ul>
                       </div>
 
                       <div class="content">
@@ -256,24 +261,26 @@
             }
 
             .product-img {
-              height: 250px;
-              overflow: hidden;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border-radius: 15px !important;
+                height: 250px;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 15px !important;
             }
 
             .product-img a {
-              height: 100%;
-              width: auto;
+                height: 100%;
+                width: 100%;
+                display: block;
             }
 
             .product-img img {
-              height: 100%;
-              width: 100%;
-              object-fit: cover;
-              padding: 0px !important;
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                padding: 0px !important;
+                display: block;
             }
           </style>
 

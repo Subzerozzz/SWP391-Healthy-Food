@@ -211,21 +211,21 @@
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
 
-                                                                                                    <c:forEach var="order" items="${orderCombo}">
+                                                                                                    <c:forEach var="orderCombo" items="${orderCombo}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="body-text format-view">#${order.orderComboId} </div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 70px">${order.comboName}</div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 20px">${order.quantity} </div>
+                                                                                                                <div class="body-text format-view">#${orderCombo.orderComboId} </div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 70px">${orderCombo.comboName}</div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 20px">${orderCombo.quantity} </div>
                                                                                                                 <div class="body-text format-view " style="padding-right: 100px">
-                                                                                                                    <fmt:formatNumber value="${order.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
+                                                                                                                    <fmt:formatNumber value="${orderCombo.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view">
                                                                                                                     <c:choose>
-                                                                                                                        <c:when test="${order.payment_status == 0}">
+                                                                                                                        <c:when test="${orderCombo.payment_status == 0}">
                                                                                                                             <span class="status-unpaid">Chưa thanh toán</span>
                                                                                                                         </c:when>
-                                                                                                                        <c:when test="${order.payment_status == 1}">
+                                                                                                                        <c:when test="${orderCombo.payment_status == 1}">
                                                                                                                             <span class="status-paid">Đã thanh toán</span>
                                                                                                                         </c:when>
                                                                                                                         <c:otherwise>
@@ -235,14 +235,14 @@
                                                                                                                 </div>
                                                                                                                 <div class="body-text format-view">
                                                                                                                     <c:choose>
-                                                                                                                        <c:when test="${order.status == 'pending'}">
-                                                                                                                            <span class="status-unpaid">Pending</span>
+                                                                                                                        <c:when test="${orderCombo.status == 'pending'}">
+                                                                                                                            <span class="status-unpaid" style="background: blue">Pending</span>
                                                                                                                         </c:when>
-                                                                                                                        <c:when test="${order.status == 'accepted'}">
+                                                                                                                        <c:when test="${orderCombo.status == 'accepted'}">
                                                                                                                             <span class="status-paid">Acceptes</span>
                                                                                                                         </c:when>
-                                                                                                                        <c:when test="${order.status == 'cancel'}">
-                                                                                                                            <span class="status-cancel">Cancal</span>
+                                                                                                                        <c:when test="${orderCombo.status == 'cancelled'}">
+                                                                                                                            <span class="status-unpaid">Cancal</span>
                                                                                                                         </c:when>
 
                                                                                                                     </c:choose>  
@@ -251,12 +251,12 @@
                                                                                                                 <div class="body-text format-view"><a class="payment-badge">vnpay</a></div>
 
                                                                                                                 <div class="list-icon-function ">
-                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=view&orderComboId=${order.orderComboId}" class="item eye">
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=view&orderComboId=${orderCombo.orderComboId}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>
                                                                                                                     <div class="item edit">
                                                                                                                         <a
-                                                                                                                            href="${pageContext.request.contextPath}/manage-ordercombo?action=viewUpdate&orderComboId=${order.orderComboId}"><i
+                                                                                                                            href="${pageContext.request.contextPath}/manage-ordercombo?action=viewUpdate&orderComboId=${orderCombo.orderComboId}"><i
                                                                                                                                 class="icon-edit-3"></i></a>
 
                                                                                                                     </div>

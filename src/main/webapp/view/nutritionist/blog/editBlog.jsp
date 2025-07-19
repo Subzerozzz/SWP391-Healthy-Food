@@ -3,12 +3,6 @@
     Created on : Jun 3, 2025, 11:47:30 PM
     Author     : Predator
 --%>
-
-<%-- 
-    Document   : editBlog
-    Created on : June 3, 2025
-    Author     : Predator (modified)
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>

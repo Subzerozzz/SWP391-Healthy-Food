@@ -27,4 +27,5 @@ public class Delivery {
     private Timestamp assigned_at;
     private Timestamp delivered_at;
     private String note;
+    private int order_combo_id;
 }

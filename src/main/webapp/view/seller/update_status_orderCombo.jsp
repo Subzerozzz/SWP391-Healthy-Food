@@ -247,7 +247,7 @@
                                                                                                     <i class="icon-chevron-right"></i>
                                                                                                 </li>
                                                                                                 <li>
-                                                                                                    <div class="text-tiny">Order #${order.orderComboId}</div>
+                                                                                                    <div class="text-tiny">Order #${orderCombo.orderComboId}</div>
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
@@ -274,23 +274,23 @@
                                                                                                         <div class="card-body">
                                                                                                             <c:choose>
                                                                                                                 <%-- For completed or cancelled orders - Read only view --%>
-                                                                                                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'}">
+                                                                                                                <c:when test="${orderCombo.status == 'accepted' || orderCombo.status == 'cancelled'|| orderCombo.status == 'completed'}">
                                                                                                                     <div class="mb-3">
                                                                                                                         <label class="form-label">Current Status</label>
                                                                                                                         <div class="d-flex align-items-center">
-                                                                                                                            <span class="badge ${order.status == 'accepted' ? 'bg-success' : 'bg-danger'} fs-6">
-                                                                                                                                ${order.status}
+                                                                                                                            <span class="badge ${orderCombo.status == 'accepted' ? 'bg-success' : 'bg-danger'} fs-6">
+                                                                                                                                ${orderCombo.status}
                                                                                                                             </span>
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                     <div class="mb-3">
                                                                                                                         <small class="text-muted">
                                                                                                                             <i class="fas fa-info-circle me-1"></i>
-                                                                                                                            This order has been ${order.status} and cannot be modified further.
+                                                                                                                            This order has been ${orderCombo.status} and cannot be modified further.
                                                                                                                         </small>
                                                                                                                     </div>
                                                                                                                     <div>
-                                                                                                                        <a href="${pageContext.request.contextPath}/manager-ordercombo" 
+                                                                                                                        <a href="${pageContext.request.contextPath}/manage-ordercombo" 
                                                                                                                            class="btn btn-secondary">
                                                                                                                             Back to Order List
                                                                                                                         </a>
@@ -300,29 +300,37 @@
                                                                                                                 <%-- For pending or accepted orders - Allow updates --%>
                                                                                                                 <c:otherwise>
                                                                                                                     <form action="${pageContext.request.contextPath}/manage-ordercombo" method="post">
-                                                                                                                        <input type="hidden" name="action" value="updateStatus">
-                                                                                                                            <input type="hidden" name="orderId" value="${order.id}">
+                                                                                                                        <input type="hidden" name="action" value="update">
+                                                                                                                            <input type="hidden" name="orderComboId" value="${orderCombo.orderComboId}">
 
-                                                                                                                                <div class="mb-3">
-                                                                                                                                    <label class="form-label">New Status</label>
-                                                                                                                                    <select class="form-select" name="newStatus" required>
-                                                                                                                                        <option value="">-- Select Status --</option>
-                                                                                                                                        <c:if test="${order.status == 'pending'}">
-                                                                                                                                            <option value="accepted">Accept Order</option>
-                                                                                                                                            <option value="cancelled">Cancel Order</option>
-                                                                                                                                        </c:if>
+
+                                                                                                                                <select class="form-select" name="newStatus" id="newStatusSelect" required onchange="toggleFieldsByStatus()"  style="margin: 10px 0">
+                                                                                                                                    <option value="">-- Select Status --</option>
+                                                                                                                                    <c:if test="${orderCombo.status == 'pending'}">
+                                                                                                                                        <option value="accepted" ${param.newStatus == 'accepted' ? 'selected' : ''}>Accept Order</option>
+                                                                                                                                        <option value="cancelled" ${param.newStatus == 'cancelled' ? 'selected' : ''}>Cancel Order</option>
+                                                                                                                                    </c:if>
+                                                                                                                                </select>
+
+                                                                                                                                <div class="mb-3" id="shipperSelectGroup" style="display: none;">
+                                                                                                                                    <label class="form-label">Choose Shipper</label>
+                                                                                                                                    <select class="form-select" name="idShipper" required>
+                                                                                                                                        <option value="">-- Select Shipper --</option>
+                                                                                                                                        <c:forEach items="${accShipper}" var="accShip">
+                                                                                                                                            <option value="${accShip.id}">${accShip.full_name}</option>
+                                                                                                                                        </c:forEach>
                                                                                                                                     </select>
                                                                                                                                 </div>
 
-                                                                                                                                <div class="mb-3">
+                                                                                                                                <div class="mb-3" id="noteGroup" style="display: none;">
                                                                                                                                     <label class="form-label">Note</label>
                                                                                                                                     <textarea class="form-control" name="note" rows="3" 
                                                                                                                                               placeholder="Enter note..."></textarea>
                                                                                                                                 </div>
 
-                                                                                                                                <div class="d-flex gap-2">
+                                                                                                                                <div class="d-flex gap-2" style="margin: 10px 0">
                                                                                                                                     <button type="submit" class="btn btn-primary">Update</button>
-                                                                                                                                    <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo" 
                                                                                                                                        class="btn btn-secondary">Back</a>
                                                                                                                                 </div>
                                                                                                                                 </form>
@@ -333,113 +341,63 @@
                                                                                                                         </div>
                                                                                                                         </div>
 
-                                                                                                                        <!-- Order History -->
-                                                                                                                        <div class="card mt-24">
-                                                                                                                            <div class="card-header">
-                                                                                                                                <h6 class="card-title mb-0">Order History</h6>
+                                                                                                                        </div>
+                                                                                                                        <!--end fix-->
+                                                                                                                        <!-- Toast Container -->
+                                                                                                                        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                                                                                                                            <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                                                                                                                <div class="toast-header" id="toast-header">
+                                                                                                                                    <strong class="me-auto" id="toast-title">Thông báo</strong>
+                                                                                                                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                                                                                                </div>
+                                                                                                                                <div class="toast-body" id="toast-body"></div>
                                                                                                                             </div>
-                                                                                                                            <div class="card-body">
-                                                                                                                                <div class="table-responsive">
-                                                                                                                                    <table class="table table-hover">
-                                                                                                                                        <thead>
-                                                                                                                                            <tr>
-                                                                                                                                                <th>Updated By</th>
-                                                                                                                                                <th>Date</th>
-                                                                                                                                                <th>Previous Status</th>
-                                                                                                                                                <th>New Status</th>
-                                                                                                                                                <th>Note</th>
-                                                                                                                                            </tr>
-                                                                                                                                        </thead>
-                                                                                                                                        <tbody>
-                                                                                                                                            <c:forEach var="approval" items="${approvals}">
-                                                                                                                                                <c:set var="ItemAccount" value="${OrderApprovalMap[approval.approved_by]}"/>
-                                                                                                                                                <tr>
-                                                                                                                                                    <td>${ItemAccount.user_name}</td>
-                                                                                                                                                    <td><fmt:formatDate value="${approval.approved_at}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                                                                                                                                    <td>
-                                                                                                                                                        <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
-                                                                                                                                                                             approval.statusBefore == 'accepted' ? 'bg-info' : 
-                                                                                                                                                                             approval.statusBefore == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                                                                                                                                  ${approval.statusBefore}
-                                                                                                                                                              </span>
-                                                                                                                                                        </td>
-                                                                                                                                                        <td>
-                                                                                                                                                            <span class="badge ${approval.statusAfter == 'pending' ? 'bg-warning' : 
-                                                                                                                                                                                 approval.statusAfter == 'accepted' ? 'bg-info' : 
-                                                                                                                                                                                 approval.statusAfter == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                                                                                                                                      ${approval.statusAfter}
-                                                                                                                                                                  </span>
-                                                                                                                                                            </td>
-                                                                                                                                                            <td>${approval.note}</td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    </c:forEach>
-                                                                                                                                                    <c:if test="${empty approvals}">
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td colspan="5" class="text-center">No update history</td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    </c:if>
-                                                                                                                                                </tbody>
-                                                                                                                                            </table>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                                </div>
-                                                                                                                                <!--end fix-->
-                                                                                                                                <!-- Toast Container -->
-                                                                                                                                <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                                                                                                                                    <div id="orderToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                                                                                                                        <div class="toast-header" id="toast-header">
-                                                                                                                                            <strong class="me-auto" id="toast-title">Thông báo</strong>
-                                                                                                                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="toast-body" id="toast-body"></div>
-                                                                                                                                    </div>
 
-                                                                                                                                    <!-- Confirmation Toast -->
-                                                                                                                                    <div id="confirmToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-                                                                                                                                        <div class="toast-header bg-warning text-white">
-                                                                                                                                            <strong class="me-auto">Confirmation</strong>
-                                                                                                                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="toast-body">
-                                                                                                                                            <p id="confirm-message">Are you sure you want to update this order status?</p>
-                                                                                                                                            <div class="mt-2 d-flex justify-content-end gap-2">
-                                                                                                                                                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="toast">No</button>
-                                                                                                                                                <button type="button" class="btn btn-sm btn-primary" id="confirm-yes-btn">Yes, Update</button>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
+                                                                                                                            <!-- Confirmation Toast -->
+                                                                                                                            <div id="confirmToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                                                                                                                                <div class="toast-header bg-warning text-white">
+                                                                                                                                    <strong class="me-auto">Confirmation</strong>
+                                                                                                                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                                                                                                </div>
+                                                                                                                                <div class="toast-body">
+                                                                                                                                    <p id="confirm-message">Are you sure you want to update this order status?</p>
+                                                                                                                                    <div class="mt-2 d-flex justify-content-end gap-2">
+                                                                                                                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="toast">No</button>
+                                                                                                                                        <button type="button" class="btn btn-sm btn-primary" id="confirm-yes-btn">Yes, Update</button>
                                                                                                                                     </div>
                                                                                                                                 </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
 
 
-                                                                                                                                <!-- /order-detail -->
-                                                                                                                                </div>
-                                                                                                                                <!-- /main-content-wrap -->
-                                                                                                                                </div>
-                                                                                                                                <!-- /main-content-wrap -->
-                                                                                                                                <!-- bottom-page -->
-                                                                                                                                <jsp:include page="./../common/footer.jsp"></jsp:include>
-                                                                                                                                    <!-- /bottom-page -->
-                                                                                                                                    </div>
-                                                                                                                                    <!-- /main-content -->
-                                                                                                                                    </div>
-                                                                                                                                    <!-- /section-content-right -->
-                                                                                                                                    </div>
-                                                                                                                                    <!-- /layout-wrap -->
-                                                                                                                                    </div>
-                                                                                                                                    <!-- /#page -->
-                                                                                                                                    </div>
-                                                                                                                                    <!-- /#wrapper -->
+                                                                                                                        <!-- /order-detail -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                        </div>
+                                                                                                                        <!-- /main-content-wrap -->
+                                                                                                                        <!-- bottom-page -->
+                                                                                                                        <jsp:include page="./../common/footer.jsp"></jsp:include>
+                                                                                                                            <!-- /bottom-page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /main-content -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /section-content-right -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /layout-wrap -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#page -->
+                                                                                                                            </div>
+                                                                                                                            <!-- /#wrapper -->
 
-                                                                                                                                    <!-- Javascript -->
-                                                                                                                                    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
-                                                                                                                                <script src="${pageContext.request.contextPath}/js/main.js"></script>
-                                                                                                                                <script>
+                                                                                                                            <!-- Javascript -->
+                                                                                                                            <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/bootstrap-select.min.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/zoom.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/switcher.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/theme-settings.js"></script>
+                                                                                                                        <script src="${pageContext.request.contextPath}/js/main.js"></script>
+                                                                                                                        <script>
                                                                                                                                     // Function to show toast
                                                                                                                                     function showToast(message, type) {
                                                                                                                                         const toastEl = document.getElementById('orderToast');
@@ -470,7 +428,7 @@
 
                                                                                                                                     // Handle form submission with confirmation
                                                                                                                                     document.addEventListener('DOMContentLoaded', function () {
-                                                                                                                                        const orderForm = document.querySelector('form[action*="manage-ordercombo"]');
+                                                                                                                                        const orderForm = document.querySelector('form[action*="manage-order"]');
                                                                                                                                         if (orderForm) {
                                                                                                                                             orderForm.addEventListener('submit', function (e) {
                                                                                                                                                 e.preventDefault();
@@ -502,21 +460,49 @@
                                                                                                                                         }
 
                                                                                                                                         // Check for messages in session
-                                                                                                                                    <c:if test="${not empty sessionScope.successMessage}">
+                                                                                                                            <c:if test="${not empty sessionScope.successMessage}">
                                                                                                                                         showToast("${sessionScope.successMessage}", "success");
                                                                                                                                         // Remove message from session
-                                                                                                                                        <% session.removeAttribute("successMessage"); %>
-                                                                                                                                    </c:if>
+                                                                                                                                <% session.removeAttribute("successMessage"); %>
+                                                                                                                            </c:if>
 
-                                                                                                                                    <c:if test="${not empty sessionScope.errorMessage}">
+                                                                                                                            <c:if test="${not empty sessionScope.errorMessage}">
                                                                                                                                         showToast("${sessionScope.errorMessage}", "error");
                                                                                                                                         // Remove message from session
-                                                                                                                                        <% session.removeAttribute("errorMessage");%>
-                                                                                                                                    </c:if>
+                                                                                                                                <% session.removeAttribute("errorMessage");%>
+                                                                                                                            </c:if>
                                                                                                                                     });
-                                                                                                                                </script>
-                                                                                                                                </body>
+                                                                                                                        </script>
+                                                                                                                        <script>
+                                                                                                                            function toggleFieldsByStatus() {
+                                                                                                                                const status = document.getElementById("newStatusSelect").value;
+                                                                                                                                const shipperGroup = document.getElementById("shipperSelectGroup");
+                                                                                                                                const noteGroup = document.getElementById("noteGroup");
+
+                                                                                                                                // Xử lý Shipper
+                                                                                                                                if (status === "accepted") {
+                                                                                                                                    shipperGroup.style.display = "block";
+                                                                                                                                    shipperGroup.querySelector('select').setAttribute('required', 'required');
+                                                                                                                                } else {
+                                                                                                                                    shipperGroup.style.display = "none";
+                                                                                                                                    shipperGroup.querySelector('select').removeAttribute('required');
+                                                                                                                                }
+
+                                                                                                                                // Xử lý Note
+                                                                                                                                if (status === "cancelled") {
+                                                                                                                                    noteGroup.style.display = "block";
+                                                                                                                                    noteGroup.querySelector('textarea').setAttribute('required', 'required');
+                                                                                                                                } else {
+                                                                                                                                    noteGroup.style.display = "none";
+                                                                                                                                    noteGroup.querySelector('textarea').removeAttribute('required');
+                                                                                                                                }
+                                                                                                                            }
+
+                                                                                                                            // Gọi khi trang load để đảm bảo đúng trạng thái ban đầu
+                                                                                                                            document.addEventListener("DOMContentLoaded", toggleFieldsByStatus);
+                                                                                                                        </script>
+                                                                                                                        </body>
 
 
-                                                                                                                                <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
-                                                                                                                                </html>
+                                                                                                                        <!-- Mirrored from themesflat.co/html/remos/oder-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->
+                                                                                                                        </html>

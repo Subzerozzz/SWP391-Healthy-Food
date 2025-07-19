@@ -4,6 +4,7 @@ import com.su25.swp391.config.GlobalConfig;
 import static com.su25.swp391.controller.customer.OrderManage.ORDER_LIST;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.dal.implement.DeliveryDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderApprovalDAO;
 
@@ -51,8 +52,9 @@ public class ManagerOrderComboController extends HttpServlet {
     private final OrderComboDAO ordercomboDAO = new OrderComboDAO();
     private final ComboDAO comboDAO = new ComboDAO();
     private OrderApprovalDAO approvalDAO = new OrderApprovalDAO();
+    private DeliveryDAO deliveryDAO = new DeliveryDAO();
 
-    private final Order order = new Order();
+    private final OrderCombo order = new OrderCombo();
     public static final String ORDER_LIST = "view/seller/order_combo_list.jsp";
     private static final String ORDER_COMBO_DETAILS = "view/seller/order_combo_detail.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
@@ -101,7 +103,7 @@ public class ManagerOrderComboController extends HttpServlet {
 
         try {
             switch (action) {
-                case "updateStatus":
+                case "update":
                     updateOrderStatus(request, response);
                     break;
                 default:
@@ -220,9 +222,11 @@ public class ManagerOrderComboController extends HttpServlet {
             // Get the new status from request
             String newStatus = request.getParameter("newStatus");
 
+            // Get id Shipper
+            Integer idShipper = Integer.parseInt(request.getParameter("idShipper"));
             // Get seller's note from request
             String note = request.getParameter("note");
-
+      
             // Validate that the new status is not empty
             if (newStatus == null || newStatus.trim().isEmpty()) {
                 request.getSession().setAttribute("errorMessage", "Status cannot be empty");
@@ -248,36 +252,41 @@ public class ManagerOrderComboController extends HttpServlet {
                 return;
             }
 
-            // Store the old status for logging
-            String oldStatus = ordercombo.getStatus();
-
             // Update the order status
             boolean update = ordercomboDAO.updateOrderStatus(orderComboId, newStatus);
+            System.out.println("Update order status? " + update);
 
+            if (newStatus.equalsIgnoreCase("accepted")) {
+                System.out.println("=> Insert delivery for shipper id: " + idShipper);
+                boolean checkInsertDelivery = deliveryDAO.insertDeliveryCombo(orderComboId, idShipper);
+                System.out.println("Insert result: " + checkInsertDelivery);
+            }
             if (update) {
-                // If the order was just accepted, show success message
-                if ("accepted".equals(newStatus) && !"accepted".equals(oldStatus)) {
-                    String statusText = newStatus;
-                    switch (newStatus) {
-                        case "accepted":
-                            statusText = "accepted";
-                            break;
-                        case "cancelled":
-                            statusText = "cancelled";
-                            break;
-                        case "abc":
-                            statusText = newStatus;
-                            break;
-                        default:
-                            statusText = newStatus;
-                    }
-                    session.setAttribute("successMessage",
-                            "Order #" + orderComboId + " has been " + statusText + " successfully.");
-                }
+                session.setAttribute("successMessage", "Success Order: " + orderComboId);
             } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
             }
 
+            // If this is a guest order (account_id = 0), send an email notification
+            if (ordercombo.getUser_id() != 0 || ordercombo.getUser_id() != null) {
+                Account buyer = accDAO.findById(ordercombo.getUser_id());
+                String guestEmail = buyer.getEmail();
+                String CustomerName = buyer.getFull_name();
+                String subject = "Order Status Update";
+                if (CustomerName == null) {
+                    CustomerName = "";
+                }
+                String content = "<h3>Hello you " + CustomerName + ",</h3>"
+                        + "<p>Your order has been <strong>" + newStatus + " " + note + "</strong>.</p>"
+                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
+                        + "<br><em>Best regards,</em><br>Customer Support Team";
+                try {
+                    EmailUtils.sendMail(guestEmail, subject, content);
+                } catch (MessagingException ex) {
+                    ex.printStackTrace(); // Consider replacing with logger
+                }
+            }
+            // Redirect to the order update detail page
             // Redirect to the order update detail page
             response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&id=" + orderComboId);
         } catch (Exception e) {
@@ -362,34 +371,18 @@ public class ManagerOrderComboController extends HttpServlet {
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-
-            // Retrieve approval records related to this order
-            List<OrderApproval> approvals = approvalDAO.getOrderApprovalsByOrderId(orderId);
-
-            // Map each approver's account information
-            HashMap<Integer, Account> OrderApprovalMap = new HashMap<>();
-            for (OrderApproval orderApproval : approvals) {
-                Account accApproval = accDAO.findById(orderApproval.getApproved_by());
-                if (accApproval != null) {
-                    OrderApprovalMap.put(orderApproval.getApproved_by(), accApproval);
-                } else {
-                    System.out.println("❗ Không tìm thấy account với id: " + orderApproval.getApproved_by());
-                }
-            }
+            //List Shipper
+            List<Account> accShipper = accDAO.findAccountByRole("shipper");
 
             // Set attributes for JSP rendering
-            request.setAttribute("order", order);
-            request.setAttribute("OrderApprovalMap", OrderApprovalMap);
-            request.setAttribute("approvals", approvals);
-
+            request.setAttribute("orderCombo", order);
+            request.setAttribute("accShipper", accShipper);
             // Forward to the update order status JSP page
             request.getRequestDispatcher("/view/seller/update_status_orderCombo.jsp").forward(request, response);
         } catch (Exception e) {
             // Handle invalid order ID format or unexpected errors
             e.printStackTrace(); // ⬅️ IN RA CONSOLE
             request.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
-//
-//            request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
