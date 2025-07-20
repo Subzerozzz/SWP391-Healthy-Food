@@ -220,7 +220,7 @@ public class ManagerOrderController extends HttpServlet {
 
             // Get the new status from request
             String newStatus = request.getParameter("newStatus");
-
+          
             // Get seller's note from request
             String note = request.getParameter("note");
 

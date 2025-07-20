@@ -340,13 +340,13 @@
     document.addEventListener('DOMContentLoaded', function () {
       if (successMessage) {
         showToast(successMessage, "success"); <
-        c: remove
+      
         var = "isSuccess"
         scope = "session" / >
       }
       if (errorMessage) {
         showToast(errorMessage, "error"); <
-        c: remove
+       
         var = "isError"
         scope = "session" / >
       }
