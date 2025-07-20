@@ -109,6 +109,25 @@
                 font-weight: 600;
                 display: inline-block;
             }
+            .block-available.pending {
+                background-color: #9b9b9b;
+                color: white;
+            }
+
+            .block-available.accepted {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .block-available.cancelled {
+                background-color: #be2003;
+                color: white;
+            }
+
+            .block-available.completed {
+                background-color: #0a6827;
+                color: white;
+            }
 
 
         </style>
@@ -170,9 +189,11 @@
                                                                                                         <form class="form-search" action="listordercombo" method="get">
                                                                                                             <fieldset class="name">
                                                                                                                 <select name="status" required>
-                                                                                                                    <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="0"  ${param.status == "0" ? 'selected' : ''}>Chưa Thanh Toán</option>
-                                                                                                                <option value="1"  ${param.status == "1" ? 'selected' : ''}>Đã Thanh Toán</option>
+                                                                                                                <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="pending"  ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
+                                                                                                                <option value="accepted"  ${param.status == 'accepted' ? 'selected' : ''}>Accepted</option>
+                                                                                                                <option value="cancelled"  ${param.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                                                                                <option value="completed"  ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
                                                                                                             </select>                                                                                                            </fieldset>
                                                                                                         <div class="button-submit">
                                                                                                             <button class="" type="submit"><i class="icon-search"></i></button>
@@ -194,16 +215,19 @@
                                                                                                         <div class="body-title">Quantity</div>
                                                                                                     </li>
                                                                                                     <li>
+                                                                                                        <div class="body-title">Status</div>
+                                                                                                    </li>
+                                                                                                    <li>
                                                                                                         <div class="body-title">Total Price</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Status</div>
+                                                                                                        <div class="body-title" style="padding-left: 40px">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title" style="padding-left: 80px">Payment Method</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left: 100px">Active</div>
+                                                                                                        <div class="body-title" style="padding-left: 70px">Active</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
@@ -212,12 +236,15 @@
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                                                                                 <div class="body-text format-view">#${order.orderComboId} </div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 70px">${order.comboName}</div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 20px">${order.quantity} </div>
-                                                                                                                <div class="body-text format-view " style="padding-right: 100px">
+                                                                                                                <div class="body-text format-view" style="padding-left: 25px">${order.comboName}</div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 45px">${order.quantity} </div>
+                                                                                                                <div class="body-text format-view" style="padding-right: 30px">
+                                                                                                                    <div class="block-available ${order.status}" ><a>${order.status}</a></div>
+                                                                                                                </div>
+                                                                                                                <div class="body-text format-view " style="padding-right: 50px">
                                                                                                                     <fmt:formatNumber value="${order.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
-                                                                                                                <div class="body-text format-view">
+                                                                                                                <div class="body-text format-view" style="padding-right: 80px">
                                                                                                                     <c:choose>
                                                                                                                         <c:when test="${order.payment_status == 0}">
                                                                                                                             <span class="status-unpaid">Chưa thanh toán</span>
@@ -233,7 +260,7 @@
                                                                                                                 
                                                                                                                 <div class="body-text format-view"><a class="payment-badge">vnpay</a></div>
 
-                                                                                                                <div class="list-icon-function ">
+                                                                                                                <div class="list-icon-function " style="padding-right: 80px">
                                                                                                                     <a href="${pageContext.request.contextPath}/ordercombodetail?orderComboId=${order.orderComboId}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>

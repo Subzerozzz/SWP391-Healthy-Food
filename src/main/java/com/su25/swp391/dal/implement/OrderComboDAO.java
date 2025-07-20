@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
@@ -48,7 +45,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public boolean update(OrderCombo orderCombo) {
         String sql = "UPDATE OrderCombo SET order_id = ?,  comboId = ?, comboName = ?, "
-                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ? WHERE orderComboId = ?";
+                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ?"
+                + " status=?  WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
@@ -59,8 +57,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6,orderCombo.getUser_id());
-            statement.setInt(7, orderCombo.getOrderComboId());
-
+            statement.setString(7, orderCombo.getStatus());
+            statement.setInt(8, orderCombo.getOrderComboId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException ex) {
@@ -91,7 +89,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public int insert(OrderCombo orderCombo) {
         String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status,user_id) VALUES ( ?, ?, ?, ?, ?,?,?)";
+                + "quantity, totalPrice,payment_status,user_id,status) VALUES ( ?, ?, ?, ?, ?,?,?,?)";
 
         try {
             connection = getConnection();
@@ -104,6 +102,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6, orderCombo.getPayment_status());
             statement.setInt(7, orderCombo.getUser_id());
+            statement.setString(8, orderCombo.getStatus());
+
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -136,6 +136,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
         orderCombo.setPayment_status(rs.getInt("payment_status"));
         orderCombo.setUser_id(rs.getInt("user_id"));
+        orderCombo.setStatus(rs.getString("status"));
+      
         return orderCombo;
     }
 
@@ -180,7 +182,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
     if (filterByStatus) {
-        sql += " AND payment_status = ?";
+        sql += " AND status = ?";
     }
     sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
 
@@ -193,7 +195,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         int paramIndex = 2;
 
         if (filterByStatus) {
-            statement.setInt(paramIndex++, Integer.parseInt(status));
+           statement.setString(paramIndex++, status);
         }
 
         statement.setInt(paramIndex++, pageSize);
@@ -216,7 +218,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
     String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
     if (filterByStatus) {
-        sql += " AND payment_status = ?";
+        sql += " AND status = ?";
     }
 
     try {
@@ -225,7 +227,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
         statement.setInt(1, userId);
         if (filterByStatus) {
-            statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+             statement.setString(2, status);
         }
 
         resultSet = statement.executeQuery();
@@ -241,4 +243,27 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     return 0;
 }
+   //Mạnh
+    public boolean updateOrderComboStatus(int orderComboId, String status) {
+    String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
+    boolean success = false;
+
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setString(1, status); 
+        statement.setInt(2, orderComboId);
+
+        int rows = statement.executeUpdate();
+        success = (rows > 0);
+    } catch (Exception e) {
+        System.out.println("Error updating orderCombo status: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        closeResources();
+    }
+
+    return success;
+}
+
 }
