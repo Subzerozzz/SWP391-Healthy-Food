@@ -62,9 +62,6 @@ public class FeedbackController extends HttpServlet {
                 case "view":
                     viewDetailFeedback(request, response);
                     break;
-                case "update":
-                    hiddenFeedback(request, response);
-                    break;
                 case "account":
                     detailAccount(request, response);
                     break;

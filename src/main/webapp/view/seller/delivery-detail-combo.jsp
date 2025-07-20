@@ -140,7 +140,7 @@ textarea.form-control {
 
 /* Buttons */
 .btn {
-    padding: 10px 20px;
+/*    padding: 10px 20px;*/
     font-size: 14px;
     border-radius: 8px;
     font-weight: 500;
@@ -179,7 +179,13 @@ textarea.form-control {
     gap: 24px;
 }
 
-
+/* Image inside table */
+.product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
 
 /* Text alignment for amounts */
 .text-end {
@@ -226,7 +232,7 @@ textarea.form-control {
                         <div class="main-content-inner">
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+<!--                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
                                             <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -235,13 +241,13 @@ textarea.form-control {
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-order"><div class="text-tiny">Order</div></a>
+                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Delivery List</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Order Status</div></a>
+                                            <a href="#"><div class="text-tiny">Delivery detail</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -250,100 +256,98 @@ textarea.form-control {
                                             <div class="text-tiny">Order #${order.id}</div>
                                         </li>
                                     </ul>
-                                </div>
+                                </div>-->
                                 <!-- order-detail -->
                                 <!--start fix-->
                                 
                                  <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-             
-                
-            </div> 
+              </div> 
                 
                                   <div class="row g-24" >
-                                      <div class="col-lg-5 col-md-12" style="display: flex;flex-direction:column;gap:15px">
-             
-                 
-                            </div>
-                             <!-- Update Status -->
-                <div class="col-lg-12 col-md-12">
+                                      <div class="col-lg-12 col-md-12" style="display: flex;gap:70px">
+                                 <!-- Order Information -->     
+                <div  class="col-lg-6 col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title mb-0">Status Information</h6>
+                            <h6 class="card-title mb-0"  style="color: blue">OrderCombo Information</h6>
                         </div>
                         <div class="card-body">
-                            <c:choose>
-                                <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'|| order.status == 'completed'}">
-                                    <div class="mb-3">
-                                        <label class="form-label">Current Status</label>
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge
-                                                  ${order.status == 'accepted' || order.status == 'completed' ? 'bg-success' : ''}
-                                                  ${order.status == 'cancelled' ? 'bg-danger' : ''}
-                                                  fs-6">
-                                                ${order.status}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            This order has been ${order.status} and cannot be modified further.
-                                        </small>
-                                    </div>
-                                    <div>
-                                        <a href="${pageContext.request.contextPath}/seller/manage-order" 
-                                           class="btn btn-secondary">
-                                            Back to Order List
-                                        </a>
-                                    </div>
-                                </c:when>
-                                
-                                <%-- For pending or accepted orders - Allow updates --%>
-                                <c:otherwise>
-                                    <form action="${pageContext.request.contextPath}/seller/manage-order" method="post">
-                                        <input type="hidden" name="action" value="update">
-                                        <input type="hidden" name="orderId" value="${order.id}">
-                                        
-
-                                            <select class="form-select" name="newStatus" id="newStatusSelect" required onchange="toggleFieldsByStatus()"  style="margin: 10px 0">
-                                                <option value="">-- Select Status --</option>
-                                                <c:if test="${order.status == 'pending'}">
-                                                    <option value="accepted">Accept Order</option>
-                                                    <option value="cancelled">Cancel Order</option>
-                                                </c:if>
-                                            </select>
-
-                                            <div class="mb-3" id="shipperSelectGroup" style="display: none;">
-                                                <label class="form-label">Choose Shipper</label>
-                                                <select class="form-select" name="idShipper">
-                                                    <option value="">-- Select Shipper --</option>
-                                                    <c:forEach items="${accShipper}" var="accShip">
-                                                        <option value="${accShip.id}">${accShip.full_name}</option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-
-                                            <div class="mb-3" id="noteGroup" style="display: none;">
-                                                <label class="form-label">Note</label>
-                                                <textarea class="form-control" name="note" rows="3" 
-                                                          placeholder="Enter note..."></textarea>
-                                            </div>
-
-                                            <div class="d-flex gap-2" style="margin: 10px 0">
-                                            <button type="submit" class="btn btn-primary">Update</button>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-order" 
-                                               class="btn btn-secondary">Back</a>
-                                        </div>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
+                            <div class="mb-3">
+                                <strong>Ordercombo ID:</strong> ${orderCombo.orderComboId}
+                            </div>
+                             <div class="mb-3">
+                                <strong>Ordercombo Name:</strong> ${orderCombo.comboName}
+                            </div>
+                          
+                            <div class="mb-3">
+                                <strong>Payment Method:</strong> ${orderCombo.payment_status}
+                            </div>
+                           
+                            <div class="mb-3">
+                                <strong>Total Price:</strong> <fmt:formatNumber value="${orderCombo.totalPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
+                            </div>
+                          
                         </div>
                     </div>
                 </div>
+                            <!-- Customer Information -->
+                            <div  class="col-lg-5 col-md-5" >
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0"  style="color: blue">Customer Information</h6>
                         </div>
-               
+                        <c:choose>
+                            <c:when test="${not empty acc}">
+                                  <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Name:</strong> ${acc.user_name}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> ${acc.email}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Mobile:</strong> ${acc.mobile}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Shipping Address:</strong>
+                                ${acc.address}
+                            </div>
+                        </div>
+                            
+                              <div class="card-body">
+                                  <h5 style="color: blue">Shipper Information</h5>  
+                            <div class="mb-3">
+                                <strong>Name:</strong> ${accShipper.user_name}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Email:</strong> ${accShipper.email}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Mobile:</strong> ${accShipper.mobile}
+                            </div>
+                            <div class="mb-3">
+                                <strong>Shipping Address:</strong>${accShipper.address}
+                            </div>
+                  
+                        </div>  
+                            </c:when>
+                        
+                        </c:choose>
+                      
+                    </div>
+                </div>
+                            </div>
+                     
+                        </div>
+                             <div style="display:flex;justify-content:end;gap:40px">
+                                
+                                <a href="${pageContext.request.contextPath}/seller/manage-delivery" 
+                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
+                                   ;">Go Back</a>
+            </div>
+                              
+           
              </div>
                                 <!--end fix-->
                                  <!-- Toast Container -->
@@ -476,34 +480,6 @@ textarea.form-control {
                 </c:if>
             });
         </script>
- <script>
- function toggleFieldsByStatus() {
-     const status = document.getElementById("newStatusSelect").value;
-     const shipperGroup = document.getElementById("shipperSelectGroup");
-     const noteGroup = document.getElementById("noteGroup");
-
-     // Xử lý Shipper
-     if (status === "accepted") {
-         shipperGroup.style.display = "block";
-         shipperGroup.querySelector('select').setAttribute('required', 'required');
-     } else {
-         shipperGroup.style.display = "none";
-         shipperGroup.querySelector('select').removeAttribute('required');
-     }
-
-     // Xử lý Note
-     if (status === "cancelled") {
-         noteGroup.style.display = "block";
-         noteGroup.querySelector('textarea').setAttribute('required', 'required');
-     } else {
-         noteGroup.style.display = "none";
-         noteGroup.querySelector('textarea').removeAttribute('required');
-     }
- }
-
- // Gọi khi trang load để đảm bảo đúng trạng thái ban đầu
- document.addEventListener("DOMContentLoaded", toggleFieldsByStatus);
- </script>
 </body>
 
 

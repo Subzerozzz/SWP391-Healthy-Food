@@ -249,6 +249,23 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         }
          return false;
     }
+    
+    public boolean updateOrderStatusComplete(int orderId, String newStatus) {
+         String sql = "UPDATE `Order` SET status = ? , updated_at = NOW(),payment_status = 1 where id = ?";
+         try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, newStatus);
+            statement.setInt(2, orderId);
+            int row = statement.executeUpdate();
+            return (row > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+             closeResources();
+        }
+         return false;
+    }
 
     public List<Order> findOrdersByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
         List<Order> list = new ArrayList<>();
@@ -311,7 +328,6 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
                 .append("WHERE (") // << mở ngoặc block OR
                 .append("COALESCE(a.user_name, '') LIKE ? ")
                 .append("OR COALESCE(a.email, '') LIKE ? ")
-                .append("OR CAST(o.id AS CHAR) LIKE ? ")
                 .append("OR COALESCE(o.full_name, '') LIKE ? ")
                 .append("OR COALESCE(o.email, '') LIKE ? ")
                 .append(") "); // << đóng ngoặc trước khi thêm AND
@@ -321,8 +337,7 @@ public class OrderDAO extends DBContext implements I_DAO<Order> {
         String searchPattern = "%" + search.trim() + "%";
         params.add(searchPattern); // user_name
         params.add(searchPattern); // account email
-        params.add(searchPattern); // order id
-        params.add(searchPattern); // full_name
+         params.add(searchPattern); // full_name
         params.add(searchPattern); // order email
 
         // Add status filter if provided

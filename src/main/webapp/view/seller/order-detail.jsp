@@ -273,9 +273,7 @@ textarea.form-control {
                             <h6 class="card-title mb-0">Order Information</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Order ID:</strong> #${order.id}
-                            </div>
+                           
                             <div class="mb-3">
                                 <strong>Order Date:</strong> <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
                             </div>
@@ -403,10 +401,7 @@ textarea.form-control {
                     </div>
                 </div>
             </div>                <div style="display:flex;justify-content:end;gap:40px">
-                                <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: #ffc107
-                                   ;">Go to Update</a>
-                                <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                    <a href="${pageContext.request.contextPath}/seller/manage-order" 
                                    class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
                                    ;">Go Back</a>
             </div>

@@ -46,7 +46,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
         }
         // Append sorting and pagination
         if(sort != null && !sort.isEmpty()){
-            sql.append(" ORDER BY order_id "+sort+" LIMIT ? OFFSET ?");
+            sql.append(" ORDER BY id "+sort+" LIMIT ? OFFSET ?");
         }else{
             sql.append(" ORDER BY assigned_at DESC LIMIT ? OFFSET ?");
         }
@@ -139,7 +139,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
         // Append sorting and pagination
         if(sort != null && !sort.isEmpty()){
-            sql.append(" ORDER BY d.order_id "+sort+" LIMIT ? OFFSET ?");
+            sql.append(" ORDER BY d.id "+sort+" LIMIT ? OFFSET ?");
         }else{
             sql.append(" ORDER BY d.assigned_at DESC LIMIT ? OFFSET ?");
         }
@@ -248,7 +248,7 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
 
     @Override
     public boolean update(Delivery t) {
-       String sql = "UPDATE Delivery SET status = ?, delivered_at = NOW(), note = ?";
+       String sql = "UPDATE Delivery SET status = ?, delivered_at = NOW(), note = ? WHERE id = ? ";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -258,6 +258,9 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery>{
             }else{
                 statement.setString(2, "");
             }
+            statement.setInt(3, t.getId());
+             int row = statement.executeUpdate();
+            return (row > 0);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

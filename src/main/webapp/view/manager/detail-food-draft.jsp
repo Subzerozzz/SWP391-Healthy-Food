@@ -124,14 +124,14 @@
                   </div>
                   <p>Type: ${foodD.type}</p>
                   <p class="description">
-                    ${foodD.description}
+                    Description: ${foodD.description}
                   </p>
                   <p class="description">
                     Number of Calo: ${foodD.calo}
                   </p>
-                  <p>Black Fresh Berry is a delicious and nutritious fruit, rich in antioxidants and flavor. Perfect for
-                    a healthy snack or to add freshness to your desserts and smoothies.</p>
-
+                  <p class="description">
+                    Nutritionist: ${accNutri.full_name}
+                  </p>
                   <div class="buttons">
                     <form action="${pageContext.request.contextPath}/type-of-request" method="get">
                       <input type="hidden" name="action" value="list" />

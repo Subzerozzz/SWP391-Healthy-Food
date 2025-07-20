@@ -75,7 +75,7 @@
         <div class="section-content-right">
           <!-- header-dashboard -->
           <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
-          <!-- /header-dashboard -->
+           /header-dashboard 
 
           <!-- main-content -->
           <div class="main-content">
@@ -104,7 +104,7 @@
                         <option value="${t}" ${param.select==t ? 'selected' : '' }>${t}</option>
                       </c:forEach>
                     </select>
-                    <input type="text" name="search" placeholder="Search by name food..." value="${param.search}" />
+                    <input type="text" name="search" placeholder="Search by name food draft..." value="${param.search}" />
                     <button type="submit">Submit</button>
                   </form>
                 </div>
@@ -306,52 +306,50 @@
   <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css" />
   <!--Alert Information about AccpetFood-->
-  <script>
-    // Function to show toast
-    function showToast(message, type) {
-      if (!message) return;
-      const toastEl = document.getElementById('orderToast');
-      const toastTitle = document.getElementById('toast-title');
-      const toastBody = document.getElementById('toast-body');
-      const header = document.getElementById('toast-header');
+<script>
+  // Function to show toast
+  function showToast(message, type) {
+    if (!message) return;
+    const toastEl = document.getElementById('orderToast');
+    const toastTitle = document.getElementById('toast-title');
+    const toastBody = document.getElementById('toast-body');
+    const header = document.getElementById('toast-header');
 
-      // Set content
-      toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
-      toastBody.textContent = message;
+    // Set content
+    toastTitle.textContent = type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification';
+    toastBody.textContent = message;
 
-      // Set header color
-      header.className = 'toast-header';
-      if (type === 'success') {
-        header.classList.add('bg-success', 'text-white');
-      } else if (type === 'error') {
-        header.classList.add('bg-danger', 'text-white');
-      } else {
-        header.classList.add('bg-info', 'text-white');
-      }
-
-      // Show toast
-      const toast = new bootstrap.Toast(toastEl);
-      toast.show();
+    // Set header color
+    header.className = 'toast-header';
+    if (type === 'success') {
+      header.classList.add('bg-success', 'text-white');
+    } else if (type === 'error') {
+      header.classList.add('bg-danger', 'text-white');
+    } else {
+      header.classList.add('bg-info', 'text-white');
     }
 
-    const successMessage = "${sessionScope.isSuccess}";
-    const errorMessage = "${sessionScope.isError}";
+    // Show toast
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+  }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      if (successMessage) {
-        showToast(successMessage, "success"); <
-        c: remove
-        var = "isSuccess"
-        scope = "session" / >
-      }
-      if (errorMessage) {
-        showToast(errorMessage, "error"); <
-        c: remove
-        var = "isError"
-        scope = "session" / >
-      }
-    });
-  </script>
+  const successMessage = "${sessionScope.isSuccess}";
+  const errorMessage = "${sessionScope.isError}";
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (successMessage) {
+      showToast(successMessage, "success");
+    }
+    if (errorMessage) {
+      showToast(errorMessage, "error");
+    }
+  });
+</script>
+
+<!-- Sau script: Xoá session -->
+<c:remove var="isSuccess" scope="session" />
+<c:remove var="isError" scope="session" />
 
   <!--Message Error-->
   <script>

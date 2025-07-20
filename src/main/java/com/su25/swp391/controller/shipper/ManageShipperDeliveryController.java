@@ -174,7 +174,13 @@ public class ManageShipperDeliveryController extends HttpServlet {
             delivery.setStatus(newStatus);
             delivery.setNote(note);
             Boolean checkUpdateSuccess = deliveryDAO.update(delivery);
-        
+            
+            if(newStatus.equalsIgnoreCase("success")){
+                Boolean checkUpdateCompleted = orderDAO.updateOrderStatusComplete(delivery.getOrder_id(), "completed");
+            }
+            if(newStatus.equalsIgnoreCase("reject")){
+                Boolean checkUpdateCompleted = orderDAO.updateOrderStatus(delivery.getOrder_id(), "completed");
+            }
             if(checkUpdateSuccess){
                session.setAttribute("isSuccess", true);
             }else{

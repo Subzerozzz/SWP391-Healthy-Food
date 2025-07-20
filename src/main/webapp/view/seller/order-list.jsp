@@ -429,7 +429,7 @@
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
-               placeholder="Search by order ID, customer name, email..."
+               placeholder="Search by customer name, email..."
                value="${search}"/>
 
         <!-- Nút Filter -->

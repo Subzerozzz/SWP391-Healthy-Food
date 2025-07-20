@@ -241,4 +241,9 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     return 0;
 }
+    public static void main(String[] args) {
+        OrderComboDAO dao = new OrderComboDAO();
+        AccountDAO a = new AccountDAO();
+        System.out.println(a.findById(dao.findById(1).getUser_id()).getUser_name());
+    }
 }

@@ -387,20 +387,7 @@ textarea.form-control {
                             <div class="mb-3">
                                 <strong>Shipping Address:</strong>${accShipper.address}
                             </div>
-                                  <c:choose>
-                                                        <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
-                                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
-                                                            <div class="item edit" style="margin-right: 10px !important " >
-                                                                <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}" title="Select Shipper"
-                                                                   style="color:#FFB200">
-                                                                  Select Shipper  <i class="fa-solid fa-motorcycle"></i>
-                                                                </a>
-                                                            </div>
-                                                        </c:when>
-                                                        <c:otherwise>
-
-                                                        </c:otherwise>
-                                                    </c:choose>
+                 
                         </div>  
                              </c:otherwise>
                         </c:choose>
