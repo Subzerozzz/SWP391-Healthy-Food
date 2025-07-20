@@ -245,7 +245,7 @@ textarea.form-control {
                         <div class="card-header">
                             <h6 class="card-title mb-0"  style="color: blue">OrderCombo Information</h6>
                         </div>
-                       <div class="card-body">
+                        <div class="card-body">
                             <div class="mb-3">
                                 <strong>Ordercombo ID:</strong> ${orderCombo.orderComboId}
                             </div>
@@ -302,23 +302,7 @@ textarea.form-control {
                                 ${acc.address}
                             </div>
                         </div>
-                            
-                              <div class="card-body">
-                                  <h5 style="color: blue">Shipper Information</h5>  
-                            <div class="mb-3">
-                                <strong>Name:</strong> ${accShipper.user_name}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong> ${accShipper.email}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mobile:</strong> ${accShipper.mobile}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>${accShipper.address}
-                            </div>
-                  
-                        </div>  
+                         
                             </c:when>
                         
                         </c:choose>
@@ -326,15 +310,15 @@ textarea.form-control {
                     </div>
                 </div>
                             </div>
-                     
-                        </div>
-                             <div style="display:flex;justify-content:end;gap:40px">
-                                
-                                <a href="${pageContext.request.contextPath}/seller/manage-delivery" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
+
+                                  </div>
+                                  <div style="display:flex;justify-content:end;gap:40px">
+
+                                      <a href="${pageContext.request.contextPath}/shipper/manage-delivery" 
+                                         class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
                                    ;">Go Back</a>
-            </div>
-                              
+                                  </div>
+
            
              </div>
                                 <!--end fix-->

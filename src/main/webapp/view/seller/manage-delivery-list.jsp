@@ -593,18 +593,18 @@
                                             test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
                                             <i class="fa-solid fa-user-check"
                                               style="color:green; margin-right: 5px;"></i>
-                                            ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                            ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}(Order)
                                           </c:when>
                                           <c:otherwise>
 <!--                                            <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i>-->
-                                            ${orderDAO.findById(de.order_id).full_name}
+                                            ${orderDAO.findById(de.order_id).full_name}(Order)
                                           </c:otherwise>
                                         </c:choose>
                                             </c:if>
                                             <c:if test="${de.order_combo_id > 0}">
                                                <i class="fa-solid fa-user-check"
                                               style="color:green; margin-right: 5px;"></i> 
-                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}
+                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}(Combo)
                                             </c:if>
                                         
                                       </td>

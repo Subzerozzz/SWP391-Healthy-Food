@@ -6,12 +6,14 @@ import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.DeliveryDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
+import com.su25.swp391.dal.implement.OrderComboDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Delivery;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
+import com.su25.swp391.entity.OrderCombo;
 import com.su25.swp391.entity.OrderItem;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,6 +36,7 @@ public class ManageShipperDeliveryController extends HttpServlet {
      private AccountDAO accDAO;
      private FoodDAO foodDAO;
      private OrderItemDAO itemDAO;
+     private OrderComboDAO ordercomboDAO;
      @Override
     public void init() throws ServletException {
         deliveryDAO = new DeliveryDAO();
@@ -41,6 +44,7 @@ public class ManageShipperDeliveryController extends HttpServlet {
         orderDAO = new OrderDAO();
         foodDAO = new FoodDAO();
         itemDAO = new OrderItemDAO();
+        ordercomboDAO = new OrderComboDAO();
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,6 +62,9 @@ public class ManageShipperDeliveryController extends HttpServlet {
                     break;
                 case "view":
                     viewDelivery(request, response);
+                    break;
+                case "viewCombo":
+                    viewDeliveryCombo(request, response);
                     break;
                 case "viewUpdate":
                     viewUpdate(request, response);
@@ -155,7 +162,7 @@ public class ManageShipperDeliveryController extends HttpServlet {
         request.setAttribute("accDAO", accDAO);
         request.setAttribute("orderDAO", orderDAO);
         request.setAttribute("listDelivery", listDelivery);
-
+        request.setAttribute("ordercomboDAO", ordercomboDAO);
         // Điều hướng tới JSP
         request.getRequestDispatcher("/view/shipper/order-list.jsp").forward(request, response);
     }
@@ -175,12 +182,15 @@ public class ManageShipperDeliveryController extends HttpServlet {
             delivery.setNote(note);
             Boolean checkUpdateSuccess = deliveryDAO.update(delivery);
             
-            if(newStatus.equalsIgnoreCase("success")){
+            if(newStatus.equalsIgnoreCase("success") && delivery.getOrder_id() > 0){
                 Boolean checkUpdateCompleted = orderDAO.updateOrderStatusComplete(delivery.getOrder_id(), "completed");
             }
-            if(newStatus.equalsIgnoreCase("reject")){
+            if(newStatus.equalsIgnoreCase("reject") && delivery.getOrder_id() > 0){
                 Boolean checkUpdateCompleted = orderDAO.updateOrderStatus(delivery.getOrder_id(), "completed");
             }
+            if(newStatus.equalsIgnoreCase("success") && delivery.getOrder_combo_id() > 0){
+               ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 1);
+             }
             if(checkUpdateSuccess){
                session.setAttribute("isSuccess", true);
             }else{
@@ -251,6 +261,47 @@ public class ManageShipperDeliveryController extends HttpServlet {
             request.setAttribute("errorMessage", "Invalid order ID format");
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
+    }
+    
+     private void viewDeliveryCombo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+          try {
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+            int id = Integer.parseInt(request.getParameter("id"));
+            
+             Delivery delivery = deliveryDAO.findById(id);
+            
+            OrderCombo orderCombo = ordercomboDAO.findById(delivery.getOrder_combo_id());
+            
+               // If the order does not exist, forward to error page
+            if (orderCombo == null) {
+                request.setAttribute("errorMessage", "orderCombo not found with ID: " + delivery.getOrder_combo_id());
+                request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+                return;
+            }
+
+            // Retrieve the account associated with the order
+            Account acc = accDAO.findById(orderCombo.getUser_id());
+
+            // Set attributes for JSP rendering
+            request.setAttribute("orderCombo", orderCombo);
+            request.setAttribute("acc", acc);
+            request.setAttribute("de", delivery);
+            // Forward to the delivery detail JSP page
+            request.getRequestDispatcher("/view/shipper/delivery-detail-combo.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            // Handle invalid order ID format
+            request.setAttribute("errorMessage", "Invalid orderCombo ID format");
+            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+        }
+    
     }
 
     private void viewUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {

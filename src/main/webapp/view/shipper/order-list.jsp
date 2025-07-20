@@ -412,6 +412,13 @@
       /* đỏ nhạt */
       color: #C62828;
     }
+    /* Word wrapping for specific columns */
+    .customer-cell,
+    .shipper-cell,
+    .note-cell {
+      word-break: break-all;
+      /* Force break for long strings like emails */
+    }
   </style>
 </head>
 
@@ -561,20 +568,26 @@
                                       <td>${de.id}</td>
                                    
 
-                                      <td>
+                                      <td class="customer-cell">
+                                      <c:if test="${de.order_id >0}">
                                         <c:choose>
                                           <c:when
                                             test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
                                             <i class="fa-solid fa-user-check"
-                                              style="color:green; margin-right: 5px;"></i>
-                                            ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                              style="color:green; margin-right: 5px;"></i> ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}(Order) 
+                                           
                                           </c:when>
                                           <c:otherwise>
-                                            <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i>
-                                            ${orderDAO.findById(de.order_id).full_name}
+
+                                            ${orderDAO.findById(de.order_id).full_name}(Order)
                                           </c:otherwise>
                                         </c:choose>
-
+                                            </c:if>
+                                            <c:if test="${de.order_combo_id > 0}">
+                                               <i class="fa-solid fa-user-check"
+                                              style="color:green; margin-right: 5px;"></i> 
+                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}(Combo)
+                                            </c:if>
                                       </td>
                                       <td>
                                         <span
@@ -615,12 +628,34 @@
 
                                       <td>
                                         <div class="actions-container">
-                                          <div class="item eye">
+<!--                                          <div class="item eye">
                                             <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"
                                               title="View Detail">
                                               <i class="icon-eye"></i>
                                             </a>
-                                          </div>
+                                          </div>-->
+   <div class="item eye">
+                                                  <c:choose>
+                                                      <c:when test="${de.order_id > 0}">
+                                                          <!-- Link đơn hàng thường -->
+                                                          <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}">
+                                                              <i class="icon-eye"></i>
+                                                          </a>
+                                                      </c:when>
+
+                                                      <c:when test="${de.order_combo_id > 0}">
+                                                          <!-- Link đơn combo -->
+                                                          <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewCombo&id=${de.id}">
+                                                              <i class="icon-eye"></i>
+                                                          </a>
+                                                      </c:when>
+
+                                                      <c:otherwise>
+                                                          <!-- Không xác định -->
+                                                          <i class="fa fa-ban text-danger" title="Không xác định đơn hàng"></i>
+                                                      </c:otherwise>
+                                                  </c:choose>
+                                              </div>
                                           <div class="item edit">
                                             <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=viewUpdate&id=${de.id}"
                                               title="Update Status">
