@@ -318,7 +318,7 @@ textarea.form-control {
                                             <div class="mb-3" id="shipperSelectGroup" style="display: none;">
                                                 <label class="form-label">Choose Shipper</label>
                                                 <select class="form-select" name="idShipper">
-                                                    <option value="">-- Select Shipper --</option>
+                                                    <option value="0">-- Select Shipper --</option>
                                                     <c:forEach items="${accShipper}" var="accShip">
                                                         <option value="${accShip.id}">${accShip.full_name}</option>
                                                     </c:forEach>

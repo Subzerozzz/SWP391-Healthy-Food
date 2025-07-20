@@ -209,7 +209,8 @@ public class ManagerOrderController extends HttpServlet {
             String newStatus = request.getParameter("newStatus");
             
             // Get id Shipper
-            Integer idShipper = Integer.parseInt(request.getParameter("idShipper"));
+            
+            int idShipper = Integer.parseInt(request.getParameter("idShipper"));
             
             // Get seller's note from request
             String note = request.getParameter("note");
