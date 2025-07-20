@@ -36,7 +36,6 @@ import java.util.Map;
  */
 @WebServlet(name="ManageDeliveryController", urlPatterns={"/seller/manage-delivery"})
 public class ManageDeliveryController extends HttpServlet {
-     
      private DeliveryDAO deliveryDAO;
      private OrderDAO orderDAO;
      private AccountDAO accDAO;
