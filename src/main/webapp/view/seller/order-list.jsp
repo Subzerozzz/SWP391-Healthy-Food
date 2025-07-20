@@ -408,6 +408,7 @@
           <option value="pending"   ${status == 'pending'   ? 'selected' : ''}>Pending</option>
           <option value="accepted"  ${status == 'accepted'  ? 'selected' : ''}>Accepted</option>
           <option value="cancelled" ${status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+           <option value="completed" ${status == 'completed' ? 'selected' : ''}>Completed</option>
         </select>
 
         <!-- Select Payment Method -->
@@ -428,7 +429,7 @@
         <!-- Ô Search -->
         <input type="text" class="form-control"
                name="search"
-               placeholder="Search by order ID, customer name, email..."
+               placeholder="Search by customer name, email..."
                value="${search}"/>
 
         <!-- Nút Filter -->
@@ -447,12 +448,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Customer</th>
-                                    <th>Address</th>
                                     <th>Total</th>
                                     <th>Payment Method</th>
                                     <th>Status</th>
-                                    <th>Coupon Code</th>
-                                    <th>Paid Status</th>
+                                    <th>Paid</th>
                                     <th>Actions</th>
                                    
                                 </tr>
@@ -499,11 +498,6 @@
                                                 </c:choose>
                                             </td>
 
-                                            <td>
-                                                ${order.shipping_address}
-                                            </td>
-
-                                            
                                            
                                             <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
                                             <td>
@@ -514,16 +508,16 @@
                                             </td>
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
-                                                          class="badge-modern ${
+                                                      class="badge-modern ${
                                                               order.status == 'pending' ? 'badge-pending' :
-                                                              order.status == 'accepted' ? 'badge-completed' :
-                                                              'badge-rejected'
-                                                          }">
+                                                                  order.status == 'accepted' ? 'badge-accepted' :
+                                                                  order.status == 'completed' ? 'badge-completed' :
+                                                                  'badge-rejected'
+                                                      }">
                                                         ${order.status}
                                                     </span>
                                             </td>
-                                           
-                                             <td>${order.coupon_code}</td>
+                                         
                                             <td>
                                                 <span style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d"
                                                           class="badge-modern ${

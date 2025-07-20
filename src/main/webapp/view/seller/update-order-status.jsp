@@ -274,11 +274,14 @@ textarea.form-control {
                         <div class="card-body">
                             <c:choose>
                                 <%-- For completed or cancelled orders - Read only view --%>
-                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'}">
+                                <c:when test="${order.status == 'accepted' || order.status == 'cancelled'|| order.status == 'completed'}">
                                     <div class="mb-3">
                                         <label class="form-label">Current Status</label>
                                         <div class="d-flex align-items-center">
-                                            <span class="badge ${order.status == 'accepted' ? 'bg-success' : 'bg-danger'} fs-6">
+                                            <span class="badge
+                                                  ${order.status == 'accepted' || order.status == 'completed' ? 'bg-success' : ''}
+                                                  ${order.status == 'cancelled' ? 'bg-danger' : ''}
+                                                  fs-6">
                                                 ${order.status}
                                             </span>
                                         </div>
@@ -300,28 +303,36 @@ textarea.form-control {
                                 <%-- For pending or accepted orders - Allow updates --%>
                                 <c:otherwise>
                                     <form action="${pageContext.request.contextPath}/seller/manage-order" method="post">
-                                        <input type="hidden" name="action" value="updateStatus">
+                                        <input type="hidden" name="action" value="update">
                                         <input type="hidden" name="orderId" value="${order.id}">
                                         
-                                        <div class="mb-3">
-                                            <label class="form-label">New Status</label>
-                                            <select class="form-select" name="newStatus" required>
+
+                                            <select class="form-select" name="newStatus" id="newStatusSelect" required onchange="toggleFieldsByStatus()"  style="margin: 10px 0">
                                                 <option value="">-- Select Status --</option>
                                                 <c:if test="${order.status == 'pending'}">
                                                     <option value="accepted">Accept Order</option>
                                                     <option value="cancelled">Cancel Order</option>
                                                     <option value="abcd">abcd</option>
                                                 </c:if>
-                                             </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">Note</label>
-                                            <textarea class="form-control" name="note" rows="3" 
-                                                      placeholder="Enter note..."></textarea>
-                                        </div>
-                                        
-                                        <div class="d-flex gap-2">
+                                            </select>
+
+                                            <div class="mb-3" id="shipperSelectGroup" style="display: none;">
+                                                <label class="form-label">Choose Shipper</label>
+                                                <select class="form-select" name="idShipper">
+                                                    <option value="0">-- Select Shipper --</option>
+                                                    <c:forEach items="${accShipper}" var="accShip">
+                                                        <option value="${accShip.id}">${accShip.full_name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3" id="noteGroup" style="display: none;">
+                                                <label class="form-label">Note</label>
+                                                <textarea class="form-control" name="note" rows="3" 
+                                                          placeholder="Enter note..."></textarea>
+                                            </div>
+
+                                            <div class="d-flex gap-2" style="margin: 10px 0">
                                             <button type="submit" class="btn btn-primary">Update</button>
                                             <a href="${pageContext.request.contextPath}/seller/manage-order" 
                                                class="btn btn-secondary">Back</a>
@@ -333,57 +344,7 @@ textarea.form-control {
                     </div>
                 </div>
                         </div>
-                      
-                   <!-- Order History -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Order History</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Updated By</th>
-                                    <th>Date</th>
-                                    <th>Previous Status</th>
-                                    <th>New Status</th>
-                                    <th>Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="approval" items="${approvals}">
-                                    <c:set var="ItemAccount" value="${OrderApprovalMap[approval.approved_by]}"/>
-                                    <tr>
-                                        <td>${ItemAccount.user_name}</td>
-                                        <td><fmt:formatDate value="${approval.approved_at}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                        <td>
-                                            <span class="badge ${approval.statusBefore == 'pending' ? 'bg-warning' : 
-                                                                approval.statusBefore == 'accepted' ? 'bg-info' : 
-                                                                approval.statusBefore == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusBefore}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge ${approval.statusAfter == 'pending' ? 'bg-warning' : 
-                                                                approval.statusAfter == 'accepted' ? 'bg-info' : 
-                                                                approval.statusAfter == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                                ${approval.statusAfter}
-                                            </span>
-                                        </td>
-                                        <td>${approval.note}</td>
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${empty approvals}">
-                                    <tr>
-                                        <td colspan="5" class="text-center">No update history</td>
-                                    </tr>
-                                </c:if>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+               
              </div>
                                 <!--end fix-->
                                  <!-- Toast Container -->
@@ -516,6 +477,34 @@ textarea.form-control {
                 </c:if>
             });
         </script>
+ <script>
+ function toggleFieldsByStatus() {
+     const status = document.getElementById("newStatusSelect").value;
+     const shipperGroup = document.getElementById("shipperSelectGroup");
+     const noteGroup = document.getElementById("noteGroup");
+
+     // Xử lý Shipper
+     if (status === "accepted") {
+         shipperGroup.style.display = "block";
+         shipperGroup.querySelector('select').setAttribute('required', 'required');
+     } else {
+         shipperGroup.style.display = "none";
+         shipperGroup.querySelector('select').removeAttribute('required');
+     }
+
+     // Xử lý Note
+     if (status === "cancelled") {
+         noteGroup.style.display = "block";
+         noteGroup.querySelector('textarea').setAttribute('required', 'required');
+     } else {
+         noteGroup.style.display = "none";
+         noteGroup.querySelector('textarea').removeAttribute('required');
+     }
+ }
+
+ // Gọi khi trang load để đảm bảo đúng trạng thái ban đầu
+ document.addEventListener("DOMContentLoaded", toggleFieldsByStatus);
+ </script>
 </body>
 
 

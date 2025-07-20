@@ -5,10 +5,12 @@
 package com.su25.swp391.controller.manageRequest;
 
 import com.su25.swp391.config.GlobalConfig;
+import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.FoodDraftDAO;
 import com.su25.swp391.dal.implement.LogRequestDAO;
 import com.su25.swp391.dal.implement.RequestDAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.FoodDraft;
 import com.su25.swp391.entity.LogRequest;
@@ -33,6 +35,7 @@ public class TypeOfRequestController extends HttpServlet {
     private RequestDAO requestDAO;
     private FoodDAO foodDAO;
     private LogRequestDAO logReqDAO;
+    private AccountDAO accDao ;
 
     @Override
     public void init() throws ServletException {
@@ -40,6 +43,7 @@ public class TypeOfRequestController extends HttpServlet {
         requestDAO = new RequestDAO();
         foodDAO = new FoodDAO();
         logReqDAO = new LogRequestDAO();
+        accDao = new AccountDAO();
     }
 
     @Override
@@ -125,8 +129,10 @@ public class TypeOfRequestController extends HttpServlet {
         String sort = request.getParameter("sort");
         // Get list Food_Draft by Id
         FoodDraft foodDraft = foodDraftDAO.findById(id);
+        Account accNutri = accDao.findById(foodDraft.getNutri_id());
         // Set Attribut to page detail-food-draft.jsp
         request.setAttribute("foodD", foodDraft);
+        request.setAttribute("accNutri", accNutri);
         request.setAttribute("search", search);
         request.setAttribute("select", select);
         // Come to page detail-food-draft.jsp

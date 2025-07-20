@@ -232,34 +232,7 @@ textarea.form-control {
                         <div class="main-content-inner">
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
-                                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                                        <li>
-                                            <a href="index.html"><div class="text-tiny">Dashboard</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery"><div class="text-tiny">Delivery List</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <a href="#"><div class="text-tiny">Delivery detail</div></a>
-                                        </li>
-                                        <li>
-                                            <i class="icon-chevron-right"></i>
-                                        </li>
-                                        <li>
-                                            <div class="text-tiny">Order #${order.id}</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- order-detail -->
-                                <!--start fix-->
-                                
+
                                  <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
               </div> 
@@ -270,34 +243,39 @@ textarea.form-control {
                 <div  class="col-lg-6 col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="card-title mb-0"  style="color: blue">Order Information</h6>
+                            <h6 class="card-title mb-0"  style="color: blue">OrderCombo Information</h6>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <strong>Order Date:</strong> <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
+                                <strong>Ordercombo ID:</strong> ${orderCombo.orderComboId}
                             </div>
+                             <div class="mb-3">
+                                <strong>Ordercombo Name:</strong> ${orderCombo.comboName}
+                            </div>
+                             <div class="mb-3">
+                                <strong>Discount Price:</strong> ${orderCombo.discountPrice}
+                            </div>
+                             <div class="mb-3">
+                                <strong>Quantity:</strong> ${orderCombo.quantity}
+                            </div>
+                                <c:choose>
+                                    <c:when test="${orderCombo.payment_status == 1}">
+                                        <div class="mb-3">
+                                            <strong>Payment Status:</strong> Paid
+                                        </div>   
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="mb-3">
+                                            <strong>Payment Status:</strong> Unpaid
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                           
+                           
                             <div class="mb-3">
-                                <strong>Payment Method:</strong> ${order.payment_method}
+                                <strong>Total Price:</strong> <fmt:formatNumber value="${orderCombo.totalPrice}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
                             </div>
-                            <div class="mb-3">
-                                <strong>Status:</strong>
-                                <span class="badge ${order.status == 'pending' ? 'bg-warning' : 
-                                                    order.status == 'accepted' ? 'bg-info' : 
-                                                    order.status == 'completed' ? 'bg-success' : 'bg-danger'}">
-                                    ${order.status}
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Total Amount:</strong> <fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                            </div>
-                            <c:if test="${not empty order.coupon_code}">
-                                <div class="mb-3">
-                                    <strong>Coupon Applied:</strong> ${order.coupon_code}
-                                </div>
-                                <div class="mb-3">
-                                    <strong>Discount Amount:</strong> <fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ
-                                </div>
-                              </c:if>
+                          
                         </div>
                     </div>
                 </div>
@@ -321,94 +299,26 @@ textarea.form-control {
                             </div>
                             <div class="mb-3">
                                 <strong>Shipping Address:</strong>
-                                ${order.shipping_address}
+                                ${acc.address}
                             </div>
                         </div>
-                            
-
+                         
                             </c:when>
-                            <c:otherwise>
-                               <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Name:</strong> ${order.full_name}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Email:</strong> ${order.email}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Mobile:</strong> ${order.mobile}
-                            </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>${order.shipping_address}
-                            </div>
-                        </div>  
-                             
-                             </c:otherwise>
+                        
                         </c:choose>
                       
                     </div>
                 </div>
                             </div>
-                     
-                        </div>
-                             <!-- Order Items -->
-            <div class="card mt-24">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Order Items</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="item" items="${OrderItems}">
-                                    <c:set var="food" value="${OrderItemMap[item.food_id]}"/>
-                                    <tr>
-                                        <td> 
-                                            <a 
-                                                href="${food.image_url}"
-                                                target="_blank">
-                                            <img 
-                                                src="${food.image_url}"
-                                            alt="${food.name}" class="product-image">
-                                              </a>
-                                        </td>
-                                        <td>${food.name}</td>
-                                        <td><fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                        <td>${item.quantity}</td>
-                                        <td><fmt:formatNumber value="${food.price*item.quantity}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                    </tr>
-                                </c:forEach>
-                                <a href="../../../java/com/su25/swp391/dal/implement/BlogDAO.java"></a>
-                                <c:if test="${not empty order.discount_amount}">
-                                    <tr>
-                                        <td colspan="4" class="text-end"><strong>Discount Amount:</strong></td>
-                                        <td><fmt:formatNumber value="${order.discount_amount}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                    </tr>
-                                </c:if>
-                                <tr>
-                                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                    <td><fmt:formatNumber value="${order.total}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>                <div style="display:flex;justify-content:end;gap:40px">
-                                
-                                <a href="${pageContext.request.contextPath}/shipper/manage-delivery" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
+
+                                  </div>
+                                  <div style="display:flex;justify-content:end;gap:40px">
+
+                                      <a href="${pageContext.request.contextPath}/shipper/manage-delivery" 
+                                         class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
                                    ;">Go Back</a>
-            </div>
-                              
+                                  </div>
+
            
              </div>
                                 <!--end fix-->

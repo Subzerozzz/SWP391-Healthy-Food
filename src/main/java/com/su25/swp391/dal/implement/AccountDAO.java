@@ -467,6 +467,7 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         } else {
             System.out.println("❌ Email chưa tồn tại.");
         }
+          System.out.println(dao.findById(0));
     }
     // Phương thức phân trang với bộ lọc
 
@@ -579,85 +580,5 @@ public class AccountDAO extends DBContext implements I_DAO<Account> {
         }
     }
 
-    
-    // TRi
-    public List<Account> searchShippers(String search, String sort, int page, int pageSize) {
-    List<Account> list = new ArrayList<>();
-
-    // Câu SQL để tìm kiếm shipper
-    StringBuilder sql = new StringBuilder("SELECT a.* FROM Account a WHERE a.role = 'shipper' ");
-
-    List<Object> params = new ArrayList<>();
-
-    if (search != null && !search.trim().isEmpty()) {
-        sql.append("AND (a.user_name LIKE ? OR a.email LIKE ?) ");
-        String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-    }
-
-    // Sắp xếp theo tên A-Z hoặc Z-A
-    if (sort != null && (sort.equalsIgnoreCase("asc") || sort.equalsIgnoreCase("desc"))) {
-        sql.append("ORDER BY a.user_name ").append(sort).append(" ");
-    } else {
-        sql.append("ORDER BY a.user_name ASC ");
-    }
-
-    // Thêm phân trang
-    sql.append("LIMIT ? OFFSET ?");
-    params.add(pageSize);
-    params.add((page - 1) * pageSize);
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-
-        for (int i = 0; i < params.size(); i++) {
-            statement.setObject(i + 1, params.get(i));
-        }
-
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            list.add(getFromResultSet(resultSet)); // Bạn cần implement hàm này để parse Account
-        }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } finally {
-        closeResources();
-    }
-
-    return list;
-}
-     public int getTotalShipperResults(String search) {
-    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Account a WHERE a.role = 'shipper' ");
-
-    List<Object> params = new ArrayList<>();
-
-    if (search != null && !search.trim().isEmpty()) {
-        sql.append("AND (a.user_name LIKE ? OR a.email LIKE ?) ");
-        String searchPattern = "%" + search.trim() + "%";
-        params.add(searchPattern);
-        params.add(searchPattern);
-    }
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-
-        for (int i = 0; i < params.size(); i++) {
-            statement.setObject(i + 1, params.get(i));
-        }
-
-        resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return resultSet.getInt(1); // Trả về COUNT(*)
-        }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } finally {
-        closeResources();
-    }
-
-    return 0;
-}
+     
 }

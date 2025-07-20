@@ -544,7 +544,7 @@
                               <table class="table table-hover">
                                 <thead>
                                   <tr>
-                                    <th>ID Order</th>
+                                    <th>ID</th>
                                     <th>Customer</th>
                                     <th>Status</th>
                                     <th>Shipper</th>
@@ -583,24 +583,32 @@
                                   <c:forEach var="de" items="${listDelivery}">
 
                                     <tr>
-                                      <td>${de.order_id}</td>
+                                      <td>${de.id}</td>
 
 
                                       <td class="customer-cell">
+                                          <c:if test="${de.order_id >0}">
                                         <c:choose>
                                           <c:when
                                             test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
                                             <i class="fa-solid fa-user-check"
                                               style="color:green; margin-right: 5px;"></i>
-                                            ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
+                                            ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}(Order)
                                           </c:when>
                                           <c:otherwise>
-                                            <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i>
-                                            ${orderDAO.findById(de.order_id).full_name}
+<!--                                            <i class="fa fa-user" style="color:gray; margin-right: 5px;"></i>-->
+                                            ${orderDAO.findById(de.order_id).full_name}(Order)
                                           </c:otherwise>
                                         </c:choose>
-
+                                            </c:if>
+                                            <c:if test="${de.order_combo_id > 0}">
+                                               <i class="fa-solid fa-user-check"
+                                              style="color:green; margin-right: 5px;"></i> 
+                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}(Combo)
+                                            </c:if>
+                                        
                                       </td>
+
                                       <td>
                                         <span
                                           style="display: flex;align-items: center;justify-content: center;height: 25px; border:solid #6c757d "
@@ -637,27 +645,35 @@
                                           </td>
                                         </c:when>
                                         <c:otherwise>
-                                          <td>No</td>
+                                            <td>No</td>
                                         </c:otherwise>
                                       </c:choose>
+
                                       <td>
-                                        <div class="actions-container">
-                                          <div class="item eye">
-                                            <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"
-                                              title="View Detail">
-                                              <i class="icon-eye"></i>
-                                            </a>
+                                          <div class="actions-container">
+                                              <div class="item eye">
+                                                  <c:choose>
+                                                      <c:when test="${de.order_id > 0}">
+                                                          <!-- Link đơn hàng thường -->
+                                                          <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}">
+                                                              <i class="icon-eye"></i>
+                                                          </a>
+                                                      </c:when>
+
+                                                      <c:when test="${de.order_combo_id > 0}">
+                                                          <!-- Link đơn combo -->
+                                                          <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=viewCombo&id=${de.id}&shipper_id=${de.shipper_id}">
+                                                              <i class="icon-eye"></i>
+                                                          </a>
+                                                      </c:when>
+
+                                                      <c:otherwise>
+                                                          <!-- Không xác định -->
+                                                          <i class="fa fa-ban text-danger" title="Không xác định đơn hàng"></i>
+                                                      </c:otherwise>
+                                                  </c:choose>
+                                              </div>
                                           </div>
-                                          <c:if test="${de.shipper_id == 0 && de.status == 'pending'}">
-                                            <!-- Chỉ hiện icon nếu chưa có shipper -->
-                                            <div class="item edit">
-                                              <a href="${pageContext.request.contextPath}/seller/manage-delivery?action=shipper&id=${de.id}"
-                                                title="Select Shipper">
-                                                <i class="fa-solid fa-motorcycle"></i>
-                                              </a>
-                                            </div>
-                                          </c:if>
-                                        </div>
                                       </td>
                                     </tr>
                                   </c:forEach>

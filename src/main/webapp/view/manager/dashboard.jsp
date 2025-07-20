@@ -75,7 +75,7 @@
         <div class="section-content-right">
           <!-- header-dashboard -->
           <jsp:include page="../common/headerDashboard.jsp"></jsp:include>
-          <!-- /header-dashboard -->
+          /header-dashboard
 
           <!-- main-content -->
           <div class="main-content">
@@ -104,7 +104,8 @@
                         <option value="${t}" ${param.select==t ? 'selected' : '' }>${t}</option>
                       </c:forEach>
                     </select>
-                    <input type="text" name="search" placeholder="Search by name food..." value="${param.search}" />
+                    <input type="text" name="search" placeholder="Search by name food draft..."
+                      value="${param.search}" />
                     <button type="submit">Submit</button>
                   </form>
                 </div>
@@ -339,19 +340,17 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       if (successMessage) {
-        showToast(successMessage, "success"); <
-      
-        var = "isSuccess"
-        scope = "session" / >
+        showToast(successMessage, "success");
       }
       if (errorMessage) {
-        showToast(errorMessage, "error"); <
-       
-        var = "isError"
-        scope = "session" / >
+        showToast(errorMessage, "error");
       }
     });
   </script>
+
+  <!-- Sau script: Xoá session -->
+  <c:remove var="isSuccess" scope="session" />
+  <c:remove var="isError" scope="session" />
 
   <!--Message Error-->
   <script>

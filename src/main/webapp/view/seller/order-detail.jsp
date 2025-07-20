@@ -273,9 +273,7 @@ textarea.form-control {
                             <h6 class="card-title mb-0">Order Information</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-3">
-                                <strong>Order ID:</strong> #${order.id}
-                            </div>
+                           
                             <div class="mb-3">
                                 <strong>Order Date:</strong> <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
                             </div>
@@ -311,16 +309,16 @@ textarea.form-control {
                             <h6 class="card-title mb-0">Customer Information</h6>
                         </div>
                         <c:choose>
-                            <c:when test="${not empty account}">
+                            <c:when test="${acc != null && acc.id != 0}">
                                   <div class="card-body">
                             <div class="mb-3">
-                                <strong>Name:</strong> ${account.user_name}
+                                <strong>Name:</strong> ${acc.user_name}
                             </div>
                             <div class="mb-3">
-                                <strong>Email:</strong> ${account.email}
+                                <strong>Email:</strong> ${acc.email}
                             </div>
                             <div class="mb-3">
-                                <strong>Mobile:</strong> ${account.mobile}
+                                <strong>Mobile:</strong> ${acc.mobile}
                             </div>
                             <div class="mb-3">
                                 <strong>Shipping Address:</strong>
@@ -340,7 +338,7 @@ textarea.form-control {
                                 <strong>Mobile:</strong> ${order.mobile}
                             </div>
                             <div class="mb-3">
-                                <strong>Shipping Address:</strong>${order.address}
+                                <strong>Shipping Address:</strong>${order.shipping_address}
                             </div>
                         </div>  
                             </c:otherwise>
@@ -403,10 +401,7 @@ textarea.form-control {
                     </div>
                 </div>
             </div>                <div style="display:flex;justify-content:end;gap:40px">
-                                <a href="${pageContext.request.contextPath}/seller/manage-order?action=viewUpdate&id=${order.id}" 
-                                   class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: #ffc107
-                                   ;">Go to Update</a>
-                                <a href="${pageContext.request.contextPath}/seller/manage-order" 
+                    <a href="${pageContext.request.contextPath}/seller/manage-order" 
                                    class="btn btn-secondary" style="margin-top: 10px; cursor:poiter;background-color: blue
                                    ;">Go Back</a>
             </div>
