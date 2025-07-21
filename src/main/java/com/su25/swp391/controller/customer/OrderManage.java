@@ -39,7 +39,7 @@ public class OrderManage extends HttpServlet {
     private final Order order = new Order();
     private final OrderCombo orderCombo = new OrderCombo();
 
-    private static final String ORDER_LIST = "view/customer/orderlist.jsp";
+    public static final String ORDER_LIST = "view/customer/orderlist.jsp";
     private static final String ORDER_DETAILS = "view/customer/orderdetail.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
@@ -406,7 +406,7 @@ public class OrderManage extends HttpServlet {
         if (combo == null || orderCombo == null) {
             return 0.0;
         }
-        double price = combo.getOriginalPrice() - combo.getDiscountPrice();
+        double price = combo.getDiscountPrice();
         int quantity = orderCombo.getQuantity();
 
         return price * quantity;
