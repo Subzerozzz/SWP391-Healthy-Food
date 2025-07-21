@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.su25.swp391.dal.implement;
 
 import com.su25.swp391.dal.DBContext;
@@ -14,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Hang
- */
 public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     @Override
@@ -48,7 +40,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public boolean update(OrderCombo orderCombo) {
         String sql = "UPDATE OrderCombo SET order_id = ?,  comboId = ?, comboName = ?, "
-                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ? WHERE orderComboId = ?";
+                + "discountPrice = ?, quantity = ?, totalPrice = ? user_id = ?"
+                + " status=?  WHERE orderComboId = ?";
 
         try {
             connection = getConnection();
@@ -58,9 +51,9 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(3, orderCombo.getDiscountPrice());
             statement.setInt(4, orderCombo.getQuantity());
             statement.setDouble(5, orderCombo.getTotalPrice());
-            statement.setInt(6,orderCombo.getUser_id());
-            statement.setInt(7, orderCombo.getOrderComboId());
-
+            statement.setInt(6, orderCombo.getUser_id());
+            statement.setString(7, orderCombo.getStatus());
+            statement.setInt(8, orderCombo.getOrderComboId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException ex) {
@@ -91,7 +84,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public int insert(OrderCombo orderCombo) {
         String sql = "INSERT INTO OrderCombo ( comboId, comboName, discountPrice, "
-                + "quantity, totalPrice,payment_status,user_id) VALUES ( ?, ?, ?, ?, ?,?,?)";
+                + "quantity, totalPrice,payment_status,user_id,status) VALUES ( ?, ?, ?, ?, ?,?,?,?)";
 
         try {
             connection = getConnection();
@@ -104,6 +97,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             statement.setDouble(5, orderCombo.getTotalPrice());
             statement.setInt(6, orderCombo.getPayment_status());
             statement.setInt(7, orderCombo.getUser_id());
+            statement.setString(8, orderCombo.getStatus());
+
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
@@ -136,6 +131,8 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
         orderCombo.setTotalPrice(rs.getDouble("totalPrice"));
         orderCombo.setPayment_status(rs.getInt("payment_status"));
         orderCombo.setUser_id(rs.getInt("user_id"));
+        orderCombo.setStatus(rs.getString("status"));
+
         return orderCombo;
     }
 
@@ -172,78 +169,104 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             closeResources();
         }
     }
-    
+
     // Mạnh
     public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
-    List<OrderCombo> list = new ArrayList<>();
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        List<OrderCombo> list = new ArrayList<>();
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
 
-    String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND payment_status = ?";
-    }
-    sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
-
-    try {
-        int offset = (page - 1) * pageSize;
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
-        int paramIndex = 2;
-
+        String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-            statement.setInt(paramIndex++, Integer.parseInt(status));
+            sql += " AND status = ?";
+        }
+        sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByStatus) {
+                statement.setString(paramIndex++, status);
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
 
-        statement.setInt(paramIndex++, pageSize);
-        statement.setInt(paramIndex, offset);
-
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            list.add(getFromResultSet(resultSet));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+        return list;
     }
 
-    return list;
-}
     // Mạnh
     public int getTotalOrderComboCountByUserIdAndStatus(int userId, String status) {
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
-    String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND payment_status = ?";
-    }
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-            statement.setInt(2, Integer.parseInt(status)); // vì payment_status là int
+            sql += " AND status = ?";
         }
 
-        resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
 
-        if (resultSet.next()) {
-            return resultSet.getInt(1);
+            statement.setInt(1, userId);
+            if (filterByStatus) {
+                statement.setString(2, status);
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+
+        return 0;
     }
 
-    return 0;
-}
     public static void main(String[] args) {
         OrderComboDAO dao = new OrderComboDAO();
         AccountDAO a = new AccountDAO();
         System.out.println(a.findById(dao.findById(1).getUser_id()).getUser_name());
     }
+    //Mạnh
+
+    public boolean updateOrderComboStatus(int orderComboId, String status) {
+        String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
+        boolean success = false;
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, status);
+            statement.setInt(2, orderComboId);
+
+            int rows = statement.executeUpdate();
+            success = (rows > 0);
+        } catch (Exception e) {
+            System.out.println("Error updating orderCombo status: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return success;
+    }
+
 }
