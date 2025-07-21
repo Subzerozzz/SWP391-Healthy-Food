@@ -325,7 +325,7 @@
                                                                                                                                 <div class="mb-3" id="noteGroup" style="display: none;">
                                                                                                                                     <label class="form-label">Note</label>
                                                                                                                                     <textarea class="form-control" name="note" rows="3" 
-                                                                                                                                              placeholder="Enter note..."></textarea>
+                                                                                                                                              placeholder="Enter note..." required></textarea>
                                                                                                                                 </div>
 
                                                                                                                                 <div class="d-flex gap-2" style="margin: 10px 0">

@@ -118,81 +118,93 @@ public class ManagerOrderComboController extends HttpServlet {
     }
 
     // View Orders List
-  private void listOrdersCombo(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    HttpSession session = request.getSession();
+    private void listOrdersCombo(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
-    String email = (String) session.getAttribute("email");
-    String username = (String) session.getAttribute("user_name");
+        String email = (String) session.getAttribute("email");
+        String username = (String) session.getAttribute("user_name");
 
-    String pageParam = request.getParameter("page");
-    String pageSizeParam = request.getParameter("pageSize");
+        String pageParam = request.getParameter("page");
+        String pageSizeParam = request.getParameter("pageSize");
 
-    String statusFilter = request.getParameter("status"); // status đơn hàng
-    String paymentFilter = request.getParameter("payment_status"); // trạng thái thanh toán
+        String statusFilter = request.getParameter("status"); // status đơn hàng
+        String paymentFilter = request.getParameter("payment_status"); // trạng thái thanh toán
+        //lay ra all list khi filter all
+        if ("all".equals(statusFilter)) {
+            statusFilter = null;
+        }
+        if ("all".equals(paymentFilter)) {
+            paymentFilter = null;
+        }
+        int currentPage = 1;
+        int pageSize = 10;
 
-    int currentPage = 1;
-    int pageSize = 10;
-
-    if (email == null && username == null) {
-        response.sendRedirect(HOME_PAGE);
-        return;
-    }
-
-    try {
-        if (pageParam != null && !pageParam.isEmpty()) {
-            currentPage = Integer.parseInt(pageParam);
-            if (currentPage < 1) currentPage = 1;
+        if (email == null && username == null) {
+            response.sendRedirect(HOME_PAGE);
+            return;
         }
 
-        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
-            pageSize = Integer.parseInt(pageSizeParam);
-            if (pageSize < 5) pageSize = 5;
-            if (pageSize > 50) pageSize = 50;
+        try {
+            if (pageParam != null && !pageParam.isEmpty()) {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            }
+
+            if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                pageSize = Integer.parseInt(pageSizeParam);
+                if (pageSize < 5) {
+                    pageSize = 5;
+                }
+                if (pageSize > 50) {
+                    pageSize = 50;
+                }
+            }
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+            pageSize = 10;
         }
-    } catch (NumberFormatException e) {
-        currentPage = 1;
-        pageSize = 10;
+
+        Account acc = Account.builder()
+                .email(email)
+                .user_name(username)
+                .build();
+
+        Account accountFoundByEmail = accountDAO.findByEmail(acc);
+        Account accountFoundByUsername = accountDAO.findByUsername(acc);
+
+        if (accountFoundByEmail != null || accountFoundByUsername != null) {
+            int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
+
+            List<OrderCombo> orderCombo = ordercomboDAO.findAllWithPaginationAndFilters(
+                    currentPage, pageSize, statusFilter, paymentFilter);
+
+            int totalOrder = ordercomboDAO.getOrderComboCountByFilters(statusFilter, paymentFilter);
+            int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
+
+            request.setAttribute("orderCombo", orderCombo);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalOrder", totalOrder);
+
+            request.setAttribute("statusFilter", statusFilter);
+            request.setAttribute("paymentFilter", paymentFilter);
+
+            session.setAttribute("currentPage", currentPage);
+            session.setAttribute("pageSize", pageSize);
+
+            int startRecord = (currentPage - 1) * pageSize + 1;
+            int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
+            request.setAttribute("startRecord", startRecord);
+            request.setAttribute("endRecord", endRecord);
+
+            request.getRequestDispatcher(ORDER_LIST).forward(request, response);
+            return;
+        } else {
+            response.sendRedirect(HOME_PAGE);
+        }
     }
-
-    Account acc = Account.builder()
-            .email(email)
-            .user_name(username)
-            .build();
-
-    Account accountFoundByEmail = accountDAO.findByEmail(acc);
-    Account accountFoundByUsername = accountDAO.findByUsername(acc);
-
-    if (accountFoundByEmail != null || accountFoundByUsername != null) {
-        int userId = (accountFoundByEmail != null) ? accountFoundByEmail.getId() : accountFoundByUsername.getId();
-
-        List<OrderCombo> orderCombo = ordercomboDAO.findAllWithPaginationAndFilters(
-                currentPage, pageSize, statusFilter, paymentFilter);
-
-        int totalOrder = ordercomboDAO.getOrderComboCountByFilters(statusFilter, paymentFilter);
-        int totalPages = (int) Math.ceil((double) totalOrder / pageSize);
-
-        request.setAttribute("orderCombo", orderCombo);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("totalOrder", totalOrder);
-
-        request.setAttribute("statusFilter", statusFilter);
-        request.setAttribute("paymentFilter", paymentFilter);
-
-        session.setAttribute("currentPage", currentPage);
-        session.setAttribute("pageSize", pageSize);
-
-        int startRecord = (currentPage - 1) * pageSize + 1;
-        int endRecord = Math.min(startRecord + pageSize - 1, totalOrder);
-        request.setAttribute("startRecord", startRecord);
-        request.setAttribute("endRecord", endRecord);
-
-        request.getRequestDispatcher(ORDER_LIST).forward(request, response);
-        return;
-    } else {
-        response.sendRedirect(HOME_PAGE);
-    }
-}
 
     /**
      * Handles updating the status of a specific order.
@@ -205,95 +217,99 @@ public class ManagerOrderComboController extends HttpServlet {
      * @param request The HttpServletRequest containing client request data.
      * @param response The HttpServletResponse used to redirect or respond.
      */
-  private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
-    try {
-        // Get the orderId from request parameter
-        int orderComboId = Integer.parseInt(request.getParameter("orderComboId"));
+    private void updateOrderStatus(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // Get the orderId from request parameter
+            int orderComboId = Integer.parseInt(request.getParameter("orderComboId"));
 
-        // Get the new status from request
-        String newStatus = request.getParameter("newStatus");
+            // Get the new status from request
+            String newStatus = request.getParameter("newStatus");
 
-        // Get seller's note from request (optional)
-        String note = request.getParameter("note");
-        if (note == null) note = ""; // tránh null khi ghép vào nội dung email
-
-        // Validate that the new status is not empty
-        if (newStatus == null || newStatus.trim().isEmpty()) {
-            request.getSession().setAttribute("errorMessage", "Status cannot be empty");
-            response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
-            return;
-        }
-
-        // Get the seller account from session
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-
-        // Check if the seller is logged in
-        if (acc == null) {
-            response.sendRedirect(request.getContextPath() + "/home");
-            return;
-        }
-
-        // Retrieve the order from the database
-        OrderCombo ordercombo = ordercomboDAO.findById(orderComboId);
-        if (ordercombo == null) {
-            session.setAttribute("errorMessage", "Order not found");
-            response.sendRedirect(request.getContextPath() + "/manage-ordercombo");
-            return;
-        }
-
-        // Update the order status
-        boolean update = ordercomboDAO.updateOrderStatus(orderComboId, newStatus);
-        System.out.println("Update order status? " + update);
-
-        // Nếu trạng thái là accepted, cần lấy shipper
-        if ("accepted".equalsIgnoreCase(newStatus)) {
-            try {
-                Integer idShipper = Integer.parseInt(request.getParameter("idShipper"));
-                System.out.println("=> Insert delivery for shipper id: " + idShipper);
-                boolean checkInsertDelivery = deliveryDAO.insertDeliveryCombo(orderComboId, idShipper);
-                System.out.println("Insert result: " + checkInsertDelivery);
-            } catch (NumberFormatException ex) {
-                session.setAttribute("errorMessage", "Please select a valid shipper.");
+            // Get seller's note from request (optional)
+            String note = request.getParameter("note");
+            if (note == null) {
+                note = ""; // tránh null khi ghép vào nội dung email
+            }
+            // Validate that the new status is not empty
+            if (newStatus == null || newStatus.trim().isEmpty()) {
+                request.getSession().setAttribute("errorMessage", "Status cannot be empty");
                 response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
                 return;
             }
-        }
 
-        if (update) {
-            session.setAttribute("successMessage", "Success Order: " + orderComboId);
-        } else {
-            session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
-        }
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
 
-        // Gửi email nếu là người dùng đăng nhập (user_id != null và != 0)
-        Integer userId = ordercombo.getUser_id();
-        if (userId != null && userId != 0) {
-            Account buyer = accDAO.findById(userId);
-            if (buyer != null) {
-                String guestEmail = buyer.getEmail();
-                String customerName = buyer.getFull_name() != null ? buyer.getFull_name() : "";
-                String subject = "Order Status Update";
-                String content = "<h3>Hello " + customerName + ",</h3>"
-                        + "<p>Your order has been <strong>" + newStatus + "</strong>.</p>"
-                        + (!note.isEmpty() ? "<p>Note: " + note + "</p>" : "")
-                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
-                        + "<br><em>Best regards,</em><br>Customer Support Team";
+            // Check if the seller is logged in
+            if (acc == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+
+            // Retrieve the order from the database
+            OrderCombo ordercombo = ordercomboDAO.findById(orderComboId);
+            if (ordercombo == null) {
+                session.setAttribute("errorMessage", "Order not found");
+                response.sendRedirect(request.getContextPath() + "/manage-ordercombo");
+                return;
+            }
+
+            // Update the order status
+            boolean update = ordercomboDAO.updateOrderStatus(orderComboId, newStatus);
+            System.out.println("Update order status? " + update);
+
+            // Nếu trạng thái là accepted, cần lấy shipper
+            if ("accepted".equalsIgnoreCase(newStatus)) {
                 try {
-                    EmailUtils.sendMail(guestEmail, subject, content);
-                } catch (MessagingException ex) {
-                    ex.printStackTrace(); // Consider replacing with logger
+                    Integer idShipper = Integer.parseInt(request.getParameter("idShipper"));
+                    System.out.println("=> Insert delivery for shipper id: " + idShipper);
+                    boolean checkInsertDelivery = deliveryDAO.insertDeliveryCombo(orderComboId, idShipper);
+                    System.out.println("Insert result: " + checkInsertDelivery);
+                } catch (NumberFormatException ex) {
+                    session.setAttribute("errorMessage", "Please select a valid shipper.");
+                    response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
+                    return;
                 }
             }
+
+            if (update) {
+                session.setAttribute("successMessage", "Success Order: " + orderComboId);
+            } else {
+                session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
+            }
+
+            // Gửi email nếu là người dùng đăng nhập (user_id != null và != 0)
+            Integer userId = ordercombo.getUser_id();
+            if (userId != null && userId != 0) {
+                Account buyer = accDAO.findById(userId);
+                if (buyer != null) {
+                    String guestEmail = buyer.getEmail();
+                    String customerName = buyer.getFull_name() != null ? buyer.getFull_name() : "";
+                    String subject = "Order Status Update";
+                    String content = "<h3>Hello " + customerName + ",</h3>"
+                            + "<p>Your order has been <strong>" + newStatus + "</strong>.</p>"
+                            + (!note.isEmpty() ? "<p>Note: " + note + "</p>" : "")
+                            + "<p>Thank you for shopping at Healthy Food Store!</p>"
+                            + "<p>Xin quý khách xác nhận lại đã nhận được thông tin đơn hàng bị hủy"
+                            + " và liên hệ lại cửa hàng nhận lại tiền hoàn!</p>"
+                            + "<p>SDT:0378654625</p>"
+                            + "<br><em>Best regards,</em><br>Customer Support Team";
+                    try {
+                        EmailUtils.sendMail(guestEmail, subject, content);
+                    } catch (MessagingException ex) {
+                        ex.printStackTrace(); // Consider replacing with logger
+                    }
+                }
+            }
+
+            // Redirect to the order update detail page
+            response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Consider replacing with logger
         }
-
-        // Redirect to the order update detail page
-        response.sendRedirect(request.getContextPath() + "/manage-ordercombo?action=viewUpdate&orderComboId=" + orderComboId);
-
-    } catch (Exception e) {
-        e.printStackTrace(); // Consider replacing with logger
     }
-}
 
     /**
      * Handles displaying the detailed information of a specific order. This

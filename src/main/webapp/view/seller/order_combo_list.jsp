@@ -171,9 +171,9 @@
                                                                                                         <fieldset class="name">
                                                                                                             <select name="payment_status" required>
                                                                                                                 <option value="all" ${param.payment_status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="0"  ${param.payment_status == "0" ? 'selected' : ''}>Chưa Thanh Toán</option>
-                                                                                                                <option value="1"  ${param.payment_status == "1" ? 'selected' : ''}>Đã Thanh Toán</option>
-                                                                                                                <option value="22"  ${param.payment_status == "" ? 'selected' : ''}>ngoại Lệ</option>
+                                                                                                                <option value="0"  ${param.payment_status == '0' ? 'selected' : ''}>Chưa Thanh Toán</option>
+                                                                                                                <option value="1"  ${param.payment_status == '1'? 'selected' : ''}>Đã Thanh Toán</option>
+                                                                                                                
                                                                                                             </select>   
                                                                                                         </fieldset>
 

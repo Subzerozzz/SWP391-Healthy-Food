@@ -52,7 +52,7 @@ public class BuyComboController extends HttpServlet {
     OrderComboFoodDAO ordercomboFoodDao = new OrderComboFoodDAO();
     OrderDAO orderDao = new OrderDAO();
     private static final String COMBO_SERVLET_URL = "comboController";
-        private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
+    private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
 
 
     /**
@@ -119,41 +119,9 @@ public class BuyComboController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
 
-        if ("wholesale".equals(action)) {
-            handleWholesalePayment(req, resp); // 
-        } else {
-            // fallback nếu không có action
-            resp.sendRedirect(req.getContextPath() + "/comboController");
-        }
     }
 
-    private void handleWholesalePayment(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            String amountParam = req.getParameter("amount");
-            if (amountParam == null || amountParam.isEmpty()) {
-                resp.sendRedirect(req.getContextPath() + "/comboController");
-                return;
-            }
-
-            long amount = (long) (Double.parseDouble(amountParam) * 100); // VNPAY cần nhân 100
-            String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // hoặc gọi VNPayConfig.buildUrl(...)
-            // build thêm tham số vào URL...
-            String redirectUrl = vnp_Url + "?vnp_Amount=" + amount + "&..."; // build đúng tham số bạn cần
-
-            resp.sendRedirect(redirectUrl); // 👈 chuyển người dùng tới VNPay
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.sendRedirect(req.getContextPath() + "/comboController");
-        }
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     private void processBuyCombo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
@@ -226,7 +194,7 @@ public class BuyComboController extends HttpServlet {
        
 
         // Chuyển sang trang tạo thanh toán
-        long amount = Math.round(((combo.getOriginalPrice()* quantity) -combo.getDiscountPrice())* 1);
+        long amount = Math.round(totalPrice* 1);
 
         response.sendRedirect(request.getContextPath() + "/ajaxServlet?amount=" + amount
                 + "&orderId=" + orderComboId + "&combo_payment=true");
@@ -293,17 +261,17 @@ public class BuyComboController extends HttpServlet {
                 session.removeAttribute("comboProducts");
 
                 setToastMessage(request, "Order Successful !!", "success");
-                response.sendRedirect(request.getContextPath() +"/listordercombo");
+                response.sendRedirect(ORDER_COMBO);
             } else {
                 // Thanh toán không thành công hoặc lỗi
                 // Xử lý lỗi hoặc chuyển hướng đến trang thông báo lỗi
                 setToastMessage(request, "Order failed. Something Wrong!!", "error");
-                response.sendRedirect(COMBO_SERVLET_URL);
+                response.sendRedirect(ORDER_COMBO);
             }
 
         } catch (Exception e) {
             setToastMessage(request, "Order failed. Something Wrong!! " + e.getMessage(), "error");
-            response.sendRedirect(COMBO_SERVLET_URL);
+            response.sendRedirect(ORDER_COMBO);
         }
 
     }
