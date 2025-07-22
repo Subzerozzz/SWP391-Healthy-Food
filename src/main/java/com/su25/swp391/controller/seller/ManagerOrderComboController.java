@@ -51,7 +51,7 @@ public class ManagerOrderComboController extends HttpServlet {
     private final FoodDAO foodDAO = new FoodDAO();
     private final OrderComboDAO ordercomboDAO = new OrderComboDAO();
     private final ComboDAO comboDAO = new ComboDAO();
-    private OrderApprovalDAO approvalDAO = new OrderApprovalDAO();
+
     private DeliveryDAO deliveryDAO = new DeliveryDAO();
 
     private final OrderCombo order = new OrderCombo();

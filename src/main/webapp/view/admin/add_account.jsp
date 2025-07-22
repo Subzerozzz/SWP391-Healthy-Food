@@ -261,8 +261,7 @@
   <c:if test="${not empty errors}">
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        <
-        c: forEach
+            <c:forEach
         var = "entry"
         items = "${errors}" >
           iziToast.error({
@@ -271,7 +270,7 @@
             position: 'topRight',
             timeout: 5000
           }); <
-        /c:forEach>
+       </c:forEach>
       });
     </script>
   </c:if>
