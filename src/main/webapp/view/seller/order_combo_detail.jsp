@@ -71,7 +71,7 @@
                                                             <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
 
                                                                 </head>
-                                                                <body class="body">
+                                                                <body class="body">More actions
 
                                                                     <!-- #wrapper -->
                                                                     <div id="wrapper">
@@ -93,6 +93,7 @@
                                                                                     <div class="section-content-right">
                                                                                         <!-- header-dashboard -->
                                                                                     <jsp:include page = "/view/common/headerDashboard.jsp"></jsp:include>
+
                                                                                         <!-- /header-dashboard -->
                                                                                         <!-- main-content -->
                                                                                         <div class="main-content">
@@ -131,6 +132,7 @@
                                                                                                                         <li>
                                                                                                                             <div class="body-title">All item</div>
                                                                                                                         </li>    
+
                                                                                                                     </ul>
                                                                                                                     <div class="order-items-container">
                                                                                                                         <ul class="flex flex-column">
@@ -154,11 +156,14 @@
                                                                                                                                 <div class="name">
                                                                                                                                     <div class="text-tiny mb-1">Price</div>
                                                                                                                                     <div class="body-title-2">
-                                                                                                                                        <fmt:formatNumber value="${combo.originalPrice}" type="number" groupingUsed="true" /> VND
+                                                                                                                                        <fmt:formatNumber value="${combo.originalPrice*orderCombo.quantity}" type="number" groupingUsed="true" /> VND
                                                                                                                                     </div>
                                                                                                                                 </div>
+
+
                                                                                                                             </div>
                                                                                                                         </li>
+
                                                                                                                     </ul>
                                                                                                                 </div>
                                                                                                             </div>
@@ -173,6 +178,7 @@
                                                                                                                         <div class="body-title">Price</div>
                                                                                                                     </li>    
                                                                                                                 </ul>
+
                                                                                                                 <ul class="flex flex-column gap14">
                                                                                                                     <li class="cart-totals-item">
                                                                                                                         <span class="body-text">Subtotal:</span>
@@ -184,8 +190,9 @@
                                                                                                                     <li class="cart-totals-item">
                                                                                                                         <span class="body-text">Discount Price</span>
                                                                                                                         <span class="body-title-2">
-                                                                                                                            <fmt:formatNumber value="${discountPrice}" type="number" groupingUsed="true"/> VND
+                                                                                                                            <fmt:formatNumber value="${combo.discountPrice}" type="number" groupingUsed="true"/> VND
                                                                                                                         </span>
+
                                                                                                                     </li>
                                                                                                                     <li class="divider"></li>
                                                                                                                     <li class="cart-totals-item">
@@ -196,14 +203,13 @@
                                                                                                                     </li>
                                                                                                                 </ul>
                                                                                                             </div>
+                                                                                                                        <div class="wg-box">
+                                                                                                                            <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/manage-ordercombo">Back to Order List</a>
+                                                                                                                        </div>
                                                                                                         </div>
-                                                                                                        <div class="wg-box" style=" margin-top: 20px; ">
-                                                                                                            <a class="tf-button style-1 w-full"
-                                                                                                               onclick="cancelOrder(${orderCombo.orderComboId}, '${orderCombo.status}')">Cancel Order</a>
-                                                                                                            <a class="tf-button style-1 w-full" href="${pageContext.request.contextPath}/listordercombo">Back to Order List</a>
-                                                                                                        </div>
-
                                                                                                     </div>
+                                                                                                    
+
                                                                                                 </div>
                                                                                                 <!-- /order-detail -->
                                                                                             </div>
@@ -222,40 +228,7 @@
                                                                             </div>
                                                                             <!-- /#page -->
                                                                         </div>
-                                                                        <!-- /#wrapper -->
-                                                                        <!-- JavaScript -->
-                                                                        <script>
-                                                                            function cancelOrder(orderComboId, status) {
-                                                                                if (status.toLowerCase() !== 'pending') {
-                                                                                    alert("Chỉ có thể hủy đơn hàng khi trạng thái là 'pending'");
-                                                                                    return;
-                                                                                }
-
-                                                                                if (!confirm("Bạn có chắc muốn hủy đơn hàng này không?"))
-                                                                                    return;
-
-                                                                                fetch('cancel-order-combo', {
-                                                                                    method: 'POST',
-                                                                                    headers: {
-                                                                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                                                                    },
-                                                                                    body: 'orderComboId=' + orderComboId
-                                                                                })
-                                                                                        .then(response => {
-                                                                                            if (response.ok) {
-                                                                                                alert("Đơn hàng đã được hủy.");
-                                                                                                location.reload(); // reload để cập nhật UI
-                                                                                            } else {
-                                                                                                alert("Không thể hủy đơn hàng. Đơn hàng có thể đã được xử lý.");
-                                                                                            }
-                                                                                        })
-                                                                                        .catch(error => {
-                                                                                            console.error("Lỗi:", error);
-                                                                                            alert("Có lỗi xảy ra khi hủy đơn.");
-                                                                                        });
-                                                                            }
-
-                                                                        </script>
+                                                                        <!-- /#wrapper -->                                                                       
 
                                                                         <script src="${pageContext.request.contextPath}/js/jquery.min_1.js"></script>
                                                                     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>

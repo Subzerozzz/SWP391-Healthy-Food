@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order", "/listordercombo", "/ordercombodetail"})
+@WebServlet(name = "OrderManage", urlPatterns = {"/orderlist", "/orderdetail", "/search", "/cancel-order", "/cancel-order-combo", "/listordercombo", "/ordercombodetail"})
 public class OrderManage extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
@@ -37,8 +37,9 @@ public class OrderManage extends HttpServlet {
     private final ComboDAO comboDAO = new ComboDAO();
 
     private final Order order = new Order();
+    private final OrderCombo orderCombo = new OrderCombo();
 
-    private static final String ORDER_LIST = "view/customer/orderlist.jsp";
+    public static final String ORDER_LIST = "view/customer/orderlist.jsp";
     private static final String ORDER_DETAILS = "view/customer/orderdetail.jsp";
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
@@ -75,6 +76,9 @@ public class OrderManage extends HttpServlet {
         switch (path) {
             case "/cancel-order":
                 cancerOrderDoPost(request, response);
+                break;
+            case "/cancel-order-combo":
+                cancerOrderComboDoPost(request, response);
                 break;
             default:
                 break;
@@ -340,6 +344,8 @@ public class OrderManage extends HttpServlet {
                 Combo combo = comboDAO.findById(comboID);
                 if (combo != null) {
                     double subtotalcombo = calculateOriginalTotalPrice(combo, orderCombo);
+                    double discountPrice = calculateDiscountPrice(combo, orderCombo);
+                    request.setAttribute("discountPrice", discountPrice);
                     request.setAttribute("orderCombo", orderCombo);
                     request.setAttribute("combo", combo);
                     request.setAttribute("subtotalcombo", subtotalcombo);
@@ -349,6 +355,25 @@ public class OrderManage extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             response.sendRedirect(HOME_PAGE);
+        }
+    }
+    
+    private void cancerOrderComboDoPost(HttpServletRequest request, HttpServletResponse response) {
+        int orderComboId = Integer.parseInt(request.getParameter("orderComboId"));
+        
+         OrderCombo orderCombo = ordercomboDAO.findById(orderComboId);
+
+         
+        if (!"pending".equalsIgnoreCase(orderCombo.getStatus())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
+            return;
+        }
+
+        boolean updated = ordercomboDAO.updateOrderComboStatus(orderComboId, "cancelled");
+        if (updated) {
+            response.setStatus(HttpServletResponse.SC_OK); // 200
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
         }
     }
 
@@ -372,6 +397,16 @@ public class OrderManage extends HttpServlet {
             return 0.0;
         }
         double price = combo.getOriginalPrice();
+        int quantity = orderCombo.getQuantity();
+
+        return price * quantity;
+    }
+    
+    public double calculateDiscountPrice(Combo combo, OrderCombo orderCombo) { // tính tiền discount
+        if (combo == null || orderCombo == null) {
+            return 0.0;
+        }
+        double price = combo.getDiscountPrice();
         int quantity = orderCombo.getQuantity();
 
         return price * quantity;

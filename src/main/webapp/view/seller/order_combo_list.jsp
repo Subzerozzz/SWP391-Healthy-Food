@@ -82,7 +82,7 @@
                 font-weight: 600;           /* tăng độ dày chữ */
                 font-size: 14px;
             }
-           
+
             .status-paid {
                 background-color: #28a745; /* Xanh lá cây */
                 color: white;
@@ -108,25 +108,6 @@
                 border-radius: 6px;
                 font-weight: 600;
                 display: inline-block;
-            }
-            .block-available.pending {
-                background-color: #9b9b9b;
-                color: white;
-            }
-
-            .block-available.accepted {
-                background-color: #28a745;
-                color: white;
-            }
-
-            .block-available.cancelled {
-                background-color: #be2003;
-                color: white;
-            }
-
-            .block-available.completed {
-                background-color: #0a6827;
-                color: white;
             }
 
 
@@ -180,28 +161,40 @@
                                                                                         <!-- main-content-wrap -->
                                                                                         <div class="main-content-wrap">
                                                                                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                                                                                <h3>Order Combo List</h3>
+                                                                                                <h3>Order List</h3>
                                                                                             </div>
                                                                                             <!-- order-list -->
                                                                                             <div class="wg-box">
                                                                                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                                                                                     <div class="wg-filter flex-grow">
-                                                                                                        <form class="form-search" action="listordercombo" method="get">
-                                                                                                            <fieldset class="name">
-                                                                                                                <select name="status" required>
-                                                                                                                <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
-                                                                                                                <option value="pending"  ${param.status == 'pending' ? 'selected' : ''}>Pending</option>
-                                                                                                                <option value="accepted"  ${param.status == 'accepted' ? 'selected' : ''}>Accepted</option>
-                                                                                                                <option value="cancelled"  ${param.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                                                                                                                <option value="completed"  ${param.status == 'completed' ? 'selected' : ''}>Completed</option>
-                                                                                                            </select>                                                                                                            </fieldset>
-                                                                                                        <div class="button-submit">
-                                                                                                            <button class="" type="submit"><i class="icon-search"></i></button>
-                                                                                                        </div>
+                                                                                                        <form class="form-search d-flex align-items-center gap-2" action="${pageContext.request.contextPath}/manage-ordercombo" method="get">
+                                                                                                        <fieldset class="name">
+                                                                                                            <select name="payment_status" required>
+                                                                                                                <option value="all" ${param.payment_status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="0"  ${param.payment_status == '0' ? 'selected' : ''}>Chưa Thanh Toán</option>
+                                                                                                                <option value="1"  ${param.payment_status == '1'? 'selected' : ''}>Đã Thanh Toán</option>
 
+                                                                                                            </select>   
+                                                                                                        </fieldset>
+
+
+
+                                                                                                        <fieldset class="name">
+                                                                                                            <select name="status" required>
+                                                                                                                <option value="all" ${param.status == 'all' ? 'selected' : ''}>-- All Status --</option>
+                                                                                                                <option value="accepted"  ${param.status == "accepted" ? 'selected' : ''}>accepted</option>
+                                                                                                                <option value="pending"  ${param.status == "pending" ? 'selected' : ''}>pending</option>
+                                                                                                                <option value="cancelled"  ${param.status == "cancelled" ? 'selected' : ''}>cancelled</option>
+                                                                                                                <option value="completed"  ${param.status == "completed" ? 'selected' : ''}>Completed</option>
+                                                                                                            </select>   
+                                                                                                        </fieldset>
+
+                                                                                                        <button type="submit" class="btn btn-outline-primary" style="width: 86.6px; height: 49.1px;border-radius: 10px; border: 1.5px solid gray;  " title="Lọc">
+                                                                                                            <i class="fas fa-filter" style="font-size: 24px "></i> <!-- Biểu tượng lọc -->
+                                                                                                        </button>
                                                                                                     </form>
                                                                                                 </div>
-                                                                                                <a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/orderlist"><i class="icon-file-text"></i>List Order</a>
+                                                                                                <!--<a class="tf-button style-1 w208" href="${pageContext.request.contextPath}/orderlist"><i class="icon-file-text"></i>List Order</a>-->
                                                                                             </div>
                                                                                             <div class="wg-table table-all-category">
                                                                                                 <ul class="table-title">
@@ -215,41 +208,38 @@
                                                                                                         <div class="body-title">Quantity</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title">Status</div>
-                                                                                                    </li>
-                                                                                                    <li>
                                                                                                         <div class="body-title">Total Price</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left: 40px">Payment Status</div>
+                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
                                                                                                         <div class="body-title" style="padding-left: 80px">Payment Method</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left: 70px">Active</div>
+                                                                                                        <div class="body-title" style="padding-left: 80px">Status</div>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title" style="padding-left: 100px">Active</div>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                                 <ul class="flex flex-column">
 
-                                                                                                    <c:forEach var="order" items="${orderCombo}">
+                                                                                                    <c:forEach var="orderCombo" items="${orderCombo}">
                                                                                                         <li class="product-item gap14">
                                                                                                             <div class="flex items-center justify-between gap20 flex-grow">
-                                                                                                                <div class="body-text format-view">#${order.orderComboId} </div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 25px">${order.comboName}</div>
-                                                                                                                <div class="body-text format-view" style="padding-left: 45px">${order.quantity} </div>
-                                                                                                                <div class="body-text format-view" style="padding-right: 30px">
-                                                                                                                    <div class="block-available ${order.status}" ><a>${order.status}</a></div>
+                                                                                                                <div class="body-text format-view">#${orderCombo.orderComboId} </div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 70px">${orderCombo.comboName}</div>
+                                                                                                                <div class="body-text format-view" style="padding-left: 20px">${orderCombo.quantity} </div>
+                                                                                                                <div class="body-text format-view " style="padding-right: 100px">
+                                                                                                                    <fmt:formatNumber value="${orderCombo.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
                                                                                                                 </div>
-                                                                                                                <div class="body-text format-view " style="padding-right: 50px">
-                                                                                                                    <fmt:formatNumber value="${order.totalPrice}" type="number" maxFractionDigits="0" groupingUsed="true"/> VND
-                                                                                                                </div>
-                                                                                                                <div class="body-text format-view" style="padding-right: 80px">
+                                                                                                                <div class="body-text format-view">
                                                                                                                     <c:choose>
-                                                                                                                        <c:when test="${order.payment_status == 0}">
+                                                                                                                        <c:when test="${orderCombo.payment_status == 0}">
                                                                                                                             <span class="status-unpaid">Chưa thanh toán</span>
                                                                                                                         </c:when>
-                                                                                                                        <c:when test="${order.payment_status == 1}">
+                                                                                                                        <c:when test="${orderCombo.payment_status == 1}">
                                                                                                                             <span class="status-paid">Đã thanh toán</span>
                                                                                                                         </c:when>
                                                                                                                         <c:otherwise>
@@ -257,13 +247,36 @@
                                                                                                                         </c:otherwise>
                                                                                                                     </c:choose>   
                                                                                                                 </div>
-                                                                                                                
+
+                                                                                                                <div class="body-text format-view">
+                                                                                                                    <c:choose>
+                                                                                                                        <c:when test="${orderCombo.status == 'pending'}">
+                                                                                                                            <span class="status-unpaid" style="background: blue">Pending</span>
+                                                                                                                        </c:when>
+                                                                                                                        <c:when test="${orderCombo.status == 'accepted'}">
+                                                                                                                            <span class="status-paid" style="background: #29A0DC">Acceptes</span>
+                                                                                                                        </c:when>
+                                                                                                                        <c:when test="${orderCombo.status == 'cancelled'}">
+                                                                                                                            <span class="status-unpaid">Cancal</span>
+                                                                                                                        </c:when>
+                                                                                                                         <c:when test="${orderCombo.status == 'completed'}">
+                                                                                                                            <span class="status-paid">Completed</span>
+                                                                                                                        </c:when>
+                                                                                                                    </c:choose>  
+                                                                                                                </div>
+
                                                                                                                 <div class="body-text format-view"><a class="payment-badge">vnpay</a></div>
 
-                                                                                                                <div class="list-icon-function " style="padding-right: 80px">
-                                                                                                                    <a href="${pageContext.request.contextPath}/ordercombodetail?orderComboId=${order.orderComboId}" class="item eye">
+                                                                                                                <div class="list-icon-function ">
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=view&orderComboId=${orderCombo.orderComboId}" class="item eye">
                                                                                                                         <i class="icon-eye"></i>
                                                                                                                     </a>
+                                                                                                                    <div class="item edit">
+                                                                                                                        <a
+                                                                                                                            href="${pageContext.request.contextPath}/manage-ordercombo?action=viewUpdate&orderComboId=${orderCombo.orderComboId}"><i
+                                                                                                                                class="icon-edit-3"></i></a>
+
+                                                                                                                    </div>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </li>
@@ -277,21 +290,21 @@
                                                                                                     <ul class="wg-pagination">
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/listordercombo?page=1&status=${param.status}"><i class="icon-chevron-left"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/manage-ordercombo?action=list&page=1"><i class="icon-chevron-left"></i></a>
                                                                                                         </li>
                                                                                                         <c:choose>
                                                                                                             <c:when test="${currentPage <= totalPages - 2}">
                                                                                                                 <c:if test="${currentPage > 1}">
                                                                                                                     <li class="">
-                                                                                                                        <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage - 1}&status=${param.status}">${currentPage - 1}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/manage-ordercombo?action=list&page=${currentPage - 1}">${currentPage - 1}</a>
                                                                                                                     </li>
                                                                                                                 </c:if>
                                                                                                                 <li class="active">
-                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage}&status=${param.status}">${currentPage}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=list&page=${currentPage}">${currentPage}</a>
                                                                                                                 </li>
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${currentPage + 1}&status=${param.status}">${currentPage + 1}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?action=list&page=${currentPage + 1}">${currentPage + 1}</a>
                                                                                                                 </li>
 
                                                                                                                 <c:if test="${currentPage < totalPages - 2}">
@@ -302,21 +315,21 @@
 
 
                                                                                                                 <li class="">
-                                                                                                                    <a href="${pageContext.request.contextPath}/listordercombo?page=${totalPages}&status=${param.status}">${totalPages}</a>
+                                                                                                                    <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${totalPages}&status=${param.status}&payment_status=${param.payment_status}">${totalPages}</a>
                                                                                                                 </li>
                                                                                                             </c:when>
 
                                                                                                             <c:otherwise>
                                                                                                                 <c:forEach begin="${totalPages-2 <= 0 ? 1 : totalPages - 2}" end="${totalPages}" var="i">
                                                                                                                     <li class="${currentPage == i ? 'active' : ''}">
-                                                                                                                        <a href="${pageContext.request.contextPath}/listordercombo?page=${i}&status=${param.status}">${i}</a>
+                                                                                                                        <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${i}&status=${param.status}&payment_status=${param.payment_status}">${i}</a>
                                                                                                                     </li>
                                                                                                                 </c:forEach>
                                                                                                             </c:otherwise>
                                                                                                         </c:choose>
 
                                                                                                         <li>
-                                                                                                            <a href="${pageContext.request.contextPath}/listordercombo?page=${totalPages}&status=${param.status}"><i class="icon-chevron-right"></i></a>
+                                                                                                            <a href="${pageContext.request.contextPath}/manage-ordercombo?page=${totalPages}&status=${param.status}&payment_status=${param.payment_status}"><i class="icon-chevron-right"></i></a>
                                                                                                         </li>
                                                                                                     </ul>
 

@@ -14,11 +14,11 @@ import lombok.ToString;
 
 @ToString
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+
 public class Delivery {
     private Integer id;
     private Integer order_id;
@@ -28,4 +28,5 @@ public class Delivery {
     private Timestamp assigned_at;
     private Timestamp delivered_at;
     private String note;
+    
 }

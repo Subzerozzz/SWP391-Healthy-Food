@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
@@ -36,7 +37,6 @@ import java.util.Map;
  */
 @WebServlet(name="ManageDeliveryController", urlPatterns={"/seller/manage-delivery"})
 public class ManageDeliveryController extends HttpServlet {
-     
      private DeliveryDAO deliveryDAO;
      private OrderDAO orderDAO;
      private AccountDAO accDAO;

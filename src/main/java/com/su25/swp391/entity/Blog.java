@@ -33,7 +33,6 @@ public class Blog {
     private String content;
     private String thumbnailblogs;
     private String status;
-    private Date birth_date;
+    private Date created_Date;
 
- 
 }

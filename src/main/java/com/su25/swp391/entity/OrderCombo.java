@@ -33,4 +33,5 @@ public class OrderCombo {
     private Integer quantity;
     private Double totalPrice;
     private Integer payment_status;
+    private String status;
 }
