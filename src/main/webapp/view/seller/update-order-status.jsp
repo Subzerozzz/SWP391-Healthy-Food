@@ -312,8 +312,7 @@ textarea.form-control {
                                                 <c:if test="${order.status == 'pending'}">
                                                     <option value="accepted">Accept Order</option>
                                                     <option value="cancelled">Cancel Order</option>
-                                                    <option value="abcd">abcd</option>
-                                                </c:if>
+                                                 </c:if>
                                             </select>
 
                                             <div class="mb-3" id="shipperSelectGroup" style="display: none;">

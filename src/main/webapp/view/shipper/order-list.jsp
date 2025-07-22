@@ -452,30 +452,7 @@
             <div class="main-content-inner">
               <!-- main-content-wrap -->
               <div class="main-content-wrap">
-                <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-
-                  <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
-                    <li>
-                      <a href="#">
-                        <div class="text-tiny">Dashboard</div>
-                      </a>
-                    </li>
-                    <li>
-                      <i class="icon-chevron-right"></i>
-                    </li>
-                    <li>
-                      <a href="${pageContext.request.contextPath}/shipper/manage-delivery">
-                        <div class="text-tiny">Delivery Management</div>
-                      </a>
-                    </li>
-                    <li>
-                      <i class="icon-chevron-right"></i>
-                    </li>
-                    <li>
-                      <div class="text-tiny">Delivery List</div>
-                    </li>
-                  </ul>
-                </div>
+             
                 <!-- order-list -->
                 <div class="wg-box">
                   <div class="">
@@ -574,19 +551,19 @@
                                           <c:when
                                             test="${not empty accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}">
                                             <i class="fa-solid fa-user-check"
-                                              style="color:green; margin-right: 5px;"></i> ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}(Order) 
+                                              style="color:green; margin-right: 5px;"></i> ${accDAO.findById(orderDAO.findById(de.order_id).account_id).user_name}
                                            
                                           </c:when>
                                           <c:otherwise>
 
-                                            ${orderDAO.findById(de.order_id).full_name}(Order)
+                                            ${orderDAO.findById(de.order_id).full_name}
                                           </c:otherwise>
                                         </c:choose>
                                             </c:if>
                                             <c:if test="${de.order_combo_id > 0}">
                                                <i class="fa-solid fa-user-check"
                                               style="color:green; margin-right: 5px;"></i> 
-                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}(Combo)
+                                               ${accDAO.findById(ordercomboDAO.findById(de.order_combo_id).user_id).user_name}
                                             </c:if>
                                       </td>
                                       <td>
@@ -627,14 +604,9 @@
                                       </c:choose>
 
                                       <td>
-                                        <div class="actions-container">
-<!--                                          <div class="item eye">
-                                            <a href="${pageContext.request.contextPath}/shipper/manage-delivery?action=view&id=${de.id}&shipper_id=${de.shipper_id}"
-                                              title="View Detail">
-                                              <i class="icon-eye"></i>
-                                            </a>
-                                          </div>-->
-   <div class="item eye">
+                                          <div class="actions-container">
+
+                                              <div class="item eye">
                                                   <c:choose>
                                                       <c:when test="${de.order_id > 0}">
                                                           <!-- Link đơn hàng thường -->
