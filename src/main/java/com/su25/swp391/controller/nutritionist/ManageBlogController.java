@@ -159,7 +159,7 @@ public class ManageBlogController extends HttpServlet {
                     .author("HarryPorter")
                     .brief_info(briefinfo)
                     .content(content)
-                    .birth_date(date)
+                    .created_Date(date)
                     .thumbnailblogs(fileName != null ? UPLOAD_DIRECTORY + "/" + fileName : null)
                     .status("Inactive")
                     .build();
@@ -216,7 +216,7 @@ public class ManageBlogController extends HttpServlet {
             blog.setAuthor(author);
             blog.setBrief_info(briefinfo);
             blog.setContent(content);
-            blog.setBirth_date(date);
+            blog.setCreated_Date(date);
             boolean isSuccess = blogDao.update(blog);
             if (isSuccess) {
                 HttpSession session = request.getSession();

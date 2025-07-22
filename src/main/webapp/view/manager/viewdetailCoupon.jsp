@@ -129,7 +129,7 @@
                                                 <p style="color: #666; margin: 0;">
                                                     <c:choose>
                                                         <c:when test="${coupon.max_discount != null && coupon.max_discount > 0}">
-                                                            <span style="font-weight: 600;">${coupon.maxDiscount}</span>
+                                                            <span style="font-weight: 600;">${coupon.max_discount}</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span style="color: #ffc107; font-style: italic;">No maximum limit</span>

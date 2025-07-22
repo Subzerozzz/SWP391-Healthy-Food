@@ -63,7 +63,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(2, blog.getAuthor());
             statement.setString(3, blog.getBrief_info());
             statement.setString(4, blog.getContent());
-            statement.setDate(5, blog.getBirth_date());
+            statement.setDate(5, blog.getCreated_Date());
             statement.setString(6, blog.getThumbnailblogs());
             statement.setInt(7, blog.getId());
             int affectedRows = statement.executeUpdate();
@@ -104,7 +104,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(2, blog.getAuthor());
             statement.setString(3, blog.getBrief_info());
             statement.setString(4, blog.getContent());
-            statement.setDate(5, blog.getBirth_date());
+            statement.setDate(5, blog.getCreated_Date());
             statement.setString(6, blog.getThumbnailblogs());
             statement.setString(7, blog.getStatus());
             int affectedRows = statement.executeUpdate();
@@ -135,7 +135,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         blog.setContent(rs.getString("content"));
         blog.setThumbnailblogs(rs.getString("thumbnailblogs"));
         blog.setStatus(rs.getString("status"));
-        blog.setBirth_date(rs.getDate("created_date"));
+        blog.setCreated_Date(rs.getDate("created_date"));
         return blog;
     }
 
@@ -217,11 +217,11 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return 0;
     }
-//    public static void main(String[] args) {
-//        BlogDAO blogDao=new BlogDAO();
-//        int count =blogDao.getTotalBlog();
-//        System.out.println(count);
-//    }
+    // public static void main(String[] args) {
+    // BlogDAO blogDao=new BlogDAO();
+    // int count =blogDao.getTotalBlog();
+    // System.out.println(count);
+    // }
 
     public List<Blog> pagingBlog(int index) {
         List<Blog> list = new ArrayList<>();
@@ -243,96 +243,98 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
         }
         return list;
     }
-    public List<Blog> filterBlogsWithPagination(String status, String search, int page, int pageSize) {
-    List<Blog> blogs = new ArrayList<>();
-    StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
-    
-    // Thêm điều kiện search nếu có
-    if (search != null && !search.trim().isEmpty()) {
-        sql.append(" AND (title LIKE ? OR content LIKE ?)");
-    }
-    
-    // Thêm điều kiện status nếu có
-    if (status != null && !status.trim().isEmpty()) {
-        sql.append(" AND status = ?");
-    }
-    
-    sql.append(" ORDER BY id ASC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
-    
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-        int paramIndex = 1;
-        
-        // Set search parameters
-        if (search != null && !search.trim().isEmpty()) {
-            statement.setString(paramIndex++, "%" + search + "%");
-            statement.setString(paramIndex++, "%" + search + "%");
-        }
-        
-        // Set status parameter
-        if (status != null && !status.trim().isEmpty()) {
-            statement.setString(paramIndex++, status);
-        }
-        
-        // Set pagination parameters
-        statement.setInt(paramIndex++, (page - 1) * pageSize);
-        statement.setInt(paramIndex++, pageSize);
-        
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            blogs.add(getFromResultSet(resultSet));
-        }
-    } catch (Exception e) {
-        System.out.println("Error filtering blogs with pagination: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        closeResources();
-    }
-    return blogs;
-}
 
-public int getTotalBlogCountWithFilter(String status, String search) {
-    StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
-    
-    // Thêm điều kiện search nếu có
-    if (search != null && !search.trim().isEmpty()) {
-        sql.append(" AND (title LIKE ? OR content LIKE ?)");
-    }
-    
-    // Thêm điều kiện status nếu có
-    if (status != null && !status.trim().isEmpty()) {
-        sql.append(" AND status = ?");
-    }
-    
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql.toString());
-        int paramIndex = 1;
-        
-        // Set search parameters
+    public List<Blog> filterBlogsWithPagination(String status, String search, int page, int pageSize) {
+        List<Blog> blogs = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM blogs WHERE 1=1");
+
+        // Thêm điều kiện search nếu có
         if (search != null && !search.trim().isEmpty()) {
-            statement.setString(paramIndex++, "%" + search + "%");
-            statement.setString(paramIndex++, "%" + search + "%");
+            sql.append(" AND (title LIKE ? OR content LIKE ?)");
         }
-        
-        // Set status parameter
+
+        // Thêm điều kiện status nếu có
         if (status != null && !status.trim().isEmpty()) {
-            statement.setString(paramIndex++, status);
+            sql.append(" AND status = ?");
         }
-        
-        resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return resultSet.getInt(1);
+
+        sql.append(" ORDER BY id ASC LIMIT ?, ?"); // Thêm DESC để hiển thị blog mới nhất trước
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Set search parameters
+            if (search != null && !search.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + search + "%");
+                statement.setString(paramIndex++, "%" + search + "%");
+            }
+
+            // Set status parameter
+            if (status != null && !status.trim().isEmpty()) {
+                statement.setString(paramIndex++, status);
+            }
+
+            // Set pagination parameters
+            statement.setInt(paramIndex++, (page - 1) * pageSize);
+            statement.setInt(paramIndex++, pageSize);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                blogs.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            System.out.println("Error filtering blogs with pagination: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        System.out.println("Error counting filtered blogs: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        closeResources();
+        return blogs;
     }
-    return 0;
-}
+
+    public int getTotalBlogCountWithFilter(String status, String search) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM blogs WHERE 1=1");
+
+        // Thêm điều kiện search nếu có
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (title LIKE ? OR content LIKE ?)");
+        }
+
+        // Thêm điều kiện status nếu có
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND status = ?");
+        }
+
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            int paramIndex = 1;
+
+            // Set search parameters
+            if (search != null && !search.trim().isEmpty()) {
+                statement.setString(paramIndex++, "%" + search + "%");
+                statement.setString(paramIndex++, "%" + search + "%");
+            }
+
+            // Set status parameter
+            if (status != null && !status.trim().isEmpty()) {
+                statement.setString(paramIndex++, status);
+            }
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error counting filtered blogs: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
     public List<Blog> searchBlogsByTitleorStatus(String keyword, int offset, int pageSize) {
         List<Blog> blogs = new ArrayList<>();
         String sql = "SELECT * FROM blogs WHERE title LIKE ? OR author LIKE ? LIMIT ? OFFSET ?";
