@@ -103,18 +103,17 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
 
     public Food checkExistFoodName(String name) {
         Food food = null;
-        String sql = "Select * From Food WHERE name = ?";
+        String sql = "SELECT * FROM Food WHERE LOWER(name) = LOWER(?)";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
-            // set giá trị vào name
             statement.setString(1, name);
             resultSet = statement.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 food = getFromResultSet(resultSet);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error checking existing food name: " + e.getMessage());
         } finally {
             closeResources();
         }
@@ -625,6 +624,21 @@ public class FoodDAO extends DBContext implements I_DAO<Food> {
     }
 
     public static void main(String[] args) {
-        System.out.println(new FoodDAO().findMaxCalo());
+        // Tạo đối tượng DAO
+        FoodDAO foodDAO = new FoodDAO();
+
+        // Tên món ăn cần kiểm tra
+        String inputName = "cơM gạo LỨT";
+
+        // Gọi hàm kiểm tra tên
+        Food existingFood = foodDAO.checkExistFoodName(inputName);
+
+        // In kết quả
+        if (existingFood != null) {
+            System.out.println("✅ Món ăn đã tồn tại:");
+            System.out.println(existingFood);
+        } else {
+            System.out.println("❌ Món ăn chưa tồn tại trong cơ sở dữ liệu.");
+        }
     }
 }

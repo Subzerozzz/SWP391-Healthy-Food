@@ -186,6 +186,11 @@
                       <div class="checkout-form">
                         <div class="contact-form">
                           <h2>Billing Information</h2>
+                          <strong style="display: inline-block; margin-bottom: 10px;">
+                              <span style="color: red">Hãy đảm bảo mọi thông tin của bạn là chính xác!</span>
+                              <br>
+                              <span style="color: red">Trong mọi trường hợp nếu xảy ra sự cố chúng tôi sẽ liên lạc để giải quyết.</span>
+                          </strong>
                           <div class="row">
                             <div class="col-lg-6">
                               <div class="form-group">
@@ -224,7 +229,7 @@
                                 <label>Address</label>
                                 <input name="address" type="text" class="form-control" placeholder=" Address"
                                        value="${not empty formData ? fn:escapeXml(formData.address[0]) : ''}">
-                                <span>Bạn có thể chỉnh sửa địa chị chi tiết nếu cần.</span>
+                                <span>Hãy điền chi tiết địa chỉ của bạn.</span>
                               </div>
                             </div>
 

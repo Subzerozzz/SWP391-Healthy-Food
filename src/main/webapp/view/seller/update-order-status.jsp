@@ -312,7 +312,6 @@ textarea.form-control {
                                                 <c:if test="${order.status == 'pending'}">
                                                     <option value="accepted">Accept Order</option>
                                                     <option value="cancelled">Cancel Order</option>
-                                                    <option value="abcd">abcd</option>
                                                 </c:if>
                                             </select>
 
