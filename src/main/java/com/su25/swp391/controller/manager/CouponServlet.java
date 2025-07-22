@@ -45,15 +45,18 @@ public class CouponServlet extends HttpServlet {
             
             // Get coupons based on search criteria
             if (searchCode != null && !searchCode.trim().isEmpty()) {
+                System.out.println("roi vao search code");
                 allCoupons = couponDAO.searchCoupons(searchCode.trim());
             } else {
+                System.out.println("roi vao get all");
                 allCoupons = couponDAO.getAllActiveCoupons();
             }
 
             // Calculate pagination
             int totalCoupons = allCoupons.size();
+            System.out.println("totalCoupons: " + totalCoupons);
             int totalPages = (int) Math.ceil((double) totalCoupons / COUPONS_PER_PAGE);
-            
+            System.out.println("totalpage + : " + totalPages);
             // Ensure page is within valid range
             if (page < 1 || page > totalPages) {
                 page = 1;

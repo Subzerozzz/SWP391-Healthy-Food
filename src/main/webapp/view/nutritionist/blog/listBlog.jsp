@@ -585,7 +585,7 @@
                                      </div>
                                      <div class="col body-title-2">${blog.id}</div>
                                      <div class="col body-title-2">${blog.author}</div>
-                                     <div class="col body-title-2">${blog.birth_date}</div> 
+                                     <div class="col body-title-2">${blog.created_Date}</div> 
                                      <div class="col">
                                          <span style="background-color: #E74C3C;; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
                                              ${blog.status}

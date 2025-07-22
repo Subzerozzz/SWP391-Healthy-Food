@@ -117,6 +117,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
             closeResources();
         }
     }
+
     @Override
     public int insert(Coupon t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from
@@ -205,42 +206,44 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
     public List<Coupon> getAllActiveCoupons() {
         List<Coupon> coupons = new ArrayList<>();
-        String sql = "SELECT * FROM Coupon WHERE is_active = 1 AND end_date >= ? AND start_date <= ? ORDER BY start_date DESC";
+        String sql = "SELECT * FROM Coupon WHERE is_active = 1 ORDER BY start_date DESC";
 
-        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+//            statement.setTimestamp(1, currentTime); // Check end_date
+//            statement.setTimestamp(2, currentTime); // Check start_date
 
-            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
-            ps.setTimestamp(1, currentTime); // Check end_date
-            ps.setTimestamp(2, currentTime); // Check start_date
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    coupons.add(getFromResultSet(rs));
-                }
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeResources();
         }
-
         return coupons;
     }
 
     public List<Coupon> searchCoupons(String keyword) {
         List<Coupon> coupons = new ArrayList<>();
         String sql = "SELECT * FROM Coupon WHERE (code LIKE ? OR description LIKE ?) "
-                + "AND is_active = 1 AND end_date >= ? AND start_date <= ?";
+                + "AND is_active = 1";
 
-        try (Connection con = connection; PreparedStatement ps = con.prepareStatement(sql)) {
-            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
-            ps.setString(1, "%" + keyword + "%");
-            ps.setString(2, "%" + keyword + "%");
-            ps.setTimestamp(3, currentTime); // Check end_date
-            ps.setTimestamp(4, currentTime); // Check start_date
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    coupons.add(getFromResultSet(rs));
-                }
+//            Timestamp currentTime = new Timestamp(new java.util.Date().getTime());
+            statement.setString(1, "%" + keyword + "%");
+            statement.setString(2, "%" + keyword + "%");
+//            statement.setTimestamp(3, currentTime); // Check end_date
+//            statement.setTimestamp(4, currentTime); // Check start_date
+            
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                coupons.add(getFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -248,7 +251,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
         return coupons;
     }
-    
+
     public List<Coupon> searchCouponsByCodeorDescription(String keyword, int offset, int pageSize) {
         List<Coupon> coupons = new ArrayList<>();
         String sql = "SELECT * FROM Coupon WHERE code LIKE ? OR description LIKE ? LIMIT ? OFFSET ?";
@@ -271,7 +274,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return coupons;
     }
-    
+
     public int countCouponsBySearch(String keyword) {
         String sql = "SELECT COUNT(*) FROM Coupon WHERE code LIKE ? OR description LIKE ?";
         try {
@@ -291,6 +294,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return 0;
     }
+
     public boolean isCouponCodeExists(String code) {
         String sql = "SELECT COUNT(*) FROM Coupon WHERE code = ?";
         try {
@@ -308,6 +312,7 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
         }
         return false;
     }
+
     public List<Coupon> filterCouponWithPagination(String discounttype, int page, int pageSize) {
         List<Coupon> coupons = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM Coupon WHERE 1=1");
@@ -342,7 +347,8 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
 
         return coupons;
     }
-public int getTotalCouponCountWithFilter(String discounttype) {
+
+    public int getTotalCouponCountWithFilter(String discounttype) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Coupon WHERE 1=1");
 
         if (discounttype != null && !discounttype.trim().isEmpty()) {
@@ -367,6 +373,7 @@ public int getTotalCouponCountWithFilter(String discounttype) {
         }
         return 0;
     }
+
     public int getTotalCoupon() {
         String sql = "SELECT COUNT(*) FROM Coupon";
         try {
@@ -383,6 +390,7 @@ public int getTotalCouponCountWithFilter(String discounttype) {
         }
         return 0;
     }
+
     public List<Coupon> pagingCoupon(int index) {
         List<Coupon> coupon = new ArrayList<>();
         String sql = "SELECT * FROM Coupon\n"
@@ -402,5 +410,24 @@ public int getTotalCouponCountWithFilter(String discounttype) {
             closeResources();
         }
         return coupon;
+    }
+
+    public static void main(String[] args) {
+        // Create an instance of the CouponDAO
+        CouponDAO couponDAO = new CouponDAO();
+
+        // Call the method to get active coupons
+        List<Coupon> activeCoupons = couponDAO.searchCoupons("searchCoupons");
+
+        // Check if any active coupons were returned
+        if (activeCoupons.isEmpty()) {
+            System.out.println("No active coupons found.");
+        } else {
+            System.out.println("Active Coupons:");
+            for (Coupon coupon : activeCoupons) {
+                // Assuming Coupon class has a toString() method that prints the coupon details
+                System.out.println(coupon);
+            }
+        }
     }
 }

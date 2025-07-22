@@ -470,7 +470,7 @@
                         </div>
                         <div class="meta-item date">
                           <div class="meta-icon">📅</div>
-                          <span>Date: ${blog.birth_date}</span>
+                          <span>Date: ${blog.created_Date}</span>
                         </div>
                       </div>
                     </div>

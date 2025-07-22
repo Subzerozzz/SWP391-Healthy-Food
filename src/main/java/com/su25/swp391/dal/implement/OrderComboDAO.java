@@ -15,7 +15,7 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
     @Override
     public List<OrderCombo> findAll() {
         List<OrderCombo> orderCombos = new ArrayList<>();
-        
+
         String sql = "SELECT * FROM OrderCombo";
         try {
             connection = getConnection();
@@ -173,94 +173,96 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
 
     // Mạnh
     public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
-    List<OrderCombo> list = new ArrayList<>();
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        List<OrderCombo> list = new ArrayList<>();
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
 
-    String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND status = ?";
-    }
-    sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
-
-    try {
-        int offset = (page - 1) * pageSize;
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
-        int paramIndex = 2;
-
+        String sql = "SELECT * FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-           statement.setString(paramIndex++, status);
+            sql += " AND status = ?";
+        }
+        sql += " ORDER BY orderComboId DESC LIMIT ? OFFSET ?";
+
+        try {
+            int offset = (page - 1) * pageSize;
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userId);
+            int paramIndex = 2;
+
+            if (filterByStatus) {
+                statement.setString(paramIndex++, status);
+            }
+
+            statement.setInt(paramIndex++, pageSize);
+            statement.setInt(paramIndex, offset);
+
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                list.add(getFromResultSet(resultSet));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
 
-        statement.setInt(paramIndex++, pageSize);
-        statement.setInt(paramIndex, offset);
-
-        resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            list.add(getFromResultSet(resultSet));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+        return list;
     }
 
-    return list;
-}
     // Mạnh
     public int getTotalOrderComboCountByUserIdAndStatus(int userId, String status) {
-    boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
-    String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
-    if (filterByStatus) {
-        sql += " AND status = ?";
-    }
-
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-
-        statement.setInt(1, userId);
+        boolean filterByStatus = status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("all");
+        String sql = "SELECT COUNT(*) FROM OrderCombo WHERE user_id = ?";
         if (filterByStatus) {
-             statement.setString(2, status);
+            sql += " AND status = ?";
         }
 
-        resultSet = statement.executeQuery();
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
 
-        if (resultSet.next()) {
-            return resultSet.getInt(1);
+            statement.setInt(1, userId);
+            if (filterByStatus) {
+                statement.setString(2, status);
+            }
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        closeResources();
+
+        return 0;
     }
+    //Mạnh
 
-    return 0;
-}
-   //Mạnh
     public boolean updateOrderComboStatus(int orderComboId, String status) {
-    String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
-    boolean success = false;
+        String sql = "UPDATE OrderCombo SET status = ? WHERE orderComboId = ?";
+        boolean success = false;
 
-    try {
-        connection = getConnection();
-        statement = connection.prepareStatement(sql);
-        statement.setString(1, status); 
-        statement.setInt(2, orderComboId);
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, status);
+            statement.setInt(2, orderComboId);
 
-        int rows = statement.executeUpdate();
-        success = (rows > 0);
-    } catch (Exception e) {
-        System.out.println("Error updating orderCombo status: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        closeResources();
+            int rows = statement.executeUpdate();
+            success = (rows > 0);
+        } catch (Exception e) {
+            System.out.println("Error updating orderCombo status: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return success;
     }
-
-    return success;
-}
 
     // Phương thức phân trang cho tất cả tài khoản
     public List<OrderCombo> findAllWithPagination(int page, int pageSize) {

@@ -86,7 +86,7 @@
                     <fieldset class="name">
                       <div class="body-title mb-10">Blog Date</div>
                       <div class="select">
-                        <input type="date" name="date" value="${blog.birth_date}">
+                        <input type="date" name="date" value="${blog.created_Date}">
                       </div>
                     </fieldset>
 
