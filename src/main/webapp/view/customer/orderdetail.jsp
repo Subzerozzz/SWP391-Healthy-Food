@@ -298,10 +298,10 @@
                           <div class="body-title">Order Status</div>
                           <c:choose>
                             <c:when test="${order.status == 'pending'}">
-                              <div class="body-title-2 tf-color-2" >Your order needs seller confirmation</div>
+                              <div class="body-title-2 tf-color-2" >Người bán chưa xác nhận đơn hàng</div>
                             </c:when>
                             <c:when test="${order.status == 'accepted'}">
-                              <div class="body-title-2 tf-color-2">Người bán chưa xác nhận đơn hàng</div>
+                              <div class="body-title-2 tf-color-2">Người bán đã xác nhận đơn hàng</div>
                             </c:when>
                             <c:when test="${order.status == 'accepted' and delivery.status == 'pending'}">
                                 <div class="body-title-2 tf-color-2" style="color: #cccccc;">Shiper chưa lấy hàng</div>

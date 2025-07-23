@@ -152,7 +152,7 @@
                     <!--feedback-->
 
                     <div class="col-lg-6 col-md-12" >
-                        <h4>Feedback Food</h4>
+                        <h3><strong>Feedback Food</strong></h3>
                         <div class="feedback-section">
                             <div class="flex items-center justify-between flex-wrap" style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
 
