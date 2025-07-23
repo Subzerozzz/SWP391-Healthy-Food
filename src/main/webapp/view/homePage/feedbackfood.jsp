@@ -160,6 +160,7 @@
                                 <div class="flex items-center justify-between gap10 flex-wrap">
                                     <div class="wg-filter flex-grow">
                                         <form action="feedbackfood" method="get">
+                                            <input type="hidden" name="id" value="${feedbackFood}" />
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <select name="rating" required>
                                                     <option value="all" ${param.rating=='all' ? 'selected' : '' }>-- All Rating --</option>
