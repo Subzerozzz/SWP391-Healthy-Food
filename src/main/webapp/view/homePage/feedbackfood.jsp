@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -12,6 +13,24 @@
         <!-- Required Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .rating-stars {
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .rating-stars .fa-star {
+                color: #ccc;
+                /* màu mặc định là xám */
+                font-size: 20px;
+                margin-right: 2px;
+            }
+
+            .rating-stars .fas.fa-star {
+                color: #f5c518;
+                /* màu vàng cho sao đầy */
+            }
+        </style>
 
         <!--=== Link of CSS Files ===-->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
@@ -27,7 +46,6 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/theme-dark.css">
 
         <!--IzizToast-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 
@@ -124,118 +142,85 @@
         <!-- Product Details Area -->
         <div class="product-details-area pt-100 pb-70">
             <div class="container">
-                <div class="row align-items-center">
+                <div class="row align-items-start">
                     <!--Image-->
                     <div class="col-lg-6 col-md-12 product-detail-image">
                         <div class="product-detls-image">
                             <img src="${foodDetail.getImage_url()}" alt="Image">
                         </div>
                     </div>
+                    <!--feedback-->
+
+                    <div class="col-lg-6 col-md-12" >
+                        <h4>Feedback Food</h4>
+                        <div class="feedback-section">
+                            <div class="flex items-center justify-between flex-wrap" style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+
+                                <!-- Form filter rating -->
+                                <div class="flex items-center justify-between gap10 flex-wrap">
+                                    <div class="wg-filter flex-grow">
+                                        <form action="feedbackfood" method="get">
+                                            <input type="hidden" name="id" value="${feedbackFood}" />
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <select name="rating" required>
+                                                    <option value="all" ${param.rating=='all' ? 'selected' : '' }>-- All Rating --</option>
+                                                    <option value="5" ${param.rating=='5' ? 'selected' : '' }>5</option>
+                                                    <option value="4" ${param.rating=='4' ? 'selected' : '' }>4</option>
+                                                    <option value="3" ${param.rating=='3' ? 'selected' : '' }>3</option>
+                                                    <option value="2" ${param.rating=='2' ? 'selected' : '' }>2</option>
+                                                    <option value="1" ${param.rating=='1' ? 'selected' : '' }>1</option>
+                                                </select>
+                                                <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
 
-                    <div class="col-lg-6 col-md-12">
-                        <div class="product-desc">
-                            <!--Name-->
-                            <h3>${foodDetail.getName()}</h3>
-                            <!--Price-->
-                            <div class="price">
-                                <span class="new-price" style="color:#F78600">
-                                    Price :
-                                    <fmt:formatNumber value="${foodDetail.getPrice()}" type="number" groupingUsed="true"
-                                                      maxFractionDigits="0" /> VNĐ
-                                </span>
-                            </div>
-
-                            <!--Description-->
-                            <p>
-                                ${foodDetail.getDescription()}
-                            </p>
-
-                            <!--Quantity-->
-                            <div class="input-count-area">
-                                <h3>Quantity</h3>
-                                <div class="input-counter">
-                                    <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input name="quantity" id="quantityOfFood" type="text" value="1">
-                                    <span class="plus-btn"><i class='bx bx-plus'></i></span>
+                                <!-- Average rating display -->
+                                <div class="average-rating" style="white-space: nowrap;">
+                                    <span>Average rating: 
+                                        <fmt:formatNumber value="${averageRating}" type="number" maxFractionDigits="1" groupingUsed="false" />
+                                        <i class="fas fa-star" style="color: gold;"></i>
+                                    </span>
                                 </div>
                             </div>
 
-                            <!--Order-->
-                            <div class="product-add-btn">
-                                <c:choose>
-                                    <c:when test="${sessionScope.account.role eq 'customer' }">
-                                        <li>
-                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}">
-                                                <div class="text-tiny">
-                                                    View Feedback Here
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
-                                            <i class="fas fa-cart-plus"></i> Add To Cart
-                                        </button>
-                                    </c:when>
-                                    <c:when test="${sessionScope.account eq null}"> 
-                                        <div>
-                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}"  style="color: black;">
-                                                View Feedback Here
-                                            </a>
-                                        </div>
-                                        <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
-                                            <i class="fas fa-cart-plus"></i> Add To Cart
-                                        </button>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <strong style="color: red">Tính năng mua hàng chỉ áp dụng với tài khoản là khách hàng hoặc khách vãng lai</strong>
-                                    </c:otherwise>
-                                </c:choose>
-
+                            <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                <c:forEach var="fb" items="${findFeedbackbyFoodId}">
+                                    <div class="feedback-item" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px;">
+                                        <h3>
+                                            <div class="rating-stars">
+                                                <c:forEach begin="1" end="5" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${i <= fb.rating}">
+                                                            <i class="fas fa-star" style="color: gold;"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="far fa-star" style="color: gold;"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
+                                        </h3>
+                                        <p>${fb.content}</p>
+                                        <small>-- ${accountDAO.findById(fb.user_id).user_name} --</small>
+                                    </div>
+                                </c:forEach>
                             </div>
 
                         </div>
                     </div>
+                    <div class="d-flex justify-content-end">
+                        <a class="tf-button style-1" href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${feedbackFood}" style="color: black;">Back</a>
+                    </div>                    <!--/feedback-->
                 </div>
             </div>
         </div>
         <!-- Product Details Area End -->
 
-        <!-- Related Product Area -->
-        <div class="related-products-area pb-70">
-            <div class="container">
-                <div class="section-title text-center">
-                    <h2>Related Products</h2>
-                </div>
-                <div class="row pt-45">
-                    <c:forEach items="${listRelated}" var="item">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="product-item">
-                                <div class="product-img">
-                                    <a href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">
-                                        <img src="${item.getImage_url()}" alt="Product Images">
-                                    </a>
-                                </div>
-
-                                <div class="content">
-                                    <h3><a
-                                            href="${pageContext.request.contextPath}/shop?action=shopDetail&id=${item.getId()}">${item.getName()}</a>
-                                    </h3>
-                                    <div>
-                                        Calo: ${item.getCalo()}
-                                    </div>
-                                    <span>
-                                        <fmt:formatNumber value="${item.getPrice()}" type="number" groupingUsed="true"
-                                                          maxFractionDigits="0" /> VNĐ
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-
-                </div>
-            </div>
-        </div>
-        <!-- Related Product Area End -->
 
         <!-- Footer Area -->
         <jsp:include page="../common/homePage/footerUser.jsp"></jsp:include>
@@ -297,48 +282,9 @@
             }
         </style>
 
-        <script>
-                                            //addToCart 
-                                            const addToCart = (id) => {
-                                                const quantity = document.querySelector("#quantityOfFood").value;
-                                                //Tạo 1 form ẩn
-                                                const form = document.createElement('form');
-                                                form.method = 'POST';
-                                                form.action = '${pageContext.request.contextPath}/cart?action=add';
-
-                                                // Tạo input ẩn cho id
-                                                const inputId = document.createElement('input');
-                                                inputId.type = 'hidden';
-                                                inputId.name = 'id';
-                                                inputId.value = id;
-                                                form.appendChild(inputId);
-
-                                                //Tạo input ẩn cho quantity
-                                                const inputQuantity = document.createElement('input');
-                                                inputQuantity.type = 'hidden';
-                                                inputQuantity.name = 'quantity';
-                                                inputQuantity.value = quantity;
-                                                form.appendChild(inputQuantity)
-                                                //Gửi form 
-                                                document.body.appendChild(form);
-                                                form.submit();
-                                            }
-        </script>
 
 
-        <c:if test="${addSuccess == true}">
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    iziToast.success({
-                        title: "Thông báo",
-                        message: "Sản phẩm đã được thêm vào giỏ hàng",
-                        position: 'topRight',
-                        timeout: 5000,
-                        backgroundColor: "#d4edda"
-                    });
-                });
-            </script>
-        </c:if>
+
     </body>
 
     <!-- Mirrored from templates.hibootstrap.com/hilo/default/shop-details.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 23 May 2025 14:14:59 GMT -->

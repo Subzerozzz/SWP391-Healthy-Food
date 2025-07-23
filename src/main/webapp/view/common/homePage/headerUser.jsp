@@ -53,7 +53,6 @@
                     </a>
                   </li>
                 </ul>
-
                 <div class="nav-bar-side-2" style="display: flex;align-items: center">
                   <c:choose>
                     <c:when test="${sessionScope.account == null}">
