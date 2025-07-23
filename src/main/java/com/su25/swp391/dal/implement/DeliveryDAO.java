@@ -530,13 +530,27 @@ public class DeliveryDAO extends DBContext implements I_DAO<Delivery> {
         return false;
     }
 
-    public static void main(String[] args) {
-        DeliveryDAO dao = new DeliveryDAO();
-//        System.out.println(dao.findById(6));
-        for (Delivery d : dao.findAll()) {
-            System.out.println(d);
-        }
+  public Delivery findDeliveryByOrderId(int orderId) {
+    Delivery delivery = null;
+    String sql = "SELECT * FROM Delivery WHERE order_id = ?";
 
+    try {
+        connection = getConnection();
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, orderId);
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            delivery = getFromResultSet(resultSet);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error in findDeliveryByOrderId: " + e.getMessage());
+    } finally {
+        closeResources(); // đóng connection, statement, resultSet
     }
+
+    return delivery;
+}
+
 
 }
