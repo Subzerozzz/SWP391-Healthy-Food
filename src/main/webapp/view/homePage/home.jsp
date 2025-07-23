@@ -95,8 +95,7 @@
                             <div class="banner-content-2">
                                 <span><b>Get 35% Discount,</b> Every Product </span>
                                 <h2>Quality Is the First Not Quantity</h2>
-                                <p>Lorem ipsum dolor sit amet, consetetur sadipscins elitr, seddiams nonumy eirmod.</p>
-                                <a href="#" class="default-btn btn-bg-three border-radius-5">Shop Now</a>
+                                <a href="${pageContext.request.contextPath}/shop" class="default-btn btn-bg-three border-radius-5">Shop Now</a>
                             </div>
                         </div>
 
