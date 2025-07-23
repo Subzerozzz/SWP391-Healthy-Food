@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "FeedbackManage", urlPatterns = {"/feedback", "/feedbackdetail", "/createfeedback", "/remove"})
+@WebServlet(name = "FeedbackManage", urlPatterns = {"/feedback", "/feedbackdetail", "/createfeedback", "/remove", "/feedbackfood"})
 public class FeedbackManage extends HttpServlet {
 
     private final AccountDAO accountDAO = new AccountDAO();
@@ -43,6 +43,9 @@ public class FeedbackManage extends HttpServlet {
     private static final String HOME_PAGE = "view/homePage/home.jsp";
     private static final String FEEDBACK_PAGE = "view/customer/feedbacklist.jsp";
     private static final String CREATE_PAGE = "view/customer/createfeedback.jsp";
+    private static final String FEEDBACK_FOOD = "view/homePage/feedbackfood.jsp";
+    private static final String SHOP = "view/homePage/shop.jsp";
+    private static final String SHOP_DETAIL = "view/homePage/shopDetail.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,6 +61,9 @@ public class FeedbackManage extends HttpServlet {
                 break;
             case "/remove":
                 removeFeedback(request, response);
+                break;
+            case "/feedbackfood":
+                feedbackfood(request, response);
                 break;
             default:
                 break;
@@ -257,6 +263,45 @@ public class FeedbackManage extends HttpServlet {
         } else {
             response.sendRedirect(HOME_PAGE);
         }
+    }
+
+    private void feedbackfood(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String feedback_food_raw = request.getParameter("id");
+        String search_raw = request.getParameter("rating");
+
+        if (feedback_food_raw == null || feedback_food_raw.trim().isEmpty()) {
+            response.sendRedirect(SHOP);
+            return;
+        }
+
+        try {
+            int feedbackFood = Integer.parseInt(feedback_food_raw);
+            
+            List<Feedback> findFeedbackbyFoodId = feedbackDAO.findFeedbackByFoodIdAndRating(feedbackFood, search_raw);
+            double averageRating = getAverageRating(findFeedbackbyFoodId);
+            
+            request.setAttribute("feedbackFood", feedbackFood);
+            request.setAttribute("accountDAO", accountDAO);
+            request.setAttribute("findFeedbackbyFoodId", findFeedbackbyFoodId);
+            session.setAttribute("averageRating", averageRating);
+            request.getRequestDispatcher(FEEDBACK_FOOD).forward(request, response);
+        } catch (Exception e) {
+            response.sendRedirect(SHOP);
+        }
+    }
+
+    public double getAverageRating(List<Feedback> feedbackList) {
+        if (feedbackList == null || feedbackList.isEmpty()) {
+            return 0;
+        }
+
+        double sum = 0;
+        for (Feedback fb : feedbackList) {
+            sum += fb.getRating();
+        }
+
+        return sum / feedbackList.size();
     }
 
 }
