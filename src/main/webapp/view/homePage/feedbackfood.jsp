@@ -170,7 +170,6 @@
                                                     <option value="2" ${param.rating=='2' ? 'selected' : '' }>2</option>
                                                     <option value="1" ${param.rating=='1' ? 'selected' : '' }>1</option>
                                                 </select>
-
                                                 <button type="submit" style="background: none; border: none; cursor: pointer;">
                                                     <i class="fas fa-search"></i>
                                                 </button>
