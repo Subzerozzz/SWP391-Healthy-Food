@@ -627,12 +627,13 @@ public class FeedbackDAO extends DBContext implements I_DAO<Feedback> {
         return 0;
     }
     //Mạnh
-public List<Feedback> findFeedbackByFoodIdAndRating(int foodId, String rating) {
+    
+ public List<Feedback> findFeedbackByFoodIdAndRating(int foodId, String rating) {
     List<Feedback> feedbackList = new ArrayList<>();
     String sql = "SELECT f.* "
                + "FROM Feedback f "
                + "JOIN OrderItem oi ON f.order_item_id = oi.id "
-               + "WHERE oi.food_id = ?";
+               + "WHERE oi.food_id = ? AND f.is_visible = 1";
 
     // Chỉ thêm điều kiện lọc rating nếu rating có giá trị hợp lệ
     boolean hasRatingFilter = rating != null && !rating.trim().isEmpty() && !"all".equalsIgnoreCase(rating);
