@@ -146,7 +146,7 @@
       display: flex;
       align-items: stretch;
       border-bottom: 1px solid #e9ecef;
-      min-width: 1200px;
+      min-width: 1100px; /* Reduced table width to minimize empty space */
     }
 
     .table-header {
@@ -156,71 +156,76 @@
     }
 
     .table-row:hover {
-      background-color: #f8f9fa;
+      background-color: #f1f5f9;
+      transition: background-color 0.3s ease;
     }
 
     .table-header .col,
     .table-row .col {
-      padding: 16px 12px;
+      padding: 18px 15px;
       display: flex;
       align-items: center;
       word-wrap: break-word;
       overflow-wrap: break-word;
+      font-size: 16px;
     }
 
     /* Column Widths */
     .col-id {
-      flex: 0 0 80px;
-      max-width: 80px;
+      flex: 0 0 60px;
+      max-width: 60px;
+      justify-content: center;
     }
 
     .col-food {
-      flex: 0 0 200px;
-      max-width: 200px;
+      flex: 0 0 170px;
+      max-width: 170px;
     }
 
     .col-rating {
-      flex: 0 0 100px;
-      max-width: 100px;
+      flex: 0 0 110px;
+      max-width: 110px;
       justify-content: center;
     }
 
     .col-content {
       flex: 1;
-      min-width: 250px;
+      min-width: 200px; /* Shorter content column */
+      white-space: normal;
     }
 
     .col-customer {
-      flex: 0 0 200px;
-      max-width: 200px;
+      flex: 0 0 170px;
+      max-width: 170px;
     }
 
     .col-status {
-      flex: 0 0 120px;
-      max-width: 120px;
+      flex: 0 0 110px;
+      max-width: 110px;
       justify-content: center;
     }
 
     .col-date {
-      flex: 0 0 180px;
-      max-width: 180px;
+      flex: 0 0 140px;
+      max-width: 140px;
+      justify-content: center;
     }
 
     .col-action {
-      flex: 0 0 120px;
-      max-width: 120px;
+      flex: 0 0 100px;
+      max-width: 100px;
       justify-content: center;
-      gap: 15px;
+      align-items: center;
+      gap: 10px;
     }
 
     /* Action Buttons */
-    .actions a,
-    .actions button {
+    .actions a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background-color: #f1f1f1;
       transition: all 0.2s ease;
@@ -228,16 +233,17 @@
       border: none;
       cursor: pointer;
       padding: 0;
+      box-sizing: border-box;
     }
 
-    .actions a:hover,
-    .actions button:hover {
+    .actions a:hover {
       background-color: #e0e0e0;
       transform: scale(1.1);
     }
 
     .actions i {
-      font-size: 18px;
+      font-size: 16px;
+      line-height: 1;
     }
 
     .icon-eye {
@@ -246,13 +252,14 @@
 
     .actions form {
       display: inline-flex;
+      align-items: center;
     }
 
     /* Toggle Switch CSS */
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
+      width: 48px;
       height: 28px;
     }
 
@@ -293,7 +300,7 @@
     }
 
     input:checked+.slider:before {
-      transform: translateX(22px);
+      transform: translateX(20px);
     }
 
     .slider.round {
@@ -309,7 +316,6 @@
     }
 
     /* Status */
-
     .status-label {
       padding: 4px 12px;
       border-radius: 20px;
@@ -321,13 +327,11 @@
       border: 2px solid;
     }
 
-    /* Trạng thái Active - màu xanh */
     .status-active {
       color: #008000;
       border-color: #008000;
     }
 
-    /* Trạng thái Inactive - màu đỏ */
     .status-inactive {
       color: #cc0000;
       border-color: #cc0000;
@@ -475,7 +479,7 @@
                         </div>
                         <div class="col col-content">
                           <c:choose>
-                            <c:when test="${fn:length(feedback.content) > 100}">
+                          <c:when test="${fn:length(feedback.content) > 100}">
                               ${fn:substring(feedback.content, 0, 100)}...
                             </c:when>
                             <c:otherwise>

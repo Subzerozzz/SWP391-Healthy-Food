@@ -15,6 +15,8 @@ import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderCombo;
 import com.su25.swp391.entity.OrderItem;
+import com.su25.swp391.utils.EmailUtils;
+import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -191,6 +193,29 @@ public class ManageShipperDeliveryController extends HttpServlet {
             if(newStatus.equalsIgnoreCase("success") && delivery.getOrder_combo_id() > 0){
                ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 1);
              }
+            Order order = orderDAO.findById(delivery.getOrder_id());
+            
+           // If this is a guest order (account_id = 0), send an email notification
+            if (order.getAccount_id() == 0 || order.getAccount_id() == null) {
+                String guestEmail = order.getEmail();
+                String guestName = order.getFull_name();
+                String subject = "Delivery Status Follow";
+                if(guestName == null){
+                    guestName = "";
+                }
+                if(note == null || note.isEmpty()){
+                    note = "";
+                }
+                String content = "<h3>Hello you " + guestName + ",</h3>"
+                        + "<p>Your order <strong>" + newStatus +" "+ note+"</strong>.</p>"
+                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
+                        + "<br><em>Best regards,</em><br>Customer Support Team";
+                try {
+                    EmailUtils.sendMail(guestEmail, subject, content);
+                } catch (MessagingException ex) {
+                    ex.printStackTrace(); // Consider replacing with logger
+                }
+            }
             if(checkUpdateSuccess){
                session.setAttribute("isSuccess", true);
             }else{

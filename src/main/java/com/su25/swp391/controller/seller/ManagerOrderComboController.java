@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  *
  * @author FPTSHOP
  */
-@WebServlet(name = "ManagerOrderController", urlPatterns = {"/manage-ordercombo"})
+@WebServlet(name = "ManagerOrderComboController", urlPatterns = {"/manage-ordercombo"})
 public class ManagerOrderComboController extends HttpServlet {
 
     // Declare properties for DAO 
