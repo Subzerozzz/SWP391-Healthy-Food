@@ -51,6 +51,28 @@
 
   <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .type-label {
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .type-create {
+      background-color: #28a745; /* Green */
+    }
+
+    .type-update {
+      background-color: #007bff; /* Blue */
+    }
+
+    .type-delete {
+      background-color: #dc3545; /* Red */
+    }
+  </style>
 </head>
 
 <body class="body">
@@ -158,7 +180,22 @@
                             <td>${foodD.id}</td>
                             <td><img src="${foodD.image_url}" alt="Image of Food" class="product-img"></td>
                             <td>${foodD.getName()}</td>
-                            <td>${foodD.getType()}</td>
+                            <td>
+                              <c:choose>
+                                <c:when test="${foodD.getType() == 'CREATE'}">
+                                  <span class="type-label type-create">${foodD.getType()}</span>
+                                </c:when>
+                                <c:when test="${foodD.getType() == 'UPDATE'}">
+                                  <span class="type-label type-update">${foodD.getType()}</span>
+                                </c:when>
+                                <c:when test="${foodD.getType() == 'DELETE'}">
+                                  <span class="type-label type-delete">${foodD.getType()}</span>
+                                </c:when>
+                                <c:otherwise>
+                                  <span>${foodD.getType()}</span>
+                                </c:otherwise>
+                              </c:choose>
+                            </td>
                             <td>
                               <a href="type-of-request?action=view&select=${foodD.getType()}&id=${foodD.getId()}&search=${search}&sort=${sort}"
                                 title="View Detail" class="item eye">
