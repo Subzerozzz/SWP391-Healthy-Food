@@ -10,7 +10,6 @@ import com.su25.swp391.dal.implement.ComboDAO;
 import com.su25.swp391.dal.implement.ComboFoodDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderComboDAO;
-import com.su25.swp391.dal.implement.OrderComboFoodDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Combo;
@@ -18,7 +17,6 @@ import com.su25.swp391.entity.ComboFood;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.Order;
 import com.su25.swp391.entity.OrderCombo;
-import com.su25.swp391.entity.OrderComboFood;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -49,7 +47,6 @@ public class BuyComboController extends HttpServlet {
     ComboFoodDAO combofoodDao = new ComboFoodDAO();
     FoodDAO fooddao = new FoodDAO();
     OrderComboDAO ordercombodao = new OrderComboDAO();
-    OrderComboFoodDAO ordercomboFoodDao = new OrderComboFoodDAO();
     OrderDAO orderDao = new OrderDAO();
     private static final String COMBO_SERVLET_URL = "comboController";
     private static final String ORDER_COMBO = "view/customer/ordercombo.jsp";
@@ -239,29 +236,13 @@ public class BuyComboController extends HttpServlet {
                 // Cập nhật trạng thái đã thanh toán
                 ordercombodao.updatePaymentStatus(orderComboIdAfterInsert, 1);
 
-                //STEP3 : insert order combo product
-                for (ComboFood cp : comboFoods) {
-                    Food food = fooddao.findById(cp.getFoodId());
-                    OrderComboFood orderComboFood = OrderComboFood
-                            .builder()
-                            .orderComboId(orderComboIdAfterInsert)
-                            .foodId(food.getId())
-                            .foodName(food.getName())
-                            .foodPrice(food.getPrice())
-                            .quantityInCombo(cp.getQuantityInCombo())
-                            .totalQuantity(cp.getQuantityInCombo() * quantity)
-                            .build();
-
-                    ordercomboFoodDao.insert(orderComboFood);
-
-                }
                 //Xóa session
                 session.removeAttribute("combo");
                 session.removeAttribute("quantity");
                 session.removeAttribute("comboProducts");
 
                 setToastMessage(request, "Order Successful !!", "success");
-                response.sendRedirect(ORDER_COMBO);
+                response.sendRedirect("listordercombo");
             } else {
                 // Thanh toán không thành công hoặc lỗi
                 // Xử lý lỗi hoặc chuyển hướng đến trang thông báo lỗi

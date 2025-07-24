@@ -187,7 +187,7 @@
                                   <!-- Cột Feedback -->
                                   <div class="name">
                                     <div class="text-tiny mb-1">Feedback</div>
-                                    <c:if test="${order.payment_status == 1 && order.status == 'completed'}">
+                                    <c:if test="${order.payment_status == 1 && order.status == 'completed' && delivery.status == 'success'}">
                                       <a href="createfeedback?order_item_id=${orderItem.id}&source=orderdetail&order_id=${order.id}"
                                         title="Write Feedback">
                                         <i class="fa fa-pencil-alt" style="font-size: 15px; color: #595959;"></i>
@@ -295,20 +295,28 @@
                           </div>
                         </div>
                         <div class="wg-box gap10">
-                          <div class="body-title">Expected Date Of Delivery</div>
+                          <div class="body-title">Order Status</div>
                           <c:choose>
                             <c:when test="${order.status == 'pending'}">
-                              <div class="body-title-2 tf-color-2">Your order needs seller confirmation</div>
+                              <div class="body-title-2 tf-color-2" >Người bán chưa xác nhận đơn hàng</div>
                             </c:when>
                             <c:when test="${order.status == 'accepted'}">
-                              <div class="body-title-2 tf-color-2">Your order has been accepted by the seller, please
-                                wait.</div>
+                              <div class="body-title-2 tf-color-2">Người bán đã xác nhận đơn hàng</div>
+                            </c:when>
+                            <c:when test="${order.status == 'accepted' and delivery.status == 'pending'}">
+                                <div class="body-title-2 tf-color-2" style="color: #cccccc;">Shiper chưa lấy hàng</div>
+                            </c:when>
+                            <c:when test="${order.status == 'accepted' and delivery.status == 'delivering'}">
+                                <div class="body-title-2 tf-color-2" style="color: #99ff99;">Shiper đang giao hàng</div>
                             </c:when>
                             <c:when test="${order.status == 'cancelled'}">
-                              <div class="body-title-2 tf-color-2">Your order has been rejected by the seller.</div>
+                              <div class="body-title-2 tf-color-2" style="color: red;">Đơn hàng đã bị hủy</div>
                             </c:when>
-                            <c:when test="${order.status == 'completed'}">
-                              <div class="body-title-2 tf-color-2">Your order is on its way to your address.</div>
+                            <c:when test="${order.status == 'completed' and delivery.status == 'success'}">
+                              <div class="body-title-2 tf-color-2" style="color: green;">Đơn hàng đã giao thành công</div>
+                            </c:when>
+                            <c:when test="${order.status == 'completed' and delivery.status == 'reject'}">
+                              <div class="body-title-2 tf-color-2" style="color: red;">Đơn hàng giao thất bại</div>
                             </c:when>
                             <c:otherwise>
                               <div class="body-title-2 tf-color-2">Status unknown. Please contact support.</div>

@@ -1,4 +1,3 @@
-
 package com.su25.swp391.controller.seller;
 
 import com.su25.swp391.config.GlobalConfig;
@@ -25,16 +24,18 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-
 import com.su25.swp391.dal.implement.DeliveryDAO;
-@WebServlet(name = "ManagerOrderController", urlPatterns = { "/seller/manage-order" })
+
+@WebServlet(name = "ManagerOrderController", urlPatterns = {"/seller/manage-order"})
 public class ManagerOrderController extends HttpServlet {
+
     // Declare properties for DAO 
     private OrderDAO orderDAO;
     private OrderItemDAO itemDAO;
     private AccountDAO accDAO = new AccountDAO();
     private FoodDAO foodDAO;
     private DeliveryDAO deliveryDAO;
+
     // Method in Servlet Container call only 1 time in lifecycle
     @Override
     public void init() throws ServletException {
@@ -104,88 +105,89 @@ public class ManagerOrderController extends HttpServlet {
     // View Orders List
     private void listOrders(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try{
-        // Get the seller account from session
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
-
-        // Check if the seller is logged in
-        if (account == null) {
-            response.sendRedirect(request.getContextPath() + "/home");
-            return;
-        }
-        // Get sort parameter
-        String sort = request.getParameter("sort");
-        // Get filter parameters by Status
-        String status = request.getParameter("status");
-        // Filter by paymentMethod
-        String paymentMethod = request.getParameter("paymentMethod");
-        // Filter by payment Status : Paid or Unpaid
-        String paymentStatusParam = request.getParameter("paymentStatus");
-        int paymentStatus = -1;
-        if(paymentStatusParam != null && !paymentStatusParam.isEmpty()){
-            paymentStatus = Integer.parseInt(paymentStatusParam);
-        }else{
-            paymentStatus = -1;
-        }
-        // Get search by name, id, email
-        String search = request.getParameter("search");
-        
-        // Pagination
-        int page = 1;
-        int pageSize = 10;
         try {
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                if (page < 1) {
-                    page = 1;
-                }
+            // Get the seller account from session
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+
+            // Check if the seller is logged in
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
             }
-        } catch (NumberFormatException e) {
-            // Keep default value
-        }
+            // Get sort parameter
+            String sort = request.getParameter("sort");
+            // Get filter parameters by Status
+            String status = request.getParameter("status");
+            // Filter by paymentMethod
+            String paymentMethod = request.getParameter("paymentMethod");
+            // Filter by payment Status : Paid or Unpaid
+            String paymentStatusParam = request.getParameter("paymentStatus");
+            int paymentStatus = -1;
+            if (paymentStatusParam != null && !paymentStatusParam.isEmpty()) {
+                paymentStatus = Integer.parseInt(paymentStatusParam);
+            } else {
+                paymentStatus = -1;
+            }
+            // Get search by name, id, email
+            String search = request.getParameter("search");
 
-        // Get orders with filters
-        List<Order> orders;
-        int totalOrders;
+            // Pagination
+            int page = 1;
+            int pageSize = 10;
+            try {
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                    if (page < 1) {
+                        page = 1;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Keep default value
+                e.printStackTrace();
+            }
 
-        if (search != null && !search.trim().isEmpty()) {
-            // If there's a search term, use search with payment method and status
-            orders = orderDAO.searchOrders(sort, search, status, paymentMethod, page, pageSize);
-            // count order
-            totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
-        } else {
-            // If no search, use filters
-            orders = orderDAO.findOrdersWithFilters(sort, status, paymentMethod,paymentStatus , page, pageSize);
-            // count order
-            totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod, paymentStatus);
-        }
-        // Number of page can have
-        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
-        // AccountMap get key with account_id and value is Account find by account_id
-        HashMap<Integer, Account> AccountMap = new HashMap<>();
-        for (Order order : orders) {
-            // Find Account by id
-            Account acc = accDAO.findById(order.getAccount_id());
-            //  key with account_id and value is Account find by account_id
-            AccountMap.put(order.getAccount_id(), acc);
-        }
-        // Set attributes
-        request.setAttribute("orders", orders);
-        request.setAttribute("AccountMap", AccountMap);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
-        request.setAttribute("sort", sort);
-        request.setAttribute("status", status);
-        request.setAttribute("paymentMethod",paymentMethod);
-        request.setAttribute("search", search);
-        request.setAttribute("paymentStatus", paymentStatus);
-        // Forword to the order list page
-        request.getRequestDispatcher("/view/seller/order-list.jsp").forward(request, response);
+            // Get orders with filters
+            List<Order> orders;
+            int totalOrders;
+
+            if (search != null && !search.trim().isEmpty()) {
+                // If there's a search term, use search with payment method and status
+                orders = orderDAO.searchOrders(sort, search, status, paymentMethod, page, pageSize);
+                // count order
+                totalOrders = orderDAO.getTotalSearchResults(search, status, paymentMethod);
+            } else {
+                // If no search, use filters
+                orders = orderDAO.findOrdersWithFilters(sort, status, paymentMethod, paymentStatus, page, pageSize);
+                // count order
+                totalOrders = orderDAO.getTotalFilteredOrders(status, paymentMethod, paymentStatus);
+            }
+            // Number of page can have
+            int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+            // AccountMap get key with account_id and value is Account find by account_id
+            HashMap<Integer, Account> AccountMap = new HashMap<>();
+            for (Order order : orders) {
+                // Find Account by id
+                Account acc = accDAO.findById(order.getAccount_id());
+                //  key with account_id and value is Account find by account_id
+                AccountMap.put(order.getAccount_id(), acc);
+            }
+            // Set attributes
+            request.setAttribute("orders", orders);
+            request.setAttribute("AccountMap", AccountMap);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("sort", sort);
+            request.setAttribute("status", status);
+            request.setAttribute("paymentMethod", paymentMethod);
+            request.setAttribute("search", search);
+            request.setAttribute("paymentStatus", paymentStatus);
+            // Forword to the order list page
+            request.getRequestDispatcher("../view/seller/order-list.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             // Handle invalid order ID format
             request.setAttribute("errorMessage", "Invalid order ID format");
-            request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
+            request.getRequestDispatcher("view/error/error.jsp").forward(request, response);
         }
     }
 
@@ -207,11 +209,10 @@ public class ManagerOrderController extends HttpServlet {
 
             // Get the new status from request
             String newStatus = request.getParameter("newStatus");
-            
+
             // Get id Shipper
-            
             int idShipper = Integer.parseInt(request.getParameter("idShipper"));
-            
+
             // Get seller's note from request
             String note = request.getParameter("note");
 
@@ -241,13 +242,13 @@ public class ManagerOrderController extends HttpServlet {
             }
             // Update the order status
             boolean update = orderDAO.updateOrderStatus(orderId, newStatus);
-            
-            if(newStatus.equalsIgnoreCase("accepted")){
-                boolean checkInsertDelivery = deliveryDAO.insertDelivery(orderId,idShipper );
+
+            if (newStatus.equalsIgnoreCase("accepted")) {
+                boolean checkInsertDelivery = deliveryDAO.insertDelivery(orderId, idShipper);
             }
-             if (update) {
-                session.setAttribute("successMessage","Success Order: "+orderId);
-              } else {
+            if (update) {
+                session.setAttribute("successMessage", "Success Order: " + orderId);
+            } else {
                 session.setAttribute("errorMessage", "Failed to update order status. Please try again.");
             }
 
@@ -256,11 +257,11 @@ public class ManagerOrderController extends HttpServlet {
                 String guestEmail = order.getEmail();
                 String guestName = order.getFull_name();
                 String subject = "Order Status Update";
-                if(guestName == null){
+                if (guestName == null) {
                     guestName = "";
                 }
                 String content = "<h3>Hello you " + guestName + ",</h3>"
-                        + "<p>Your order has been <strong>" + newStatus +" "+ note+"</strong>.</p>"
+                        + "<p>Your order has been <strong>" + newStatus + " " + note + "</strong>.</p>"
                         + "<p>Thank you for shopping at Healthy Food Store!</p>"
                         + "<br><em>Best regards,</em><br>Customer Support Team";
                 try {
@@ -268,16 +269,16 @@ public class ManagerOrderController extends HttpServlet {
                 } catch (MessagingException ex) {
                     ex.printStackTrace(); // Consider replacing with logger
                 }
-            }else{
+            } else {
                 Account accCustomer = accDAO.findById(order.getAccount_id());
                 String customerEmail = accCustomer.getEmail();
-                 String customerName = accCustomer.getFull_name();
-                 if(customerName == null){
+                String customerName = accCustomer.getFull_name();
+                if (customerName == null) {
                     customerName = "";
                 }
                 String subject = "Order Status Update";
                 String content = "<h3>Hello you " + customerName + ",</h3>"
-                        + "<p>Your order has been <strong>" + newStatus +" "+ note+"</strong>.</p>"
+                        + "<p>Your order has been <strong>" + newStatus + " " + note + "</strong>.</p>"
                         + "<p>Thank you for shopping at Healthy Food Store!</p>"
                         + "<br><em>Best regards,</em><br>Customer Support Team";
                 try {
@@ -296,11 +297,12 @@ public class ManagerOrderController extends HttpServlet {
     }
 
     /**
-     * Handles displaying the detailed information of a specific order.
-     * This method: - Retrieves the order by its ID from the request parameter.
-     * - Loads the related account and order items. - Maps food details for each
+     * Handles displaying the detailed information of a specific order. This
+     * method: - Retrieves the order by its ID from the request parameter. -
+     * Loads the related account and order items. - Maps food details for each
      * order item. - Forwards the data to the order detail JSP page for
      * rendering. - Handles invalid or missing order cases.
+     *
      * @param request The HttpServletRequest containing client request data
      * @param response The HttpServletResponse for sending the response
      * @throws ServletException if a servlet-specific error occurs
@@ -331,7 +333,7 @@ public class ManagerOrderController extends HttpServlet {
                 request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
                 return;
             }
-            
+
             // Retrieve the list of items in the order
             List<OrderItem> orderItems = itemDAO.getOrderItemsByOrderId(order.getId());
 
@@ -344,13 +346,13 @@ public class ManagerOrderController extends HttpServlet {
 
             // Set attributes for JSP rendering
             request.setAttribute("order", order);
-            if(order.getAccount_id() == null || order.getAccount_id() == 0){
+            if (order.getAccount_id() == null || order.getAccount_id() == 0) {
                 request.setAttribute("acc", null);
-            }else{
+            } else {
                 Account acc = accDAO.findById(order.getAccount_id());
                 request.setAttribute("acc", acc);
             }
-            
+
             request.setAttribute("OrderItems", orderItems);
             request.setAttribute("OrderItemMap", OrderItemMap);
 
@@ -362,6 +364,7 @@ public class ManagerOrderController extends HttpServlet {
             request.getRequestDispatcher("/view/error/error.jsp").forward(request, response);
         }
     }
+
     /**
      * Handles displaying the update status page for a specific order.
      *
@@ -402,7 +405,7 @@ public class ManagerOrderController extends HttpServlet {
             }
             // List Shipper
             List<Account> accShipper = accDAO.findAccountByRole("shipper");
-           
+
             // Set attributes for JSP rendering
             request.setAttribute("order", order);
             request.setAttribute("accShipper", accShipper);

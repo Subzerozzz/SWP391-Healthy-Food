@@ -2,12 +2,14 @@ package com.su25.swp391.controller.customer;
 
 import com.su25.swp391.dal.implement.AccountDAO;
 import com.su25.swp391.dal.implement.ComboDAO;
+import com.su25.swp391.dal.implement.DeliveryDAO;
 import com.su25.swp391.dal.implement.FoodDAO;
 import com.su25.swp391.dal.implement.OrderComboDAO;
 import com.su25.swp391.dal.implement.OrderDAO;
 import com.su25.swp391.dal.implement.OrderItemDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Combo;
+import com.su25.swp391.entity.Delivery;
 import com.su25.swp391.entity.Food;
 import com.su25.swp391.entity.OrderItem;
 import com.su25.swp391.entity.Order;
@@ -35,6 +37,7 @@ public class OrderManage extends HttpServlet {
     private final FoodDAO foodDAO = new FoodDAO();
     private final OrderComboDAO ordercomboDAO = new OrderComboDAO();
     private final ComboDAO comboDAO = new ComboDAO();
+    private final DeliveryDAO deliveryDAO = new DeliveryDAO();
 
     private final Order order = new Order();
     private final OrderCombo orderCombo = new OrderCombo();
@@ -99,12 +102,16 @@ public class OrderManage extends HttpServlet {
         try {
             //parse sang int
             int orderId = Integer.parseInt(orderIdStr);
+            
+            Delivery delivery = deliveryDAO.findDeliveryByOrderId(orderId);
+            
 
             //get ra list cac OI dua tren order id
             List<OrderItem> orderItemList = orderDetailDAO.findOrderItemsByOrderId(orderId);
 
             request.setAttribute("orderItemList", orderItemList);
             request.setAttribute("foodDAO", foodDAO);
+            request.setAttribute("delivery", delivery);
 
             // Tạo Map<Integer, Food> từ danh sách food_id có trong orderItemList
             Set<Integer> foodIds = orderItemList.stream()

@@ -8,7 +8,6 @@ package com.su25.swp391.entity;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,5 +31,5 @@ public class Feedback {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     
-                               //k phải sửa tên thuộc tính mà vẫn thuận tiện dùng thuộc tính isVisible
+                              
 }

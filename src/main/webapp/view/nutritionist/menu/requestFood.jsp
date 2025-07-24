@@ -117,7 +117,7 @@
                               </div>
                               <div class="flex items-center justify-between gap20 flex-grow">
                                 <div class="name">
-                                  <a href="product-list.html" class="body-title-2">${item.getName()}</a>
+                                  <a href="#" class="body-title-2">${item.getName()}</a>
                                 </div>
                                   <c:forEach items="${listNutri}" var="nutri">
                                     <c:if test="${nutri.getId() == item.getNutri_id()}">
