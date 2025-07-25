@@ -99,6 +99,10 @@
                           <a id="buttonExcelFile" class="tf-button style-1 w208 btn" href="#"><i class="icon-plus"></i>
                               Choose File Excel
                           </a>
+                              
+                          <div id="fileWarning" style="color: red; font-size: 0.9em; display: none;">
+                            Vui lòng chọn cả file Excel và thư mục ảnh trước khi import.
+                          </div>
                           <button type="submit" class="buttonImport">Import</button>
                       </form>
                     </div>
@@ -719,6 +723,18 @@
                     buttonImageFile.textContent = folderName + " (" + fileImage.files.length + " images)";
                 }
             })
+            
+            document.getElementById("formInputExcel").addEventListener("submit", function(e) {
+                const excelFile = document.getElementById("excelFile").files.length;
+                const imageFiles = document.getElementById("fileImage").files.length;
+
+                if (excelFile === 0 || imageFiles === 0) {
+                  e.preventDefault();
+                  document.getElementById("fileWarning").style.display = "block";
+                } else {
+                  document.getElementById("fileWarning").style.display = "none";
+                }
+              });
             
             
         </script>

@@ -499,7 +499,7 @@ public class CartController extends HttpServlet {
                 //neu duoc di tiep
                 String discountType = coupon.getDiscount_type();
                 Double discountValue = null;
-                if (discountType == "percentage") {
+                if (discountType.equalsIgnoreCase("percentage") ) {
                     discountValue = (subTotal * coupon.getDiscount_value()) / 100;
                 } else {
                     discountValue = coupon.getDiscount_value();

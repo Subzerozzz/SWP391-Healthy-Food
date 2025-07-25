@@ -170,7 +170,7 @@
                                               <span class="minus-btn">
                                                 <i class='bx bx-minus'></i>
                                               </span>
-                                              <input name="quantity" type="text" value="${item.getQuantity()}" min="1">
+                                                <input readonly name="quantity" type="text" value="${item.getQuantity()}" min="1">
 
                                               <span class="plus-btn">
                                                 <i class='bx bx-plus'></i>
@@ -545,7 +545,7 @@
           document.addEventListener("DOMContentLoaded", function () {
             iziToast.error({
                 title: "Thông báo",
-                message: "Đơn hàng đã được gửi qua email. Vui lòng kiểm !",
+                message: "Đơn hàng đã được gửi qua email. Vui lòng kiểm tra!",
                 position: 'topRight',
                 timeout: 5000,
                 backgroundColor:"#d4edda"

@@ -17,8 +17,8 @@
           <div class="container">
             <nav class="navbar navbar-expand-md navbar-light ">
               <a class="navbar-brand">
-                <img src="${pageContext.request.contextPath}/images/logos/logo-2.png" class="logo-one" alt="Logo">
-                <img src="${pageContext.request.contextPath}/images/logos/logo-1.png" class="logo-two" alt="Logo">
+                <img style="width: 200px" src="${pageContext.request.contextPath}/images/healthylogo.png" class="logo-one" alt="Logo">
+                <img style="width: 200px" src="${pageContext.request.contextPath}/images/healthylogo.png" class="logo-two" alt="Logo">
               </a>
 
               <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
