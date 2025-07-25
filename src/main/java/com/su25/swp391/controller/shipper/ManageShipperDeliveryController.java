@@ -170,63 +170,7 @@ public class ManageShipperDeliveryController extends HttpServlet {
     }
 
 
-    private void updateStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            int delivery_id = Integer.parseInt(request.getParameter("delivery_id"));
-            
-            String newStatus =request.getParameter("newStatus");
-            
-            String note =request.getParameter("note");
-            
-            Delivery delivery = deliveryDAO.findById(delivery_id);
-            delivery.setStatus(newStatus);
-            delivery.setNote(note);
-            Boolean checkUpdateSuccess = deliveryDAO.update(delivery);
-            
-            if(newStatus.equalsIgnoreCase("success") && delivery.getOrder_id() > 0){
-                Boolean checkUpdateCompleted = orderDAO.updateOrderStatusComplete(delivery.getOrder_id(), "completed");
-            }
-            if(newStatus.equalsIgnoreCase("reject") && delivery.getOrder_id() > 0){
-                Boolean checkUpdateCompleted = orderDAO.updateOrderStatus(delivery.getOrder_id(), "completed");
-            }
-            if(newStatus.equalsIgnoreCase("success") && delivery.getOrder_combo_id() > 0){
-               ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 1);
-             }
-            Order order = orderDAO.findById(delivery.getOrder_id());
-            
-           // If this is a guest order (account_id = 0), send an email notification
-            if (order.getAccount_id() == 0 || order.getAccount_id() == null) {
-                String guestEmail = order.getEmail();
-                String guestName = order.getFull_name();
-                String subject = "Delivery Status Follow";
-                if(guestName == null){
-                    guestName = "";
-                }
-                if(note == null || note.isEmpty()){
-                    note = "";
-                }
-                String content = "<h3>Hello you " + guestName + ",</h3>"
-                        + "<p>Your order <strong>" + newStatus +" "+ note+"</strong>.</p>"
-                        + "<p>Thank you for shopping at Healthy Food Store!</p>"
-                        + "<br><em>Best regards,</em><br>Customer Support Team";
-                try {
-                    EmailUtils.sendMail(guestEmail, subject, content);
-                } catch (MessagingException ex) {
-                    ex.printStackTrace(); // Consider replacing with logger
-                }
-            }
-            if(checkUpdateSuccess){
-               session.setAttribute("isSuccess", true);
-            }else{
-               session.setAttribute("errorMessage", true); 
-            }
-           response.sendRedirect(request.getContextPath() + "/shipper/manage-delivery");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-       
-    }
+     
 
     private void viewDelivery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       
