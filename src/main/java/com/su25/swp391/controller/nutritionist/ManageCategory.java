@@ -232,8 +232,8 @@ public class ManageCategory extends HttpServlet {
             try {
                 if (minBMI_raw != null && !minBMI_raw.trim().isEmpty()) {
                     minBMI = Double.parseDouble(minBMI_raw.trim());
-                    if (minBMI < 10 || minBMI > 50) {
-                        errors.put("minBMI", "Min BMI phải nằm trong khoảng từ 10 đến 50");
+                    if (minBMI < 0 || minBMI > 100) {
+                        errors.put("minBMI", "Min BMI phải nằm trong khoảng từ 0 đến 100");
                     }
                 } else {
                     errors.put("minBMI", "Min BMI không được để trống");
@@ -241,8 +241,8 @@ public class ManageCategory extends HttpServlet {
 
                 if (maxBMI_raw != null && !maxBMI_raw.trim().isEmpty()) {
                     maxBMI = Double.parseDouble(maxBMI_raw.trim());
-                    if (maxBMI < 10 || maxBMI > 50) {
-                        errors.put("maxBMI", "Max BMI phải nằm trong khoảng từ 10 đến 50");
+                    if (maxBMI < 0 || maxBMI > 100) {
+                        errors.put("maxBMI", "Max BMI phải nằm trong khoảng từ 0 đến 100");
                     }
                 } else {
                     errors.put("maxBMI", "Max BMI không được để trống");
@@ -325,8 +325,8 @@ public class ManageCategory extends HttpServlet {
             } else {
                 try {
                     minBMI = Double.parseDouble(minBMIStr.trim());
-                    if (minBMI < 10 || minBMI > 50) {
-                        errors.put("minBMI", "minBMI must be between 10 and 50.");
+                    if (minBMI < 0 || minBMI > 100) {
+                        errors.put("minBMI", "minBMI must be between 0 and 100.");
                     }
                 } catch (NumberFormatException e) {
                     errors.put("minBMI", "minBMI must be a valid number.");
@@ -339,8 +339,8 @@ public class ManageCategory extends HttpServlet {
             } else {
                 try {
                     maxBMI = Double.parseDouble(maxBMIStr.trim());
-                    if (maxBMI < 10 || maxBMI > 50) {
-                        errors.put("maxBMI", "maxBMI must be between 10 and 50.");
+                    if (maxBMI < 0 || maxBMI > 100) {
+                        errors.put("maxBMI", "maxBMI must be between 0 and 100.");
                     }
                 } catch (NumberFormatException e) {
                     errors.put("maxBMI", "maxBMI must be a valid number.");

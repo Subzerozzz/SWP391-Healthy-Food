@@ -331,7 +331,7 @@
                                                                         }
 
                                                                         // Hàm kiểm tra số trong khoảng và bắt buộc
-                                                                        function validateNumberInput(input, fieldName, minValue = 10, maxValue = 50) {
+                                                                        function validateNumberInput(input, fieldName, minValue = 0, maxValue = 100) {
                                                                             const value = input.value.trim();
 
                                                                             if (value === "") {
@@ -352,7 +352,7 @@
                                                                             }
 
                                                                             if (number < minValue || number > maxValue) {
-                                                                                showError(input, ` Số phải nằm trong khoảng 10-50`);
+                                                                                showError(input, ` Số phải nằm trong khoảng 0-100`);
                                                                                 return false;
                                                                             }
 

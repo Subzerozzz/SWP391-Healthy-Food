@@ -128,7 +128,7 @@
                     <!--Image-->
                     <div class="col-lg-6 col-md-12 product-detail-image">
                         <div class="product-detls-image">
-                            <img src="${foodDetail.getImage_url()}" alt="Image">
+                            <img src="${pageContext.request.contextPath}/${foodDetail.image_url}" alt="Image">
                         </div>
                     </div>
 
@@ -165,21 +165,25 @@
                             <div class="product-add-btn">
                                 <c:choose>
                                     <c:when test="${sessionScope.account.role eq 'customer' }">
-                                        <li>
-                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}">
-                                                <div class="text-tiny">
+                                        <div>
+                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}"  style="color: black; 
+                                               margin-bottom: 20px">
+                                                <button class="default-btn btn-bg-three">
                                                     View Feedback Here
-                                                </div>
+                                                </button>
                                             </a>
-                                        </li>
+                                        </div>
                                         <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">
                                             <i class="fas fa-cart-plus"></i> Add To Cart
                                         </button>
                                     </c:when>
                                     <c:when test="${sessionScope.account eq null}"> 
                                         <div>
-                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}"  style="color: black;">
-                                                View Feedback Here
+                                            <a href="${pageContext.request.contextPath}/feedbackfood?id=${foodDetail.id}"  style="color: black; 
+                                               margin-bottom: 20px">
+                                                <button class="default-btn btn-bg-three">
+                                                    View Feedback Here
+                                                </button>
                                             </a>
                                         </div>
                                         <button onclick="addToCart(${foodDetail.getId()})" type="submit" class="default-btn btn-bg-three">

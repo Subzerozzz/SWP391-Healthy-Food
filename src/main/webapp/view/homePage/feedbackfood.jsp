@@ -146,7 +146,7 @@
                     <!--Image-->
                     <div class="col-lg-6 col-md-12 product-detail-image">
                         <div class="product-detls-image">
-                            <img src="${foodDetail.getImage_url()}" alt="Image">
+                            <img src="${pageContext.request.contextPath}/${foodDAO.findById(feedbackFood).image_url}" alt="Image">
                         </div>
                     </div>
                     <!--feedback-->

@@ -280,6 +280,11 @@
                       <div class="checkout-form">
                         <div class="contact-form">
                           <h2>Billing Information</h2>
+                          <strong style="display: inline-block; margin-bottom: 10px;">
+                              <span style="color: red">Hãy đảm bảo mọi thông tin của bạn là chính xác!</span>
+                              <br>
+                              <span style="color: red">Trong mọi trường hợp nếu xảy ra sự cố chúng tôi sẽ liên lạc để giải quyết.</span>
+                          </strong>
                           <div class="row">
                             <div class="col-lg-6">
                               <div class="form-group">

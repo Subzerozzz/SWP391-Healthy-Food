@@ -41,7 +41,7 @@ public class BlogController extends HttpServlet {
     private void showBlogList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String searchTitle = request.getParameter("search");
-        String status = "Inactive"; // Thay đổi từ "published" thành "Inactive" để khớp với database
+        String status = "Active";
 
         int page = 1;
         int pageSize = 5;
@@ -109,12 +109,14 @@ public class BlogController extends HttpServlet {
             Blog blog = blogDAO.findById(blogId);
 
             if (blog == null) {
+                System.out.println("Blog not found with ID: " + blogId);
                 setToastMessage(request, "Blog not found", "error");
                 response.sendRedirect(request.getContextPath() + "/blog");
                 return;
             }
 
-            if (!"Inactive".equals(blog.getStatus())) {
+            if (!"Active".equals(blog.getStatus())) {
+                System.out.println("Blog is not available: " + blog);
                 setToastMessage(request, "Blog is not available", "error");
                 response.sendRedirect(request.getContextPath() + "/blog");
                 return;

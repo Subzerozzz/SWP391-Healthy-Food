@@ -340,9 +340,7 @@ textarea.form-control {
                             <div class="mb-3">
                                 <strong>Mobile:</strong> ${accShipper.mobile}
                             </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>${accShipper.address}
-                            </div>
+                           
                                   <c:choose>
                                                         <c:when test="${de.shipper_id == 0 && de.status == 'pending'}">
                                                             <!-- Chỉ hiện icon nếu chưa có shipper -->
@@ -385,9 +383,7 @@ textarea.form-control {
                             <div class="mb-3">
                                 <strong>Mobile:</strong> ${accShipper.mobile}
                             </div>
-                            <div class="mb-3">
-                                <strong>Shipping Address:</strong>${accShipper.address}
-                            </div>
+                          
                  
                         </div>  
                              </c:otherwise>
@@ -420,13 +416,11 @@ textarea.form-control {
                                     <c:set var="food" value="${OrderItemMap[item.food_id]}"/>
                                     <tr>
                                         <td> 
-                                            <a 
-                                                href="${food.image_url}"
-                                                target="_blank">
+                                            
                                             <img 
-                                                src="${food.image_url}"
+                                                src="${pageContext.request.contextPath}/${food.image_url}"
                                             alt="${food.name}" class="product-image">
-                                              </a>
+                                             
                                         </td>
                                         <td>${food.name}</td>
                                         <td><fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>

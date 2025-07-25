@@ -1,6 +1,8 @@
 package com.su25.swp391.controller.nutritionist;
 
+import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.BlogDAO;
+import com.su25.swp391.entity.Account;
 import com.su25.swp391.entity.Blog;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -92,12 +94,16 @@ public class ManageBlogController extends HttpServlet {
 
     private void blogCreateDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String author = "Anonymous"; // Default author, can be changed later
+            HttpSession session = request.getSession();
+            Account authorAccount = (Account) session.getAttribute(GlobalConfig.SESSION_ACCOUNT);
+            if (authorAccount != null) {
+                author = authorAccount.getFull_name();
+            }
             String title = request.getParameter("title");
-            String author = request.getParameter("author");
             String briefinfo = request.getParameter("briefinfo");
             String content = request.getParameter("content");
             String dateStr = request.getParameter("date");
-            String status = request.getParameter("status");
             Date date = null;
             try {
                 if (dateStr != null && !dateStr.isEmpty()) {
@@ -156,7 +162,7 @@ public class ManageBlogController extends HttpServlet {
             }
             Blog newBlog = Blog.builder()
                     .title(title)
-                    .author("HarryPorter")
+                    .author(author)
                     .brief_info(briefinfo)
                     .content(content)
                     .created_Date(date)
@@ -167,7 +173,6 @@ public class ManageBlogController extends HttpServlet {
             BlogDAO BlogDao = new BlogDAO();
             boolean isSuccses = BlogDao.insert(newBlog) > 0;
             if (isSuccses) {
-                HttpSession session = request.getSession();
                 request.getSession().setAttribute("totalMess", "Add new Blog Success");
                 request.getSession().setAttribute("totalType", "Success");
                 session.setAttribute("isAdd", true);
@@ -195,6 +200,7 @@ public class ManageBlogController extends HttpServlet {
             String briefinfo = request.getParameter("briefinfo");
             String content = request.getParameter("content");
             String dateStr = request.getParameter("date");
+            String status = request.getParameter("status");
             //Xu ly thong tin ve nhap date
             Date date = null;
             try {
@@ -212,11 +218,50 @@ public class ManageBlogController extends HttpServlet {
             }
             BlogDAO blogDao = new BlogDAO();
             Blog blog = blogDao.findById(id);
+            
+            // Handle file upload for thumbnail
+            String fileName = blog.getThumbnailblogs(); // Keep existing thumbnail by default
+            try {
+                Part filePart = request.getPart("filename");
+                if (filePart != null && filePart.getSize() > 0) {
+                    String originalFileName = filePart.getSubmittedFileName();
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    fileName = UUID.randomUUID().toString() + fileExtension;
+
+                    String applicationPath = request.getServletContext().getRealPath("");
+                    String uploadPath = applicationPath + File.separator + UPLOAD_DIRECTORY;
+
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                    }
+
+                    InputStream inputStream = filePart.getInputStream();
+                    String filePath = uploadPath + File.separator + fileName;
+                    FileOutputStream outputStream = new FileOutputStream(filePath);
+
+                    int read;
+                    byte[] bytes = new byte[1024];
+                    while ((read = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, read);
+                    }
+                    outputStream.close();
+                    
+                    // Update filename to include the upload directory path
+                    fileName = UPLOAD_DIRECTORY + "/" + fileName;
+                }
+            } catch (Exception e) {
+                System.out.println("Error uploading thumbnail: " + e.getMessage());
+                // Continue with update even if file upload fails
+            }
+            
             blog.setTitle(title);
             blog.setAuthor(author);
             blog.setBrief_info(briefinfo);
             blog.setContent(content);
             blog.setCreated_Date(date);
+            blog.setStatus(status);
+            blog.setThumbnailblogs(fileName);
             boolean isSuccess = blogDao.update(blog);
             if (isSuccess) {
                 HttpSession session = request.getSession();

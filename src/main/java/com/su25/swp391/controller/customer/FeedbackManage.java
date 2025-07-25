@@ -279,8 +279,10 @@ public class FeedbackManage extends HttpServlet {
             int feedbackFood = Integer.parseInt(feedback_food_raw);
             
             List<Feedback> findFeedbackbyFoodId = feedbackDAO.findFeedbackByFoodIdAndRating(feedbackFood, search_raw);
-            double averageRating = getAverageRating(findFeedbackbyFoodId);
+            List<Feedback> findFeedbackbyFoodId2 = feedbackDAO.findFeedbackByFoodIdAndRating(feedbackFood, "all");
+            double averageRating = getAverageRating(findFeedbackbyFoodId2);
             
+            request.setAttribute("foodDAO", foodDAO);
             request.setAttribute("feedbackFood", feedbackFood);
             request.setAttribute("accountDAO", accountDAO);
             request.setAttribute("findFeedbackbyFoodId", findFeedbackbyFoodId);

@@ -280,6 +280,7 @@ public class ManageAccount extends HttpServlet {
             String user_name = request.getParameter("user_name");
             String email = request.getParameter("emails");
             String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirmPassword");
             String address = request.getParameter("address");
             String role = request.getParameter("role");
             String status = request.getParameter("status");
@@ -292,6 +293,9 @@ public class ManageAccount extends HttpServlet {
 
             if (user_name != null && email != null && user_name.equalsIgnoreCase(email)) {
                 errors.put("user_name", "Tên đăng nhập không được trùng với email");
+            }
+            if(!password.equals(confirmPassword)){
+                errors.put("confirmPassword","password have to same confirmPassword");
             }
             //validate address
             if (address == null || address.trim().isEmpty()) {

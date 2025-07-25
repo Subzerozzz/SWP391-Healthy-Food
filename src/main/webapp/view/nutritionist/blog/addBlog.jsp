@@ -105,6 +105,18 @@
                                             <label class="form-label">Content <span class="text-danger">*</span></label>
                                             <textarea class="form-control" name="content" id="content" rows="10"></textarea>
                                         </div>
+
+<!--                                        <fieldset class="thumbnail">
+                                            <div class="body-title mb-10">Blog Thumbnail</div>
+                                            <div class="upload-image">
+                                                <div class="item">
+                                                    <img id="preview" src="${pageContext.request.contextPath}/images/upload/upload-1.png" alt="Upload Image" style="max-width: 200px; max-height: 150px; display: block;">
+                                                </div>
+                                                <div class="text-tiny mb-10">Upload an image for your blog thumbnail (optional).</div>
+                                                <input type="file" name="filename" id="myFile" accept="image/*" onchange="previewImage(event)">
+                                            </div>
+                                        </fieldset>-->
+
                                         <div class="cols gap10">
                                              <button class="tf-button w-full" type="submit">Add Blog</button>
                                          </div>
@@ -146,34 +158,37 @@
      </script>
      <script>
          function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById("preview");
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
+             const input = event.target;
+             const preview = document.getElementById("preview");
+             if (input.files && input.files[0]) {
+                 const reader = new FileReader();
+                 reader.onload = function (e) {
+                     preview.src = e.target.result;
+                     preview.style.display = "block";
+                 };
+                 reader.readAsDataURL(input.files[0]);
+             }
+         }
 
-          document.addEventListener('DOMContentLoaded', function () {
-            const fileInput = document.getElementById('myFile');
-            const imageContainer = document.querySelector('.item img');
+         document.addEventListener('DOMContentLoaded', function () {
+             const fileInput = document.getElementById('myFile');
+             const imageContainer = document.getElementById('preview');
 
-            fileInput.addEventListener('change', function () {
-              if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
+             if (fileInput) {
+                 fileInput.addEventListener('change', function () {
+                     if (fileInput.files && fileInput.files[0]) {
+                         const reader = new FileReader();
 
-                reader.onload = function (e) {
-                  imageContainer.src = e.target.result;
-                };
+                         reader.onload = function (e) {
+                             imageContainer.src = e.target.result;
+                             imageContainer.style.display = "block";
+                         };
 
-                reader.readAsDataURL(fileInput.files[0]);
-              }
-            });
-          });
+                         reader.readAsDataURL(fileInput.files[0]);
+                     }
+                 });
+             }
+         });
      </script>
  </body>
  <!-- Mirrored from themesflat.co/html/remos/add-product.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:35 GMT -->

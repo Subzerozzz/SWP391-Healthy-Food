@@ -7,6 +7,7 @@ package com.su25.swp391.controller.authen;
 import com.oracle.wls.shaded.org.apache.regexp.RE;
 import com.su25.swp391.config.GlobalConfig;
 import com.su25.swp391.dal.implement.AccountDAO;
+import com.su25.swp391.dal.implement.BlogDAO;
 import com.su25.swp391.dal.implement.CartDAO;
 import com.su25.swp391.entity.Account;
 import com.su25.swp391.utils.EmailUtils;
@@ -58,6 +59,7 @@ public class AuthenController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getServletPath();
+        
 
         switch (path) {
             case "/login":
@@ -67,6 +69,7 @@ public class AuthenController extends HttpServlet {
                 request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
                 break;
             case "/home":
+                request.setAttribute("blogDAO", new BlogDAO());
                 request.getRequestDispatcher(HOME_PAGE).forward(request, response);
                 break;
             case "/otp":

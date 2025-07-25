@@ -127,7 +127,6 @@
                                             <input style="border-radius:30px" class="form-control" type="password" name="password"  placeholder="Password">
                                         </div>
                                     </div>
-                                    <p style="color:red">${toastMessage}</p>
                                     <div class="col-lg-12 form-condition">
                                         <div class="agree-label">
                                             <div>
@@ -328,6 +327,23 @@
         <script src="${pageContext.request.contextPath}/js/custom.js"></script>
 
         <!--Thông báo lỗi đăng nhập--> 
+        <c:if test="${toastType == 'success'}">
+            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    iziToast.success({
+                                        title: "Thông báo",
+                                        message: '${sessionScope.toastMessage}',
+                                        position: 'topRight',
+                                        timeout: 5000,
+                                    });
+                                });
+            </script>
+            <!--Xóa đi biến isDelete sau khi đã thông báo--> 
+            <%
+                session.removeAttribute("toastType");
+                session.removeAttribute("toastMessage");
+            %>
+        </c:if>
 
         <c:if test="${toastType == 'error'}">
             <script>

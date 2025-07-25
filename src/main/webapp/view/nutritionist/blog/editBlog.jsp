@@ -90,9 +90,37 @@
                       </div>
                     </fieldset>
 
+                    <fieldset class="status">
+                      <div class="body-title mb-10">Status <span class="tf-color-1">*</span></div>
+                      <div class="select">
+                        <select name="status" required>
+                          <option value="Active" ${blog.status eq 'Active' ? 'selected' : ''}>Active</option>
+                          <option value="Inactive" ${blog.status eq 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
+                      </div>
+                    </fieldset>
+
+<!--                    <fieldset class="thumbnail">
+                      <div class="body-title mb-10">Blog Thumbnail</div>
+                      <div class="upload-image">
+                        <div class="item">
+                          <c:choose>
+                            <c:when test="${not empty blog.thumbnailblogs}">
+                              <img src="${pageContext.request.contextPath}/${blog.thumbnailblogs}" alt="Current Thumbnail" style="max-width: 200px; max-height: 150px;">
+                            </c:when>
+                            <c:otherwise>
+                              <img src="${pageContext.request.contextPath}/images/upload/upload-1.png" alt="Upload Image" style="max-width: 200px; max-height: 150px;">
+                            </c:otherwise>
+                          </c:choose>
+                        </div>
+                        <div class="text-tiny">Upload a new image (optional). Current image will be kept if no new image is selected.</div>
+                        <input type="file" name="filename" id="myFile" accept="image/*" style="margin-top: 10px;">
+                      </div>
+                    </fieldset>-->
+
                     <div class="cols gap10">
                       <button class="tf-button w-full" type="submit">Update Blog</button>
-                      <a href="blogList.jsp" class="tf-button style-2 w-full">Cancel</a>
+                      <a href="${pageContext.request.contextPath}/manage-blog" class="tf-button style-2 w-full">Cancel</a>
                     </div>
 
 

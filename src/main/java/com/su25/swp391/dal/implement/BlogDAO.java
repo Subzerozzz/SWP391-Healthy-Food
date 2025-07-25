@@ -55,7 +55,7 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
 
     @Override
     public boolean update(Blog blog) {
-        String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content=?,created_date=?, thumbnailblogs=?  WHERE id = ?";
+        String sql = "UPDATE blogs SET title = ?, author = ?, brief_info = ?, content=?,created_date=?, thumbnailblogs=?, status=?  WHERE id = ?";
         try {
             connection = getConnection();
             statement = connection.prepareStatement(sql);
@@ -65,7 +65,8 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             statement.setString(4, blog.getContent());
             statement.setDate(5, blog.getCreated_Date());
             statement.setString(6, blog.getThumbnailblogs());
-            statement.setInt(7, blog.getId());
+            statement.setString(7, blog.getStatus());
+            statement.setInt(8, blog.getId());
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -376,5 +377,28 @@ public class BlogDAO extends DBContext implements I_DAO<Blog> {
             closeResources();
         }
         return 0;
+    }
+
+    public List<Blog> getLatestActiveBlogs(int limit) {
+        List<Blog> blogs = new ArrayList<>();
+        String sql = "SELECT * FROM blogs WHERE status = 'Active' ORDER BY created_date DESC LIMIT ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, limit);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                blogs.add(getFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting latest active blogs: " + e.getMessage());
+        } finally {
+            closeResources();
+        }
+        return blogs;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new BlogDAO().findById(35));
     }
 }

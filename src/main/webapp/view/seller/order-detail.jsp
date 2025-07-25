@@ -371,13 +371,11 @@ textarea.form-control {
                                     <c:set var="food" value="${OrderItemMap[item.food_id]}"/>
                                     <tr>
                                         <td> 
-                                            <a 
-                                                href="${food.image_url}"
-                                                target="_blank">
+                                           
                                             <img 
-                                                src="${food.image_url}"
+                                                src="${pageContext.request.contextPath}/${food.image_url}"
                                             alt="${food.name}" class="product-image">
-                                              </a>
+                                              
                                         </td>
                                         <td>${food.name}</td>
                                         <td><fmt:formatNumber value="${food.price}" type="currency" currencySymbol="" maxFractionDigits="0"/> VNĐ</td>

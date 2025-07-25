@@ -203,7 +203,7 @@
                                                                         }
 
                                                                         // Hàm kiểm tra số trong khoảng và bắt buộc
-                                                                        function validateNumberInput(input, fieldName, minValue = 10, maxValue = 50) {
+                                                                        function validateNumberInput(input, fieldName, minValue = 0, maxValue = 100) {
                                                                             const value = input.value.trim();
 
                                                                             if (value === "") {

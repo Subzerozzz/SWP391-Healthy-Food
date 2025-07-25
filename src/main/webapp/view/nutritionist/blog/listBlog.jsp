@@ -463,7 +463,6 @@
 
                                  /* Style cho status badge */
                                  .table-row .col span {
-                                     background-color: #E74C3C !important;
                                      color: white;
                                      padding: 6px 16px;
                                      border-radius: 20px;
@@ -587,10 +586,18 @@
                                      <div class="col body-title-2">${blog.author}</div>
                                      <div class="col body-title-2">${blog.created_Date}</div> 
                                      <div class="col">
-                                         <span style="background-color: #E74C3C;; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
-                                             ${blog.status}
-                                         </span>
-
+                                         <c:choose>
+                                             <c:when test="${blog.status.toLowerCase() eq 'active'}">
+                                                 <span style="background-color: #28a745; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                                     ${blog.status}
+                                                 </span>
+                                             </c:when>
+                                             <c:otherwise>
+                                                 <span style="background-color: #E74C3C; color: white; padding: 6px 16px; border-radius: 20px; display: inline-block; font-weight: bold;">
+                                                     ${blog.status}
+                                                 </span>
+                                             </c:otherwise>
+                                         </c:choose>
                                      </div>
                                      <div class="col actions ">
                                          <a href="${pageContext.request.contextPath}/manage-blog?action=view&id=${blog.id}"><i class="icon-eye"></i></a>

@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
@@ -109,9 +111,12 @@
                                                     </div>
                                                     <div class="body-text">${food.id}</div>
                                                     <div class="body-text">${food.description}</div>
-                                                    <div class="body-text">${food.price}</div>
-                                                    <div class="body-text">${item.quantityInCombo}</div>
-                                                    <div class="body-text">${food.calo}</div>
+                                                    <div class="body-text" style="text-align: center; padding-right: 50px">
+                                                        <fmt:formatNumber value="${food.price}" type="number" groupingUsed="true" maxFractionDigits="0" /> VNĐ
+                                                        
+                                                    </div>
+                                                    <div class="body-text" style="text-align: center">${item.quantityInCombo}</div>
+                                                    <div class="body-text" style="text-align: center">${food.calo}</div>
                                                 </div>
                                             </li>
                                             </c:forEach>
@@ -150,6 +155,12 @@
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 </body>
+    
+    <style>
+        .body-title {
+            text-align: center
+        }
+    </style>
 
 
 <!-- Mirrored from themesflat.co/html/remos/oder-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 May 2025 09:44:52 GMT -->

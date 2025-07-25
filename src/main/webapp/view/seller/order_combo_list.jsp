@@ -214,11 +214,12 @@
                                                                                                         <div class="body-title" style="padding-left: 80px">Payment Status</div>
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Method</div>
-                                                                                                    </li>
-                                                                                                    <li>
                                                                                                         <div class="body-title" style="padding-left: 80px">Status</div>
                                                                                                     </li>
+                                                                                                    <li>
+                                                                                                        <div class="body-title" style="padding-left: 80px">Payment Method</div>
+                                                                                                    </li>
+                                                                                                    
                                                                                                     <li>
                                                                                                         <div class="body-title" style="padding-left: 100px">Active</div>
                                                                                                     </li>

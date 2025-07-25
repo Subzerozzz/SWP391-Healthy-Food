@@ -150,7 +150,7 @@
                       </fieldset>
                       <fieldset class="password">
                         <div class="body-title mb-10">Confirm password</div>
-                        <input class="password-input" type="password" placeholder="Confirm password" name="password"
+                        <input class="password-input" type="password" placeholder="Confirm password" name="confirmPassword"
                           tabindex="0" value="" aria-required="true" required>
                         <span class="show-pass">
                           <i class="icon-eye view"></i>
@@ -261,8 +261,7 @@
   <c:if test="${not empty errors}">
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        <
-        c: forEach
+        <c:forEach
         var = "entry"
         items = "${errors}" >
           iziToast.error({
@@ -270,8 +269,7 @@
             message: "${fn:escapeXml(entry.value)}",
             position: 'topRight',
             timeout: 5000
-          }); <
-        /c:forEach>
+          }); </c:forEach>
       });
     </script>
   </c:if>

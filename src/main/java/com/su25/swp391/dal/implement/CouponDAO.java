@@ -119,10 +119,45 @@ public class CouponDAO extends DBContext implements I_DAO<Coupon> {
     }
 
     @Override
-    public int insert(Coupon t) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    public int insert(Coupon coupon) {
+        String sql = "INSERT INTO Coupon (code,description,discount_type,discount_value,min_purchase,max_discount,"
+                + "start_date, end_date,is_active,usage_limit,per_customer_limit)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, coupon.getCode());
+            statement.setString(2, coupon.getDescription());
+            statement.setString(3, coupon.getDiscount_type());
+            statement.setDouble(4, coupon.getDiscount_value());
+            statement.setDouble(5, coupon.getMin_purchase());
+            statement.setDouble(6, coupon.getMax_discount());
+            statement.setDate(7, new java.sql.Date(coupon.getStart_date().getTime()));
+            statement.setDate(8, new java.sql.Date(coupon.getEnd_date().getTime()));
+            statement.setInt(9, coupon.getIs_active());
+            // Xử lý null an toàn
+            statement.setObject(10, coupon.getUsage_limit(), java.sql.Types.INTEGER);
+            statement.setObject(11, coupon.getPer_customer_limit(), java.sql.Types.INTEGER);
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating coupon failed, no rows affected.");
+            }
+            resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                throw new SQLException("Creating coupon failed, no ID obtained.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding coupon: " + e.getMessage());
+            return -1;
+        } finally {
+            closeResources();
+        }
     }
+    
 
     @Override
     public Coupon getFromResultSet(ResultSet rs) throws SQLException {

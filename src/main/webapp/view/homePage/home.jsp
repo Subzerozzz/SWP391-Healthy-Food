@@ -25,6 +25,64 @@
         <!--=== Title & Favicon ===-->
         <title>Hilo - Organic Food eCommerce Shop HTML Template</title>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/favicon.png">
+        
+        <style>
+            .blog-card {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .blog-card .blog-image-container {
+                width: 100%;
+                height: 250px;
+                overflow: hidden;
+                position: relative;
+            }
+            
+            .blog-card .blog-image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center;
+                transition: transform 0.3s ease;
+            }
+            
+            .blog-card .blog-image-container:hover img {
+                transform: scale(1.05);
+            }
+            
+            .blog-card .content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .blog-card .content h3 {
+                flex: 1;
+                margin-bottom: 15px;
+            }
+            
+            .blog-card .content p {
+                margin-bottom: 15px;
+            }
+            
+            .blog-card .content .read-btn {
+                margin-top: auto;
+            }
+            
+            /* Đảm bảo các cột có chiều cao bằng nhau */
+            .blog-area .row {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            
+            .blog-area .row > [class*="col-"] {
+                display: flex;
+                margin-bottom: 30px;
+            }
+        </style>
     </head>
     <body>
         <!-- Pre Loader -->
@@ -271,52 +329,53 @@
 
                 <div class="row pt-45">
                     <div class="col-lg-4 col-md-6">
+                    <c:set var="blogBMI" value="${requestScope.blogDAO.findById(35)}" />
                         <div class="blog-card blog-color-2">
-                            <a href="blog-details.html">
-                                <img src="${pageContext.request.contextPath}/images/blog/blog-img1.jpg" alt="Images">
+                            <a href="${pageContext.request.contextPath}/blog?action=detail&id=${blogBMI.id}" class="blog-image-container">
+                                <c:choose>
+                                        <c:when test="${not empty blogBMI.thumbnailblogs}">
+                                            <img src="${pageContext.request.contextPath}/${blogBMI.thumbnailblogs}" alt="Blog Image">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/images/blog/blog-img1.jpg" alt="Default Blog Image">
+                                        </c:otherwise>
+                                    </c:choose>
                             </a>
                             <div class="content">
-                                <span><i class='bx bx-time-five'></i> Nov 01, 2024</span>
-                                <h3><a href="blog-details.html">We Always Ready to Give You Best Delivery Support </a></h3>
+                                <span><i class='bx bx-time-five'></i> ${blogBMI.created_Date}</span>
+                                <h3><a href="${pageContext.request.contextPath}/blog?action=detail&id=${blogBMI.id}">${blogBMI.title}</a></h3>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consetetur exit sadipscing elitr, sed diam.
+                                    ${blogBMI.brief_info}
                                 </p>
-                                <a href="#" class="read-btn">Read More</a>
+                                <a href="${pageContext.request.contextPath}/blog?action=detail&id=${blogBMI.id}" class="read-btn">Read More</a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="blog-card blog-color-2">
-                            <a href="blog-details.html">
-                                <img src="${pageContext.request.contextPath}/images/blog/blog-img2.jpg" alt="Images">
-                            </a>
-                            <div class="content">
-                                <span><i class='bx bx-time-five'></i> Nov 05, 2024</span>
-                                <h3><a href="blog-details.html">Click  and Make the Payment in the Most Easiest Way</a></h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consetetur exit sadipscing elitr, sed diam.
-                                </p>
-                                <a href="#" class="read-btn">Read More</a>
+                    <c:forEach items="${blogDAO.getLatestActiveBlogs(2)}" var="blog" varStatus="status">
+                        <div class="col-lg-4 col-md-6 ${status.index == 2 ? 'offset-lg-0 offset-md-3' : ''}">
+                            <div class="blog-card blog-color-2">
+                                <a href="${pageContext.request.contextPath}/blog?action=detail&id=${blog.id}" class="blog-image-container">
+                                    <c:choose>
+                                        <c:when test="${not empty blog.thumbnailblogs}">
+                                            <img src="${pageContext.request.contextPath}/${blog.thumbnailblogs}" alt="Blog Image">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${pageContext.request.contextPath}/images/blog/blog-img${status.index + 2}.jpg" alt="Default Blog Image">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </a>
+                                <div class="content">
+                                    <span><i class='bx bx-time-five'></i> ${blog.created_Date}</span>
+                                    <h3><a href="${pageContext.request.contextPath}/blog?action=detail&id=${blog.id}">${blog.title}</a></h3>
+                                    <p>
+                                        ${blog.brief_info}
+                                    </p>
+                                    <a href="${pageContext.request.contextPath}/blog?action=detail&id=${blog.id}" class="read-btn">Read More</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 offset-lg-0 offset-md-3">
-                        <div class="blog-card blog-color-2">
-                            <a href="blog-details.html">
-                                <img src="${pageContext.request.contextPath}/images/blog/blog-img3.jpg" alt="Images">
-                            </a>
-                            <div class="content">
-                                <span><i class='bx bx-time-five'></i> Nov 07, 2024</span>
-                                <h3><a href="blog-details.html">Global Ecommerce System Marked as a History </a></h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consetetur exit sadipscing elitr, sed diam.
-                                </p>
-                                <a href="#" class="read-btn">Read More</a>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
                 </div>
             </div>
         </section>
