@@ -705,8 +705,6 @@ public class ManageFoodController extends HttpServlet {
         for (Part filePart : parts) {
             String fileName = null;
             if (filePart != null && "fileImage".equals(filePart.getName()) && filePart.getSize() > 0) {
-                System.out.println("File received: " + filePart.getSubmittedFileName() + ", size: " + filePart.getSize());
-
                 // Lấy tên file gốc
                 String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                 // Tạo tên file duy nhất

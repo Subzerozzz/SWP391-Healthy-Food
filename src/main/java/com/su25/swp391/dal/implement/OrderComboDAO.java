@@ -170,7 +170,25 @@ public class OrderComboDAO extends DBContext implements I_DAO<OrderCombo> {
             closeResources();
         }
     }
-
+     
+    // NEW
+    public void updatePaymentStatus(int orderComboId, int status,String completed) {
+        String sql = "UPDATE OrderCombo SET payment_status = ?,status = ? WHERE orderComboId = ?";
+        try {
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, status);
+            statement.setString(2, completed);
+            statement.setInt(3, orderComboId);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Error updating payment status: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+    }
+    // end NEW
+    
     // Mạnh
     public List<OrderCombo> findOrderCombosByUserIdAndStatusWithPagination(int userId, String status, int page, int pageSize) {
         List<OrderCombo> list = new ArrayList<>();

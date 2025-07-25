@@ -191,7 +191,10 @@ public class ManageShipperDeliveryController extends HttpServlet {
                 Boolean checkUpdateCompleted = orderDAO.updateOrderStatus(delivery.getOrder_id(), "completed");
             }
             if (newStatus.equalsIgnoreCase("success") && delivery.getOrder_combo_id() > 0) {
-                ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 1);
+                ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 1, "completed");
+            }
+            if (newStatus.equalsIgnoreCase("reject") && delivery.getOrder_combo_id() > 0) {
+                ordercomboDAO.updatePaymentStatus(delivery.getOrder_combo_id(), 0, "completed");
             }
             if (delivery.getOrder_id() > 0) {
                 Order order = orderDAO.findById(delivery.getOrder_id());
